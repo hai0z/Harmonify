@@ -1,0 +1,84 @@
+import {View, Text, TouchableOpacity} from 'react-native';
+import React, {useEffect} from 'react';
+import {usePlayerStore} from '../../store/playerStore';
+import {FlashList} from '@shopify/flash-list';
+import {LinearGradient} from 'react-native-linear-gradient';
+import {useNavigation} from '@react-navigation/native';
+import useSyncLyric from '../../hooks/useSyncLyric';
+import tinycolor from 'tinycolor2';
+
+const OFFSET = 1;
+
+const Lyric = () => {
+  const lyrics = usePlayerStore(state => state.lyrics);
+
+  let bgColor = usePlayerStore(state => state.color);
+
+  const {currentLine} = useSyncLyric(lyrics);
+
+  const nativgation = useNavigation<any>();
+
+  useEffect(() => {
+    lyricsRef.current &&
+      lyricsRef.current.scrollToIndex({
+        index:
+          (currentLine as number) === -1 ? 0 : (currentLine as number) - OFFSET,
+        animated: true,
+      });
+  }, [currentLine]);
+
+  const lyricsRef = React.useRef<FlashList<any>>(null);
+
+  bgColor = bgColor.vibrant === '#0098DB' ? bgColor.average : bgColor.vibrant;
+
+  return (
+    lyrics?.length > 0 && (
+      <TouchableOpacity
+        onPress={() => nativgation.navigate('Lyric', {lyrics})}
+        activeOpacity={1}
+        className="rounded-2xl mt-8"
+        style={{
+          backgroundColor: bgColor,
+          height: 360,
+        }}>
+        <LinearGradient
+          colors={[bgColor, bgColor, 'transparent']}
+          className="absolute top-0 left-0 right-0 bottom-0 h-10 z-[2] rounded-t-2xl"
+        />
+        <View className="px-4 py-4">
+          <Text className="text-white font-bold z-[3] ">Lời bài hát</Text>
+        </View>
+        <View className="flex-1">
+          <FlashList
+            ref={lyricsRef}
+            contentContainerStyle={{padding: 16}}
+            data={lyrics}
+            initialScrollIndex={currentLine! - OFFSET}
+            estimatedItemSize={16}
+            showsVerticalScrollIndicator={false}
+            extraData={currentLine}
+            renderItem={({item, index}: any) => {
+              return (
+                <Text
+                  key={index}
+                  className=" font-bold text-[20px] mb-4"
+                  style={{
+                    color: (currentLine as number) >= index ? 'white' : 'black',
+                  }}>
+                  {item.data}
+                </Text>
+              );
+            }}
+            keyExtractor={(_, index) => index.toString()}
+          />
+        </View>
+        <LinearGradient
+          colors={['transparent', bgColor]}
+          className="absolute  left-0 right-0 bottom-0 h-20 z-[2] rounded-b-xl"
+        />
+      </TouchableOpacity>
+    )
+  );
+};
+
+export default React.memo(Lyric);

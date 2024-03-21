@@ -1,0 +1,177 @@
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import HomeScreens from '../screens/HomeScreens';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {StatusBar} from 'expo-status-bar';
+import MiniPlayer from '../components/MiniPlayer';
+import SearchScreens from '../screens/SearchScreens';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+
+import PlayerScreens from '../screens/PlayerScreens';
+import LyricScreen from '../screens/LyricScreen';
+import {View, Text} from 'react-native';
+import PlaylistDetail from '../screens/PlaylistDetail';
+import {BottomTabBar} from '@react-navigation/bottom-tabs';
+import ArtistScreens from '../screens/ArtistScreens';
+import ChartScreens from '../screens/ChartScreens';
+import LinearGradient from 'react-native-linear-gradient';
+import ArtistSong from '../screens/ArtistSong';
+export type HomeStackParamsList = {
+  Home: undefined;
+  Search: undefined;
+  Player: undefined;
+  Lyric: undefined;
+  PlayListDetail: undefined;
+  Artists: undefined;
+  ArtistsSong: undefined;
+};
+const Stack = createNativeStackNavigator<HomeStackParamsList>();
+
+const Tab = createBottomTabNavigator();
+
+const HomeWrapper = () => {
+  return (
+    <View className="flex-1 h-full w-full relative bg-[#121212]">
+      <StatusBar backgroundColor="#00000050" style="light" />
+      <HomeTab />
+    </View>
+  );
+};
+
+const HomeStack = () => {
+  return (
+    <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen name="Home" component={HomeScreens} />
+      <Stack.Screen name="Search" component={SearchScreens} />
+      <Stack.Screen
+        name="PlayListDetail"
+        component={PlaylistDetail}
+        options={{
+          animation: 'none',
+        }}
+      />
+      <Stack.Screen
+        name="Artists"
+        component={ArtistScreens}
+        options={{
+          animation: 'none',
+        }}
+      />
+      <Stack.Screen
+        name="ArtistsSong"
+        component={ArtistSong}
+        options={{
+          animation: 'none',
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
+
+const HomeTab = () => {
+  return (
+    <Tab.Navigator
+      tabBar={props => (
+        <View className="bg-[#121212]">
+          <MiniPlayer />
+          <BottomTabBar {...props} />
+          <LinearGradient
+            colors={['transparent', '#000000']}
+            className="h-[60px] -bottom-0 left-0 right-0 absolute"
+          />
+        </View>
+      )}
+      screenOptions={({route}) => ({
+        tabBarHideOnKeyboard: true,
+        headerShown: false,
+        tabBarIcon: ({color, size}) => {
+          switch (route.name) {
+            case 'HomeTab':
+              return <AntDesign name="home" size={size} color={color} />;
+            case 'Chart':
+              return <AntDesign name="barschart" size={size} color={color} />;
+            case 'Search':
+              return <AntDesign name="search1" size={size} color={color} />;
+            case 'Library':
+              return (
+                <MaterialIcons name="library-music" size={size} color={color} />
+              );
+          }
+        },
+        tabBarStyle: {
+          position: 'absolute',
+          borderTopWidth: 0,
+          bottom: 0,
+          right: 0,
+          height: 60,
+          width: '100%',
+          zIndex: 2,
+          backgroundColor: '#00000080',
+        },
+        tabBarActiveTintColor: '#DA291C',
+        tabBarInactiveTintColor: '#ffffff50',
+        tabBarIconStyle: {
+          bottom: 0,
+        },
+        tabBarItemStyle: {
+          backgroundColor: '#00000090',
+          position: 'relative',
+        },
+      })}>
+      <Tab.Screen
+        name="HomeTab"
+        component={HomeStack}
+        options={{
+          title: 'Trang Chủ',
+        }}
+      />
+      <Tab.Screen
+        name="Chart"
+        component={ChartScreens}
+        options={{
+          title: 'Bảng xếp hạng',
+        }}
+      />
+      <Tab.Screen
+        name="Search"
+        component={SearchScreens}
+        options={{
+          title: 'Tìm kiếm',
+        }}
+      />
+      <Tab.Screen
+        name="Library"
+        component={HomeStack}
+        options={{
+          title: 'Thư viện',
+        }}
+      />
+    </Tab.Navigator>
+  );
+};
+function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator screenOptions={{headerShown: false}}>
+        <Stack.Screen name="Home" component={HomeWrapper} />
+        <Stack.Screen
+          name="Player"
+          component={PlayerScreens}
+          options={{
+            animation: 'slide_from_bottom',
+          }}
+        />
+        <Stack.Screen
+          name="Lyric"
+          component={LyricScreen}
+          options={{
+            animation: 'slide_from_bottom',
+          }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
+
+export default App;
