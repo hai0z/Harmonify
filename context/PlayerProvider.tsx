@@ -3,22 +3,19 @@ import {usePlayerStore} from '../store/playerStore';
 import {getLyric} from '../apis/lyric';
 import {getColors} from 'react-native-image-colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import TrackPlayer, {usePlaybackState} from 'react-native-track-player';
+import TrackPlayer, {Event, useActiveTrack} from 'react-native-track-player';
 import nodejs from 'nodejs-mobile-react-native';
+import getThumbnail from '../utils/getThumnail';
 const PlayerContext = React.createContext({});
 
 const PlayerProvider = ({children}: {children: React.ReactNode}) => {
-  const {
-    setLyrics,
-    currentSong,
-    setColor,
-    setCurrentSong,
-    playList,
-    setPlayList,
-  } = usePlayerStore(state => state);
+  const {setLyrics, setColor, playList, setPlayList, setCurrentSong} =
+    usePlayerStore(state => state);
 
-  const getSongColors = async () => {
-    getColors(currentSong?.artwork!, {
+  const currentSong = useActiveTrack();
+
+  const getSongColors = async (url: string) => {
+    getColors(url, {
       fallback: '#0098db',
       quality: 'lowest',
       pixelSpacing: 100,
@@ -26,7 +23,6 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
   };
 
   const getSongLyric = async () => {
-    setLyrics([]);
     if (currentSong?.id !== null && currentSong?.id !== '') {
       const dataLyric: any = await getLyric(currentSong?.id as string);
       let customLyr: {startTime: number; endTime: number; data: string}[] = [];
@@ -59,19 +55,41 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
     }
   };
 
-  useEffect(() => {
-    (async () => {
-      try {
-        let data = await AsyncStorage.getItem('playlist');
-        if (data !== null) {
-          setPlayList(JSON.parse(data));
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    })();
-  }, []);
+  const initPlayer = async () => {
+    let data = await AsyncStorage.getItem('playlist');
+    data = JSON.parse(data as string);
+    let storedSong = await AsyncStorage.getItem('currentSong');
+    storedSong = JSON.parse(storedSong as string);
+    if (data != null && storedSong != null) {
+      await TrackPlayer.reset();
+      const dataPlaylist = data as any;
+      const currentSong = storedSong as any;
+      setPlayList(dataPlaylist);
+      await TrackPlayer.add(
+        dataPlaylist.map((item: any) => {
+          return {
+            id: item?.encodeId,
+            url: 'null',
+            title: item.title,
+            artist: item.artistsNames,
+            artwork: getThumbnail(item.thumbnail) || '',
+            duration: item.duration,
+          };
+        }),
+      );
+      const index = dataPlaylist.findIndex(
+        (item: any) => item?.encodeId === currentSong?.id,
+      );
+      await TrackPlayer.skip(index === -1 ? 0 : index);
+    } else {
+      setPlayList([]);
+      await TrackPlayer.reset();
+    }
+  };
 
+  useEffect(() => {
+    initPlayer();
+  }, []);
   useEffect(() => {
     (async () => {
       try {
@@ -85,31 +103,12 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
   useEffect(() => {
     (async () => {
       try {
-        let data = await AsyncStorage.getItem('currentSong');
-        if (data !== null) {
-          const s = JSON.parse(data);
-          nodejs.channel.post('initSong', s?.id);
-          setCurrentSong(s);
-          nodejs.channel.addListener('initSong', async data => {
-            TrackPlayer.load({
-              ...s,
-              url: data['128'],
-            });
-          });
-
-          getSongColors();
-          getSongLyric();
+        if (currentSong) {
+          await AsyncStorage.setItem(
+            'currentSong',
+            JSON.stringify(currentSong),
+          );
         }
-      } catch (e) {
-        console.log(e);
-      }
-    })();
-  }, []);
-
-  useEffect(() => {
-    (async () => {
-      try {
-        await AsyncStorage.setItem('currentSong', JSON.stringify(currentSong));
       } catch (e) {
         console.log(e);
       }
@@ -117,7 +116,7 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
   }, [currentSong?.id]);
 
   useEffect(() => {
-    getSongColors();
+    getSongColors(currentSong?.artwork ?? '');
   }, [currentSong?.id]);
 
   useEffect(() => {

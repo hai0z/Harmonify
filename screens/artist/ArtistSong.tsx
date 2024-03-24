@@ -10,14 +10,15 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {FlashList} from '@shopify/flash-list';
-import {getArtist, getArtistSong} from '../apis/artists';
+import {getArtist, getArtistSong} from '../../apis/artists';
 import {LinearGradient} from 'react-native-linear-gradient';
-import {usePlayerStore} from '../store/playerStore';
-import {handlePlay} from '../utils/musicControl';
+import {usePlayerStore} from '../../store/playerStore';
+import {handlePlay} from '../../utils/musicControl';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {StatusBar} from 'expo-status-bar';
 import {useNavigation} from '@react-navigation/native';
 import nodejs from 'nodejs-mobile-react-native';
+import getThumbnail from '../../utils/getThumnail';
 interface artistType {
   id: string;
   name: string;
@@ -40,8 +41,14 @@ const ArtistSong = ({route}: any) => {
 
   useEffect(() => {
     setLoading(true);
+    setData([]);
+    setDataDetailArtist({} as artistType);
     nodejs.channel.addListener('getListArtistSong', (data: any) => {
-      if (data.hasMore === false) return;
+      if (data.hasMore === false && page > 1) {
+        setHasLoadMore(false);
+        return;
+      }
+      if (data.items === undefined) return;
       setData((prev: any) => [...prev, ...data.items]);
       setLoading(false);
     });
@@ -156,7 +163,10 @@ const ArtistSong = ({route}: any) => {
               className="flex flex-row  items-center mx-4 my-2"
               onPress={() => handlePlay(item, data)}>
               <View className="w-14 h-14 rounded-md justify-center items-center">
-                <Text className="text-white font-extrabold">{index + 1}</Text>
+                <Image
+                  src={getThumbnail(item?.thumbnailM) || ''}
+                  className="w-14 h-14 rounded-md"
+                />
               </View>
               <View className="flex justify-center ml-2 flex-1">
                 <Text className="text-white" numberOfLines={1}>

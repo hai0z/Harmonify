@@ -15,6 +15,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {usePlayerStore} from '../store/playerStore';
 import {StyleSheet} from 'react-native';
 import nodejs from 'nodejs-mobile-react-native';
+import SplashScreen from 'react-native-splash-screen';
 interface typePlaylistCover {
   items: [];
   title: string;

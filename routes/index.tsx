@@ -13,10 +13,18 @@ import LyricScreen from '../screens/LyricScreen';
 import {View, Text} from 'react-native';
 import PlaylistDetail from '../screens/PlaylistDetail';
 import {BottomTabBar} from '@react-navigation/bottom-tabs';
-import ArtistScreens from '../screens/ArtistScreens';
+import ArtistScreens from '../screens/artist/ArtistScreens';
 import ChartScreens from '../screens/ChartScreens';
 import LinearGradient from 'react-native-linear-gradient';
-import ArtistSong from '../screens/ArtistSong';
+import ArtistSong from '../screens/artist/ArtistSong';
+import {useAuth} from '../context/AuthProvider';
+import Login from '../screens/auth/Login';
+import Register from '../screens/auth/Register';
+import LibrarySrceens from '../screens/library/LibrarySrceens';
+import LikedSong from '../screens/library/LikedSong';
+import MyPlaylist from '../screens/library/MyPlaylist';
+import {useEffect} from 'react';
+import SplashScreen from 'react-native-splash-screen';
 export type HomeStackParamsList = {
   Home: undefined;
   Search: undefined;
@@ -25,6 +33,13 @@ export type HomeStackParamsList = {
   PlayListDetail: undefined;
   Artists: undefined;
   ArtistsSong: undefined;
+  Login: undefined;
+  Register: undefined;
+  Library: undefined;
+  MyPlaylist: undefined;
+  LikedSong: undefined;
+  Chart: undefined;
+  Lib: undefined;
 };
 const Stack = createNativeStackNavigator<HomeStackParamsList>();
 
@@ -36,6 +51,16 @@ const HomeWrapper = () => {
       <StatusBar backgroundColor="#00000050" style="light" />
       <HomeTab />
     </View>
+  );
+};
+
+const LibraryStack = () => {
+  return (
+    <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen name="Library" component={LibrarySrceens} />
+      <Stack.Screen name="MyPlaylist" component={MyPlaylist} />
+      <Stack.Screen name="LikedSong" component={LikedSong} />
+    </Stack.Navigator>
   );
 };
 
@@ -93,7 +118,7 @@ const HomeTab = () => {
               return <AntDesign name="barschart" size={size} color={color} />;
             case 'Search':
               return <AntDesign name="search1" size={size} color={color} />;
-            case 'Library':
+            case 'LibraryTab':
               return (
                 <MaterialIcons name="library-music" size={size} color={color} />
               );
@@ -110,7 +135,7 @@ const HomeTab = () => {
           backgroundColor: '#00000080',
         },
         tabBarActiveTintColor: '#DA291C',
-        tabBarInactiveTintColor: '#ffffff50',
+        tabBarInactiveTintColor: '#ababab',
         tabBarIconStyle: {
           bottom: 0,
         },
@@ -141,8 +166,8 @@ const HomeTab = () => {
         }}
       />
       <Tab.Screen
-        name="Library"
-        component={HomeStack}
+        name="LibraryTab"
+        component={LibraryStack}
         options={{
           title: 'Thư viện',
         }}
@@ -151,24 +176,47 @@ const HomeTab = () => {
   );
 };
 function App() {
+  const {isLogin} = useAuth();
+  useEffect(() => {
+    SplashScreen.hide();
+  }, []);
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown: false}}>
-        <Stack.Screen name="Home" component={HomeWrapper} />
-        <Stack.Screen
-          name="Player"
-          component={PlayerScreens}
-          options={{
-            animation: 'slide_from_bottom',
-          }}
-        />
-        <Stack.Screen
-          name="Lyric"
-          component={LyricScreen}
-          options={{
-            animation: 'slide_from_bottom',
-          }}
-        />
+        {isLogin ? (
+          <>
+            <Stack.Screen name="Home" component={HomeWrapper} />
+            <Stack.Screen
+              name="Player"
+              component={PlayerScreens}
+              options={{
+                animation: 'slide_from_bottom',
+              }}
+            />
+            <Stack.Screen
+              name="Lyric"
+              component={LyricScreen}
+              options={{
+                animation: 'slide_from_bottom',
+              }}
+            />
+          </>
+        ) : (
+          <>
+            <Stack.Screen
+              name="Login"
+              component={Login}
+              options={{
+                animation: 'fade',
+              }}
+            />
+            <Stack.Screen
+              name="Register"
+              component={Register}
+              options={{animation: 'fade'}}
+            />
+          </>
+        )}
       </Stack.Navigator>
     </NavigationContainer>
   );

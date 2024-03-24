@@ -10,6 +10,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import useKeyBoardStatus from '../hooks/useKeyBoardStatus';
 import TrackPlayer, {
   State,
+  useActiveTrack,
   usePlaybackState,
   useProgress,
 } from 'react-native-track-player';
@@ -19,6 +20,7 @@ import useDarkColor from '../hooks/useDarkColor';
 import {useNavigation} from '@react-navigation/native';
 import {usePlayerStore} from '../store/playerStore';
 import TextTicker from 'react-native-text-ticker';
+import {addToLikedList} from '../utils/firebase';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const MiniPlayer = () => {
@@ -27,6 +29,7 @@ const MiniPlayer = () => {
   const keyboardVisible = useKeyBoardStatus();
 
   const {currentSong} = usePlayerStore(state => state);
+  const track = useActiveTrack();
 
   const [color] = usePlayerStore(state => [state.color]);
 
@@ -42,7 +45,8 @@ const MiniPlayer = () => {
     }
   }, []);
 
-  if (currentSong === null) return null;
+  console.log('track', track);
+  if (track === undefined) return null;
 
   return (
     !keyboardVisible && (
@@ -71,7 +75,7 @@ const MiniPlayer = () => {
             }}>
             <Image
               source={{
-                uri: currentSong?.artwork,
+                uri: track?.artwork,
               }}
               style={{
                 width: 40,
@@ -93,7 +97,7 @@ const MiniPlayer = () => {
                   fontWeight: '600',
                   fontSize: 14,
                 }}>
-                {currentSong?.title}
+                {track?.title}
               </TextTicker>
 
               <Text
@@ -102,7 +106,7 @@ const MiniPlayer = () => {
                   fontSize: 12,
                 }}
                 numberOfLines={1}>
-                {currentSong?.artist?.name}
+                {track?.artist}
               </Text>
             </View>
 
@@ -114,7 +118,8 @@ const MiniPlayer = () => {
                 justifyContent: 'space-between',
                 gap: 16,
               }}>
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => addToLikedList(currentSong, currentSong, [])}>
                 <AntDesign name={'hearto'} size={24} color="#ffffff" />
               </TouchableOpacity>
               <TouchableOpacity

@@ -11,15 +11,15 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {FlashList} from '@shopify/flash-list';
-import {getArtist, getArtistSong} from '../apis/artists';
+import {getArtist, getArtistSong} from '../../apis/artists';
 import {LinearGradient} from 'react-native-linear-gradient';
-import {usePlayerStore} from '../store/playerStore';
-import {handlePlay} from '../utils/musicControl';
+import {usePlayerStore} from '../../store/playerStore';
+import {handlePlay} from '../../utils/musicControl';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {StatusBar} from 'expo-status-bar';
 import {useNavigation} from '@react-navigation/native';
 import nodejs from 'nodejs-mobile-react-native';
-import PlayListCover from '../components/PlayListCover';
+import PlayListCover from '../../components/PlayListCover';
 interface artistType {
   id: string;
   name: string;
@@ -42,7 +42,6 @@ const ArtistScreens = ({route}: any) => {
 
   useEffect(() => {
     setLoading(true);
-
     nodejs.channel.addListener('getArtist', (data: any) => {
       setDataDetailArtist(data);
       setLoading(false);
@@ -121,7 +120,7 @@ const ArtistScreens = ({route}: any) => {
           </View>
           {dataDetailArtist?.sections
             .filter((type: any) => type.sectionId === 'aSongs')[0]
-            .items.slice(0, 5)
+            ?.items.slice(0, 5)
             .map((item: any) => (
               <TouchableOpacity
                 key={item.encodeId}
@@ -149,11 +148,11 @@ const ArtistScreens = ({route}: any) => {
             ))}
           <View className="w-full justify-center items-center my-2">
             <TouchableOpacity
-              className="w-40 bg-[#DA291C] p-2 rounded-md items-center"
+              className="w-32 p-2 rounded-full items-center border-[#DA291C] border"
               onPress={() => {
                 navigation.push('ArtistsSong', {
                   id: dataDetailArtist?.id,
-                  name: dataDetailArtist?.name,
+                  name: dataDetailArtist?.alias,
                 });
               }}>
               <Text className="text-white text-sm">Xem thêm</Text>
@@ -197,7 +196,7 @@ const ArtistScreens = ({route}: any) => {
             contentContainerStyle={{paddingHorizontal: 16, gap: 10}}>
             {dataDetailArtist?.sections
               .filter((type: any) => type.sectionId === 'aSingle')[0]
-              .items.map((item: any, index: number) => (
+              ?.items.map((item: any, index: number) => (
                 <PlayListCover
                   key={index}
                   encodeId={item.encodeId}
@@ -219,12 +218,12 @@ const ArtistScreens = ({route}: any) => {
             contentContainerStyle={{paddingHorizontal: 16, gap: 10}}>
             {dataDetailArtist?.sections
               .filter((type: any) => type.sectionId === 'aReArtist')[0]
-              .items.map((item: any, index: number) => (
+              ?.items.map((item: any, index: number) => (
                 <TouchableOpacity
                   key={index}
                   activeOpacity={1}
                   onPress={() => {
-                    navigation.push('Artists', {
+                    navigation.navigate('Artists', {
                       name: item.alias,
                     });
                   }}>

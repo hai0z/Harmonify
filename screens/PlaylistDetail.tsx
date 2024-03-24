@@ -38,6 +38,7 @@ const PlaylistDetail = ({route}: {route: any}) => {
   const navigation = useNavigation<any>();
 
   useEffect(() => {
+    setLoading(true);
     nodejs.channel.addListener('getDetailPlaylist', (data: any) => {
       setPlaylistData(data);
       setLoading(false);
@@ -162,10 +163,10 @@ const PlaylistDetail = ({route}: {route: any}) => {
                 </Animated.Text>
                 <View className="flex flex-col gap-4 mt-8">
                   <Text className="text-white">
-                    {playlistData.artistsNames}
+                    {playlistData?.artistsNames}
                   </Text>
                   <View className="flex flex-row">
-                    {playlistData.artists.map((item: any) => (
+                    {playlistData?.artists?.map((item: any) => (
                       <TouchableOpacity
                         onPress={() =>
                           navigation.navigate('Artists', {
@@ -190,7 +191,7 @@ const PlaylistDetail = ({route}: {route: any}) => {
                   <View className="flex flex-row justify-between">
                     <View className="flex flex-row items-center">
                       <Text className="text-white">
-                        {playlistData.song.total} bài hát{' '}
+                        {playlistData?.song.total} bài hát{' '}
                       </Text>
                       <Text className="text-white ml-4">
                         <AntDesign name="heart" size={20} color="#DA291C" />{' '}

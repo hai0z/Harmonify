@@ -1,0 +1,8 @@
+export const COLOR = {
+  PRIMARY: '#DA291C',
+  SECONDARY: '#FBE122',
+  WHITE: '#FFFFFF',
+  BACKGROUND: '#121212',
+  GREY: '#A9A9A9',
+  LIGHT_GREY: '#D3D3D3',
+}

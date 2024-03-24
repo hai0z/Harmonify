@@ -2,19 +2,15 @@ import {useEffect} from 'react';
 import TrackPlayer, {
   AppKilledPlaybackBehavior,
   Capability,
-  Event,
   RepeatMode,
 } from 'react-native-track-player';
 import Navigation from './routes/';
 import PlayerProvider from './context/PlayerProvider';
-import {NextTrack} from './utils/musicControl';
-import SplashScreen from 'react-native-splash-screen';
+
+import AuthProvider from './context/AuthProvider';
+
 export default function App() {
-  TrackPlayer.addEventListener(Event.PlaybackQueueEnded, () => {
-    NextTrack();
-  });
   useEffect(() => {
-    SplashScreen.hide();
     const setupPlayer = async () => {
       try {
         await TrackPlayer.setupPlayer();
@@ -44,7 +40,7 @@ export default function App() {
           android: {
             appKilledPlaybackBehavior:
               AppKilledPlaybackBehavior.StopPlaybackAndRemoveNotification,
-            stopForegroundGracePeriod: 3000,
+            alwaysPauseOnInterruption: true,
           },
         });
       } catch (e) {}
@@ -53,8 +49,10 @@ export default function App() {
   }, []);
 
   return (
-    <PlayerProvider>
-      <Navigation />
-    </PlayerProvider>
+    <AuthProvider>
+      <PlayerProvider>
+        <Navigation />
+      </PlayerProvider>
+    </AuthProvider>
   );
 }

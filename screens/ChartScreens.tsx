@@ -209,7 +209,7 @@ const ChartHeader = ({data, handlePlaySong}: any) => {
               style={{width: SCREEN_WIDTH, height: SCREEN_WIDTH * 1.2}}>
               <Animated.Image
                 className="rounded-xl"
-                src={getThumbnail(item.thumbnailM)}
+                src={getThumbnail(item.thumbnailM) || ''}
                 style={{
                   width: SCREEN_WIDTH * 0.6,
                   height: SCREEN_WIDTH * 0.6,
@@ -257,7 +257,7 @@ const ChartItem = React.memo(({item, index, total, onPlay}: any) => {
       className="flex flex-row  items-center mx-4 my-2"
       onPress={() => onPlay(item)}>
       <Text className="text-[#FBE122] font-bold mr-4 text-2xl">
-        {index + 3}
+        {index + 3 < 10 ? `0${index + 3}` : index + 3}
       </Text>
       <Image
         source={{uri: item?.thumbnail}}

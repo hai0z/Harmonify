@@ -12,12 +12,14 @@ import {
 import {usePlayerStore} from '../../store/playerStore';
 import getThumbnail from '../../utils/getThumnail';
 import {handlePlay} from '../../utils/musicControl';
+import TrackPlayer, {useActiveTrack} from 'react-native-track-player';
 
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('screen');
 
 const ImageSlider = () => {
-  const {playList, currentSong} = usePlayerStore(state => state);
+  const {playList} = usePlayerStore(state => state);
 
+  const currentSong = useActiveTrack();
   const currentSongIndex = playList.findIndex(
     (s: any) => s.encodeId == currentSong?.id,
   );
@@ -34,7 +36,13 @@ const ImageSlider = () => {
       ),
       playList.length,
     );
-    pageNum - 1 != currentSongIndex && handlePlay(playList[pageNum - 1]);
+    if (pageNum - 1 != currentSongIndex) {
+      if (pageNum - 1 < currentSongIndex) {
+        TrackPlayer.skipToPrevious();
+      } else {
+        TrackPlayer.skipToNext();
+      }
+    }
   };
 
   useEffect(() => {
@@ -68,7 +76,7 @@ const ImageSlider = () => {
               alignItems: 'center',
             }}>
             <Image
-              src={getThumbnail(item.thumbnailM)}
+              src={getThumbnail(item.thumbnailM) || ''}
               className="rounded-md z-20"
               style={{
                 height: SCREEN_WIDTH * 0.85,

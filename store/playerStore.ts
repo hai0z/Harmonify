@@ -4,11 +4,7 @@ interface CurrentSong {
   id: string,
   url: string,
   title: string,
-  artist: {
-    name: string,
-    id: string,
-    alias: string
-  },
+  artist: string;
   artwork: string,
   duration: number,
 }

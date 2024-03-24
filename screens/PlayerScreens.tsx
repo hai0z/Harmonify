@@ -18,13 +18,16 @@ import Lyric from '../components/Player/Lyric';
 import TextTicker from 'react-native-text-ticker';
 import ImageSlider from '../components/Player/ImageSlider';
 import ArtistCard from '../components/Player/ArtistCard';
+import SongInfoCard from '../components/Player/SongInfoCard';
+import {useActiveTrack} from 'react-native-track-player';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 const PlayerScreens = () => {
-  const {currentSong, playList} = usePlayerStore(state => state);
+  const {playList} = usePlayerStore(state => state);
   const navigation = useNavigation<any>();
+  const track = useActiveTrack();
   return (
     <ScrollView
       className="bg-[#121212]"
@@ -44,7 +47,7 @@ const PlayerScreens = () => {
         />
 
         <Image
-          source={{uri: currentSong?.artwork}}
+          source={{uri: track?.artwork}}
           blurRadius={1000}
           style={[
             StyleSheet.absoluteFillObject,
@@ -77,7 +80,7 @@ const PlayerScreens = () => {
                 alignItems: 'center',
               }}>
               <Image
-                source={{uri: currentSong?.artwork!}}
+                source={{uri: track?.artwork!}}
                 className="rounded-md z-20"
                 style={{
                   height: SCREEN_WIDTH * 0.85,
@@ -100,11 +103,9 @@ const PlayerScreens = () => {
               bounce
               repeatSpacer={50}
               marqueeDelay={3000}>
-              {currentSong?.title}
+              {track?.title}
             </TextTicker>
-            <Text className="text-zinc-500 font-semibold">
-              {currentSong?.artist?.name}
-            </Text>
+            <Text className="text-zinc-500 font-semibold">{track?.artist}</Text>
           </View>
         </View>
       </View>
@@ -114,6 +115,7 @@ const PlayerScreens = () => {
         </View>
         <Lyric />
         <ArtistCard />
+        <SongInfoCard />
       </View>
     </ScrollView>
   );

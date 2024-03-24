@@ -15,6 +15,10 @@ rn_bridge.channel.on('getSong', async id => {
   const data = await ZingMp3.getSong(id);
   rn_bridge.channel.post('getSong', data.data);
 });
+rn_bridge.channel.on('getSongInfo', async id => {
+  const data = await ZingMp3.getInfoSong(id);
+  rn_bridge.channel.post('getSongInfo', data.data);
+});
 rn_bridge.channel.on('initSong', async id => {
   const data = await ZingMp3.getSong(id);
   rn_bridge.channel.post('initSong', data.data);
