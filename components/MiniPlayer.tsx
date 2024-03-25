@@ -28,7 +28,6 @@ const MiniPlayer = () => {
 
   const keyboardVisible = useKeyBoardStatus();
 
-  const {currentSong} = usePlayerStore(state => state);
   const track = useActiveTrack();
 
   const [color] = usePlayerStore(state => [state.color]);
@@ -44,10 +43,7 @@ const MiniPlayer = () => {
       await TrackPlayer.pause();
     }
   }, []);
-
-  console.log('track', track);
   if (track === undefined) return null;
-
   return (
     !keyboardVisible && (
       <View
@@ -60,7 +56,7 @@ const MiniPlayer = () => {
           onPress={() => navigation.navigate('Player')}
           activeOpacity={1}
           style={{
-            backgroundColor: useDarkColor(color.dominant) || '#282828',
+            backgroundColor: useDarkColor(color.dominant),
             flexDirection: 'column',
             borderRadius: 6,
             justifyContent: 'center',
@@ -118,8 +114,7 @@ const MiniPlayer = () => {
                 justifyContent: 'space-between',
                 gap: 16,
               }}>
-              <TouchableOpacity
-                onPress={() => addToLikedList(currentSong, currentSong, [])}>
+              <TouchableOpacity>
                 <AntDesign name={'hearto'} size={24} color="#ffffff" />
               </TouchableOpacity>
               <TouchableOpacity

@@ -17,11 +17,10 @@ import {getDetailPlaylist} from '../apis/detailPlaylist';
 import {LinearGradient} from 'react-native-linear-gradient';
 import getThumbnail from '../utils/getThumnail';
 import {FlashList} from '@shopify/flash-list';
-import {usePlayerStore} from '../store/playerStore';
 import {handlePlay} from '../utils/musicControl';
-import {useNavigation, useFocusEffect} from '@react-navigation/native';
-import TrackPlayer from 'react-native-track-player';
+import {useNavigation} from '@react-navigation/native';
 import nodejs from 'nodejs-mobile-react-native';
+import {useActiveTrack} from 'react-native-track-player';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const PlaylistDetail = ({route}: {route: any}) => {
@@ -29,13 +28,13 @@ const PlaylistDetail = ({route}: {route: any}) => {
 
   const {data} = route.params;
 
-  const {currentSong} = usePlayerStore(state => state);
-
   const [loading, setLoading] = React.useState(true);
 
   const scrollY = React.useRef(new Animated.Value(0)).current;
 
   const navigation = useNavigation<any>();
+
+  const currentSong = useActiveTrack();
 
   useEffect(() => {
     setLoading(true);
@@ -86,7 +85,10 @@ const PlaylistDetail = ({route}: {route: any}) => {
   );
 
   const handlePlaySong = async (song: any) => {
-    handlePlay(song, playlistData?.song?.items || []);
+    handlePlay(song, {
+      id: data.playListId,
+      items: playlistData?.song?.items,
+    });
   };
   if (loading)
     return (

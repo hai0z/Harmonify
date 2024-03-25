@@ -20,6 +20,7 @@ import ImageSlider from '../components/Player/ImageSlider';
 import ArtistCard from '../components/Player/ArtistCard';
 import SongInfoCard from '../components/Player/SongInfoCard';
 import {useActiveTrack} from 'react-native-track-player';
+import {DEFAULT_IMG} from '../constants';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
@@ -47,7 +48,7 @@ const PlayerScreens = () => {
         />
 
         <Image
-          source={{uri: track?.artwork}}
+          source={{uri: track?.artwork || DEFAULT_IMG}}
           blurRadius={1000}
           style={[
             StyleSheet.absoluteFillObject,
@@ -64,7 +65,7 @@ const PlayerScreens = () => {
           <Text className="text-white font-bold">Đang phát từ thư viện</Text>
           <Entypo name="dots-three-vertical" size={20} color="white" />
         </View>
-        {playList.length > 0 ? (
+        {playList.items.length > 0 ? (
           <ImageSlider />
         ) : (
           <View
@@ -80,7 +81,7 @@ const PlayerScreens = () => {
                 alignItems: 'center',
               }}>
               <Image
-                source={{uri: track?.artwork!}}
+                source={{uri: track?.artwork || DEFAULT_IMG}}
                 className="rounded-md z-20"
                 style={{
                   height: SCREEN_WIDTH * 0.85,

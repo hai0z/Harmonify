@@ -8,9 +8,13 @@ import {useActiveTrack} from 'react-native-track-player';
 const SongInfoCard = () => {
   const {color} = usePlayerStore(state => state);
   const currentSong = useActiveTrack();
+
   const bgColor = color.vibrant === '#0098DB' ? color.average : color.vibrant;
+
   const [data, setData] = useState<any>(null);
+
   const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     setLoading(true);
     nodejs.channel.addListener('getSongInfo', (data: any) => {
@@ -19,7 +23,8 @@ const SongInfoCard = () => {
     });
     nodejs.channel.post('getSongInfo', currentSong?.id);
   }, [currentSong?.id]);
-  if (loading) {
+
+  if (loading || currentSong === undefined) {
     return null;
   }
   return (

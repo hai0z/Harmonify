@@ -5,7 +5,7 @@ import {FlashList} from '@shopify/flash-list';
 import useSyncLyric from '../hooks/useSyncLyric';
 import {useNavigation} from '@react-navigation/native';
 import Entypo from 'react-native-vector-icons/Entypo';
-import TrackPlayer from 'react-native-track-player';
+import TrackPlayer, {useActiveTrack} from 'react-native-track-player';
 import TrackSlider from '../components/Player/Control/TrackSlider';
 import PlayButton from '../components/Player/Control/PlayButton';
 import {LinearGradient} from 'react-native-linear-gradient';
@@ -13,9 +13,10 @@ const OFFSET = 3;
 const DEFAULT_LINE = -1;
 const LyricScreen = ({route}: {route: any}) => {
   const {lyrics} = route.params;
-  let {color: bgColor, currentSong} = usePlayerStore(state => state);
+  let {color: bgColor} = usePlayerStore(state => state);
   const {currentLine} = useSyncLyric(lyrics);
 
+  const currentSong = useActiveTrack();
   const navigation = useNavigation<any>();
 
   useEffect(() => {
@@ -43,9 +44,7 @@ const LyricScreen = ({route}: {route: any}) => {
         </TouchableOpacity>
         <View className="flex-1 flex justify-center items-center">
           <Text className="text-white font-bold">{currentSong?.title}</Text>
-          <Text className="text-white font-bold">
-            {currentSong?.artist?.name}
-          </Text>
+          <Text className="text-white font-bold">{currentSong?.artist}</Text>
         </View>
       </View>
       <LinearGradient

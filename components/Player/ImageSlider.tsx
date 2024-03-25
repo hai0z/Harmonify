@@ -11,7 +11,6 @@ import {
 } from 'react-native';
 import {usePlayerStore} from '../../store/playerStore';
 import getThumbnail from '../../utils/getThumnail';
-import {handlePlay} from '../../utils/musicControl';
 import TrackPlayer, {useActiveTrack} from 'react-native-track-player';
 
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('screen');
@@ -20,7 +19,7 @@ const ImageSlider = () => {
   const {playList} = usePlayerStore(state => state);
 
   const currentSong = useActiveTrack();
-  const currentSongIndex = playList.findIndex(
+  const currentSongIndex = playList.items.findIndex(
     (s: any) => s.encodeId == currentSong?.id,
   );
 
@@ -34,7 +33,7 @@ const ImageSlider = () => {
         Math.floor(e.nativeEvent.contentOffset.x / SCREEN_WIDTH + 0.5) + 1,
         0,
       ),
-      playList.length,
+      playList.items.length,
     );
     if (pageNum - 1 != currentSongIndex) {
       if (pageNum - 1 < currentSongIndex) {
@@ -66,7 +65,7 @@ const ImageSlider = () => {
         initialScrollIndex={currentSongIndex}
         onMomentumScrollEnd={swpipeToChangeSong}
         estimatedItemSize={SCREEN_WIDTH}
-        data={playList}
+        data={playList.items}
         renderItem={({item, index}: any) => (
           <View
             key={index}
@@ -76,7 +75,7 @@ const ImageSlider = () => {
               alignItems: 'center',
             }}>
             <Image
-              src={getThumbnail(item.thumbnailM) || ''}
+              src={getThumbnail(item.thumbnailM)}
               className="rounded-md z-20"
               style={{
                 height: SCREEN_WIDTH * 0.85,

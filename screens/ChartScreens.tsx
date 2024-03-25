@@ -57,7 +57,10 @@ const ChartScreens = () => {
   }, []);
 
   const handlePlaySong = (song: any) => {
-    handlePlay(song, data);
+    handlePlay(song, {
+      id: 'chart',
+      items: data,
+    });
   };
 
   const navigation = useNavigation<any>();

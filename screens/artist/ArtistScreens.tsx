@@ -10,10 +10,7 @@ import {
   ScrollView,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {FlashList} from '@shopify/flash-list';
-import {getArtist, getArtistSong} from '../../apis/artists';
-import {LinearGradient} from 'react-native-linear-gradient';
-import {usePlayerStore} from '../../store/playerStore';
+
 import {handlePlay} from '../../utils/musicControl';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {StatusBar} from 'expo-status-bar';
@@ -126,12 +123,12 @@ const ArtistScreens = ({route}: any) => {
                 key={item.encodeId}
                 className="flex-row items-center px-4 mb-2"
                 onPress={() => {
-                  handlePlay(
-                    item,
-                    dataDetailArtist?.sections.filter(
+                  handlePlay(item, {
+                    id: name,
+                    items: dataDetailArtist?.sections.filter(
                       (type: any) => type.sectionId === 'aSongs',
                     )[0].items,
-                  );
+                  });
                 }}>
                 <Image
                   source={{uri: item.thumbnail}}

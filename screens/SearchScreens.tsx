@@ -10,7 +10,6 @@ import {
 import React, {useEffect, useState} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useDebounce} from '../hooks/useDebounce';
-import {getSearch} from '../apis/search';
 import getThumbnail from '../utils/getThumnail';
 import {usePlayerStore} from '../store/playerStore';
 import {handlePlay} from '../utils/musicControl';
@@ -94,8 +93,8 @@ const SearchScreens = () => {
             key={index}
             className="flex flex-row items-center mb-3 gap-2"
             onPress={() => {
-              setPlayList([]);
-              handlePlay(e);
+              setPlayList({id: '', items: []});
+              handlePlay(e, null);
             }}>
             <Image
               source={{uri: getThumbnail(e.thumbnail) || ''}}

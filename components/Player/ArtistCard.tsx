@@ -6,44 +6,41 @@ import {usePlayerStore} from '../../store/playerStore';
 import {useNavigation} from '@react-navigation/native';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {useActiveTrack} from 'react-native-track-player';
+import {DEFAULT_IMG} from '../../constants';
 const ArtistCard = () => {
   const {color} = usePlayerStore(state => state);
 
   const currentSong = useActiveTrack();
 
   const [data, setData] = useState<any>(null);
-  const [songInfo, setSongInfo] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    nodejs.channel.addListener('getArtist', (data: any) => {
-      setData(data);
-      setLoading(false);
-    });
-    nodejs.channel.addListener('getSongInfo', (data: any) => {
-      setSongInfo(data);
-      nodejs.channel.post('getArtist', data?.artists[0]?.alias);
-      setLoading(false);
-    });
-    nodejs.channel.post('getSongInfo', currentSong?.id);
-  }, []);
 
-  useEffect(() => {
-    nodejs.channel.post('getInfoSong', currentSong?.id);
-  }, [currentSong?.id]);
+  const [songInfo, setSongInfo] = useState<any>(null);
 
   const navigation = useNavigation<any>();
 
   const bgColor = color.vibrant === '#0098DB' ? color.average : color.vibrant;
-  if (loading) {
-    return null;
-  }
+
+  useEffect(() => {
+    nodejs.channel.addListener('getArtist', (data: any) => {
+      setData(data);
+    });
+    nodejs.channel.addListener('getSongInfo', (data: any) => {
+      setSongInfo(data);
+      nodejs.channel.post('getArtist', data?.artists?.[0]?.alias);
+    });
+    nodejs.channel.post('getSongInfo', currentSong?.id);
+  }, []);
+  useEffect(() => {
+    setData(null);
+    nodejs.channel.post('getInfoSong', currentSong?.id);
+  }, [currentSong?.id]);
+
   return (
     <TouchableOpacity
       activeOpacity={1}
       className="w-full rounded-2xl h-[340px] mt-8"
       onPress={() =>
         navigation.navigate('Artists', {
-          id: songInfo?.artists?.[0]?.id,
           name: songInfo?.artists?.[0]?.alias,
         })
       }>
@@ -51,8 +48,7 @@ const ArtistCard = () => {
       <Image
         style={[StyleSheet.absoluteFillObject]}
         source={{
-          uri:
-            getThumbnail(data?.thumbnail) || 'https://picsum.photos/1080/1920',
+          uri: getThumbnail(data?.thumbnail) || DEFAULT_IMG,
         }}
         className="w-full h-full rounded-2xl"
       />

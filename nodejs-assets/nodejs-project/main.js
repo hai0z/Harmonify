@@ -11,9 +11,12 @@ rn_bridge.channel.on('home', async () => {
     data.data.items.filter(e => e.sectionType === 'playlist'),
   );
 });
-rn_bridge.channel.on('getSong', async id => {
-  const data = await ZingMp3.getSong(id);
-  rn_bridge.channel.post('getSong', data.data);
+rn_bridge.channel.on('getSong', async track => {
+  const data = await ZingMp3.getSong(track.id);
+  rn_bridge.channel.post('getSong', {
+    data: data.data,
+    track: track,
+  });
 });
 rn_bridge.channel.on('getSongInfo', async id => {
   const data = await ZingMp3.getInfoSong(id);

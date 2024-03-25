@@ -14,7 +14,7 @@ export default function App() {
     const setupPlayer = async () => {
       try {
         await TrackPlayer.setupPlayer();
-        await TrackPlayer.setRepeatMode(RepeatMode.Off);
+        await TrackPlayer.setRepeatMode(RepeatMode.Queue);
         await TrackPlayer.setVolume(1);
         await TrackPlayer.updateOptions({
           capabilities: [

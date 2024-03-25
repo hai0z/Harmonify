@@ -161,7 +161,12 @@ const ArtistSong = ({route}: any) => {
               activeOpacity={0.8}
               style={{paddingBottom: index === data.length - 1 ? 200 : 0}}
               className="flex flex-row  items-center mx-4 my-2"
-              onPress={() => handlePlay(item, data)}>
+              onPress={() =>
+                handlePlay(item, {
+                  id: id,
+                  items: data,
+                })
+              }>
               <View className="w-14 h-14 rounded-md justify-center items-center">
                 <Image
                   src={getThumbnail(item?.thumbnailM) || ''}
