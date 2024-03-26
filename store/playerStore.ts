@@ -21,14 +21,10 @@ interface PlayerStore {
   playList: IPlaylist,
   setColor: (color: Partial<Color>) => void,
   setPlayList: (playlist: IPlaylist) => void,
-  lyrics: any
+  lyrics: any[],
   setLyrics: (lyrics: any) => void
-  currentPlaylistId: string,
-  setCurrentPlaylistId: (id: string) => void,
   isLoadingTrack: boolean,
   setisLoadingTrack: (isLoadingTrack: boolean) => void,
-  currentSong: Track,
-  setCurrentSong: (song: Track) => void
 }
 export const usePlayerStore = create<PlayerStore>((set) => ({
   playList: {} as IPlaylist,
@@ -37,11 +33,7 @@ export const usePlayerStore = create<PlayerStore>((set) => ({
   setPlayList: (playlist: IPlaylist) => set({ playList: playlist }),
   lyrics: [],
   setLyrics: (lyrics: any) => set({ lyrics }),
-  currentPlaylistId: "",
-  setCurrentPlaylistId: (id: string) => set({ currentPlaylistId: id }),
   isLoadingTrack: false,
   setisLoadingTrack: (isLoadingTrack: boolean) => set({ isLoadingTrack }),
-  currentSong: {} as Track,
-  setCurrentSong: (song: Track) => set({ currentSong: song }),
 }))
 

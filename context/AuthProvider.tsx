@@ -1,6 +1,5 @@
 import React, {useEffect} from 'react';
 import {auth} from '../firebase/config';
-import {View, Text} from 'react-native';
 interface AuthContextType {
   isLogin: boolean;
   setIsLogin: React.Dispatch<React.SetStateAction<boolean>>;
@@ -15,7 +14,6 @@ const AuthProvider = ({children}: {children: React.ReactNode}) => {
   const [loading, setLoading] = React.useState(true);
   useEffect(() => {
     const unsubcribe = auth.onAuthStateChanged(user => {
-      console.log(user);
       if (user) {
         setIsLogin(true);
         setLoading(false);

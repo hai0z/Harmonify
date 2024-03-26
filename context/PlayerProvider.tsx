@@ -13,8 +13,9 @@ nodejs.channel.addListener('getLyric', async data => {
 });
 
 const PlayerProvider = ({children}: {children: React.ReactNode}) => {
-  const {setLyrics, setColor, playList, setPlayList, setCurrentSong} =
-    usePlayerStore(state => state);
+  const {setLyrics, setColor, playList, setPlayList} = usePlayerStore(
+    state => state,
+  );
 
   const currentSong = useActiveTrack();
 

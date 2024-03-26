@@ -54,10 +54,8 @@ const handlePlay = async (song: any, playlist: IPlaylist | null) => {
         artist: song.artistsNames,
         artwork: getThumbnail(song.thumbnail),
         duration: song.duration,
-        url: "null",
+        url: NULL_URL
       })
-
-
     }
     await TrackPlayer.play();
   } catch (error) {

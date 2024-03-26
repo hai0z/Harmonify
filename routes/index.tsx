@@ -175,6 +175,7 @@ const HomeTab = () => {
     </Tab.Navigator>
   );
 };
+
 function App() {
   const {isLogin} = useAuth();
   useEffect(() => {
