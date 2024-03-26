@@ -9,6 +9,7 @@ import TrackPlayer, {useActiveTrack} from 'react-native-track-player';
 import TrackSlider from '../components/Player/Control/TrackSlider';
 import PlayButton from '../components/Player/Control/PlayButton';
 import {LinearGradient} from 'react-native-linear-gradient';
+import tinycolor from 'tinycolor2';
 const OFFSET = 3;
 const DEFAULT_LINE = -1;
 const LyricScreen = ({route}: {route: any}) => {
@@ -29,13 +30,18 @@ const LyricScreen = ({route}: {route: any}) => {
     });
   }, [currentLine]);
 
-  bgColor = bgColor.vibrant === '#0098DB' ? bgColor.average : bgColor.vibrant;
+  const bg =
+    bgColor.vibrant === '#0098DB'
+      ? tinycolor(bgColor.average).isDark()
+        ? tinycolor(bgColor.average).lighten(20).toString()
+        : bgColor.average
+      : bgColor.vibrant;
 
   const lyricsRef = React.useRef<FlashList<any>>(null);
   return (
     <View
       style={{
-        backgroundColor: bgColor,
+        backgroundColor: bg,
       }}
       className="pt-[35px] h-full w-full pb-10">
       <View className="flex flex-row items-center justify-between px-6 py-6">
@@ -48,7 +54,7 @@ const LyricScreen = ({route}: {route: any}) => {
         </View>
       </View>
       <LinearGradient
-        colors={[bgColor, bgColor, 'transparent']}
+        colors={[bg!, bg!, 'transparent']}
         className="absolute top-24 left-0 right-0 bottom-0 h-16 z-[2]"
       />
 
@@ -81,7 +87,7 @@ const LyricScreen = ({route}: {route: any}) => {
           keyExtractor={(_, index) => index.toString()}
         />
         <LinearGradient
-          colors={['transparent', bgColor, bgColor]}
+          colors={['transparent', bg!, bg!]}
           className="absolute bottom-0 left-0 right-0 h-8 z-[2]"
         />
       </View>

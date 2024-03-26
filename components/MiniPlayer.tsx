@@ -28,13 +28,13 @@ const MiniPlayer = () => {
 
   const keyboardVisible = useKeyBoardStatus();
 
-  const track = useActiveTrack();
-
-  const [color] = usePlayerStore(state => [state.color]);
+  const {color} = usePlayerStore(state => state);
 
   const playerState = usePlaybackState();
 
   const progress = useProgress(1000);
+
+  const track = useActiveTrack();
 
   const togglePlay = useCallback(async (state: State | undefined) => {
     if (state !== State.Playing) {
@@ -43,7 +43,13 @@ const MiniPlayer = () => {
       await TrackPlayer.pause();
     }
   }, []);
-  if (track === undefined) return null;
+
+  if (
+    track === undefined ||
+    track === null ||
+    usePlayerStore.getState().isLoadingTrack
+  )
+    return null;
   return (
     !keyboardVisible && (
       <View
@@ -56,7 +62,7 @@ const MiniPlayer = () => {
           onPress={() => navigation.navigate('Player')}
           activeOpacity={1}
           style={{
-            backgroundColor: useDarkColor(color.dominant),
+            backgroundColor: useDarkColor(color.dominant!),
             flexDirection: 'column',
             borderRadius: 6,
             justifyContent: 'center',

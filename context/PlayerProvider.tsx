@@ -1,62 +1,30 @@
 import React, {useEffect} from 'react';
 import {usePlayerStore} from '../store/playerStore';
-import {getLyric} from '../apis/lyric';
 import {getColors} from 'react-native-image-colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import TrackPlayer, {Event, useActiveTrack} from 'react-native-track-player';
+import TrackPlayer, {useActiveTrack} from 'react-native-track-player';
 import getThumbnail from '../utils/getThumnail';
-import {DEFAULT_IMG} from '../constants';
+import nodejs from 'nodejs-mobile-react-native';
+import {NULL_URL} from '../constants';
 const PlayerContext = React.createContext({});
 
+nodejs.channel.addListener('getLyric', async data => {
+  usePlayerStore.getState().setLyrics(data);
+});
+
 const PlayerProvider = ({children}: {children: React.ReactNode}) => {
-  const {setLyrics, setColor, playList, setPlayList} = usePlayerStore(
-    state => state,
-  );
+  const {setLyrics, setColor, playList, setPlayList, setCurrentSong} =
+    usePlayerStore(state => state);
 
   const currentSong = useActiveTrack();
 
   const getSongColors = async () => {
-    if (currentSong !== undefined) {
-      getColors(currentSong.artwork || DEFAULT_IMG, {
+    if (currentSong?.artwork !== undefined) {
+      getColors(currentSong.artwork, {
         fallback: '#0098db',
         quality: 'lowest',
         pixelSpacing: 1000,
       }).then(setColor);
-    }
-  };
-
-  const getSongLyric = async () => {
-    if (currentSong !== undefined) {
-      const dataLyric: any = await getLyric(currentSong?.id as string);
-      let customLyr: {startTime: number; endTime: number; data: string}[] = [];
-      if (dataLyric) {
-        dataLyric?.sentences &&
-          dataLyric.sentences.forEach((e: {words: []}, _: number) => {
-            let lineLyric: string = '';
-            let sTime: number = 0;
-            let eTime: number = 0;
-            e.words.forEach(
-              (
-                element: {data: string; startTime: number; endTime: number},
-                index: number,
-              ) => {
-                if (index === 0) {
-                  sTime = element.startTime;
-                }
-                if (index === e.words.length - 1) {
-                  eTime = element.endTime;
-                }
-                lineLyric = lineLyric + element.data + ' ';
-              },
-            );
-            customLyr.push({
-              startTime: sTime,
-              endTime: eTime,
-              data: lineLyric,
-            });
-          });
-        setLyrics(customLyr);
-      }
     }
   };
 
@@ -67,33 +35,35 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
     storedSong = JSON.parse(storedSong as string);
     const dataPlaylist = data as any;
     const currentSong = storedSong as any;
-    if (data != null && data.length > 0) {
+    if (dataPlaylist.items.length > 0 && dataPlaylist) {
       await TrackPlayer.reset();
       setPlayList(dataPlaylist);
       await TrackPlayer.add(
         dataPlaylist.items.map((item: any) => {
           return {
             id: item?.encodeId,
-            url: 'null',
+            url: NULL_URL,
             title: item.title,
             artist: item.artistsNames,
-            artwork: getThumbnail(item.thumbnail) || '',
+            artwork: getThumbnail(item.thumbnail),
             duration: item.duration,
           };
         }),
       );
-      const index = dataPlaylist.findIndex(
+      const index = dataPlaylist.items.findIndex(
         (item: any) => item?.encodeId === currentSong?.id,
       );
       await TrackPlayer.skip(index === -1 ? 0 : index);
+      getSongColors();
     } else {
       if (currentSong != null) {
+        getSongColors();
         await TrackPlayer.add({
           id: currentSong?.id,
-          url: 'null',
+          url: NULL_URL,
           title: currentSong.title,
           artist: currentSong.artist,
-          artwork: getThumbnail(currentSong.artwork) || '',
+          artwork: getThumbnail(currentSong.artwork),
           duration: currentSong.duration,
         });
       }
@@ -107,8 +77,7 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
   useEffect(() => {
     (async () => {
       try {
-        if (playList)
-          await AsyncStorage.setItem('playlist', JSON.stringify(playList));
+        await AsyncStorage.setItem('playlist', JSON.stringify(playList));
       } catch (e) {
         console.log(e);
       }
@@ -118,12 +87,7 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
   useEffect(() => {
     (async () => {
       try {
-        if (currentSong) {
-          await AsyncStorage.setItem(
-            'currentSong',
-            JSON.stringify(currentSong),
-          );
-        }
+        await AsyncStorage.setItem('currentSong', JSON.stringify(currentSong));
       } catch (e) {
         console.log(e);
       }
@@ -136,7 +100,7 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
 
   useEffect(() => {
     setLyrics([]);
-    getSongLyric();
+    nodejs.channel.post('getLyric', currentSong?.id);
   }, [currentSong?.id]);
 
   return <PlayerContext.Provider value={{}}>{children}</PlayerContext.Provider>;

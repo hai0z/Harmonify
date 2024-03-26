@@ -29,7 +29,12 @@ const Lyric = () => {
 
   const lyricsRef = React.useRef<FlashList<any>>(null);
 
-  bgColor = bgColor.vibrant === '#0098DB' ? bgColor.average : bgColor.vibrant;
+  const bg =
+    bgColor.vibrant === '#0098DB'
+      ? tinycolor(bgColor.average).isDark()
+        ? tinycolor(bgColor.average).lighten(20).toString()
+        : bgColor.average
+      : bgColor.vibrant;
 
   return (
     lyrics?.length > 0 && (
@@ -38,11 +43,11 @@ const Lyric = () => {
         activeOpacity={1}
         className="rounded-2xl mt-8"
         style={{
-          backgroundColor: bgColor,
+          backgroundColor: bg,
           height: 360,
         }}>
         <LinearGradient
-          colors={[bgColor, bgColor, 'transparent']}
+          colors={[bg!, bg!, 'transparent']}
           className="absolute top-0 left-0 right-0 bottom-0 h-10 z-[2] rounded-t-2xl"
         />
         <View className="px-4 py-4">
@@ -73,7 +78,7 @@ const Lyric = () => {
           />
         </View>
         <LinearGradient
-          colors={['transparent', bgColor]}
+          colors={['transparent', bg!]}
           className="absolute  left-0 right-0 bottom-0 h-20 z-[2] rounded-b-xl"
         />
       </TouchableOpacity>

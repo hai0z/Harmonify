@@ -5,12 +5,17 @@ import {getInfoSong} from '../../apis/song';
 import dayjs from 'dayjs';
 import nodejs from 'nodejs-mobile-react-native';
 import {useActiveTrack} from 'react-native-track-player';
+import tinycolor from 'tinycolor2';
 const SongInfoCard = () => {
-  const {color} = usePlayerStore(state => state);
+  const {color: bgColor} = usePlayerStore(state => state);
   const currentSong = useActiveTrack();
 
-  const bgColor = color.vibrant === '#0098DB' ? color.average : color.vibrant;
-
+  const bg =
+    bgColor.vibrant === '#0098DB'
+      ? tinycolor(bgColor.average).isDark()
+        ? tinycolor(bgColor.average).lighten(20).toString()
+        : bgColor.average
+      : bgColor.vibrant;
   const [data, setData] = useState<any>(null);
 
   const [loading, setLoading] = useState(true);
@@ -29,7 +34,7 @@ const SongInfoCard = () => {
   }
   return (
     <View
-      style={{backgroundColor: bgColor}}
+      style={{backgroundColor: bg}}
       className="w-full mt-8 rounded-2xl px-4 py-2 flex justify-between">
       <Text className="text-white font-bold text-[18px]">
         Phát hành lúc {dayjs.unix(data?.releaseDate).format('DD/MM/YYYY')}

@@ -44,7 +44,7 @@ const PlayerScreens = () => {
         }}>
         <LinearGradient
           colors={['transparent', '#121212']}
-          className="absolute bottom-0 h-80 left-0 right-0 z-10"
+          className="absolute bottom-0 h-full left-0 right-0 z-10"
         />
 
         <Image
@@ -65,7 +65,7 @@ const PlayerScreens = () => {
           <Text className="text-white font-bold">Đang phát từ thư viện</Text>
           <Entypo name="dots-three-vertical" size={20} color="white" />
         </View>
-        {playList.items.length > 0 ? (
+        {playList?.items?.length > 0 ? (
           <ImageSlider />
         ) : (
           <View

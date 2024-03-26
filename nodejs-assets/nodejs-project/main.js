@@ -3,6 +3,7 @@
 
 var rn_bridge = require('rn-bridge');
 const {ZingMp3} = require('zingmp3-api-full');
+const ColorThief = require('colorthief');
 
 rn_bridge.channel.on('home', async () => {
   const data = await ZingMp3.getHome();
@@ -43,6 +44,11 @@ rn_bridge.channel.on('getArtist', async name => {
   const data = await ZingMp3.getArtist(name);
   rn_bridge.channel.post('getArtist', data.data);
 });
+rn_bridge.channel.on('getArtistBySongId', async songId => {
+  const song = await ZingMp3.getInfoSong(songId);
+  const artist = await ZingMp3.getArtist(song.data?.artists[0]?.alias);
+  rn_bridge.channel.post('getArtistBySongId', artist.data);
+});
 rn_bridge.channel.on('charthome', async () => {
   const data = await ZingMp3.getChartHome();
   rn_bridge.channel.post('charthome', data.data);
@@ -73,4 +79,23 @@ rn_bridge.channel.on('getLyric', async songId => {
       });
     });
   rn_bridge.channel.post('getLyric', customLyr);
+});
+
+rn_bridge.channel.on('getColors', async imgSrc => {
+  const rgbToHex = (r, g, b) =>
+    '#' +
+    [r, g, b]
+      .map(x => {
+        const hex = x.toString(16);
+        return hex.length === 1 ? '0' + hex : hex;
+      })
+      .join('');
+  ColorThief.getPalette(imgSrc, 5)
+    .then(palete => {
+      const hexPalete = palete.map(e => rgbToHex(...e));
+      rn_bridge.channel.post('getColors', hexPalete);
+    })
+    .catch(e => {
+      rn_bridge.channel.post('getColors', e);
+    });
 });

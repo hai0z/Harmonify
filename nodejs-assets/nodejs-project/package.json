@@ -10,6 +10,7 @@
   "author": "janeasystems",
   "license": "",
   "dependencies": {
+    "colorthief": "^2.4.0",
     "zingmp3-api-full": "^1.0.14"
   }
 }
