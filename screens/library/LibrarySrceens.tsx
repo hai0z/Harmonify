@@ -1,29 +1,16 @@
 import {View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
-import React, {useEffect} from 'react';
+import React from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useNavigation} from '@react-navigation/native';
 import Entypo from 'react-native-vector-icons/Entypo';
 import LinearGradient from 'react-native-linear-gradient';
 import {usePlayerStore} from '../../store/playerStore';
-import {collection, onSnapshot, query} from 'firebase/firestore';
-import {auth, db} from '../../firebase/config';
 
 const LibrarySrceens = () => {
   const navigation = useNavigation<any>();
-  const {likedSongs, setLikedSongs} = usePlayerStore(state => state);
-  useEffect(() => {
-    const q = query(collection(db, `users/${auth.currentUser?.uid}/likedSong`));
-    const unsub = onSnapshot(q, querySnapshot => {
-      const songs = [] as any;
-      querySnapshot.forEach(doc => {
-        songs.push(doc.data());
-      });
-      setLikedSongs(songs);
-    });
-    return () => {
-      unsub();
-    };
-  }, []);
+
+  const likedSongs = usePlayerStore(state => state.likedSongs);
+
   return (
     <View style={styles.container}>
       <View style={styles.top}>

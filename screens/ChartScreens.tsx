@@ -56,12 +56,14 @@ const ChartScreens = () => {
     nodejs.channel.post('charthome');
   }, []);
 
-  const handlePlaySong = (song: any) => {
-    handlePlay(song, {
-      id: 'chart',
-      items: data,
-    });
-  };
+  const handlePlaySong = useCallback(
+    (song: any) =>
+      handlePlay(song, {
+        id: 'chart',
+        items: data,
+      }),
+    [],
+  );
 
   const navigation = useNavigation<any>();
   if (loading) {
@@ -71,7 +73,6 @@ const ChartScreens = () => {
       </View>
     );
   }
-
   return (
     <View className="flex-1 bg-[#121212]">
       <Animated.View
@@ -100,15 +101,11 @@ const ChartScreens = () => {
             handlePlaySong={handlePlaySong}
           />
         )}
+        ListFooterComponent={() => <View style={{height: 200}} />}
         estimatedItemSize={70}
         data={[...data].splice(3, data.length)}
         renderItem={({item, index}) => (
-          <ChartItem
-            item={item}
-            index={index}
-            onPlay={handlePlaySong}
-            total={[...data].splice(3, data.length).length}
-          />
+          <ChartItem item={item} index={index} onPlay={handlePlaySong} />
         )}
       />
     </View>
@@ -250,13 +247,11 @@ const ChartHeader = ({data, handlePlaySong}: any) => {
     </View>
   );
 };
-const ChartItem = React.memo(({item, index, total, onPlay}: any) => {
+const ChartItem = React.memo(({item, index, onPlay}: any) => {
+  console.log('chart item');
   return (
     <TouchableOpacity
       activeOpacity={0.8}
-      style={{
-        paddingBottom: index === total - 1 ? 200 : 0,
-      }}
       className="flex flex-row  items-center mx-4 my-2"
       onPress={() => onPlay(item)}>
       <Text className="text-[#FBE122] font-bold mr-4 text-2xl">

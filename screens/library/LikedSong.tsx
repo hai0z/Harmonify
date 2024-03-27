@@ -8,7 +8,7 @@ import {
   StatusBar,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import React, {useMemo} from 'react';
+import React, {useCallback, useMemo} from 'react';
 import {LinearGradient} from 'react-native-linear-gradient';
 import {FlashList} from '@shopify/flash-list';
 import {handlePlay} from '../../utils/musicControl';
@@ -55,12 +55,15 @@ const PlaylistDetail = () => {
     [scrollY],
   );
 
-  const handlePlaySong = async (song: any) => {
-    handlePlay(song, {
-      id: `${likedSong.length}-likedSong`,
-      items: likedSong,
-    });
-  };
+  const handlePlaySong = useCallback(
+    (song: any) =>
+      handlePlay(song, {
+        id: `${likedSong.length}-likedSong`,
+        items: likedSong,
+      }),
+    [],
+  );
+
   return (
     <View className="flex-1 bg-[#121212] w-full">
       <StatusBar backgroundColor="#00000030" />
@@ -137,7 +140,7 @@ const PlaylistDetail = () => {
         estimatedItemSize={72}
         extraData={[likedSong]}
         keyExtractor={(item: any, index) => `${item.encodeId}_${index}`}
-        renderItem={({item, index}: any) => {
+        renderItem={({item}: any) => {
           return (
             <TrackItem item={item} onClick={handlePlaySong} isAlbum={false} />
           );
