@@ -8,6 +8,7 @@ interface Props {
   onClick: (item: any) => void;
 }
 const TrackItem = (props: Props) => {
+  console.log('df');
   const {item, index, onClick, isAlbum} = props;
   return (
     <TouchableOpacity
@@ -30,7 +31,7 @@ const TrackItem = (props: Props) => {
           numberOfLines={1}
           style={{
             fontWeight: '400',
-            color: '#fff',
+            color: 'white',
           }}>
           {item?.title}
         </Text>
