@@ -10,7 +10,7 @@ export const objectToTrack = (data: any) => {
     url: NULL_URL,
     title: data.title,
     artist: data.artistsNames,
-    artwork: getThumbnail(data.thumbnail),
+    artwork: getThumbnail(data.thumbnail || data.thumbnailM),
     duration: data.duration,
   };
 }
@@ -53,7 +53,7 @@ const handlePlay = async (song: any, playlist: IPlaylist | null) => {
     } else {
       TrackPlayer.load(objectToTrack(song))
     }
-    usePlayerStore.getState().setCurrentSong(song);
+    usePlayerStore.getState().setCurrentSong(objectToTrack(song));
     await TrackPlayer.play();
   } catch (error) {
     console.error('Lỗi:', error);

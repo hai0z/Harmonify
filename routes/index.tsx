@@ -27,7 +27,7 @@ import {useEffect} from 'react';
 import SplashScreen from 'react-native-splash-screen';
 import Toast from '../components/toast/Toast';
 import useToastStore from '../store/toastStore';
-import {TABBAR_HEIGHT} from '../constants';
+import {COLOR, TABBAR_HEIGHT} from '../constants';
 export type HomeStackParamsList = {
   Home: undefined;
   Search: undefined;
@@ -105,11 +105,11 @@ const HomeTab = () => {
   return (
     <Tab.Navigator
       tabBar={props => (
-        <View className="z-50">
+        <>
           <Toast />
           <MiniPlayer />
           <BottomTabBar {...props} />
-        </View>
+        </>
       )}
       screenOptions={({route}) => ({
         tabBarHideOnKeyboard: true,
@@ -130,13 +130,16 @@ const HomeTab = () => {
         },
 
         tabBarStyle: {
+          position: 'absolute',
           borderTopWidth: 0,
           height: TABBAR_HEIGHT,
-          width: '100%',
           zIndex: 2,
-          backgroundColor: 'transparent',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          backgroundColor: '#000000',
         },
-        tabBarActiveTintColor: '#DA291C',
+        tabBarActiveTintColor: COLOR.PRIMARY,
         tabBarInactiveTintColor: '#ababab',
       })}>
       <Tab.Screen

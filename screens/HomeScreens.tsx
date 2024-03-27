@@ -1,21 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {
-  ActivityIndicator,
-  Image,
-  ScrollView,
-  Text,
-  ToastAndroid,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {ActivityIndicator, ScrollView, Text, View} from 'react-native';
 import PlayListCover from '../components/PlayListCover';
-import {getHomePlayList} from '../apis/home';
 import Header from '../components/Header';
-import LinearGradient from 'react-native-linear-gradient';
 import {usePlayerStore} from '../store/playerStore';
-import {StyleSheet} from 'react-native';
 import nodejs from 'nodejs-mobile-react-native';
-import SplashScreen from 'react-native-splash-screen';
+import {collection, onSnapshot, query} from 'firebase/firestore';
+import {auth, db} from '../firebase/config';
 interface typePlaylistCover {
   items: [];
   title: string;
@@ -28,6 +18,22 @@ interface typePlaylistCover {
 function HomeScreens() {
   const [dataHome, setdataHome] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const setLikedSongs = usePlayerStore(state => state.setLikedSongs);
+
+  useEffect(() => {
+    const q = query(collection(db, `users/${auth.currentUser?.uid}/likedSong`));
+    const unsub = onSnapshot(q, querySnapshot => {
+      const songs = [] as any;
+      querySnapshot.forEach(doc => {
+        songs.push(doc.data());
+      });
+      setLikedSongs(songs);
+    });
+    return () => {
+      unsub();
+    };
+  }, []);
+
   useEffect(() => {
     setLoading(true);
     nodejs.channel.addListener('home', data => {
