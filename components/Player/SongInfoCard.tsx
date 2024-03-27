@@ -1,14 +1,13 @@
 import {View, Text} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {usePlayerStore} from '../../store/playerStore';
-import {getInfoSong} from '../../apis/song';
 import dayjs from 'dayjs';
 import nodejs from 'nodejs-mobile-react-native';
-import {useActiveTrack} from 'react-native-track-player';
 import tinycolor from 'tinycolor2';
 const SongInfoCard = () => {
   const {color: bgColor} = usePlayerStore(state => state);
-  const currentSong = useActiveTrack();
+
+  const currentSong = usePlayerStore(state => state.currentSong);
 
   const bg =
     bgColor.vibrant === '#0098DB'
@@ -16,6 +15,7 @@ const SongInfoCard = () => {
         ? tinycolor(bgColor.average).lighten(20).toString()
         : bgColor.average
       : bgColor.vibrant;
+
   const [data, setData] = useState<any>(null);
 
   const [loading, setLoading] = useState(true);

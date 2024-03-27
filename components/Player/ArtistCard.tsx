@@ -11,7 +11,7 @@ import tinycolor from 'tinycolor2';
 const ArtistCard = () => {
   const {color: bgColor} = usePlayerStore(state => state);
 
-  const currentSong = useActiveTrack();
+  const currentSong = usePlayerStore(state => state.currentSong);
 
   const [data, setData] = useState<any>(null);
 
