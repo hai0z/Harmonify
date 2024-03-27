@@ -1,13 +1,12 @@
 import React, {useEffect} from 'react';
 import {usePlayerStore} from '../store/playerStore';
 import {getColors} from 'react-native-image-colors';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import TrackPlayer from 'react-native-track-player';
 import getThumbnail from '../utils/getThumnail';
 import nodejs from 'nodejs-mobile-react-native';
 import {NULL_URL} from '../constants';
-import {collection, onSnapshot, query} from 'firebase/firestore';
-import {auth, db} from '../firebase/config';
+import {getData, storeData} from '../utils/localStorage';
+import {objectToTrack} from '../utils/musicControl';
 const PlayerContext = React.createContext({});
 
 nodejs.start('main.js');
@@ -22,94 +21,66 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
     setColor,
     playList,
     setPlayList,
-    setLikedSongs,
     currentSong,
+    setCurrentSong,
   } = usePlayerStore(state => state);
 
   const getSongColors = async () => {
     if (currentSong?.artwork !== undefined) {
       getColors(currentSong.artwork, {
         fallback: '#0098db',
-        quality: 'lowest',
-        pixelSpacing: 1000,
       }).then(setColor);
     }
   };
 
+  const getLatestSong = async () => {
+    const data = await getData('currentSong');
+    if (data != null) {
+      setCurrentSong(data);
+      getSongColors();
+    }
+  };
+
+  const getDataPlaylist = async () => {
+    const data = await getData('playlist');
+    if (data != null) {
+      setPlayList(data);
+    }
+  };
+
   const initPlayer = async () => {
-    let data = await AsyncStorage.getItem('playlist');
-    data = JSON.parse(data as string);
-    let storedSong = await AsyncStorage.getItem('currentSong');
-    storedSong = JSON.parse(storedSong as string);
-    const dataPlaylist = data as any;
-    const currentSong = storedSong as any;
+    let dataPlaylist = await getData('playlist');
+    let storedSong = await getData('currentSong');
     if (dataPlaylist.items.length > 0 && dataPlaylist) {
       await TrackPlayer.reset();
       setPlayList(dataPlaylist);
       await TrackPlayer.add(
-        dataPlaylist.items.map((item: any) => {
-          return {
-            id: item?.encodeId,
-            url: NULL_URL,
-            title: item.title,
-            artist: item.artistsNames,
-            artwork: getThumbnail(item.thumbnail),
-            duration: item.duration,
-          };
-        }),
+        dataPlaylist.items.map((item: any) => objectToTrack(item)),
       );
       const index = dataPlaylist.items.findIndex(
-        (item: any) => item?.encodeId === currentSong?.id,
+        (item: any) => item?.encodeId === storedSong?.id,
       );
       await TrackPlayer.skip(index === -1 ? 0 : index);
     } else {
-      if (currentSong != null) {
-        await TrackPlayer.add({
-          id: currentSong?.id,
-          url: NULL_URL,
-          title: currentSong.title,
-          artist: currentSong.artist,
-          artwork: getThumbnail(currentSong.artwork),
-          duration: currentSong.duration,
-        });
+      if (storedSong != null) {
+        await TrackPlayer.add(objectToTrack(storedSong));
       }
     }
-    getSongColors();
   };
 
   useEffect(() => {
+    getLatestSong();
+    getDataPlaylist();
     initPlayer();
   }, []);
 
   useEffect(() => {
-    (async () => {
-      try {
-        await AsyncStorage.setItem('playlist', JSON.stringify(playList));
-      } catch (e) {
-        console.log(e);
-      }
-    })();
+    storeData('playlist', playList);
   }, [playList.id]);
 
   useEffect(() => {
-    (async () => {
-      try {
-        if (currentSong)
-          await AsyncStorage.setItem(
-            'currentSong',
-            JSON.stringify(currentSong),
-          );
-      } catch (e) {
-        console.log(e);
-      }
-    })();
-  }, [currentSong?.id]);
-
-  useEffect(() => {
+    storeData('currentSong', currentSong);
     getSongColors();
-  }, [currentSong?.id]);
-
-  useEffect(() => {
     setLyrics([]);
     nodejs.channel.post('getLyric', currentSong?.id);
   }, [currentSong?.id]);

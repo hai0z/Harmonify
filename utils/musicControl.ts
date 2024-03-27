@@ -4,6 +4,16 @@ import getThumbnail from "./getThumnail";
 import nodejs from "nodejs-mobile-react-native";
 import { NULL_URL } from '../constants';
 
+export const objectToTrack = (data: any) => {
+  return {
+    id: data?.encodeId,
+    url: NULL_URL,
+    title: data.title,
+    artist: data.artistsNames,
+    artwork: getThumbnail(data.thumbnail),
+    duration: data.duration,
+  };
+}
 TrackPlayer.addEventListener(Event.PlaybackActiveTrackChanged, async event => {
   if (!event.track) return;
   if (event.track.url !== NULL_URL) {
@@ -14,7 +24,6 @@ TrackPlayer.addEventListener(Event.PlaybackActiveTrackChanged, async event => {
     event.track.url === NULL_URL) {
     !usePlayerStore.getState().isLoadingTrack &&
       nodejs.channel.post('getSong', event.track);
-    console.log('chay vao///');
   }
 });
 
@@ -33,41 +42,18 @@ const handlePlay = async (song: any, playlist: IPlaylist | null) => {
         usePlayerStore.getState().setisLoadingTrack(true);
         usePlayerStore.getState().setPlayList(playlist);
         await TrackPlayer.reset();
-        await TrackPlayer.add(playlist.items.map((item: any) => {
-          return {
-            id: item?.encodeId,
-            url: NULL_URL,
-            title: item.title,
-            artist: item.artistsNames,
-            artwork: getThumbnail(item.thumbnail),
-            duration: item.duration,
-          };
-        }));
+        await TrackPlayer.add(playlist.items.map((item: any) => objectToTrack(item)));
       }
       const index = playlist.items.findIndex(
         (item: any) => item?.encodeId === song?.encodeId,
       )
-      await TrackPlayer.skip(index).then(() => {
+      await TrackPlayer.skip(index === -1 ? 0 : index).finally(() => {
         usePlayerStore.getState().setisLoadingTrack(false);
       })
     } else {
-      TrackPlayer.load({
-        id: song?.encodeId,
-        title: song.title,
-        artist: song.artistsNames,
-        artwork: getThumbnail(song.thumbnail),
-        duration: song.duration,
-        url: NULL_URL
-      })
+      TrackPlayer.load(objectToTrack(song))
     }
-    usePlayerStore.getState().setCurrentSong({
-      id: song?.encodeId,
-      title: song.title,
-      artist: song.artistsNames,
-      artwork: getThumbnail(song.thumbnail),
-      duration: song.duration,
-      url: NULL_URL
-    })
+    usePlayerStore.getState().setCurrentSong(song);
     await TrackPlayer.play();
   } catch (error) {
     console.error('Lỗi:', error);
