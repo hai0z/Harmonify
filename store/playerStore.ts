@@ -25,15 +25,33 @@ interface PlayerStore {
   setLyrics: (lyrics: any) => void
   isLoadingTrack: boolean,
   setisLoadingTrack: (isLoadingTrack: boolean) => void,
+  likedSongs: any,
+  setLikedSongs: (likedSongs: any) => void
+  currentSong: Track | null
+  setCurrentSong: (currentSong: Track | null) => void
 }
 export const usePlayerStore = create<PlayerStore>((set) => ({
   playList: {} as IPlaylist,
-  color: {} as Partial<Color>,
+  color: {
+    average: "#49494949",
+    darkMuted: "#49494949",
+    darkVibrant: "#49494949",
+    dominant: "#49494949",
+    lightMuted: "#49494949",
+    lightVibrant: "#49494949",
+    muted: "#49494949",
+    platform: "android",
+    vibrant: "#49494949",
+  } as Partial<Color>,
   setColor: (color: Partial<Color>) => set({ color }),
   setPlayList: (playlist: IPlaylist) => set({ playList: playlist }),
   lyrics: [],
   setLyrics: (lyrics: any) => set({ lyrics }),
   isLoadingTrack: false,
   setisLoadingTrack: (isLoadingTrack: boolean) => set({ isLoadingTrack }),
+  likedSongs: [],
+  setLikedSongs: (likedSongs: any) => set({ likedSongs }),
+  currentSong: null,
+  setCurrentSong: (currentSong: Track | null) => set({ currentSong }),
 }))
 

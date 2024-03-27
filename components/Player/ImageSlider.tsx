@@ -75,7 +75,7 @@ const ImageSlider = () => {
               alignItems: 'center',
             }}>
             <Image
-              src={getThumbnail(item.thumbnailM)}
+              src={getThumbnail(item.thumbnail)}
               className="rounded-md z-20"
               style={{
                 height: SCREEN_WIDTH * 0.85,

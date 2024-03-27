@@ -13,6 +13,7 @@ import {auth, db} from '../../firebase/config';
 import {
   getAdditionalUserInfo,
   createUserWithEmailAndPassword,
+  getAuth,
 } from 'firebase/auth';
 import {COLOR} from '../../constants';
 import {doc, setDoc} from 'firebase/firestore';
@@ -31,7 +32,7 @@ const Login = () => {
     }
     try {
       const userCredential = await createUserWithEmailAndPassword(
-        auth,
+        getAuth(),
         email,
         password,
       );
@@ -48,6 +49,7 @@ const Login = () => {
         });
       }
     } catch (error) {
+      console.log(error);
       Alert.alert('Thất bại', 'có lỗi xảy ra vui lòng thử lại sau');
     }
   };
@@ -67,15 +69,18 @@ const Login = () => {
           onChangeText={text => setEmail(text)}
           placeholder="Email"
           value={email}
+          keyboardType="email-address"
           className="bg-white/50 rounded-full h-10 p-2"
         />
         <TextInput
+          secureTextEntry
           onChangeText={text => setPassword(text)}
           placeholder="Mật khẩu"
           value={password}
           className="bg-white/50 rounded-full h-10 p-2"
         />
         <TextInput
+          secureTextEntry
           onChangeText={text => setConfirmPassword(text)}
           placeholder="Nhập lại mật khẩu"
           value={confirmPassword}

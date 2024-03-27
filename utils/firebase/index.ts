@@ -1,17 +1,16 @@
 import { deleteDoc, doc, setDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase/config";
-import { Track } from "react-native-track-player";
-import { IPlaylist } from "../../store/playerStore";
+import { usePlayerStore } from "../../store/playerStore";
 
 
 export const addToLikedList = async (
-  song: Track,
-  ListFavourite: IPlaylist,
+  song: any,
 ): Promise<void> => {
   try {
-    const user = auth.currentUser?.uid
-    const docRef = doc(db, `users/${user}/likedSong`, song.id);
-    if (ListFavourite.items.some((s: any) => s.id == song.id)) {
+    const user = auth.currentUser?.uid;
+    const likedSongs = usePlayerStore.getState().likedSongs;
+    const docRef = doc(db, `users/${user}/likedSong`, song.encodeId);
+    if (likedSongs.some((s: any) => s.encodeId == song.encodeId)) {
       await deleteDoc(docRef);
     } else {
       await setDoc(docRef, song);

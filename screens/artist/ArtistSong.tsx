@@ -10,9 +10,7 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {FlashList} from '@shopify/flash-list';
-import {getArtist, getArtistSong} from '../../apis/artists';
 import {LinearGradient} from 'react-native-linear-gradient';
-import {usePlayerStore} from '../../store/playerStore';
 import {handlePlay} from '../../utils/musicControl';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {StatusBar} from 'expo-status-bar';

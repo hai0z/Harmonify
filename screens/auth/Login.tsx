@@ -10,7 +10,11 @@ import {
 import React from 'react';
 import {StatusBar} from 'expo-status-bar';
 import {auth, db} from '../../firebase/config';
-import {getAdditionalUserInfo, signInWithEmailAndPassword} from 'firebase/auth';
+import {
+  getAdditionalUserInfo,
+  getAuth,
+  signInWithEmailAndPassword,
+} from 'firebase/auth';
 import {COLOR} from '../../constants';
 import {doc, setDoc} from 'firebase/firestore';
 import {useNavigation} from '@react-navigation/native';
@@ -24,13 +28,14 @@ const Login = () => {
   const handleLogin = async () => {
     try {
       const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password,
+        getAuth(),
+        email.trim(),
+        password.trim(),
       );
       const {
         user: {uid, photoURL, displayName, email: userEmail},
       } = userCredential;
+      console.log(getAdditionalUserInfo(userCredential));
       if (getAdditionalUserInfo(userCredential)?.isNewUser) {
         const userRef = doc(db, 'users', uid);
         await setDoc(userRef, {
@@ -42,7 +47,6 @@ const Login = () => {
       }
     } catch (error) {
       console.log(error);
-      console.log(email, password);
       Alert.alert('Thất bại', 'Sai Email hoặc Mật khẩu');
     }
   };
@@ -65,6 +69,7 @@ const Login = () => {
           className="bg-white/50 rounded-full h-10 p-2"
         />
         <TextInput
+          secureTextEntry
           value={password}
           onChangeText={text => setPassword(text)}
           placeholder="Mật khẩu"

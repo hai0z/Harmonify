@@ -21,6 +21,7 @@ import {handlePlay} from '../utils/musicControl';
 import {useNavigation} from '@react-navigation/native';
 import nodejs from 'nodejs-mobile-react-native';
 import {useActiveTrack} from 'react-native-track-player';
+import TrackItem from '../components/TrackItem';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const PlaylistDetail = ({route}: {route: any}) => {
@@ -34,7 +35,7 @@ const PlaylistDetail = ({route}: {route: any}) => {
 
   const navigation = useNavigation<any>();
 
-  const currentSong = useActiveTrack();
+  // const currentSong = useActiveTrack();
 
   useEffect(() => {
     setLoading(true);
@@ -212,16 +213,14 @@ const PlaylistDetail = ({route}: {route: any}) => {
         nestedScrollEnabled
         data={playlistData?.song?.items}
         estimatedItemSize={72}
-        extraData={currentSong?.id}
         keyExtractor={(item: any, index) => `${item.encodeId}_${index}`}
         renderItem={({item, index}: any) => {
           return (
-            <TrackDetail
+            <TrackItem
               item={item}
               index={index}
               isAlbum={playlistData.isAlbum}
-              currentTrack={currentSong}
-              onPlay={handlePlaySong}
+              onClick={handlePlaySong}
             />
           );
         }}
@@ -230,40 +229,4 @@ const PlaylistDetail = ({route}: {route: any}) => {
   );
 };
 
-const TrackDetail = React.memo(
-  ({item, isAlbum, index, currentTrack, onPlay}: any) => {
-    return (
-      <TouchableOpacity
-        activeOpacity={0.8}
-        className="flex flex-row  items-center mx-4 my-2"
-        onPress={() => onPlay(item)}>
-        {isAlbum ? (
-          <View className="w-14 h-14 rounded-md flex justify-center items-center">
-            <Text className="text-white font-semibold">{index + 1}</Text>
-          </View>
-        ) : (
-          <Image
-            source={{uri: item?.thumbnail}}
-            key={item.encodeId}
-            className="w-14 h-14 rounded-md"
-          />
-        )}
-        <View className="flex justify-center ml-2 flex-1">
-          <Text
-            numberOfLines={1}
-            style={{
-              fontWeight: item.encodeId === currentTrack?.id ? 'bold' : '400',
-              color: item.encodeId === currentTrack?.id ? '#DA291C' : 'white',
-            }}>
-            {item?.title}
-          </Text>
-
-          <Text numberOfLines={1} className="text-zinc-500 font-semibold">
-            {item?.artistsNames}
-          </Text>
-        </View>
-      </TouchableOpacity>
-    );
-  },
-);
 export default PlaylistDetail;

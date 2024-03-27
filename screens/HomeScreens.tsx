@@ -29,7 +29,6 @@ function HomeScreens() {
   const [dataHome, setdataHome] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(true);
   useEffect(() => {
-    nodejs.start('main.js');
     setLoading(true);
     nodejs.channel.addListener('home', data => {
       setdataHome(data);

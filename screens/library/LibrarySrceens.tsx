@@ -4,9 +4,12 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useNavigation} from '@react-navigation/native';
 import Entypo from 'react-native-vector-icons/Entypo';
 import LinearGradient from 'react-native-linear-gradient';
+import {usePlayerStore} from '../../store/playerStore';
 
 const LibrarySrceens = () => {
   const navigation = useNavigation<any>();
+  const {likedSongs} = usePlayerStore(state => state);
+
   return (
     <View style={styles.container}>
       <View style={styles.top}>
@@ -52,7 +55,9 @@ const LibrarySrceens = () => {
             <Text className="text-white font-bold mb-[5px]">
               Bài hát đã thích
             </Text>
-            <Text style={{color: '#bdbdbd'}}>Danh sách phát • 99 bài hát</Text>
+            <Text style={{color: '#bdbdbd'}}>
+              Danh sách phát • {likedSongs.length} bài hát
+            </Text>
           </View>
         </TouchableOpacity>
         {/* {playList.map((pl: IPlayList) => {

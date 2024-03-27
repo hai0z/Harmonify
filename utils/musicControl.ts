@@ -1,4 +1,4 @@
-import { IPlaylist, usePlayerStore } from './../store/playerStore';
+import { IPlaylist, usePlayerStore } from '../store/playerStore';
 import TrackPlayer, { Event } from "react-native-track-player";
 import getThumbnail from "./getThumnail";
 import nodejs from "nodejs-mobile-react-native";
@@ -6,6 +6,10 @@ import { NULL_URL } from '../constants';
 
 TrackPlayer.addEventListener(Event.PlaybackActiveTrackChanged, async event => {
   if (!event.track) return;
+  if (usePlayerStore.getState().isLoadingTrack) return;
+  if (event.track.url !== NULL_URL) {
+    usePlayerStore.getState().setCurrentSong(event.track);
+  }
   if (
     event.index !== undefined && event.track != undefined &&
     event.track.url === NULL_URL) {
@@ -13,15 +17,11 @@ TrackPlayer.addEventListener(Event.PlaybackActiveTrackChanged, async event => {
   }
 });
 
-
 nodejs.channel.addListener('getSong', async data => {
   await TrackPlayer.load({
     ...data.track,
     url: data.data['128'],
-  }).finally(() => {
-    usePlayerStore.getState().setisLoadingTrack(false);
   })
-
 });
 
 const handlePlay = async (song: any, playlist: IPlaylist | null) => {
@@ -30,25 +30,27 @@ const handlePlay = async (song: any, playlist: IPlaylist | null) => {
     if (playlist) {
       if (currentPlaylistId !== playlist.id) {
         usePlayerStore.getState().setisLoadingTrack(true);
+        usePlayerStore.getState().setPlayList(playlist);
         await TrackPlayer.reset();
-        await TrackPlayer.setQueue(playlist.items.map((item: any) => {
+        await TrackPlayer.add(playlist.items.map((item: any) => {
           return {
             id: item?.encodeId,
-            url: "null",
+            url: NULL_URL,
             title: item.title,
             artist: item.artistsNames,
             artwork: getThumbnail(item.thumbnail),
             duration: item.duration,
           };
         }));
-        usePlayerStore.getState().setPlayList(playlist);
       }
       const index = playlist.items.findIndex(
         (item: any) => item?.encodeId === song?.encodeId,
       )
-      await TrackPlayer.skip(index);
+      await TrackPlayer.skip(index).then(() => {
+        usePlayerStore.getState().setisLoadingTrack(false);
+      })
     } else {
-      await TrackPlayer.load({
+      TrackPlayer.load({
         id: song?.encodeId,
         title: song.title,
         artist: song.artistsNames,
@@ -57,6 +59,14 @@ const handlePlay = async (song: any, playlist: IPlaylist | null) => {
         url: NULL_URL
       })
     }
+    usePlayerStore.getState().setCurrentSong({
+      id: song?.encodeId,
+      title: song.title,
+      artist: song.artistsNames,
+      artwork: getThumbnail(song.thumbnail),
+      duration: song.duration,
+      url: NULL_URL
+    })
     await TrackPlayer.play();
   } catch (error) {
     console.error('Lỗi:', error);

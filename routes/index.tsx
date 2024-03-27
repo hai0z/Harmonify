@@ -1,4 +1,4 @@
-import {NavigationContainer} from '@react-navigation/native';
+import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomeScreens from '../screens/HomeScreens';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -25,6 +25,9 @@ import LikedSong from '../screens/library/LikedSong';
 import MyPlaylist from '../screens/library/MyPlaylist';
 import {useEffect} from 'react';
 import SplashScreen from 'react-native-splash-screen';
+import Toast from '../components/toast/Toast';
+import useToastStore from '../store/toastStore';
+import {TABBAR_HEIGHT} from '../constants';
 export type HomeStackParamsList = {
   Home: undefined;
   Search: undefined;
@@ -59,7 +62,11 @@ const LibraryStack = () => {
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen name="Library" component={LibrarySrceens} />
       <Stack.Screen name="MyPlaylist" component={MyPlaylist} />
-      <Stack.Screen name="LikedSong" component={LikedSong} />
+      <Stack.Screen
+        name="LikedSong"
+        component={LikedSong}
+        options={{animation: 'ios'}}
+      />
     </Stack.Navigator>
   );
 };
@@ -73,21 +80,21 @@ const HomeStack = () => {
         name="PlayListDetail"
         component={PlaylistDetail}
         options={{
-          animation: 'none',
+          animation: 'ios',
         }}
       />
       <Stack.Screen
         name="Artists"
         component={ArtistScreens}
         options={{
-          animation: 'none',
+          animation: 'ios',
         }}
       />
       <Stack.Screen
         name="ArtistsSong"
         component={ArtistSong}
         options={{
-          animation: 'none',
+          animation: 'ios',
         }}
       />
     </Stack.Navigator>
@@ -98,13 +105,10 @@ const HomeTab = () => {
   return (
     <Tab.Navigator
       tabBar={props => (
-        <View className="bg-[#121212]">
+        <View className="z-50">
+          <Toast />
           <MiniPlayer />
           <BottomTabBar {...props} />
-          <LinearGradient
-            colors={['transparent', '#000000']}
-            className="h-[60px] -bottom-0 left-0 right-0 absolute"
-          />
         </View>
       )}
       screenOptions={({route}) => ({
@@ -124,25 +128,16 @@ const HomeTab = () => {
               );
           }
         },
+
         tabBarStyle: {
-          position: 'absolute',
           borderTopWidth: 0,
-          bottom: 0,
-          right: 0,
-          height: 60,
+          height: TABBAR_HEIGHT,
           width: '100%',
           zIndex: 2,
-          backgroundColor: '#00000080',
+          backgroundColor: 'transparent',
         },
         tabBarActiveTintColor: '#DA291C',
         tabBarInactiveTintColor: '#ababab',
-        tabBarIconStyle: {
-          bottom: 0,
-        },
-        tabBarItemStyle: {
-          backgroundColor: '#00000090',
-          position: 'relative',
-        },
       })}>
       <Tab.Screen
         name="HomeTab"

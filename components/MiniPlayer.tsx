@@ -1,15 +1,9 @@
-import {
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  Dimensions,
-  ActivityIndicator,
-} from 'react-native';
+import {View, Text, Image, TouchableOpacity, Dimensions} from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import useKeyBoardStatus from '../hooks/useKeyBoardStatus';
 import TrackPlayer, {
   State,
+  Track,
   useActiveTrack,
   usePlaybackState,
   useProgress,
@@ -20,7 +14,8 @@ import useDarkColor from '../hooks/useDarkColor';
 import {useNavigation} from '@react-navigation/native';
 import {usePlayerStore} from '../store/playerStore';
 import TextTicker from 'react-native-text-ticker';
-import {addToLikedList} from '../utils/firebase';
+import {COLOR, MINI_PLAYER_HEIGHT, TABBAR_HEIGHT} from '../constants';
+import useToggleLikeSong from '../hooks/useToggleLikeSong';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const MiniPlayer = () => {
@@ -28,13 +23,15 @@ const MiniPlayer = () => {
 
   const keyboardVisible = useKeyBoardStatus();
 
-  const {color} = usePlayerStore(state => state);
+  const {color, currentSong} = usePlayerStore(state => state);
 
   const playerState = usePlaybackState();
 
   const progress = useProgress(1000);
 
   const track = useActiveTrack();
+
+  const {handleAddToLikedList, isLiked} = useToggleLikeSong();
 
   const togglePlay = useCallback(async (state: State | undefined) => {
     if (state !== State.Playing) {
@@ -44,18 +41,17 @@ const MiniPlayer = () => {
     }
   }, []);
 
-  if (
-    track === undefined ||
-    track === null ||
-    usePlayerStore.getState().isLoadingTrack
-  )
+  if (track === undefined || track === null || currentSong === null)
     return null;
+
   return (
     !keyboardVisible && (
       <View
-        className="bottom-[59px] h-[60px] flex flex-col justify-center absolute"
+        className=" flex flex-col justify-center absolute mb-[-1px]"
         style={{
           width: SCREEN_WIDTH * 0.96,
+          height: MINI_PLAYER_HEIGHT,
+          bottom: TABBAR_HEIGHT,
           transform: [{translateX: (SCREEN_WIDTH * 0.04) / 2}],
         }}>
         <TouchableOpacity
@@ -77,7 +73,7 @@ const MiniPlayer = () => {
             }}>
             <Image
               source={{
-                uri: track?.artwork,
+                uri: currentSong?.artwork,
               }}
               style={{
                 width: 40,
@@ -99,7 +95,7 @@ const MiniPlayer = () => {
                   fontWeight: '600',
                   fontSize: 14,
                 }}>
-                {track?.title}
+                {currentSong?.title}
               </TextTicker>
 
               <Text
@@ -108,7 +104,7 @@ const MiniPlayer = () => {
                   fontSize: 12,
                 }}
                 numberOfLines={1}>
-                {track?.artist}
+                {currentSong?.artist}
               </Text>
             </View>
 
@@ -120,26 +116,28 @@ const MiniPlayer = () => {
                 justifyContent: 'space-between',
                 gap: 16,
               }}>
-              <TouchableOpacity>
-                <AntDesign name={'hearto'} size={24} color="#ffffff" />
+              <TouchableOpacity
+                onPress={() => {
+                  handleAddToLikedList(track);
+                }}>
+                <AntDesign
+                  name={isLiked ? 'heart' : 'hearto'}
+                  size={24}
+                  color={isLiked ? COLOR.PRIMARY : '#ffffff'}
+                />
               </TouchableOpacity>
               <TouchableOpacity
                 className=" mr-4"
                 onPress={() => togglePlay(playerState.state)}>
-                {playerState.state === State.Buffering ||
-                playerState.state === State.Loading ? (
-                  <ActivityIndicator size="small" color="#fff" />
-                ) : (
-                  <Entypo
-                    name={
-                      playerState.state !== State.Playing
-                        ? 'controller-play'
-                        : 'controller-paus'
-                    }
-                    size={30}
-                    color="#fff"
-                  />
-                )}
+                <Entypo
+                  name={
+                    playerState.state !== State.Playing
+                      ? 'controller-play'
+                      : 'controller-paus'
+                  }
+                  size={30}
+                  color="#fff"
+                />
               </TouchableOpacity>
             </View>
           </View>

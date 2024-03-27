@@ -2,23 +2,43 @@ import React, {useEffect} from 'react';
 import {usePlayerStore} from '../store/playerStore';
 import {getColors} from 'react-native-image-colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import TrackPlayer, {useActiveTrack} from 'react-native-track-player';
+import TrackPlayer from 'react-native-track-player';
 import getThumbnail from '../utils/getThumnail';
 import nodejs from 'nodejs-mobile-react-native';
 import {NULL_URL} from '../constants';
+import {collection, onSnapshot, query} from 'firebase/firestore';
+import {auth, db} from '../firebase/config';
 const PlayerContext = React.createContext({});
+
+nodejs.start('main.js');
 
 nodejs.channel.addListener('getLyric', async data => {
   usePlayerStore.getState().setLyrics(data);
 });
 
 const PlayerProvider = ({children}: {children: React.ReactNode}) => {
-  const {setLyrics, setColor, playList, setPlayList} = usePlayerStore(
-    state => state,
-  );
+  const {
+    setLyrics,
+    setColor,
+    playList,
+    setPlayList,
+    setLikedSongs,
+    currentSong,
+  } = usePlayerStore(state => state);
 
-  const currentSong = useActiveTrack();
-
+  useEffect(() => {
+    const q = query(collection(db, `users/${auth.currentUser?.uid}/likedSong`));
+    const unsub = onSnapshot(q, querySnapshot => {
+      const songs = [] as any;
+      querySnapshot.forEach(doc => {
+        songs.push(doc.data());
+      });
+      setLikedSongs(songs);
+    });
+    return () => {
+      unsub();
+    };
+  }, []);
   const getSongColors = async () => {
     if (currentSong?.artwork !== undefined) {
       getColors(currentSong.artwork, {
@@ -55,10 +75,8 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
         (item: any) => item?.encodeId === currentSong?.id,
       );
       await TrackPlayer.skip(index === -1 ? 0 : index);
-      getSongColors();
     } else {
       if (currentSong != null) {
-        getSongColors();
         await TrackPlayer.add({
           id: currentSong?.id,
           url: NULL_URL,
@@ -69,6 +87,7 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
         });
       }
     }
+    getSongColors();
   };
 
   useEffect(() => {
@@ -88,7 +107,11 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
   useEffect(() => {
     (async () => {
       try {
-        await AsyncStorage.setItem('currentSong', JSON.stringify(currentSong));
+        if (currentSong)
+          await AsyncStorage.setItem(
+            'currentSong',
+            JSON.stringify(currentSong),
+          );
       } catch (e) {
         console.log(e);
       }

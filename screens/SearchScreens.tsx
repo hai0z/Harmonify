@@ -22,13 +22,23 @@ const SearchScreens = () => {
   const [filterValue, setFilterValue] = useState<number>(0);
   const [filterData, setFilterData] = useState<any>([]);
   const {setPlayList} = usePlayerStore(state => state);
+
+  const [isSearch, setIsSearch] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    nodejs.channel.post('search', debouncedValue);
+  }, [debouncedValue]);
+
   useEffect(() => {
     nodejs.channel.addListener('search', (data: any) => {
       setData(data);
       setFilterData(data);
     });
-    nodejs.channel.post('search', debouncedValue);
-  }, [debouncedValue]);
+
+    return () => {
+      nodejs.channel.removeListener('search', () => {});
+    };
+  }, []);
 
   const navigation = useNavigation<any>();
 
@@ -50,6 +60,7 @@ const SearchScreens = () => {
           className="flex-1 h-10 bg-[#282828] rounded-full px-4 text-white"
         />
       </View>
+
       <View className="flex flex-row items-center mt-2">
         {['Tất cả', 'Bài bát', 'PlayList', 'Nghệ sĩ'].map((e, index) => (
           <View className="flex flex-row items-center mr-2" key={index}>
@@ -84,6 +95,7 @@ const SearchScreens = () => {
           </View>
         ))}
       </View>
+
       <ScrollView
         className="pt-9"
         showsVerticalScrollIndicator={false}
