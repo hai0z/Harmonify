@@ -26,19 +26,6 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
     currentSong,
   } = usePlayerStore(state => state);
 
-  useEffect(() => {
-    const q = query(collection(db, `users/${auth.currentUser?.uid}/likedSong`));
-    const unsub = onSnapshot(q, querySnapshot => {
-      const songs = [] as any;
-      querySnapshot.forEach(doc => {
-        songs.push(doc.data());
-      });
-      setLikedSongs(songs);
-    });
-    return () => {
-      unsub();
-    };
-  }, []);
   const getSongColors = async () => {
     if (currentSong?.artwork !== undefined) {
       getColors(currentSong.artwork, {

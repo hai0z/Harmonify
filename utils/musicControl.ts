@@ -6,14 +6,15 @@ import { NULL_URL } from '../constants';
 
 TrackPlayer.addEventListener(Event.PlaybackActiveTrackChanged, async event => {
   if (!event.track) return;
-  if (usePlayerStore.getState().isLoadingTrack) return;
   if (event.track.url !== NULL_URL) {
     usePlayerStore.getState().setCurrentSong(event.track);
   }
   if (
     event.index !== undefined && event.track != undefined &&
     event.track.url === NULL_URL) {
-    nodejs.channel.post('getSong', event.track);
+    !usePlayerStore.getState().isLoadingTrack &&
+      nodejs.channel.post('getSong', event.track);
+    console.log('chay vao///');
   }
 });
 

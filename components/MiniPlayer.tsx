@@ -23,7 +23,7 @@ const MiniPlayer = () => {
 
   const keyboardVisible = useKeyBoardStatus();
 
-  const {color, currentSong} = usePlayerStore(state => state);
+  const {color, currentSong, isLoadingTrack} = usePlayerStore(state => state);
 
   const playerState = usePlaybackState();
 
@@ -41,7 +41,12 @@ const MiniPlayer = () => {
     }
   }, []);
 
-  if (track === undefined || track === null || currentSong === null)
+  if (
+    track === undefined ||
+    track === null ||
+    currentSong === null ||
+    isLoadingTrack
+  )
     return null;
 
   return (
