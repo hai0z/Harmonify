@@ -13,7 +13,7 @@ const Header = () => {
     }
   };
   return (
-    <View className="h-16 w-full flex flex-row justify-between items-center px-4">
+    <View className="h-16 w-full flex flex-row justify-between items-center px-4 mt-[35px]">
       <View className="flex flex-row gap-2 items-center">
         <Animated.Text
           className="font-bold capitalize text-xl  z-[5]"
