@@ -56,14 +56,12 @@ const ChartScreens = () => {
     nodejs.channel.post('charthome');
   }, []);
 
-  const handlePlaySong = useCallback(
-    (song: any) =>
-      handlePlay(song, {
-        id: 'chart',
-        items: data,
-      }),
-    [],
-  );
+  const handlePlaySong = (song: any) => {
+    handlePlay(song, {
+      id: 'chart',
+      items: data,
+    });
+  };
 
   const navigation = useNavigation<any>();
   if (loading) {

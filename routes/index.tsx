@@ -1,6 +1,6 @@
 import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import HomeScreens from '../screens/HomeScreens';
+import HomeScreens from '../screens/home/HomeScreens';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {StatusBar} from 'expo-status-bar';
 import MiniPlayer from '../components/MiniPlayer';

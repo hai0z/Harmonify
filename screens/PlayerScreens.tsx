@@ -59,7 +59,9 @@ const PlayerScreens = () => {
           ]}
         />
         <View className="flex flex-row items-center justify-between px-6">
-          <TouchableOpacity onPress={() => navigation.goBack()}>
+          <TouchableOpacity
+            className="z-50"
+            onPress={() => navigation.goBack()}>
             <Entypo name="chevron-down" size={24} color="white" />
           </TouchableOpacity>
           <Text className="text-white font-bold">Đang phát từ thư viện</Text>

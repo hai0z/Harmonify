@@ -7,15 +7,13 @@ const ColorThief = require('colorthief');
 
 rn_bridge.channel.on('home', async () => {
   const data = await ZingMp3.getHome();
-  rn_bridge.channel.post(
-    'home',
-    data.data.items.filter(e => e.sectionType === 'playlist'),
-  );
+  rn_bridge.channel.post('home', data.data.items);
 });
 rn_bridge.channel.on('getSong', async track => {
   const data = await ZingMp3.getSong(track.id);
+
   rn_bridge.channel.post('getSong', {
-    data: data.data,
+    data: data.data !== undefined ? data.data : 'NULL',
     track: track,
   });
 });
