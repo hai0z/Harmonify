@@ -1,5 +1,6 @@
 import {View, Text, TouchableOpacity, Image} from 'react-native';
 import React from 'react';
+import getThumbnail from '../utils/getThumnail';
 
 interface Props {
   item: any;
@@ -21,7 +22,7 @@ const TrackItem = (props: Props) => {
         </View>
       ) : (
         <Image
-          source={{uri: item?.thumbnail}}
+          source={{uri: getThumbnail(item.thumbnail)}}
           key={item.encodeId}
           className="w-14 h-14 rounded-md"
         />
