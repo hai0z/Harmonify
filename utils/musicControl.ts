@@ -3,6 +3,7 @@ import TrackPlayer, { Event } from "react-native-track-player";
 import getThumbnail from "./getThumnail";
 import nodejs from "nodejs-mobile-react-native";
 import { NULL_URL } from '../constants';
+import useToastStore, { ToastTime } from '../store/toastStore';
 
 export const objectToTrack = (data: any) => {
   return {
@@ -28,6 +29,11 @@ TrackPlayer.addEventListener(Event.PlaybackActiveTrackChanged, async event => {
 });
 
 nodejs.channel.addListener('getSong', async data => {
+  console.log('vao load song', data);
+  if (data.data === NULL_URL) {
+    useToastStore.getState().show("Không thể phát bài hát này", ToastTime.SHORT);
+    return
+  }
   await TrackPlayer.load({
     ...data.track,
     url: data.data['128'],
@@ -47,9 +53,14 @@ const handlePlay = async (song: any, playlist: IPlaylist | null) => {
       const index = playlist.items.findIndex(
         (item: any) => item?.encodeId === song?.encodeId,
       )
-      await TrackPlayer.skip(index === -1 ? 0 : index).finally(() => {
+      if (index === -1) {
         usePlayerStore.getState().setisLoadingTrack(false);
-      })
+        await TrackPlayer.reset();
+      } else {
+        await TrackPlayer.skip(index).finally(() => {
+          usePlayerStore.getState().setisLoadingTrack(false);
+        })
+      }
     } else {
       TrackPlayer.load(objectToTrack(song))
     }
