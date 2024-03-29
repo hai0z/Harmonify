@@ -105,8 +105,10 @@ const SearchScreens = () => {
             key={index}
             className="flex flex-row items-center mb-3 gap-2"
             onPress={() => {
-              setPlayList({id: '', items: []});
-              handlePlay(e, null);
+              handlePlay(e, {
+                id: 'search',
+                items: [e],
+              });
             }}>
             <Image
               source={{uri: getThumbnail(e.thumbnail) || ''}}

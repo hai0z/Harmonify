@@ -21,8 +21,9 @@ TrackPlayer.addEventListener(Event.PlaybackActiveTrackChanged, async event => {
     usePlayerStore.getState().setCurrentSong(event.track);
   }
   if (
-    event.index !== undefined && event.track != undefined &&
+    event.index !== undefined && event.track !== undefined &&
     event.track.url === NULL_URL) {
+    console.log(event.track);
     !usePlayerStore.getState().isLoadingTrack &&
       nodejs.channel.post('getSong', event.track);
   }
@@ -40,35 +41,32 @@ nodejs.channel.addListener('getSong', async data => {
   })
 });
 
-const handlePlay = async (song: any, playlist: IPlaylist | null) => {
+const handlePlay = async (song: any, playlist: IPlaylist = {
+  id: "",
+  items: [],
+}) => {
   const currentPlaylistId = usePlayerStore.getState().playList?.id;
-  try {
-    if (playlist) {
-      if (currentPlaylistId !== playlist.id) {
-        usePlayerStore.getState().setisLoadingTrack(true);
-        usePlayerStore.getState().setPlayList(playlist);
-        await TrackPlayer.reset();
-        await TrackPlayer.add(playlist.items.map((item: any) => objectToTrack(item)));
-      }
-      const index = playlist.items.findIndex(
-        (item: any) => item?.encodeId === song?.encodeId,
-      )
-      if (index === -1) {
-        usePlayerStore.getState().setisLoadingTrack(false);
-        await TrackPlayer.reset();
-      } else {
-        await TrackPlayer.skip(index).finally(() => {
-          usePlayerStore.getState().setisLoadingTrack(false);
-        })
-      }
-    } else {
-      TrackPlayer.load(objectToTrack(song))
-    }
-    usePlayerStore.getState().setCurrentSong(objectToTrack(song));
-    await TrackPlayer.play();
-  } catch (error) {
-    console.error('Lỗi:', error);
+
+  if (currentPlaylistId !== playlist.id) {
+    usePlayerStore.getState().setisLoadingTrack(true);
+    usePlayerStore.getState().setPlayList(playlist);
+    await TrackPlayer.reset();
+    await TrackPlayer.add(playlist.items.map((item: any) => objectToTrack(item)));
   }
+  const index = playlist.items.findIndex(
+    (item: any) => item?.encodeId === song?.encodeId,
+  )
+  if (index === -1) {
+    usePlayerStore.getState().setisLoadingTrack(false);
+    await TrackPlayer.reset();
+  } else {
+    await TrackPlayer.skip(index).finally(() => {
+      usePlayerStore.getState().setisLoadingTrack(false);
+    })
+  }
+  usePlayerStore.getState().setCurrentSong(objectToTrack(song));
+  await TrackPlayer.play();
+
 }
 
 const NextTrack = async () => {

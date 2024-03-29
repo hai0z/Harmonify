@@ -31,7 +31,10 @@ interface PlayerStore {
   setCurrentSong: (currentSong: Track | null) => void
 }
 export const usePlayerStore = create<PlayerStore>((set) => ({
-  playList: {} as IPlaylist,
+  playList: {
+    id: "",
+    items: [],
+  },
   color: {
     average: "#49494949",
     darkMuted: "#49494949",

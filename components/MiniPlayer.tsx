@@ -1,4 +1,11 @@
-import {View, Text, Image, TouchableOpacity, Dimensions} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  Dimensions,
+  StyleSheet,
+} from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import useKeyBoardStatus from '../hooks/useKeyBoardStatus';
 import TrackPlayer, {
@@ -59,11 +66,26 @@ const MiniPlayer = () => {
           bottom: TABBAR_HEIGHT,
           transform: [{translateX: (SCREEN_WIDTH * 0.04) / 2}],
         }}>
+        <Image
+          source={{
+            uri: currentSong?.artwork,
+          }}
+          blurRadius={150}
+          style={[
+            StyleSheet.absoluteFillObject,
+
+            {
+              width: '100%',
+              height: '100%',
+              borderRadius: 6,
+              zIndex: -1,
+            },
+          ]}
+        />
         <TouchableOpacity
           onPress={() => navigation.navigate('Player')}
           activeOpacity={1}
           style={{
-            backgroundColor: useDarkColor(color.dominant!),
             flexDirection: 'column',
             borderRadius: 6,
             justifyContent: 'center',
@@ -85,7 +107,7 @@ const MiniPlayer = () => {
                 height: 40,
                 borderRadius: 5,
                 marginLeft: 7,
-                zIndex: 50,
+                zIndex: 10,
               }}
             />
             <View style={{marginLeft: 10, flex: 1, paddingRight: 20}}>
@@ -99,6 +121,9 @@ const MiniPlayer = () => {
                   color: 'white',
                   fontWeight: '600',
                   fontSize: 14,
+                  textShadowColor: 'rgba(0, 0, 0, 0.5)',
+                  textShadowOffset: {width: -1, height: 1},
+                  textShadowRadius: 2,
                 }}>
                 {currentSong?.title}
               </TextTicker>
@@ -107,6 +132,9 @@ const MiniPlayer = () => {
                 style={{
                   color: 'white',
                   fontSize: 12,
+                  textShadowColor: 'rgba(0, 0, 0, 0.5)',
+                  textShadowOffset: {width: -1, height: 1},
+                  textShadowRadius: 2,
                 }}
                 numberOfLines={1}>
                 {currentSong?.artist}

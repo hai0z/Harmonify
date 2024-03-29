@@ -36,6 +36,7 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
     if (data != null) {
       setCurrentSong(data);
       getSongColors();
+      return data;
     }
   };
 
@@ -43,13 +44,15 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
     const data = await getData('playlist');
     if (data != null) {
       setPlayList(data);
+      return data;
     }
   };
 
   const initPlayer = async () => {
     let dataPlaylist = await getData('playlist');
     let storedSong = await getData('currentSong');
-    if (dataPlaylist.items.length > 0 && dataPlaylist) {
+    console.log({storedSong, dataPlaylist});
+    if (dataPlaylist.items.length > 0 && dataPlaylist.id !== '' && storedSong) {
       await TrackPlayer.reset();
       setPlayList(dataPlaylist);
       await TrackPlayer.add(
@@ -58,10 +61,11 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
       const index = dataPlaylist.items.findIndex(
         (item: any) => item?.encodeId === storedSong?.id,
       );
-      await TrackPlayer.skip(index === -1 ? 0 : index);
+      await TrackPlayer.skip(index);
     } else {
-      if (storedSong != null) {
-        await TrackPlayer.add(objectToTrack(storedSong));
+      if (storedSong !== null) {
+        setCurrentSong(objectToTrack(storedSong));
+        await TrackPlayer.add([objectToTrack(storedSong)]);
       }
     }
   };

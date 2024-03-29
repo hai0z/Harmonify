@@ -53,6 +53,9 @@ function HomeScreens() {
       setLoading(false);
     });
     nodejs.channel.post('home');
+    // return () => {
+    //   nodejs.channel.removeListener('home', () => {});
+    // };
   }, []);
 
   if (loading) {
@@ -65,9 +68,9 @@ function HomeScreens() {
   const timeColor = () => {
     const hour = new Date().getHours();
     if (hour < 12) {
-      return '#6096f9';
+      return '#3F1D38';
     } else if (hour < 18) {
-      return '#138086';
+      return '#092635';
     } else {
       return '#534666';
     }
@@ -77,8 +80,11 @@ function HomeScreens() {
       showsVerticalScrollIndicator={false}
       className="bg-[#121212] h-full w-full pb-[200px]">
       <Header />
-      <View className="h-28 top-0" style={[StyleSheet.absoluteFillObject]}>
-        <LinearGradient colors={[timeColor(), '#121212']} className="h-full" />
+      <View className="h-56 top-0" style={[StyleSheet.absoluteFillObject]}>
+        <LinearGradient
+          colors={[timeColor(), `${timeColor()}50`, '#121212']}
+          className="h-full"
+        />
       </View>
       <View>{dataNewRelease && <NewRelease data={dataNewRelease} />}</View>
       {dataHome?.map((e: any, index: number) => {
