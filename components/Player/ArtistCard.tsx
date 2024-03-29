@@ -42,7 +42,7 @@ const ArtistCard = () => {
   return (
     <TouchableOpacity
       activeOpacity={1}
-      className="w-full rounded-2xl h-[340px] mt-8"
+      className="w-full rounded-2xl h-[320px] mt-8"
       onPress={() =>
         navigation.navigate('Artists', {
           name: data.alias,

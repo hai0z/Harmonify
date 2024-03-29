@@ -25,8 +25,6 @@ import LikedSong from '../screens/library/LikedSong';
 import MyPlaylist from '../screens/library/MyPlaylist';
 import {useEffect} from 'react';
 import SplashScreen from 'react-native-splash-screen';
-import Toast from '../components/toast/Toast';
-import useToastStore from '../store/toastStore';
 import {COLOR, TABBAR_HEIGHT} from '../constants';
 export type HomeStackParamsList = {
   Home: undefined;

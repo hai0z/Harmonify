@@ -7,7 +7,7 @@ import {useNavigation} from '@react-navigation/native';
 import useSyncLyric from '../../hooks/useSyncLyric';
 import tinycolor from 'tinycolor2';
 
-const OFFSET = 1;
+const OFFSET = 2;
 
 const Lyric = () => {
   const lyrics = usePlayerStore(state => state.lyrics);
@@ -41,10 +41,10 @@ const Lyric = () => {
       <TouchableOpacity
         onPress={() => nativgation.navigate('Lyric', {lyrics})}
         activeOpacity={1}
-        className="rounded-2xl mt-8"
+        className="rounded-2xl mt-10"
         style={{
           backgroundColor: bg,
-          height: 360,
+          height: 320,
         }}>
         <LinearGradient
           colors={[bg!, bg!, 'transparent']}

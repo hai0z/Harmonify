@@ -66,36 +66,6 @@ const MiniPlayer = () => {
           bottom: TABBAR_HEIGHT,
           transform: [{translateX: (SCREEN_WIDTH * 0.04) / 2}],
         }}>
-        {/* <View
-          style={[
-            StyleSheet.absoluteFillObject,
-
-            {
-              width: '100%',
-              height: '100%',
-              borderRadius: 6,
-              zIndex: -1,
-              backgroundColor: '#121212',
-            },
-          ]}
-        /> */}
-        {/* <Image
-          source={{
-            uri: currentSong?.artwork,
-          }}
-          blurRadius={200}
-          resizeMode="cover"
-          style={[
-            StyleSheet.absoluteFillObject,
-
-            {
-              width: '100%',
-              height: '100%',
-              borderRadius: 6,
-              zIndex: 1,
-            },
-          ]}
-        /> */}
         <TouchableOpacity
           onPress={() => navigation.navigate('Player')}
           activeOpacity={1}

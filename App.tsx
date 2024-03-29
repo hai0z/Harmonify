@@ -10,7 +10,7 @@ import PlayerProvider from './context/PlayerProvider';
 import AuthProvider from './context/AuthProvider';
 import Toast from './components/toast/Toast';
 import {addEventListener} from '@react-native-community/netinfo';
-import useToastStore, {ToastTime} from './store/toastStore';
+import useToastStore from './store/toastStore';
 import React from 'react';
 export default function App() {
   useEffect(() => {

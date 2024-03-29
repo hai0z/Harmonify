@@ -17,9 +17,9 @@ nodejs.channel.addListener('getLyric', async data => {
 export const getSongColors = async () => {
   if (usePlayerStore.getState().currentSong?.artwork !== null) {
     getColors(
-      getThumbnail(usePlayerStore.getState().currentSong?.artwork!, 94),
+      getThumbnail(usePlayerStore.getState().currentSong?.artwork!, 48),
       {
-        fallback: '#0098db',
+        fallback: '#0098DB',
       },
     ).then(usePlayerStore.getState().setColor);
   }

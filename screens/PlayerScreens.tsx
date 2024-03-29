@@ -44,12 +44,12 @@ const PlayerScreens = () => {
           backgroundColor: COLOR.BACKGROUND,
         }}>
         <LinearGradient
-          colors={[useDarkColor(color.dominant!, 30), COLOR.BACKGROUND]}
+          colors={[useDarkColor(color.dominant!, 25), COLOR.BACKGROUND]}
           style={[
             StyleSheet.absoluteFill,
             {
               width: SCREEN_WIDTH,
-              height: SCREEN_HEIGHT,
+              height: SCREEN_HEIGHT * 1.25,
             },
           ]}
         />
@@ -103,7 +103,7 @@ const PlayerScreens = () => {
               marqueeDelay={3000}>
               {track?.title}
             </TextTicker>
-            <Text className="text-zinc-500 font-semibold">{track?.artist}</Text>
+            <Text className="text-zinc-400 font-semibold">{track?.artist}</Text>
           </View>
         </View>
       </View>

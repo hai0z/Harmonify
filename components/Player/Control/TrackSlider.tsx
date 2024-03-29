@@ -9,17 +9,17 @@ const TrackSlider = () => {
 
   const time = caculateTime(progess.duration, progess.position);
 
-  const onSlidingComplete = useCallback((value: number) => {
-    TrackPlayer.stop();
-    TrackPlayer.seekTo(value);
-    TrackPlayer.play();
+  const onSlidingComplete = useCallback(async (value: number) => {
+    await TrackPlayer.pause();
+    await TrackPlayer.seekTo(value);
+    await TrackPlayer.play();
   }, []);
 
   return (
     <View>
       <Slider
         minimumValue={0}
-        step={0.25}
+        step={0.5}
         value={progess.position}
         onSlidingComplete={onSlidingComplete}
         onSlidingStart={() => TrackPlayer.pause()}
@@ -32,7 +32,7 @@ const TrackSlider = () => {
         }}
         trackStyle={{
           height: 3.5,
-          backgroundColor: '#ffffff90',
+          backgroundColor: '#ffffff95',
         }}
         minTrackStyle={{
           backgroundColor: '#ffffff',
