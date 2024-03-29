@@ -106,7 +106,7 @@ const MiniPlayer = () => {
             width: '100%',
             height: '100%',
             zIndex: 2,
-            backgroundColor: useDarkColor(color.dominant!, 50),
+            backgroundColor: useDarkColor(color.dominant!, 40),
           }}>
           <View
             style={{

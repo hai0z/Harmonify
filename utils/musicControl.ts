@@ -4,6 +4,7 @@ import getThumbnail from "./getThumnail";
 import nodejs from "nodejs-mobile-react-native";
 import { NULL_URL } from '../constants';
 import useToastStore, { ToastTime } from '../store/toastStore';
+import { getSongColors } from '../context/PlayerProvider';
 
 export const objectToTrack = (data: any) => {
   return {
@@ -30,7 +31,6 @@ TrackPlayer.addEventListener(Event.PlaybackActiveTrackChanged, async event => {
 });
 
 nodejs.channel.addListener('getSong', async data => {
-  console.log('vao load song', data);
   if (data.data === NULL_URL) {
     useToastStore.getState().show("Không thể phát bài hát này", ToastTime.SHORT);
     return

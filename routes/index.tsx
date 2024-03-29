@@ -135,7 +135,7 @@ const HomeTab = () => {
           }
         },
         tabBarItemStyle: {
-          backgroundColor: '#00000090',
+          backgroundColor: '#12121295',
           height: TABBAR_HEIGHT,
         },
         tabBarStyle: {
@@ -146,7 +146,7 @@ const HomeTab = () => {
           bottom: 0,
           left: 0,
           right: 0,
-          backgroundColor: '#00000090',
+          backgroundColor: '#12121295',
         },
         tabBarActiveTintColor: COLOR.PRIMARY,
         tabBarInactiveTintColor: '#ababab',
