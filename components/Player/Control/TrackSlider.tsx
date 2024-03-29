@@ -5,7 +5,7 @@ import Slider from '@react-native-assets/slider';
 import caculateTime from '../../../utils/caculateMusicTime';
 
 const TrackSlider = () => {
-  const progess = useProgress(100);
+  const progess = useProgress(500);
 
   const time = caculateTime(progess.duration, progess.position);
 

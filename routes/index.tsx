@@ -105,11 +105,17 @@ const HomeTab = () => {
   return (
     <Tab.Navigator
       tabBar={props => (
-        <>
-          <Toast />
+        <View className="relative">
           <MiniPlayer />
           <BottomTabBar {...props} />
-        </>
+          <LinearGradient
+            colors={['transparent', '#121212']}
+            className="absolute bottom-0 left-0 right-0"
+            style={{
+              height: TABBAR_HEIGHT,
+            }}
+          />
+        </View>
       )}
       screenOptions={({route}) => ({
         tabBarHideOnKeyboard: true,
@@ -128,7 +134,10 @@ const HomeTab = () => {
               );
           }
         },
-
+        tabBarItemStyle: {
+          backgroundColor: '#00000090',
+          height: TABBAR_HEIGHT,
+        },
         tabBarStyle: {
           position: 'absolute',
           borderTopWidth: 0,
@@ -137,7 +146,7 @@ const HomeTab = () => {
           bottom: 0,
           left: 0,
           right: 0,
-          backgroundColor: '#000000',
+          backgroundColor: '#00000090',
         },
         tabBarActiveTintColor: COLOR.PRIMARY,
         tabBarInactiveTintColor: '#ababab',

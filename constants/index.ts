@@ -11,6 +11,6 @@ export const DEFAULT_IMG = "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/a
 
 export const NULL_URL = "NULL"
 
-export const TABBAR_HEIGHT = 60
+export const TABBAR_HEIGHT = 65
 
 export const MINI_PLAYER_HEIGHT = 60

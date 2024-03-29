@@ -20,13 +20,14 @@ import ImageSlider from '../components/Player/ImageSlider';
 import ArtistCard from '../components/Player/ArtistCard';
 import SongInfoCard from '../components/Player/SongInfoCard';
 import {useActiveTrack} from 'react-native-track-player';
-import {DEFAULT_IMG} from '../constants';
+import {COLOR, DEFAULT_IMG} from '../constants';
+import useDarkColor from '../hooks/useDarkColor';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 const PlayerScreens = () => {
-  const {playList} = usePlayerStore(state => state);
+  const {playList, color} = usePlayerStore(state => state);
   const navigation = useNavigation<any>();
   const track = useActiveTrack();
   return (
@@ -40,21 +41,15 @@ const PlayerScreens = () => {
         className="pt-[35px]"
         style={{
           height: SCREEN_HEIGHT * 0.75,
-          backgroundColor: '#121212',
+          backgroundColor: COLOR.BACKGROUND,
         }}>
         <LinearGradient
-          colors={['transparent', '#121212']}
-          className="absolute bottom-0 h-full left-0 right-0 z-10"
-        />
-
-        <Image
-          source={{uri: track?.artwork || DEFAULT_IMG}}
-          blurRadius={1000}
+          colors={[useDarkColor(color.dominant!, 30), COLOR.BACKGROUND]}
           style={[
-            StyleSheet.absoluteFillObject,
+            StyleSheet.absoluteFill,
             {
               width: SCREEN_WIDTH,
-              height: SCREEN_HEIGHT * 0.75,
+              height: SCREEN_HEIGHT,
             },
           ]}
         />

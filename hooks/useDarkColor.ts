@@ -1,15 +1,15 @@
 import tinycolor from 'tinycolor2';
 
-export default function useDarkColor(color: string) {
+export default function useDarkColor(color: string, darken: number) {
   const tinyColor = tinycolor(color);
 
   if (tinyColor.isValid()) {
     if (tinyColor.isDark()) {
       return tinyColor.toHexString();
     } else {
-      return tinyColor.darken(20).toHexString();
+      return tinyColor.darken(darken).toHexString();
     }
   } else {
-    return '#292929';
+    return color;
   }
 }

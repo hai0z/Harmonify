@@ -22,20 +22,15 @@ const PlayButton = () => {
         justifyContent: 'center',
         alignItems: 'center',
       }}>
-      {playerState.state === State.Buffering ||
-      playerState.state === State.Loading ? (
-        <ActivityIndicator size="small" color="#000" />
-      ) : (
-        <Entypo
-          name={
-            playerState.state !== State.Playing
-              ? 'controller-play'
-              : 'controller-paus'
-          }
-          size={36}
-          color="#000"
-        />
-      )}
+      <Entypo
+        name={
+          playerState.state !== State.Playing
+            ? 'controller-play'
+            : 'controller-paus'
+        }
+        size={36}
+        color="#000"
+      />
     </TouchableOpacity>
   );
 };
