@@ -8,7 +8,7 @@ import {
   StatusBar,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback, useContext, useMemo} from 'react';
 import {LinearGradient} from 'react-native-linear-gradient';
 import {FlashList} from '@shopify/flash-list';
 import {handlePlay} from '../../utils/musicControl';
@@ -17,6 +17,8 @@ import {useActiveTrack} from 'react-native-track-player';
 import {usePlayerStore} from '../../store/playerStore';
 import Entypo from 'react-native-vector-icons/Entypo';
 import TrackItem from '../../components/TrackItem';
+import {PlayerContext} from '../../context/PlayerProvider';
+import useBottomSheetStore from '../../store/bottomSheetStore';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const PlaylistDetail = () => {
@@ -24,7 +26,7 @@ const PlaylistDetail = () => {
 
   const navigation = useNavigation<any>();
 
-  const {likedSongs: likedSong, color} = usePlayerStore(state => state);
+  const {likedSongs: likedSong} = usePlayerStore(state => state);
   const headerColor = useMemo(
     () =>
       scrollY.interpolate({
@@ -35,6 +37,7 @@ const PlaylistDetail = () => {
     [scrollY],
   );
 
+  const {showBottomSheet} = useContext(PlayerContext);
   const headerTitleOpacity = useMemo(
     () =>
       scrollY.interpolate({
@@ -142,7 +145,12 @@ const PlaylistDetail = () => {
         keyExtractor={(item: any, index) => `${item.encodeId}_${index}`}
         renderItem={({item}: any) => {
           return (
-            <TrackItem item={item} onClick={handlePlaySong} isAlbum={false} />
+            <TrackItem
+              item={item}
+              onClick={handlePlaySong}
+              isAlbum={false}
+              showBottomSheet={showBottomSheet}
+            />
           );
         }}
       />

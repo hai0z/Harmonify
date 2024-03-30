@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import React, {useCallback, useEffect, useMemo} from 'react';
+import React, {useCallback, useContext, useEffect, useMemo} from 'react';
 import {getDetailPlaylist} from '../apis/detailPlaylist';
 import {LinearGradient} from 'react-native-linear-gradient';
 import getThumbnail from '../utils/getThumnail';
@@ -22,6 +22,7 @@ import {useNavigation} from '@react-navigation/native';
 import nodejs from 'nodejs-mobile-react-native';
 import {useActiveTrack} from 'react-native-track-player';
 import TrackItem from '../components/TrackItem';
+import {PlayerContext} from '../context/PlayerProvider';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const PlaylistDetail = ({route}: {route: any}) => {
@@ -35,7 +36,7 @@ const PlaylistDetail = ({route}: {route: any}) => {
 
   const navigation = useNavigation<any>();
 
-  // const currentSong = useActiveTrack();
+  const {showBottomSheet} = useContext(PlayerContext);
 
   useEffect(() => {
     setLoading(true);
@@ -217,6 +218,7 @@ const PlaylistDetail = ({route}: {route: any}) => {
         renderItem={({item, index}: any) => {
           return (
             <TrackItem
+              showBottomSheet={showBottomSheet}
               item={item}
               index={index}
               isAlbum={playlistData.isAlbum}

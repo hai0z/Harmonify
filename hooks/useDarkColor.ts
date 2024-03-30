@@ -4,7 +4,7 @@ export default function useDarkColor(color: string, amount: number) {
   const tinyColor = tinycolor(color);
   if (tinyColor.isValid()) {
     if (tinyColor.isDark()) {
-      return tinyColor.lighten(5).toHexString();
+      return tinyColor.brighten(5).toHexString();
     } else {
       return tinyColor.darken(amount).toHexString();
     }

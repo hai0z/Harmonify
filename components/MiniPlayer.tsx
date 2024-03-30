@@ -76,7 +76,7 @@ const MiniPlayer = () => {
             width: '100%',
             height: '100%',
             zIndex: 2,
-            backgroundColor: useDarkColor(color.dominant!, 40),
+            backgroundColor: useDarkColor(color.dominant!, 35),
           }}>
           <View
             style={{
@@ -107,9 +107,6 @@ const MiniPlayer = () => {
                   color: 'white',
                   fontWeight: '600',
                   fontSize: 14,
-                  textShadowColor: 'rgba(0, 0, 0, 0.5)',
-                  textShadowOffset: {width: -1, height: 1},
-                  textShadowRadius: 2,
                 }}>
                 {currentSong?.title}
               </TextTicker>
@@ -118,9 +115,6 @@ const MiniPlayer = () => {
                 style={{
                   color: 'white',
                   fontSize: 12,
-                  textShadowColor: 'rgba(0, 0, 0, 0.5)',
-                  textShadowOffset: {width: -1, height: 1},
-                  textShadowRadius: 2,
                 }}
                 numberOfLines={1}>
                 {currentSong?.artist}

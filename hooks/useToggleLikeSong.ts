@@ -4,18 +4,25 @@ import { Track, useActiveTrack } from 'react-native-track-player';
 import { addToLikedList } from '../utils/firebase';
 import useToastStore, { ToastTime } from '../store/toastStore';
 
-const useToggleLikeSong = () => {
+const useToggleLikeSong = (trackId = null) => {
+
   const [isLiked, setIsLiked] = useState(false);
 
   const { likedSongs } = usePlayerStore(state => state);
 
   const { show } = useToastStore(state => state);
+
   const track = useActiveTrack();
+
+  if (trackId === null) {
+    trackId = track?.id
+  }
+
   useEffect(() => {
     if (likedSongs.length > 0) {
-      setIsLiked(likedSongs.some((s: any) => s.encodeId == track?.id));
+      setIsLiked(likedSongs.some((s: any) => s.encodeId === trackId));
     }
-  }, [likedSongs.length, track?.id]);
+  }, [likedSongs.length, trackId]);
 
   const handleAddToLikedList = async (likedSong: Track) => {
     setIsLiked(!isLiked);

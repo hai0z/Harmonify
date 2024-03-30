@@ -26,6 +26,8 @@ import MyPlaylist from '../screens/library/MyPlaylist';
 import {useEffect} from 'react';
 import SplashScreen from 'react-native-splash-screen';
 import {COLOR, TABBAR_HEIGHT} from '../constants';
+import TrackItemBottomSheet from '../components/bottom-sheet/TrackItemBottomSheet';
+import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 export type HomeStackParamsList = {
   Home: undefined;
   Search: undefined;
@@ -48,10 +50,13 @@ const Tab = createBottomTabNavigator();
 
 const HomeWrapper = () => {
   return (
-    <View className="flex-1 h-full w-full relative bg-[#121212]">
-      <StatusBar backgroundColor="#00000050" style="light" />
-      <HomeTab />
-    </View>
+    <BottomSheetModalProvider>
+      <View className="flex-1 h-full w-full relative bg-[#121212]">
+        <StatusBar backgroundColor="#00000050" style="light" />
+        <HomeTab />
+        <TrackItemBottomSheet />
+      </View>
+    </BottomSheetModalProvider>
   );
 };
 
@@ -140,7 +145,7 @@ const HomeTab = () => {
           position: 'absolute',
           borderTopWidth: 0,
           height: TABBAR_HEIGHT,
-          zIndex: 2,
+          zIndex: 1,
           bottom: 0,
           left: 0,
           right: 0,

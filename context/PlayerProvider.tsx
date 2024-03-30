@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useCallback, useEffect, useRef} from 'react';
 import {usePlayerStore} from '../store/playerStore';
 import {getColors} from 'react-native-image-colors';
 import TrackPlayer from 'react-native-track-player';
@@ -6,7 +6,16 @@ import nodejs from 'nodejs-mobile-react-native';
 import {getData, storeData} from '../utils/localStorage';
 import {objectToTrack} from '../utils/musicControl';
 import getThumbnail from '../utils/getThumnail';
-const PlayerContext = React.createContext({});
+import {BottomSheetModal} from '@gorhom/bottom-sheet';
+import {BottomSheetModalMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
+import useBottomSheetStore from '../store/bottomSheetStore';
+
+interface ContextType {
+  bottomSheetModalRef: React.RefObject<BottomSheetModalMethods>;
+  handlePresentModalPress: () => void;
+  showBottomSheet: (item: any) => void;
+}
+export const PlayerContext = React.createContext({} as ContextType);
 
 nodejs.start('main.js');
 
@@ -14,20 +23,35 @@ nodejs.channel.addListener('getLyric', async data => {
   usePlayerStore.getState().setLyrics(data);
 });
 
-export const getSongColors = async () => {
-  if (usePlayerStore.getState().currentSong?.artwork !== null) {
-    getColors(
-      getThumbnail(usePlayerStore.getState().currentSong?.artwork!, 48),
-      {
-        fallback: '#0098DB',
-      },
-    ).then(usePlayerStore.getState().setColor);
-  }
-};
-
 const PlayerProvider = ({children}: {children: React.ReactNode}) => {
   const {setLyrics, playList, setPlayList, currentSong, setCurrentSong} =
     usePlayerStore(state => state);
+
+  const getSongColors = async () => {
+    if (usePlayerStore.getState().currentSong?.artwork !== null) {
+      getColors(
+        getThumbnail(usePlayerStore.getState().currentSong?.artwork!, 32),
+        {
+          fallback: '#0098DB',
+          cache: true,
+          key: usePlayerStore.getState().currentSong?.encodeId,
+        },
+      ).then(usePlayerStore.getState().setColor);
+    }
+  };
+
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.present();
+  }, []);
+
+  const {setData} = useBottomSheetStore(state => state);
+
+  const showBottomSheet = useCallback((item: any) => {
+    handlePresentModalPress();
+    setData(item);
+  }, []);
 
   const getLatestSong = async () => {
     const data = await getData('currentSong');
@@ -85,7 +109,12 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
     nodejs.channel.post('getLyric', currentSong?.id);
   }, [currentSong?.id]);
 
-  return <PlayerContext.Provider value={{}}>{children}</PlayerContext.Provider>;
+  return (
+    <PlayerContext.Provider
+      value={{bottomSheetModalRef, handlePresentModalPress, showBottomSheet}}>
+      {children}
+    </PlayerContext.Provider>
+  );
 };
 
 export default PlayerProvider;

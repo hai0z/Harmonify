@@ -1,9 +1,10 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   ActivityIndicator,
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import PlayListCover from '../../components/PlayListCover';
@@ -86,7 +87,9 @@ function HomeScreens() {
           className="h-full"
         />
       </View>
+
       <View>{dataNewRelease && <NewRelease data={dataNewRelease} />}</View>
+
       {dataHome?.map((e: any, index: number) => {
         return (
           <View key={index}>

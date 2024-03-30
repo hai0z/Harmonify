@@ -6,7 +6,7 @@ import TrackPlayer, {
 } from 'react-native-track-player';
 import Navigation from './routes/';
 import PlayerProvider from './context/PlayerProvider';
-
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import AuthProvider from './context/AuthProvider';
 import Toast from './components/toast/Toast';
 import {addEventListener} from '@react-native-community/netinfo';
@@ -61,8 +61,10 @@ export default function App() {
   return (
     <AuthProvider>
       <PlayerProvider>
-        <Navigation />
-        <Toast />
+        <GestureHandlerRootView>
+          <Navigation />
+          <Toast />
+        </GestureHandlerRootView>
       </PlayerProvider>
     </AuthProvider>
   );

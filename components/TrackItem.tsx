@@ -1,16 +1,18 @@
 import {View, Text, TouchableOpacity, Image} from 'react-native';
-import React from 'react';
+import React, {useCallback, useContext} from 'react';
 import getThumbnail from '../utils/getThumnail';
-
+import Feather from 'react-native-vector-icons/Feather';
 interface Props {
   item: any;
   index?: number;
   isAlbum?: boolean;
   onClick: (item: any) => void;
+  showBottomSheet: (item: any) => void;
 }
 const TrackItem = (props: Props) => {
   console.log('df');
-  const {item, index, onClick, isAlbum} = props;
+  const {item, index, onClick, isAlbum, showBottomSheet} = props;
+
   return (
     <TouchableOpacity
       activeOpacity={0.8}
@@ -41,6 +43,11 @@ const TrackItem = (props: Props) => {
           {item?.artistsNames}
         </Text>
       </View>
+      <TouchableOpacity
+        onPress={() => showBottomSheet(item)}
+        hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}>
+        <Feather name="more-vertical" size={20} color="#ffffff90" />
+      </TouchableOpacity>
     </TouchableOpacity>
   );
 };

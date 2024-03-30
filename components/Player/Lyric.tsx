@@ -32,7 +32,7 @@ const Lyric = () => {
   const bg =
     bgColor.vibrant === '#0098DB'
       ? tinycolor(bgColor.average).isDark()
-        ? tinycolor(bgColor.average).lighten(20).toString()
+        ? tinycolor(bgColor.average).lighten(30).toString()
         : bgColor.average
       : bgColor.vibrant;
 

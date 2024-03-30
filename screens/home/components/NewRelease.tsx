@@ -7,11 +7,13 @@ import {
   TouchableOpacity,
   Animated,
 } from 'react-native';
-import React, {useEffect} from 'react';
+import React, {useCallback, useContext, useEffect} from 'react';
 import {FlashList} from '@shopify/flash-list';
 import TrackItem from '../../../components/TrackItem';
 import {COLOR} from '../../../constants';
 import {handlePlay} from '../../../utils/musicControl';
+import {PlayerContext} from '../../../context/PlayerProvider';
+import useBottomSheetStore from '../../../store/bottomSheetStore';
 
 function paginateArray(data: any[], itemsPerPage: number) {
   const totalPages = Math.ceil(data?.length / itemsPerPage);
@@ -50,8 +52,8 @@ const NewRelease = ({data}: Props) => {
   }, [tabIndex]);
 
   const dataList = [allPage, vPopPage, othersPage];
-  const handlePlaySong = (song: any) => {
-    handlePlay(song, {
+  const handlePlaySong = useCallback((song: any) => {
+    return handlePlay(song, {
       id: 'new-release' + tabIndex,
       items:
         tabIndex === 0
@@ -60,7 +62,9 @@ const NewRelease = ({data}: Props) => {
           ? data?.items?.vPop
           : data?.items?.others,
     });
-  };
+  }, []);
+
+  const {showBottomSheet} = useContext(PlayerContext);
   return (
     <View>
       <Text className="text-xl flex justify-between items-end mt-4 mb-3 uppercase mx-4 text-white">
@@ -90,19 +94,23 @@ const NewRelease = ({data}: Props) => {
         ref={listRef}
         horizontal
         pagingEnabled
-        initialNumToRender={4}
+        initialNumToRender={1}
         keyExtractor={(_, index) => index.toString()}
         data={dataList[tabIndex]}
         renderItem={({item}) => (
-          <ScrollView style={{width: SCREEN_WIDTH}}>
-            {item.map((e: any, index: number) => (
+          <FlatList
+            initialNumToRender={1}
+            contentContainerStyle={{
+              width: SCREEN_WIDTH,
+            }}
+            data={item}
+            renderItem={({item}) => (
               <TrackItem
-                item={e}
-                key={index}
-                onClick={() => handlePlaySong(e)}
+                item={item}
+                onClick={handlePlaySong}
+                showBottomSheet={showBottomSheet}
               />
-            ))}
-          </ScrollView>
+            )}></FlatList>
         )}
       />
     </View>

@@ -6,9 +6,10 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
+  Animated,
 } from 'react-native';
 
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {LinearGradient} from 'react-native-linear-gradient';
 import {usePlayerStore} from '../store/playerStore';
@@ -30,6 +31,7 @@ const PlayerScreens = () => {
   const {playList, color} = usePlayerStore(state => state);
   const navigation = useNavigation<any>();
   const track = useActiveTrack();
+
   return (
     <ScrollView
       className="bg-[#121212]"
@@ -49,7 +51,7 @@ const PlayerScreens = () => {
             StyleSheet.absoluteFill,
             {
               width: SCREEN_WIDTH,
-              height: SCREEN_HEIGHT * 1.25,
+              height: SCREEN_HEIGHT,
             },
           ]}
         />
