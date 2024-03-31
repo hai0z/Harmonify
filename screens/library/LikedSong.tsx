@@ -19,6 +19,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import TrackItem from '../../components/TrackItem';
 import {PlayerContext} from '../../context/PlayerProvider';
 import useBottomSheetStore from '../../store/bottomSheetStore';
+import {COLOR} from '../../constants';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const PlaylistDetail = () => {
@@ -103,7 +104,7 @@ const PlaylistDetail = () => {
                   className="absolute bottom-0 h-40 left-0 right-0 z-50"
                 />
                 <LinearGradient
-                  colors={['transparent', 'blue']}
+                  colors={['transparent', COLOR.PRIMARY]}
                   style={[
                     StyleSheet.absoluteFill,
                     {
@@ -113,7 +114,7 @@ const PlaylistDetail = () => {
                   ]}
                 />
                 <LinearGradient
-                  colors={['blue', '#bdbdbd']}
+                  colors={[COLOR.PRIMARY, '#bdbdbd']}
                   style={[
                     {
                       width: SCREEN_WIDTH * 0.6,
@@ -121,7 +122,7 @@ const PlaylistDetail = () => {
                     },
                   ]}
                   className="justify-center items-center rounded-lg z-[99]">
-                  <Entypo name="heart" size={120} color="#fff" />
+                  <Entypo name="heart" size={120} color={COLOR.SECONDARY} />
                 </LinearGradient>
               </View>
               <View className="z-50 mt-4 px-6 mb-4">

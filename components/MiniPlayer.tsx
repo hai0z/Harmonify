@@ -1,16 +1,8 @@
-import {
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  Dimensions,
-  StyleSheet,
-} from 'react-native';
-import React, {useCallback, useEffect, useState} from 'react';
+import {View, Text, Image, TouchableOpacity, Dimensions} from 'react-native';
+import React, {useCallback} from 'react';
 import useKeyBoardStatus from '../hooks/useKeyBoardStatus';
 import TrackPlayer, {
   State,
-  Track,
   useActiveTrack,
   usePlaybackState,
   useProgress,
@@ -118,7 +110,7 @@ const MiniPlayer = () => {
                   fontSize: 12,
                 }}
                 numberOfLines={1}>
-                {currentSong?.artist}
+                {currentSong?.artist || currentSong?.artistName}
               </Text>
             </View>
 

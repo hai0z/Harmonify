@@ -22,7 +22,6 @@ export const PlayerContext = React.createContext({} as ContextType);
 nodejs.start('main.js');
 
 nodejs.channel.addListener('getLyric', async data => {
-  console.log({data});
   usePlayerStore.getState().setLyrics(data);
 });
 
@@ -112,11 +111,8 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
         setCurrentSong(objectToTrack(storedSong));
         await TrackPlayer.add(objectToTrack(storedSong));
       } else {
-        setCurrentSong({...objectToTrack(storedSong), url: storedSong.url});
-        await TrackPlayer.add({
-          ...objectToTrack(storedSong),
-          url: storedSong.url,
-        });
+        setCurrentSong(storedSong);
+        await TrackPlayer.add(storedSong);
       }
     }
   };

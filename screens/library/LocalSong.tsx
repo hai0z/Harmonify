@@ -7,20 +7,22 @@ import {
   StatusBar,
   Image,
   Text,
+  ActivityIndicator,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import React, {useCallback, useContext, useMemo} from 'react';
+import React, {useCallback, useMemo} from 'react';
 import {LinearGradient} from 'react-native-linear-gradient';
 import {FlashList} from '@shopify/flash-list';
 import {handlePlaySongInLocal} from '../../utils/musicControl';
 import {useNavigation} from '@react-navigation/native';
-import {usePlayerStore} from '../../store/playerStore';
-import {DEFAULT_IMG} from '../../constants';
+import {COLOR, DEFAULT_IMG} from '../../constants';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import useGetLocalSong from '../../hooks/useGetLocalSong';
+import Feather from 'react-native-vector-icons/Feather';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const LocalSong = ({route}: any) => {
-  const {data} = route.params;
+  const {isLoading, localSong} = useGetLocalSong();
 
   const scrollY = React.useRef(new Animated.Value(0)).current;
 
@@ -60,6 +62,15 @@ const LocalSong = ({route}: any) => {
     (song: any) => handlePlaySongInLocal(song),
     [],
   );
+  if (isLoading) {
+    return (
+      <View
+        className="flex-1 justify-center items-center"
+        style={{backgroundColor: COLOR.BACKGROUND}}>
+        <ActivityIndicator size={'large'} color={COLOR.PRIMARY} />
+      </View>
+    );
+  }
 
   return (
     <View className="flex-1 bg-[#121212] w-full">
@@ -97,7 +108,7 @@ const LocalSong = ({route}: any) => {
                   className="absolute bottom-0 h-40 left-0 right-0 z-50"
                 />
                 <LinearGradient
-                  colors={['transparent', 'blue']}
+                  colors={['transparent', COLOR.PRIMARY]}
                   style={[
                     StyleSheet.absoluteFill,
                     {
@@ -107,7 +118,7 @@ const LocalSong = ({route}: any) => {
                   ]}
                 />
                 <LinearGradient
-                  colors={['blue', '#bdbdbd']}
+                  colors={[COLOR.PRIMARY, '#bdbdbd']}
                   style={[
                     {
                       width: SCREEN_WIDTH * 0.6,
@@ -115,11 +126,7 @@ const LocalSong = ({route}: any) => {
                     },
                   ]}
                   className="justify-center items-center rounded-lg z-[99]">
-                  <MaterialCommunityIcons
-                    name="cellphone-arrow-down"
-                    size={120}
-                    color="#fff"
-                  />
+                  <Feather name="folder" size={120} color={COLOR.SECONDARY} />
                 </LinearGradient>
               </View>
               <View className="z-50 mt-4 px-6 mb-4">
@@ -137,9 +144,9 @@ const LocalSong = ({route}: any) => {
         }}
         ListFooterComponent={() => <View style={{height: SCREEN_WIDTH}} />}
         nestedScrollEnabled
-        data={data}
+        data={localSong}
         estimatedItemSize={72}
-        extraData={[data]}
+        extraData={[localSong]}
         keyExtractor={(item: any, index) => `${item.encodeId}_${index}`}
         renderItem={({item}: any) => {
           return <Item item={item} onPress={handlePlaySong} />;

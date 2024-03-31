@@ -1,10 +1,6 @@
 import {View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
 import React from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {useNavigation} from '@react-navigation/native';
-import Entypo from 'react-native-vector-icons/Entypo';
-import LinearGradient from 'react-native-linear-gradient';
-import {usePlayerStore} from '../../store/playerStore';
 import LocalSong from './components/LocalSong';
 import Playlist from './components/Playlist';
 import {COLOR} from '../../constants';
@@ -18,9 +14,7 @@ const LibrarySrceens = () => {
           <Image
             resizeMode="cover"
             style={styles.avatar}
-            source={{
-              uri: 'https://timanhdep.com/wp-content/uploads/2022/06/hinh-avatar-anime-nu-de-thuong-cuc-cute-06.jpg',
-            }}
+            source={require('../../assets/evil.png')}
           />
           <Text style={styles.txt}>Thư viện</Text>
         </View>
@@ -38,7 +32,7 @@ const LibrarySrceens = () => {
               backgroundColor:
                 selectedTab === index ? COLOR.PRIMARY : 'transparent',
             }}
-            className="h-[30px] items-center justify-center mx-[7px] px-[15px] rounded-[12px] border">
+            className="items-center justify-center mx-2 rounded-full px-2 py-1">
             <Text style={{color: '#fff'}}>{item}</Text>
           </TouchableOpacity>
         ))}
@@ -59,9 +53,9 @@ const styles = StyleSheet.create({
     paddingTop: 35,
   },
   avatar: {
-    width: 45,
-    height: 45,
-    borderRadius: 45 / 2,
+    width: 35,
+    height: 35,
+    borderRadius: 35 / 2,
   },
   top: {
     height: 65,

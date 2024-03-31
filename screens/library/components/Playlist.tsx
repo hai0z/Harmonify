@@ -4,6 +4,7 @@ import {useNavigation} from '@react-navigation/native';
 import {usePlayerStore} from '../../../store/playerStore';
 import LinearGradient from 'react-native-linear-gradient';
 import Entypo from 'react-native-vector-icons/Entypo';
+import {COLOR} from '../../../constants';
 
 const Playlist = () => {
   const likedSongs = usePlayerStore(state => state.likedSongs);
@@ -20,9 +21,9 @@ const Playlist = () => {
         activeOpacity={0.8}
         className="flex-row items-center">
         <LinearGradient
-          colors={['blue', '#bdbdbd']}
-          className="w-20 h-20 justify-center items-center">
-          <Entypo name="heart" size={36} color="#fff" />
+          colors={[COLOR.PRIMARY, '#bdbdbd']}
+          className="w-16 h-16 justify-center items-center">
+          <Entypo name="heart" size={36} color={COLOR.SECONDARY} />
         </LinearGradient>
         <View style={{marginLeft: 10}}>
           <Text className="text-white font-bold mb-[5px]">
