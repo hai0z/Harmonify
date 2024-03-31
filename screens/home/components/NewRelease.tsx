@@ -96,8 +96,7 @@ const NewRelease = ({data}: Props) => {
           data={dataList[tabIndex]}
           renderItem={({item}) => (
             <View style={{width: SCREEN_WIDTH}} className="flex-1">
-              <FlashList
-                estimatedItemSize={70}
+              <FlatList
                 data={item}
                 renderItem={({item}) => (
                   <TrackItem
@@ -105,7 +104,7 @@ const NewRelease = ({data}: Props) => {
                     onClick={handlePlaySong}
                     showBottomSheet={showBottomSheet}
                   />
-                )}></FlashList>
+                )}></FlatList>
             </View>
           )}
         />
