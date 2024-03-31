@@ -8987,6 +8987,11 @@ react-native-gesture-handler@^2.16.0:
     lodash "^4.17.21"
     prop-types "^15.7.2"
 
+react-native-get-music-files@^2.2.4:
+  version "2.2.4"
+  resolved "https://registry.yarnpkg.com/react-native-get-music-files/-/react-native-get-music-files-2.2.4.tgz#6f35981892938e314507fc9f9553418e1980bcec"
+  integrity sha512-jHTOZ/yH+OIlYG0xG0eli7Ztw/KLbwBrX/oSviqEeSHIW983/CNorY2JcT64y7qZiXzJdYhehsAtZuPF6xw04A==
+
 react-native-image-colors@^2.4.0:
   version "2.4.0"
   resolved "https://registry.npmjs.org/react-native-image-colors/-/react-native-image-colors-2.4.0.tgz"
@@ -8998,6 +9003,11 @@ react-native-linear-gradient@^2.8.3:
   version "2.8.3"
   resolved "https://registry.npmjs.org/react-native-linear-gradient/-/react-native-linear-gradient-2.8.3.tgz"
   integrity sha512-KflAXZcEg54PXkLyflaSZQ3PJp4uC4whM7nT/Uot9m0e/qxFV3p6uor1983D1YOBJbJN7rrWdqIjq0T42jOJyA==
+
+react-native-permissions@^4.1.5:
+  version "4.1.5"
+  resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-4.1.5.tgz#db4d1ddbf076570043f4fd4168f54bb6020aec92"
+  integrity sha512-r6VMRacASmtRHS+GZ+5HQCp9p9kiE+UU9magHOZCXZLTJitdTuVHWZRrb4v4oqZGU+zAp3mZhTQftuMMv+WLUg==
 
 react-native-reanimated@^3.8.1:
   version "3.8.1"

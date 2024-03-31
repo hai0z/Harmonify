@@ -30,7 +30,8 @@ const MiniPlayer = () => {
 
   const keyboardVisible = useKeyBoardStatus();
 
-  const {color, currentSong, isLoadingTrack} = usePlayerStore(state => state);
+  const {color, currentSong, isLoadingTrack, tempSong, isPlayFromLocal} =
+    usePlayerStore(state => state);
 
   const playerState = usePlaybackState();
 
@@ -129,16 +130,19 @@ const MiniPlayer = () => {
                 justifyContent: 'space-between',
                 gap: 16,
               }}>
-              <TouchableOpacity
-                onPress={() => {
-                  handleAddToLikedList(track);
-                }}>
-                <AntDesign
-                  name={isLiked ? 'heart' : 'hearto'}
-                  size={24}
-                  color={isLiked ? COLOR.PRIMARY : '#ffffff'}
-                />
-              </TouchableOpacity>
+              {!isPlayFromLocal && (
+                <TouchableOpacity
+                  onPress={() => {
+                    handleAddToLikedList(tempSong);
+                  }}>
+                  <AntDesign
+                    name={isLiked ? 'heart' : 'hearto'}
+                    size={24}
+                    color={isLiked ? COLOR.PRIMARY : '#ffffff'}
+                  />
+                </TouchableOpacity>
+              )}
+
               <TouchableOpacity
                 className=" mr-4"
                 onPress={() => togglePlay(playerState.state)}>

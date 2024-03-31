@@ -4,11 +4,10 @@ import getThumbnail from "./getThumnail";
 import nodejs from "nodejs-mobile-react-native";
 import { NULL_URL } from '../constants';
 import useToastStore, { ToastTime } from '../store/toastStore';
-import { getSongColors } from '../context/PlayerProvider';
 
 export const objectToTrack = (data: any) => {
   return {
-    id: data?.encodeId,
+    id: data.encodeId,
     url: NULL_URL,
     title: data.title,
     artist: data.artistsNames,
@@ -16,18 +15,25 @@ export const objectToTrack = (data: any) => {
     duration: data.duration,
   };
 }
+
 TrackPlayer.addEventListener(Event.PlaybackActiveTrackChanged, async event => {
-  if (!event.track) return;
-  if (event.track.url !== NULL_URL) {
-    usePlayerStore.getState().setCurrentSong(event.track);
+  if (!usePlayerStore.getState().isPlayFromLocal) {
+    if (!event.track) return;
+    if (event.track.url !== NULL_URL) {
+      usePlayerStore.getState().setCurrentSong(event.track);
+      nodejs.channel.post('getSongInfo', event.track?.id);
+    }
+    if (
+      event.index !== undefined && event.track !== undefined &&
+      event.track.url === NULL_URL) {
+      console.log(event.track);
+      !usePlayerStore.getState().isLoadingTrack &&
+        nodejs.channel.post('getSong', event.track);
+    }
+  } else {
+    usePlayerStore.getState().setCurrentSong(event.track!);
   }
-  if (
-    event.index !== undefined && event.track !== undefined &&
-    event.track.url === NULL_URL) {
-    console.log(event.track);
-    !usePlayerStore.getState().isLoadingTrack &&
-      nodejs.channel.post('getSong', event.track);
-  }
+
 });
 
 nodejs.channel.addListener('getSong', async data => {
@@ -41,12 +47,16 @@ nodejs.channel.addListener('getSong', async data => {
   })
 });
 
+nodejs.channel.addListener('getSongInfo', async data => {
+  usePlayerStore.getState().setTempSong(data);
+});
+
 const handlePlay = async (song: any, playlist: IPlaylist = {
   id: "",
   items: [],
 }) => {
+  usePlayerStore.getState().setIsPlayFromLocal(false);
   const currentPlaylistId = usePlayerStore.getState().playList?.id;
-
   if (currentPlaylistId !== playlist.id) {
     usePlayerStore.getState().setisLoadingTrack(true);
     usePlayerStore.getState().setPlayList(playlist);
@@ -68,6 +78,21 @@ const handlePlay = async (song: any, playlist: IPlaylist = {
   await TrackPlayer.play();
 
 }
+const handlePlaySongInLocal = async (song: any) => {
+  console.log(song);
+  usePlayerStore.getState().setIsPlayFromLocal(true);
+  usePlayerStore.getState().setPlayList({ id: "", items: [] });
+  await TrackPlayer.reset();
+  await TrackPlayer.add({
+    ...objectToTrack(song),
+    url: song.url
+  });
+  usePlayerStore.getState().setCurrentSong({
+    ...objectToTrack(song),
+    url: song.url
+  });
+  await TrackPlayer.play();
+}
 
 const NextTrack = async () => {
   await TrackPlayer.skipToNext()
@@ -77,4 +102,4 @@ const PrevTrack = async () => {
   await TrackPlayer.skipToPrevious()
 }
 
-export { NextTrack, PrevTrack, handlePlay }
+export { NextTrack, PrevTrack, handlePlay, handlePlaySongInLocal }

@@ -43,7 +43,7 @@ const NewRelease = ({data}: Props) => {
   const vPopPage = paginateArray(data?.items?.vPop, 3);
   const othersPage = paginateArray(data?.items?.others, 3);
 
-  const listRef = React.useRef<FlatList>(null);
+  const listRef = React.useRef<FlashList<any>>(null);
 
   const scrollX = React.useRef(new Animated.Value(0)).current;
 
@@ -86,33 +86,30 @@ const NewRelease = ({data}: Props) => {
           </TouchableOpacity>
         ))}
       </View>
-      <Animated.FlatList
-        onScroll={Animated.event(
-          [{nativeEvent: {contentOffset: {x: scrollX}}}],
-          {useNativeDriver: true},
-        )}
-        ref={listRef}
-        horizontal
-        pagingEnabled
-        initialNumToRender={1}
-        keyExtractor={(_, index) => index.toString()}
-        data={dataList[tabIndex]}
-        renderItem={({item}) => (
-          <FlatList
-            initialNumToRender={1}
-            contentContainerStyle={{
-              width: SCREEN_WIDTH,
-            }}
-            data={item}
-            renderItem={({item}) => (
-              <TrackItem
-                item={item}
-                onClick={handlePlaySong}
-                showBottomSheet={showBottomSheet}
-              />
-            )}></FlatList>
-        )}
-      />
+      <View className="flex-1">
+        <FlashList
+          ref={listRef}
+          horizontal
+          pagingEnabled
+          estimatedItemSize={SCREEN_WIDTH}
+          keyExtractor={(_, index) => index.toString()}
+          data={dataList[tabIndex]}
+          renderItem={({item}) => (
+            <View style={{width: SCREEN_WIDTH}} className="flex-1">
+              <FlashList
+                estimatedItemSize={70}
+                data={item}
+                renderItem={({item}) => (
+                  <TrackItem
+                    item={item}
+                    onClick={handlePlaySong}
+                    showBottomSheet={showBottomSheet}
+                  />
+                )}></FlashList>
+            </View>
+          )}
+        />
+      </View>
     </View>
   );
 };

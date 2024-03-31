@@ -8,7 +8,7 @@ import {
   Animated,
   TouchableOpacity,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {FlashList} from '@shopify/flash-list';
 import {LinearGradient} from 'react-native-linear-gradient';
 import {handlePlay} from '../../utils/musicControl';
@@ -17,6 +17,8 @@ import {StatusBar} from 'expo-status-bar';
 import {useNavigation} from '@react-navigation/native';
 import nodejs from 'nodejs-mobile-react-native';
 import getThumbnail from '../../utils/getThumnail';
+import TrackItem from '../../components/TrackItem';
+import {PlayerContext} from '../../context/PlayerProvider';
 interface artistType {
   id: string;
   name: string;
@@ -84,6 +86,19 @@ const ArtistSong = ({route}: any) => {
   });
 
   const navigation = useNavigation<any>();
+
+  const {showBottomSheet} = useContext(PlayerContext);
+
+  const handlePlaySong = useCallback(
+    (song: any) => {
+      return handlePlay(song, {
+        id: 'artist' + id,
+        items: data,
+      });
+    },
+    [data],
+  );
+
   if (loading) {
     return (
       <View className="flex-1 items-center justify-center bg-[#121212]">
@@ -155,31 +170,10 @@ const ArtistSong = ({route}: any) => {
           estimatedItemSize={70}
           data={data}
           renderItem={({item, index}: any) => (
-            <TouchableOpacity
-              activeOpacity={0.8}
-              style={{paddingBottom: index === data.length - 1 ? 200 : 0}}
-              className="flex flex-row  items-center mx-4 my-2"
-              onPress={() =>
-                handlePlay(item, {
-                  id: id,
-                  items: data,
-                })
-              }>
-              <View className="w-14 h-14 rounded-md justify-center items-center">
-                <Image
-                  src={getThumbnail(item?.thumbnailM) || ''}
-                  className="w-14 h-14 rounded-md"
-                />
-              </View>
-              <View className="flex justify-center ml-2 flex-1">
-                <Text className="text-white" numberOfLines={1}>
-                  {item?.title}
-                </Text>
-                <Text numberOfLines={1} className="text-zinc-500 font-semibold">
-                  {item?.artistsNames}
-                </Text>
-              </View>
-            </TouchableOpacity>
+            <TrackItem
+              item={item}
+              showBottomSheet={showBottomSheet}
+              onClick={handlePlaySong}></TrackItem>
           )}
         />
       </View>

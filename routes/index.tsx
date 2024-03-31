@@ -28,6 +28,7 @@ import SplashScreen from 'react-native-splash-screen';
 import {COLOR, TABBAR_HEIGHT} from '../constants';
 import TrackItemBottomSheet from '../components/bottom-sheet/TrackItemBottomSheet';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
+import LocalSong from '../screens/library/LocalSong';
 export type HomeStackParamsList = {
   Home: undefined;
   Search: undefined;
@@ -43,6 +44,7 @@ export type HomeStackParamsList = {
   LikedSong: undefined;
   Chart: undefined;
   Lib: undefined;
+  LocalSong: undefined;
 };
 const Stack = createNativeStackNavigator<HomeStackParamsList>();
 
@@ -50,13 +52,11 @@ const Tab = createBottomTabNavigator();
 
 const HomeWrapper = () => {
   return (
-    <BottomSheetModalProvider>
-      <View className="flex-1 h-full w-full relative bg-[#121212]">
-        <StatusBar backgroundColor="#00000050" style="light" />
-        <HomeTab />
-        <TrackItemBottomSheet />
-      </View>
-    </BottomSheetModalProvider>
+    <View className="flex-1 h-full w-full relative bg-[#121212]">
+      <StatusBar backgroundColor="#00000050" style="light" />
+      <HomeTab />
+      <TrackItemBottomSheet />
+    </View>
   );
 };
 
@@ -66,9 +66,35 @@ const LibraryStack = () => {
       <Stack.Screen name="Library" component={LibrarySrceens} />
       <Stack.Screen name="MyPlaylist" component={MyPlaylist} />
       <Stack.Screen
+        name="LocalSong"
+        component={LocalSong}
+        options={{animation: 'ios'}}
+      />
+      <Stack.Screen
         name="LikedSong"
         component={LikedSong}
         options={{animation: 'ios'}}
+      />
+      <Stack.Screen
+        name="PlayListDetail"
+        component={PlaylistDetail}
+        options={{
+          animation: 'ios',
+        }}
+      />
+      <Stack.Screen
+        name="Artists"
+        component={ArtistScreens}
+        options={{
+          animation: 'ios',
+        }}
+      />
+      <Stack.Screen
+        name="ArtistsSong"
+        component={ArtistSong}
+        options={{
+          animation: 'ios',
+        }}
       />
     </Stack.Navigator>
   );

@@ -36,7 +36,7 @@ const ArtistCard = () => {
     nodejs.channel.post('getArtistBySongId', currentSong?.id);
   }, [currentSong?.id]);
 
-  if (data === null) {
+  if (data === null || usePlayerStore.getState().isPlayFromLocal) {
     return null;
   }
   return (

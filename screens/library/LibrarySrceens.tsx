@@ -5,11 +5,11 @@ import {useNavigation} from '@react-navigation/native';
 import Entypo from 'react-native-vector-icons/Entypo';
 import LinearGradient from 'react-native-linear-gradient';
 import {usePlayerStore} from '../../store/playerStore';
-
+import LocalSong from './components/LocalSong';
+import Playlist from './components/Playlist';
+import {COLOR} from '../../constants';
 const LibrarySrceens = () => {
-  const navigation = useNavigation<any>();
-
-  const likedSongs = usePlayerStore(state => state.likedSongs);
+  const [selectedTab, setSelectedTab] = React.useState(0);
 
   return (
     <View style={styles.container}>
@@ -29,69 +29,24 @@ const LibrarySrceens = () => {
         </TouchableOpacity>
       </View>
       <View className="h-10 flex-row items-center">
-        {['Danh sách phát', 'Nghệ sĩ'].map((item, index) => (
-          <View
+        {['Danh sách phát', 'Nghệ sĩ', 'Đã tải xuống'].map((item, index) => (
+          <TouchableOpacity
+            onPress={() => setSelectedTab(index)}
             key={index}
-            style={{borderColor: '#dbdbdb'}}
+            style={{
+              borderColor: !selectedTab ? '#dbdbdb' : 'none',
+              backgroundColor:
+                selectedTab === index ? COLOR.PRIMARY : 'transparent',
+            }}
             className="h-[30px] items-center justify-center mx-[7px] px-[15px] rounded-[12px] border">
             <Text style={{color: '#fff'}}>{item}</Text>
-          </View>
+          </TouchableOpacity>
         ))}
       </View>
-      <View style={{flex: 1, marginHorizontal: 10, marginTop: 20}}>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate('LikedSong', {
-              type: 'favourite',
-            });
-          }}
-          activeOpacity={0.8}
-          className="flex-row items-center">
-          <LinearGradient
-            colors={['blue', '#bdbdbd']}
-            className="w-20 h-20 justify-center items-center">
-            <Entypo name="heart" size={36} color="#fff" />
-          </LinearGradient>
-          <View style={{marginLeft: 10}}>
-            <Text className="text-white font-bold mb-[5px]">
-              Bài hát đã thích
-            </Text>
-            <Text style={{color: '#bdbdbd'}}>
-              Danh sách phát • {likedSongs.length} bài hát
-            </Text>
-          </View>
-        </TouchableOpacity>
-        {/* {playList.map((pl: IPlayList) => {
-          return (
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('ListFavourite', {
-                  type: 'playlist',
-                  playlistName: pl.name,
-                })
-              }
-              onLongPress={() => handleShowPlaylistManage(pl.name)}
-              key={pl.name}
-              className="flex-row items-center pt-2">
-              <View
-                // colors={["blue", "#bdbdbd"]}
-                className="w-20 h-20 justify-center items-center">
-                <Entypo name="heart" size={36} color="#fff" />
-              </View>
-              <View style={{marginLeft: 10}}>
-                <Text className="text-white font-bold mb-[5px]">{pl.name}</Text>
-                <Text style={{color: '#bdbdbd'}}>Danh sách phát</Text>
-              </View>
-            </TouchableOpacity>
-          );
-        })} */}
+      <View className="flex-1">
+        {selectedTab === 0 && <Playlist />}
+        {selectedTab === 2 && <LocalSong />}
       </View>
-      {/* <AddPlayListModal visible={modalVisible} onClose={handleCloseModal} /> */}
-      {/* <PlayListManage
-        visible={PlayListManageVisible}
-        playListName={selectedPlaylist}
-        onClose={() => setPlayListManageVisible(false)}
-      /> */}
     </View>
   );
 };

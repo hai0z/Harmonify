@@ -29,6 +29,10 @@ interface PlayerStore {
   setLikedSongs: (likedSongs: any) => void
   currentSong: Track | null
   setCurrentSong: (currentSong: Track | null) => void
+  tempSong: any | null
+  setTempSong: (tempSong: any | null) => void
+  isPlayFromLocal: boolean
+  setIsPlayFromLocal: (isPlayFromLocal: boolean) => void
 }
 export const usePlayerStore = create<PlayerStore>((set) => ({
   playList: {
@@ -56,5 +60,9 @@ export const usePlayerStore = create<PlayerStore>((set) => ({
   setLikedSongs: (likedSongs: any) => set({ likedSongs }),
   currentSong: null,
   setCurrentSong: (currentSong: Track | null) => set({ currentSong }),
+  tempSong: null,
+  setTempSong: (tempSong: any | null) => set({ tempSong }),
+  isPlayFromLocal: false,
+  setIsPlayFromLocal: (isPlayFromLocal: boolean) => set({ isPlayFromLocal }),
 }))
 

@@ -2,8 +2,8 @@
 // The main.js file will be overwritten in updates/reinstalls.
 
 var rn_bridge = require('rn-bridge');
+
 const {ZingMp3} = require('zingmp3-api-full');
-const ColorThief = require('colorthief');
 
 rn_bridge.channel.on('home', async () => {
   const data = await ZingMp3.getHome();
@@ -11,8 +11,14 @@ rn_bridge.channel.on('home', async () => {
 });
 rn_bridge.channel.on('getSong', async track => {
   const data = await ZingMp3.getSong(track.id);
-
   rn_bridge.channel.post('getSong', {
+    data: data.data !== undefined ? data.data : 'NULL',
+    track: track,
+  });
+});
+rn_bridge.channel.on('downloadSong', async track => {
+  const data = await ZingMp3.getSong(track.encodeId);
+  rn_bridge.channel.post('downloadSong', {
     data: data.data !== undefined ? data.data : 'NULL',
     track: track,
   });
@@ -54,6 +60,7 @@ rn_bridge.channel.on('charthome', async () => {
 rn_bridge.channel.on('getLyric', async songId => {
   if (!songId) return;
   const data = await ZingMp3.getLyric(songId);
+  if (!data.data) return;
   const dataLyric = data.data;
   let customLyr = [];
   dataLyric.sentences &&
@@ -77,23 +84,4 @@ rn_bridge.channel.on('getLyric', async songId => {
       });
     });
   rn_bridge.channel.post('getLyric', customLyr);
-});
-
-rn_bridge.channel.on('getColors', async imgSrc => {
-  const rgbToHex = (r, g, b) =>
-    '#' +
-    [r, g, b]
-      .map(x => {
-        const hex = x.toString(16);
-        return hex.length === 1 ? '0' + hex : hex;
-      })
-      .join('');
-  ColorThief.getPalette(imgSrc, 5)
-    .then(palete => {
-      const hexPalete = palete.map(e => rgbToHex(...e));
-      rn_bridge.channel.post('getColors', hexPalete);
-    })
-    .catch(e => {
-      rn_bridge.channel.post('getColors', e);
-    });
 });

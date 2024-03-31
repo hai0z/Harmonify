@@ -29,7 +29,11 @@ const SongInfoCard = () => {
     nodejs.channel.post('getSongInfo', currentSong?.id);
   }, [currentSong?.id]);
 
-  if (loading || currentSong === undefined) {
+  if (
+    loading ||
+    currentSong === undefined ||
+    usePlayerStore.getState().isPlayFromLocal
+  ) {
     return null;
   }
   return (

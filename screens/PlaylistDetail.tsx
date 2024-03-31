@@ -136,7 +136,7 @@ const PlaylistDetail = ({route}: {route: any}) => {
                 />
                 <RNImage
                   blurRadius={100}
-                  src={data?.thumbnail}
+                  src={getThumbnail(playlistData?.thumbnailM)}
                   style={[
                     StyleSheet.absoluteFill,
                     {
@@ -146,7 +146,7 @@ const PlaylistDetail = ({route}: {route: any}) => {
                   ]}
                 />
                 <Animated.Image
-                  src={getThumbnail(playlistData?.thumbnailM) || ''}
+                  src={getThumbnail(playlistData?.thumbnailM)}
                   className="rounded-lg"
                   style={[
                     {

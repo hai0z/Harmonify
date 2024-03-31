@@ -24,7 +24,8 @@ const useToggleLikeSong = (trackId = null) => {
     }
   }, [likedSongs.length, trackId]);
 
-  const handleAddToLikedList = async (likedSong: Track) => {
+
+  const handleAddToLikedList = async (likedSong: any) => {
     setIsLiked(!isLiked);
     if (isLiked) {
       show('Đã xóa khỏi yêu thích', ToastTime.SHORT);
@@ -32,13 +33,7 @@ const useToggleLikeSong = (trackId = null) => {
       show('Đã thêm vào yêu thích', ToastTime.SHORT);
     }
     try {
-      await addToLikedList({
-        encodeId: likedSong.id,
-        title: likedSong.title,
-        thumbnail: likedSong.artwork,
-        artistsNames: likedSong.artist,
-        duration: likedSong.duration,
-      });
+      await addToLikedList(likedSong);
     } catch (err: any) {
       console.log(err);
     }

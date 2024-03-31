@@ -9,23 +9,33 @@ import getThumbnail from '../utils/getThumnail';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import {BottomSheetModalMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
 import useBottomSheetStore from '../store/bottomSheetStore';
+import {NULL_URL} from '../constants';
 
 interface ContextType {
   bottomSheetModalRef: React.RefObject<BottomSheetModalMethods>;
   handlePresentModalPress: () => void;
   showBottomSheet: (item: any) => void;
 }
+
 export const PlayerContext = React.createContext({} as ContextType);
 
 nodejs.start('main.js');
 
 nodejs.channel.addListener('getLyric', async data => {
+  console.log({data});
   usePlayerStore.getState().setLyrics(data);
 });
 
 const PlayerProvider = ({children}: {children: React.ReactNode}) => {
-  const {setLyrics, playList, setPlayList, currentSong, setCurrentSong} =
-    usePlayerStore(state => state);
+  const {
+    setLyrics,
+    playList,
+    setPlayList,
+    currentSong,
+    setCurrentSong,
+    isPlayFromLocal,
+    setIsPlayFromLocal,
+  } = usePlayerStore(state => state);
 
   const getSongColors = async () => {
     if (usePlayerStore.getState().currentSong?.artwork !== null) {
@@ -34,7 +44,7 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
         {
           fallback: '#0098DB',
           cache: true,
-          key: usePlayerStore.getState().currentSong?.encodeId,
+          key: usePlayerStore.getState().currentSong?.id,
         },
       ).then(usePlayerStore.getState().setColor);
     }
@@ -69,10 +79,23 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
       return data;
     }
   };
+  const getPlayFromLocal = async () => {
+    const data = await getData('isPlayFromLocal');
+    if (data != null) {
+      setIsPlayFromLocal(data);
+      return data;
+    }
+  };
 
   const initPlayer = async () => {
     let dataPlaylist = await getData('playlist');
     let storedSong = await getData('currentSong');
+    let iplc = await getData('isPlayFromLocal');
+    if (iplc === null) {
+      setIsPlayFromLocal(false);
+    } else {
+      setIsPlayFromLocal(iplc);
+    }
     console.log({storedSong, dataPlaylist});
     if (dataPlaylist.items.length > 0 && dataPlaylist.id !== '' && storedSong) {
       await TrackPlayer.reset();
@@ -83,11 +106,17 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
       const index = dataPlaylist.items.findIndex(
         (item: any) => item?.encodeId === storedSong?.id,
       );
-      await TrackPlayer.skip(index);
+      await TrackPlayer.skip(index === -1 ? 0 : index);
     } else {
-      if (storedSong !== null) {
+      if (storedSong !== null && storedSong.url === NULL_URL) {
         setCurrentSong(objectToTrack(storedSong));
-        await TrackPlayer.add([objectToTrack(storedSong)]);
+        await TrackPlayer.add(objectToTrack(storedSong));
+      } else {
+        setCurrentSong({...objectToTrack(storedSong), url: storedSong.url});
+        await TrackPlayer.add({
+          ...objectToTrack(storedSong),
+          url: storedSong.url,
+        });
       }
     }
   };
@@ -95,18 +124,25 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
   useEffect(() => {
     getLatestSong();
     getDataPlaylist();
+    getPlayFromLocal();
     initPlayer();
   }, []);
+
+  useEffect(() => {
+    storeData('isPlayFromLocal', isPlayFromLocal);
+  }, [isPlayFromLocal]);
 
   useEffect(() => {
     storeData('playlist', playList);
   }, [playList.id]);
 
   useEffect(() => {
-    if (currentSong) getSongColors();
+    if (!isPlayFromLocal) {
+      if (currentSong) getSongColors();
+      setLyrics([]);
+      nodejs.channel.post('getLyric', currentSong?.id);
+    }
     storeData('currentSong', currentSong);
-    setLyrics([]);
-    nodejs.channel.post('getLyric', currentSong?.id);
   }, [currentSong?.id]);
 
   return (

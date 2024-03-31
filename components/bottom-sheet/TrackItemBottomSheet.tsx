@@ -6,6 +6,8 @@ import {
   Button,
   Image,
   TouchableOpacity,
+  ToastAndroid,
+  Platform,
 } from 'react-native';
 import {
   BottomSheetModal,
@@ -25,6 +27,16 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
 import {objectToTrack} from '../../utils/musicControl';
+import Feather from 'react-native-vector-icons/Feather';
+import useDownloadSong from '../../hooks/useDownloadSong';
+import {
+  check,
+  PERMISSIONS,
+  request,
+  requestMultiple,
+  RESULTS,
+} from 'react-native-permissions';
+
 const TrackItemBottomSheet = () => {
   // ref
   const {data} = useBottomSheetStore(state => state);
@@ -32,7 +44,7 @@ const TrackItemBottomSheet = () => {
 
   // variables
 
-  const snapPoints = useMemo(() => ['55%', '70%'], []);
+  const snapPoints = useMemo(() => ['55%'], []);
 
   const {dismiss} = useBottomSheetModal();
   // renders
@@ -49,6 +61,8 @@ const TrackItemBottomSheet = () => {
   const {isLiked, handleAddToLikedList} = useToggleLikeSong(data?.encodeId);
 
   const navigation = useNavigation<any>();
+  const {downloadFile} = useDownloadSong();
+
   return (
     <BottomSheetModal
       enablePanDownToClose
@@ -77,7 +91,7 @@ const TrackItemBottomSheet = () => {
             <TouchableOpacity
               className="w-full py-3 flex flex-row items-center  mb-3 gap-2"
               onPress={() => {
-                handleAddToLikedList(objectToTrack(data));
+                handleAddToLikedList(data);
                 dismiss();
               }}>
               <AntDesign name="hearto" size={24} color="#ffffff90" />
@@ -110,6 +124,14 @@ const TrackItemBottomSheet = () => {
               <Text className="text-white text-base">Xem Album</Text>
             </TouchableOpacity>
           )}
+          <TouchableOpacity
+            className="w-full py-3 flex flex-row items-center  mb-3 gap-2"
+            onPress={async () => {
+              downloadFile(data);
+            }}>
+            <Feather name="download" size={24} color="#ffffff90" />
+            <Text className="text-white text-base">Tải xuống</Text>
+          </TouchableOpacity>
         </View>
       </BottomSheetView>
     </BottomSheetModal>

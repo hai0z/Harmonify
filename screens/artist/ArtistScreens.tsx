@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
 import {handlePlay} from '../../utils/musicControl';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -56,6 +56,15 @@ const ArtistScreens = ({route}: any) => {
   });
 
   const navigation = useNavigation<any>();
+  //  const handlePlaySong = useCallback(
+  //    (song: any) => {
+  //      return handlePlay(song, {
+  //        id: 'artist' + ,
+  //        items: data,
+  //      });
+  //    },
+  //    [data],
+  //  );
   if (loading) {
     return (
       <View className="flex-1 items-center justify-center bg-[#121212]">
