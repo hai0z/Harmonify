@@ -1,4 +1,4 @@
-import { IPlaylist, usePlayerStore } from '../store/playerStore';
+import { DefaultColor, IPlaylist, usePlayerStore } from '../store/playerStore';
 import TrackPlayer, { Event } from "react-native-track-player";
 import getThumbnail from "./getThumnail";
 import nodejs from "nodejs-mobile-react-native";
@@ -79,9 +79,9 @@ const handlePlay = async (song: any, playlist: IPlaylist = {
 
 }
 const handlePlaySongInLocal = async (song: any) => {
-  console.log(song);
   usePlayerStore.getState().setIsPlayFromLocal(true);
   usePlayerStore.getState().setPlayList({ id: "", items: [] });
+  usePlayerStore.getState().setColor(DefaultColor);
   await TrackPlayer.reset();
   await TrackPlayer.add({
     ...objectToTrack(song),

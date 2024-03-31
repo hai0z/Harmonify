@@ -1,6 +1,17 @@
 import { Track } from "react-native-track-player";
 import { create } from "zustand";
 
+export const DefaultColor = {
+  average: "#49494949",
+  darkMuted: "#49494949",
+  darkVibrant: "#49494949",
+  dominant: "#49494949",
+  lightMuted: "#49494949",
+  lightVibrant: "#49494949",
+  muted: "#49494949",
+  platform: "android",
+  vibrant: "#49494949",
+}
 export interface IPlaylist {
   id: string,
   items: any[]
@@ -39,17 +50,7 @@ export const usePlayerStore = create<PlayerStore>((set) => ({
     id: "",
     items: [],
   },
-  color: {
-    average: "#49494949",
-    darkMuted: "#49494949",
-    darkVibrant: "#49494949",
-    dominant: "#49494949",
-    lightMuted: "#49494949",
-    lightVibrant: "#49494949",
-    muted: "#49494949",
-    platform: "android",
-    vibrant: "#49494949",
-  } as Partial<Color>,
+  color: DefaultColor as Partial<Color>,
   setColor: (color: Partial<Color>) => set({ color }),
   setPlayList: (playlist: IPlaylist) => set({ playList: playlist }),
   lyrics: [],

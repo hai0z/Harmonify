@@ -11,7 +11,7 @@ const OFFSET = 2;
 
 const Lyric = () => {
   const lyrics = usePlayerStore(state => state.lyrics);
-
+  const isPlayFromLocal = usePlayerStore(state => state.isPlayFromLocal);
   let bgColor = usePlayerStore(state => state.color);
 
   const {currentLine} = useSyncLyric(lyrics);
@@ -37,7 +37,8 @@ const Lyric = () => {
       : bgColor.vibrant;
 
   return (
-    lyrics?.length > 0 && (
+    lyrics?.length > 0 &&
+    !isPlayFromLocal && (
       <TouchableOpacity
         onPress={() => nativgation.navigate('Lyric', {lyrics})}
         activeOpacity={1}
