@@ -23,6 +23,7 @@ import nodejs from 'nodejs-mobile-react-native';
 import TrackItem from '../components/TrackItem';
 import {PlayerContext} from '../context/PlayerProvider';
 import useThemeStore from '../store/themeStore';
+import {usePlayerStore} from '../store/playerStore';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const PlaylistDetail = ({route}: {route: any}) => {
@@ -87,12 +88,15 @@ const PlaylistDetail = ({route}: {route: any}) => {
     [scrollY],
   );
 
-  const handlePlaySong = async (song: any) => {
-    handlePlay(song, {
-      id: data.playListId,
-      items: playlistData?.song?.items,
-    });
-  };
+  const handlePlaySong = useCallback(
+    (song: any) =>
+      handlePlay(song, {
+        id: data.playListId,
+        items: playlistData.song.items,
+      }),
+    [],
+  );
+
   if (loading)
     return (
       <View

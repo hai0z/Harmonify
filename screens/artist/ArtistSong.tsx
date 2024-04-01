@@ -20,6 +20,7 @@ import getThumbnail from '../../utils/getThumnail';
 import TrackItem from '../../components/TrackItem';
 import {PlayerContext} from '../../context/PlayerProvider';
 import useThemeStore from '../../store/themeStore';
+import {usePlayerStore} from '../../store/playerStore';
 interface artistType {
   id: string;
   name: string;
@@ -96,7 +97,6 @@ const ArtistSong = ({route}: any) => {
   const navigation = useNavigation<any>();
 
   const {showBottomSheet} = useContext(PlayerContext);
-
   const handlePlaySong = useCallback(
     (song: any) => {
       return handlePlay(song, {

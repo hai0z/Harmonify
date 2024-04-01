@@ -8,7 +8,7 @@ const SettingScreen = () => {
   const selectedColor = darkMode ? darkTheme.BACKGROUND : lightTheme.BACKGROUND;
   const bg = useSharedValue(`${selectedColor}`);
   const handleChangeColor = (color: string) => {
-    bg.value = withTiming(`${color}`, {duration: 500});
+    bg.value = withTiming(`${color}`, {duration: 750});
   };
 
   return (
@@ -21,7 +21,8 @@ const SettingScreen = () => {
       <View className="flex flex-row items-center justify-between mt-8">
         <Text style={{color: COLOR.TEXT_PRIMARY}}>Chế độ tối</Text>
         <Switch
-          ios_backgroundColor="#3e3e3e"
+          thumbColor={COLOR.PRIMARY}
+          trackColor={{false: COLOR.GRADIENT, true: COLOR.TEXT_SECONDARY}}
           onValueChange={() => {
             handleChangeColor(
               darkMode ? lightTheme.BACKGROUND : darkTheme.BACKGROUND,

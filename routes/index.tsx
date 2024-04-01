@@ -49,7 +49,7 @@ export type HomeStackParamsList = {
   Setting: undefined;
 };
 const Stack = createNativeStackNavigator<HomeStackParamsList>();
-
+const LibStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const HomeWrapper = () => {
@@ -70,41 +70,41 @@ const HomeWrapper = () => {
 
 const LibraryStack = () => {
   return (
-    <Stack.Navigator screenOptions={{headerShown: false}}>
-      <Stack.Screen name="Library" component={LibrarySrceens} />
-      <Stack.Screen name="MyPlaylist" component={MyPlaylist} />
-      <Stack.Screen
+    <LibStack.Navigator screenOptions={{headerShown: false}}>
+      <LibStack.Screen name="Library" component={LibrarySrceens} />
+      <LibStack.Screen name="MyPlaylist" component={MyPlaylist} />
+      <LibStack.Screen
         name="LocalSong"
         component={LocalSong}
         options={{animation: 'ios'}}
       />
-      <Stack.Screen
+      <LibStack.Screen
         name="LikedSong"
         component={LikedSong}
         options={{animation: 'ios'}}
       />
-      <Stack.Screen
+      <LibStack.Screen
         name="PlayListDetail"
         component={PlaylistDetail}
         options={{
           animation: 'ios',
         }}
       />
-      <Stack.Screen
+      <LibStack.Screen
         name="Artists"
         component={ArtistScreens}
         options={{
           animation: 'ios',
         }}
       />
-      <Stack.Screen
+      <LibStack.Screen
         name="ArtistsSong"
         component={ArtistSong}
         options={{
           animation: 'ios',
         }}
       />
-    </Stack.Navigator>
+    </LibStack.Navigator>
   );
 };
 

@@ -9,10 +9,11 @@ interface Props {
   isAlbum?: boolean;
   onClick: (item: any) => void;
   showBottomSheet: (item: any) => void;
+  isActive?: boolean;
 }
 const TrackItem = (props: Props) => {
   console.log('df');
-  const {item, index, onClick, isAlbum, showBottomSheet} = props;
+  const {item, index, onClick, isAlbum, showBottomSheet, isActive} = props;
   const COLOR = useThemeStore(state => state.COLOR);
   return (
     <TouchableOpacity
@@ -39,7 +40,7 @@ const TrackItem = (props: Props) => {
           className="font-semibold"
           numberOfLines={1}
           style={{
-            color: COLOR.TEXT_PRIMARY,
+            color: isActive ? COLOR.PRIMARY : COLOR.TEXT_PRIMARY,
           }}>
           {item?.title}
         </Text>

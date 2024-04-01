@@ -15,6 +15,7 @@ import {handlePlay} from '../utils/musicControl';
 import nodejs from 'nodejs-mobile-react-native';
 import {useNavigation} from '@react-navigation/native';
 import useThemeStore from '../store/themeStore';
+import TrackPlayer from 'react-native-track-player';
 const SearchScreens = () => {
   const [text, setText] = useState<string>('');
   const [data, setData] = useState<any>([]);
@@ -100,9 +101,9 @@ const SearchScreens = () => {
           <TouchableOpacity
             key={index}
             className="flex flex-row items-center mb-3 gap-2"
-            onPress={() => {
+            onPress={async () => {
               handlePlay(e, {
-                id: 'search',
+                id: e.encodeId,
                 items: [e],
               });
             }}>

@@ -9,16 +9,16 @@ const headerGradientDark = {
 const headerGradientLight = {
   MORNING: '#FDCEDF',
   AFTERNOON: '#EFBC9B',
-  EVENING: '#FFACC7',
+  EVENING: '#F5FCC1',
 }
 export const lightTheme = {
-  PRIMARY: '#FF9B9B',
+  PRIMARY: '#E97777',
   SECONDARY: '#F07B3F',
   TEXT_PRIMARY: '#000000',
   TEXT_SECONDARY: '#606060',
-  BACKGROUND: '#F8E8EE',
+  BACKGROUND: '#FAF2F2',
   GRADIENT: "#F3D7CA",
-  TEXT_LYRIC: tinycolor('#FF9B9B').darken(10).toString()
+  TEXT_LYRIC: tinycolor('#E97777').darken(10).toString()
 
 }
 

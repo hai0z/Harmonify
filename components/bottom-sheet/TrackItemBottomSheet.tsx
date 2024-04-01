@@ -101,7 +101,7 @@ const TrackItemBottomSheet = () => {
           <TouchableOpacity
             className="w-full py-3 flex flex-row items-center  mb-3 gap-2"
             onPress={() => {
-              navigation.push('Artists', {name: data?.artists[0].alias});
+              navigation.navigate('Artists', {name: data?.artists[0].alias});
               dismiss();
             }}>
             <FontAwesome5
