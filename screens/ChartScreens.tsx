@@ -290,10 +290,7 @@ const ChartItem = React.memo(({item, index, onPlay}: any) => {
           {item?.title}
         </Text>
 
-        <Text
-          numberOfLines={1}
-          className="font-semibold"
-          style={{color: COLOR.TEXT_SECONDARY}}>
+        <Text numberOfLines={1} style={{color: COLOR.TEXT_SECONDARY}}>
           {item?.artistsNames}
         </Text>
       </View>

@@ -38,7 +38,9 @@ const MiniPlayer = () => {
 
   const gradientColor = darkMode
     ? useDarkColor(color.dominant!, 35)
-    : tinycolor(color.dominant!).brighten(75).toString();
+    : tinycolor(color.dominant!).isDark()
+    ? tinycolor(color.dominant!).lighten(75).toString()
+    : tinycolor(color.dominant!).lighten(15).toString();
 
   const togglePlay = useCallback(async (state: State | undefined) => {
     if (state !== State.Playing) {

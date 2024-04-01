@@ -1,3 +1,4 @@
+import tinycolor from "tinycolor2";
 import { create } from "zustand";
 
 const headerGradientDark = {
@@ -7,8 +8,8 @@ const headerGradientDark = {
 }
 const headerGradientLight = {
   MORNING: '#FDCEDF',
-  AFTERNOON: '#F9B572',
-  EVENING: '#FF9B9B',
+  AFTERNOON: '#EFBC9B',
+  EVENING: '#FFACC7',
 }
 export const lightTheme = {
   PRIMARY: '#FF9B9B',
@@ -17,7 +18,7 @@ export const lightTheme = {
   TEXT_SECONDARY: '#606060',
   BACKGROUND: '#F8E8EE',
   GRADIENT: "#F3D7CA",
-  TEXT_LYRIC: '#FC5185'
+  TEXT_LYRIC: tinycolor('#FF9B9B').darken(10).toString()
 
 }
 

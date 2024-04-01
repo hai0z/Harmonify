@@ -11,7 +11,7 @@ const Playlist = () => {
   const {COLOR} = useThemeStore(state => state);
   const navigation = useNavigation<any>();
   return (
-    <View style={{flex: 1, marginHorizontal: 10, marginTop: 20}}>
+    <View style={{flex: 1, marginHorizontal: 16, marginTop: 20}}>
       <TouchableOpacity
         onPress={() => {
           navigation.navigate('LikedSong', {

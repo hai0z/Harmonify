@@ -28,7 +28,7 @@ const LibrarySrceens = () => {
           />
         </TouchableOpacity>
       </View>
-      <View className="h-10 flex-row items-center">
+      <View className="h-10 flex-row items-center mx-4">
         {['Danh sách phát', 'Nghệ sĩ', 'Đã tải xuống'].map((item, index) => (
           <TouchableOpacity
             onPress={() => setSelectedTab(index)}
@@ -37,7 +37,7 @@ const LibrarySrceens = () => {
               backgroundColor:
                 selectedTab === index ? COLOR.PRIMARY : 'transparent',
             }}
-            className="items-center justify-center mx-2 rounded-full px-2 py-1">
+            className="items-center justify-center mr-2 rounded-full px-2 py-1">
             <Text style={{color: COLOR.TEXT_PRIMARY}}>{item}</Text>
           </TouchableOpacity>
         ))}
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 10,
+    paddingHorizontal: 16,
   },
   topLeft: {
     flexDirection: 'row',
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 24,
 
-    marginLeft: 10,
+    marginLeft: 16,
   },
   plusIcon: {},
 });

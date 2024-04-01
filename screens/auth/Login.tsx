@@ -15,16 +15,16 @@ import {
   getAuth,
   signInWithEmailAndPassword,
 } from 'firebase/auth';
-import {COLOR} from '../../constants';
 import {doc, setDoc} from 'firebase/firestore';
 import {useNavigation} from '@react-navigation/native';
+import useThemeStore from '../../store/themeStore';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 const Login = () => {
   const [email, setEmail] = React.useState<string>('');
   const [password, setPassword] = React.useState<string>('');
-
+  const {COLOR} = useThemeStore(state => state);
   const handleLogin = async () => {
     try {
       const userCredential = await signInWithEmailAndPassword(
@@ -53,7 +53,7 @@ const Login = () => {
   const navigation = useNavigation<any>();
   return (
     <View className="bg-[#121212] flex-1  items-center px-8">
-      <StatusBar style="light" backgroundColor="#12121230" />
+      <StatusBar style="light" backgroundColor="transparent" />
       <View
         className="flex justify-center gap-4 w-full"
         style={{marginTop: SCREEN_HEIGHT / 6}}>

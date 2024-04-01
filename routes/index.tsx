@@ -59,7 +59,7 @@ const HomeWrapper = () => {
       className="flex-1 h-full w-full relative "
       style={{backgroundColor: COLOR.BACKGROUND}}>
       <StatusBar
-        backgroundColor={`${COLOR.BACKGROUND}30`}
+        backgroundColor={`transparent`}
         style={darkMode ? 'light' : 'dark'}
       />
       <HomeTab />

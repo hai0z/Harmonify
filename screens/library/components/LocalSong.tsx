@@ -26,7 +26,7 @@ const LocalSong = () => {
           navigation.navigate('LocalSong');
         }}
         activeOpacity={0.8}
-        className="flex-row items-center mt-[20px] mx-[10px]">
+        className="flex-row items-center mt-[20px] mx-[16px]">
         <LinearGradient
           colors={[COLOR.PRIMARY, COLOR.GRADIENT]}
           className="w-16 h-16 justify-center items-center">

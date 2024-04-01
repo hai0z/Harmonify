@@ -118,7 +118,7 @@ const ArtistSong = ({route}: any) => {
   return (
     <View className=" flex-1" style={{backgroundColor: COLOR.BACKGROUND}}>
       <StatusBar
-        backgroundColor={`${COLOR.BACKGROUND}30`}
+        backgroundColor={`transparent`}
         style={darkMode ? 'light' : 'dark'}
       />
       <Animated.View

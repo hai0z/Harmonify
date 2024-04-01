@@ -34,11 +34,11 @@ const TrackItem = (props: Props) => {
           className="w-14 h-14 rounded-md"
         />
       )}
-      <View className="flex justify-center ml-2 flex-1">
+      <View className="flex justify-center ml-2 flex-1 ">
         <Text
+          className="font-semibold"
           numberOfLines={1}
           style={{
-            fontWeight: '400',
             color: COLOR.TEXT_PRIMARY,
           }}>
           {item?.title}

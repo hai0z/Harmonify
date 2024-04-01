@@ -6,10 +6,9 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
-  Animated,
 } from 'react-native';
 
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {LinearGradient} from 'react-native-linear-gradient';
 import {usePlayerStore} from '../store/playerStore';
@@ -38,8 +37,11 @@ const PlayerScreens = () => {
   const {COLOR} = useThemeStore(state => state);
 
   const gradientColor = darkMode
-    ? useDarkColor(color.dominant!, 25)
-    : tinycolor(color.dominant!).brighten(55).toString();
+    ? useDarkColor(color.dominant!, 35)
+    : tinycolor(color.dominant!).isDark()
+    ? tinycolor(color.dominant!).lighten(75).toString()
+    : tinycolor(color.dominant!).lighten(15).toString();
+
   return (
     <ScrollView
       style={{backgroundColor: COLOR.BACKGROUND}}
