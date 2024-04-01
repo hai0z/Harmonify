@@ -5,9 +5,9 @@ import getThumbnail from '../../utils/getThumnail';
 import {usePlayerStore} from '../../store/playerStore';
 import {useNavigation} from '@react-navigation/native';
 import Entypo from 'react-native-vector-icons/Entypo';
-import {useActiveTrack} from 'react-native-track-player';
 import {DEFAULT_IMG} from '../../constants';
 import tinycolor from 'tinycolor2';
+import useThemeStore from '../../store/themeStore';
 const ArtistCard = () => {
   const {color: bgColor} = usePlayerStore(state => state);
 
@@ -17,12 +17,14 @@ const ArtistCard = () => {
 
   const navigation = useNavigation<any>();
 
-  const bg =
-    bgColor.vibrant === '#0098DB'
+  const {darkMode, COLOR} = useThemeStore(state => state);
+  const bg = darkMode
+    ? bgColor.vibrant === '#0098DB'
       ? tinycolor(bgColor.average).isDark()
         ? tinycolor(bgColor.average).lighten(20).toString()
         : bgColor.average
-      : bgColor.vibrant;
+      : bgColor.vibrant
+    : tinycolor(bgColor.dominant).lighten(50).toString();
 
   useEffect(() => {
     setData(null);
@@ -57,7 +59,7 @@ const ArtistCard = () => {
         className="w-full h-full rounded-2xl"
       />
       <View className="z-20 px-4 py-4">
-        <Text className="text-white font-bold text-[16px]">
+        <Text className="font-bold text-[16px] z-10" style={{color: '#ffffff'}}>
           Giới thiệu về nghệ sĩ
         </Text>
       </View>
@@ -65,11 +67,17 @@ const ArtistCard = () => {
         style={{backgroundColor: bg}}
         className="absolute bottom-0 h-20  w-full rounded-b-2xl px-4 py-2 flex justify-between flex-row z-20">
         <View className="flex justify-between">
-          <Text className="text-white font-bold text-[16px]">{data?.name}</Text>
-          <Text className="text-white font-bold text-[12px]">
+          <Text
+            className="font-bold text-[16px]"
+            style={{color: COLOR.TEXT_PRIMARY}}>
+            {data?.name}
+          </Text>
+          <Text
+            className=" font-bold text-[12px]"
+            style={{color: COLOR.TEXT_PRIMARY}}>
             Ngày sinh: {data?.birthday || 'không rõ'}
           </Text>
-          <Text className="text-white  text-[12px]">
+          <Text className="  text-[12px]" style={{color: COLOR.TEXT_PRIMARY}}>
             {data?.follow} người theo dõi
           </Text>
         </View>

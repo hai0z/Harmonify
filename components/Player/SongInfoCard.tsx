@@ -4,17 +4,20 @@ import {usePlayerStore} from '../../store/playerStore';
 import dayjs from 'dayjs';
 import nodejs from 'nodejs-mobile-react-native';
 import tinycolor from 'tinycolor2';
+import useThemeStore from '../../store/themeStore';
 const SongInfoCard = () => {
   const {color: bgColor} = usePlayerStore(state => state);
 
   const currentSong = usePlayerStore(state => state.currentSong);
 
-  const bg =
-    bgColor.vibrant === '#0098DB'
+  const {darkMode, COLOR} = useThemeStore(state => state);
+  const bg = darkMode
+    ? bgColor.vibrant === '#0098DB'
       ? tinycolor(bgColor.average).isDark()
         ? tinycolor(bgColor.average).lighten(20).toString()
         : bgColor.average
-      : bgColor.vibrant;
+      : bgColor.vibrant
+    : tinycolor(bgColor.dominant).lighten(50).toString();
 
   const [data, setData] = useState<any>(null);
 
@@ -40,20 +43,22 @@ const SongInfoCard = () => {
     <View
       style={{backgroundColor: bg}}
       className="w-full mt-8 rounded-2xl px-4 py-2 flex justify-between">
-      <Text className="text-white font-bold text-[18px]">
+      <Text
+        className="font-bold text-[18px]"
+        style={{color: COLOR.TEXT_PRIMARY}}>
         Phát hành lúc {dayjs.unix(data?.releaseDate).format('DD/MM/YYYY')}
       </Text>
-      <Text className="text-white">
+      <Text style={{color: COLOR.TEXT_PRIMARY}}>
         Tác giả :{' '}
         {data?.composers?.map((e: any) => e?.name).join(', ') || 'không rõ'}
       </Text>
-      <Text className="text-white">
+      <Text style={{color: COLOR.TEXT_PRIMARY}}>
         Thể loại: {data?.genres?.map((e: any) => e?.name).join(', ')}
       </Text>
-      <Text className="text-white">
+      <Text style={{color: COLOR.TEXT_PRIMARY}}>
         Nghệ sĩ: {data?.artists?.map((e: any) => e?.name).join(', ')}
       </Text>
-      <Text className="text-white">{data?.like} lượt thích</Text>
+      <Text style={{color: COLOR.TEXT_PRIMARY}}>{data?.like} lượt thích</Text>
     </View>
   );
 };

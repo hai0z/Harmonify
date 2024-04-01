@@ -10,15 +10,14 @@ import {
 import React, {useCallback, useContext, useEffect} from 'react';
 import {FlashList} from '@shopify/flash-list';
 import TrackItem from '../../../components/TrackItem';
-import {COLOR} from '../../../constants';
 import {handlePlay} from '../../../utils/musicControl';
 import {PlayerContext} from '../../../context/PlayerProvider';
 import useBottomSheetStore from '../../../store/bottomSheetStore';
+import useThemeStore from '../../../store/themeStore';
 
 function paginateArray(data: any[], itemsPerPage: number) {
   const totalPages = Math.ceil(data?.length / itemsPerPage);
   const paginatedArray = [];
-
   for (let i = 0; i < totalPages; i++) {
     const startIndex = i * itemsPerPage;
     const page = data?.slice(startIndex, startIndex + itemsPerPage);
@@ -46,6 +45,7 @@ const NewRelease = ({data}: Props) => {
   const listRef = React.useRef<FlashList<any>>(null);
 
   const scrollX = React.useRef(new Animated.Value(0)).current;
+  const COLOR = useThemeStore(state => state.COLOR);
 
   useEffect(() => {
     listRef.current?.scrollToIndex({index: 0});
@@ -67,7 +67,9 @@ const NewRelease = ({data}: Props) => {
   const {showBottomSheet} = useContext(PlayerContext);
   return (
     <View>
-      <Text className="text-xl flex justify-between items-end mt-4 mb-3 uppercase mx-4 text-white">
+      <Text
+        className="text-xl flex justify-between items-end mt-4 mb-3 uppercase mx-4 "
+        style={{color: COLOR.TEXT_PRIMARY}}>
         Mới phát hành
       </Text>
       <View className="flex-row gap-4 px-4 py-2">
@@ -80,7 +82,10 @@ const NewRelease = ({data}: Props) => {
               backgroundColor:
                 tabIndex === index ? COLOR.PRIMARY : 'transparent',
             }}>
-            <Text key={index} className="text-white text-base">
+            <Text
+              key={index}
+              className="text-base"
+              style={{color: COLOR.TEXT_PRIMARY}}>
               {item}
             </Text>
           </TouchableOpacity>

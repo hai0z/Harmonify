@@ -6,7 +6,9 @@ import PlayButton from './Control/PlayButton';
 import NextButton from './Control/NextButton';
 import PrevButton from './Control/PrevButton';
 import LoopButton from './Control/LoopButton';
+import useThemeStore from '../../store/themeStore';
 const Player = () => {
+  const {COLOR} = useThemeStore(state => state);
   return (
     <View>
       <TrackSlider />
@@ -14,7 +16,7 @@ const Player = () => {
         <TouchableOpacity
           activeOpacity={1}
           className="w-[60px] h-[60px] items-start justify-center ">
-          <MaterialIcons name="shuffle" size={24} color={'#fff'} />
+          <MaterialIcons name="shuffle" size={24} color={COLOR.TEXT_PRIMARY} />
         </TouchableOpacity>
         <PrevButton />
         <PlayButton />

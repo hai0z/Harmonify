@@ -21,20 +21,28 @@ import ImageSlider from '../components/Player/ImageSlider';
 import ArtistCard from '../components/Player/ArtistCard';
 import SongInfoCard from '../components/Player/SongInfoCard';
 import {useActiveTrack} from 'react-native-track-player';
-import {COLOR, DEFAULT_IMG} from '../constants';
 import useDarkColor from '../hooks/useDarkColor';
+import useThemeStore from '../store/themeStore';
+import tinycolor from 'tinycolor2';
+import {DEFAULT_IMG} from '../constants';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 const PlayerScreens = () => {
   const {playList, color} = usePlayerStore(state => state);
+  const {darkMode} = useThemeStore(state => state);
   const navigation = useNavigation<any>();
   const track = useActiveTrack();
 
+  const {COLOR} = useThemeStore(state => state);
+
+  const gradientColor = darkMode
+    ? useDarkColor(color.dominant!, 25)
+    : tinycolor(color.dominant!).brighten(50).toString();
   return (
     <ScrollView
-      className="bg-[#121212]"
+      style={{backgroundColor: COLOR.BACKGROUND}}
       showsVerticalScrollIndicator={false}
       contentContainerStyle={{
         paddingBottom: 100,
@@ -46,7 +54,7 @@ const PlayerScreens = () => {
           backgroundColor: COLOR.BACKGROUND,
         }}>
         <LinearGradient
-          colors={[useDarkColor(color.dominant!, 25), COLOR.BACKGROUND]}
+          colors={[gradientColor, COLOR.BACKGROUND]}
           style={[
             StyleSheet.absoluteFill,
             {
@@ -59,10 +67,16 @@ const PlayerScreens = () => {
           <TouchableOpacity
             className="z-50"
             onPress={() => navigation.goBack()}>
-            <Entypo name="chevron-down" size={24} color="white" />
+            <Entypo name="chevron-down" size={24} color={COLOR.TEXT_PRIMARY} />
           </TouchableOpacity>
-          <Text className="text-white font-bold">Đang phát từ thư viện</Text>
-          <Entypo name="dots-three-vertical" size={20} color="white" />
+          <Text className=" font-bold" style={{color: COLOR.TEXT_PRIMARY}}>
+            Đang phát từ thư viện
+          </Text>
+          <Entypo
+            name="dots-three-vertical"
+            size={20}
+            color={COLOR.TEXT_PRIMARY}
+          />
         </View>
         {playList?.items?.length > 0 ? (
           <ImageSlider />
@@ -97,7 +111,8 @@ const PlayerScreens = () => {
           }}>
           <View className="z-50">
             <TextTicker
-              className="text-white font-bold text-lg"
+              style={{color: COLOR.TEXT_PRIMARY}}
+              className=" font-bold text-lg"
               duration={10000}
               loop
               bounce
@@ -105,7 +120,11 @@ const PlayerScreens = () => {
               marqueeDelay={3000}>
               {track?.title}
             </TextTicker>
-            <Text className="text-zinc-400 font-semibold">{track?.artist}</Text>
+            <Text
+              className=" font-semibold"
+              style={{color: COLOR.TEXT_SECONDARY}}>
+              {track?.artist}
+            </Text>
           </View>
         </View>
       </View>

@@ -19,20 +19,21 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import TrackItem from '../../components/TrackItem';
 import {PlayerContext} from '../../context/PlayerProvider';
 import useBottomSheetStore from '../../store/bottomSheetStore';
-import {COLOR} from '../../constants';
+import useThemeStore from '../../store/themeStore';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const PlaylistDetail = () => {
   const scrollY = React.useRef(new Animated.Value(0)).current;
 
+  const COLOR = useThemeStore(state => state.COLOR);
   const navigation = useNavigation<any>();
 
   const {likedSongs: likedSong} = usePlayerStore(state => state);
   const headerColor = useMemo(
     () =>
       scrollY.interpolate({
-        inputRange: [0, SCREEN_WIDTH * 0.6, SCREEN_WIDTH * 0.8],
-        outputRange: ['transparent', 'transparent', '#121212'],
+        inputRange: [SCREEN_WIDTH * 0.79, SCREEN_WIDTH * 0.8],
+        outputRange: ['transparent', COLOR.BACKGROUND],
         extrapolate: 'clamp',
       }),
     [scrollY],
@@ -69,18 +70,20 @@ const PlaylistDetail = () => {
   );
 
   return (
-    <View className="flex-1 bg-[#121212] w-full">
-      <StatusBar backgroundColor="#00000030" />
+    <View
+      className="flex-1  w-full"
+      style={{backgroundColor: COLOR.BACKGROUND}}>
+      <StatusBar backgroundColor={`${COLOR.BACKGROUND}30`} />
       <Animated.View
         className="absolute top-0 pt-[35px] left-0 right-0 z-30 h-20  justify-between items-center flex-row px-6"
         style={{backgroundColor: headerColor}}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color="#ffffff" />
+          <Ionicons name="arrow-back" size={24} color={COLOR.TEXT_PRIMARY} />
         </TouchableOpacity>
         <View className="justify-center items-center">
           <Animated.Text
-            style={{opacity: headerTitleOpacity}}
-            className="text-white font-bold">
+            style={{opacity: headerTitleOpacity, color: COLOR.TEXT_PRIMARY}}
+            className="font-bold">
             Bài hát đã thích
           </Animated.Text>
         </View>
@@ -100,11 +103,11 @@ const PlaylistDetail = () => {
                 className="flex justify-end items-center pb-4"
                 style={{height: SCREEN_WIDTH * 0.8}}>
                 <LinearGradient
-                  colors={['transparent', '#121212']}
+                  colors={['transparent', COLOR.BACKGROUND]}
                   className="absolute bottom-0 h-40 left-0 right-0 z-50"
                 />
                 <LinearGradient
-                  colors={['transparent', COLOR.PRIMARY]}
+                  colors={[COLOR.PRIMARY, 'transparent']}
                   style={[
                     StyleSheet.absoluteFill,
                     {
@@ -114,7 +117,7 @@ const PlaylistDetail = () => {
                   ]}
                 />
                 <LinearGradient
-                  colors={[COLOR.PRIMARY, '#bdbdbd']}
+                  colors={[COLOR.PRIMARY, COLOR.GRADIENT]}
                   style={[
                     {
                       width: SCREEN_WIDTH * 0.6,
@@ -127,8 +130,8 @@ const PlaylistDetail = () => {
               </View>
               <View className="z-50 mt-4 px-6 mb-4">
                 <Animated.Text
-                  style={{opacity: titleOpacity}}
-                  className="text-white text-center text-3xl font-bold">
+                  style={{opacity: titleOpacity, color: COLOR.TEXT_PRIMARY}}
+                  className=" text-center text-3xl font-bold">
                   {'Bài hát đã thích'}
                 </Animated.Text>
               </View>

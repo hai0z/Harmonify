@@ -19,6 +19,7 @@ import nodejs from 'nodejs-mobile-react-native';
 import getThumbnail from '../../utils/getThumnail';
 import TrackItem from '../../components/TrackItem';
 import {PlayerContext} from '../../context/PlayerProvider';
+import useThemeStore from '../../store/themeStore';
 interface artistType {
   id: string;
   name: string;
@@ -38,6 +39,7 @@ const ArtistSong = ({route}: any) => {
   const [dataDetailArtist, setDataDetailArtist] = useState<artistType>();
   const [hasLoadMore, setHasLoadMore] = useState(true);
   const [page, setPage] = useState(1);
+  const {darkMode, COLOR} = useThemeStore(state => state);
 
   useEffect(() => {
     setLoading(true);
@@ -80,9 +82,15 @@ const ArtistSong = ({route}: any) => {
 
   const scrollY = React.useRef(new Animated.Value(0)).current;
 
-  const headerOpacity = scrollY.interpolate({
-    inputRange: [0, SCREEN_WIDTH * 0.4, SCREEN_WIDTH * 0.6],
-    outputRange: [0, 0, 1],
+  const headerColor = scrollY.interpolate({
+    inputRange: [SCREEN_WIDTH * 0.59, SCREEN_WIDTH * 0.6],
+    outputRange: ['transparent', COLOR.BACKGROUND],
+    extrapolate: 'clamp',
+  });
+  const titleOpacity = scrollY.interpolate({
+    inputRange: [SCREEN_WIDTH * 0.59, SCREEN_WIDTH * 0.6],
+    outputRange: [0, 1],
+    extrapolate: 'clamp',
   });
 
   const navigation = useNavigation<any>();
@@ -98,29 +106,38 @@ const ArtistSong = ({route}: any) => {
     },
     [data],
   );
-
   if (loading) {
     return (
-      <View className="flex-1 items-center justify-center bg-[#121212]">
-        <ActivityIndicator size="large" color="#DA291C" />
+      <View
+        className="flex-1 items-center justify-center "
+        style={{backgroundColor: COLOR.BACKGROUND}}>
+        <ActivityIndicator size="large" color={COLOR.PRIMARY} />
       </View>
     );
   }
   return (
-    <View className="bg-[#121212] flex-1">
-      <StatusBar backgroundColor={`#00000030`} style="light" />
+    <View className=" flex-1" style={{backgroundColor: COLOR.BACKGROUND}}>
+      <StatusBar
+        backgroundColor={`${COLOR.BACKGROUND}30`}
+        style={darkMode ? 'light' : 'dark'}
+      />
       <Animated.View
         className="absolute top-0 pt-[35px] left-0 right-0 z-[999] h-20  items-center flex-row px-6"
-        style={{opacity: headerOpacity, backgroundColor: '#121212'}}>
+        style={{backgroundColor: headerColor}}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color="#ffffff" />
+          <Ionicons name="arrow-back" size={24} color={COLOR.TEXT_PRIMARY} />
         </TouchableOpacity>
-        <Animated.Text className="text-white font-bold ml-4">
+        <Animated.Text
+          className=" font-bold ml-4"
+          style={{color: COLOR.TEXT_PRIMARY, opacity: titleOpacity}}>
           {dataDetailArtist?.name}
         </Animated.Text>
       </Animated.View>
       <View className="flex-1">
         <FlashList
+          ListFooterComponent={() => {
+            return <View className="h-40"></View>;
+          }}
           onEndReached={() => {
             fetchMoreData();
           }}
@@ -138,7 +155,7 @@ const ArtistSong = ({route}: any) => {
                     height: SCREEN_WIDTH * 0.8,
                   }}>
                   <LinearGradient
-                    colors={['transparent', '#121212']}
+                    colors={['transparent', COLOR.BACKGROUND]}
                     className="absolute bottom-0 h-40 left-0 right-0 z-10"
                   />
 
@@ -161,7 +178,9 @@ const ArtistSong = ({route}: any) => {
                     ]}
                   />
                 </View>
-                <Text className="text-white font-bold text-3xl text-left mt-4 px-4">
+                <Text
+                  className=" font-bold text-3xl text-left mt-4 px-4"
+                  style={{color: COLOR.TEXT_PRIMARY}}>
                   {dataDetailArtist?.name}
                 </Text>
               </View>

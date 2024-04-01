@@ -13,7 +13,6 @@ import {NULL_URL} from '../constants';
 
 interface ContextType {
   bottomSheetModalRef: React.RefObject<BottomSheetModalMethods>;
-  handlePresentModalPress: () => void;
   showBottomSheet: (item: any) => void;
 }
 
@@ -51,14 +50,10 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
-  const handlePresentModalPress = useCallback(() => {
-    bottomSheetModalRef.current?.present();
-  }, []);
-
   const {setData} = useBottomSheetStore(state => state);
 
   const showBottomSheet = useCallback((item: any) => {
-    handlePresentModalPress();
+    bottomSheetModalRef.current?.present();
     setData(item);
   }, []);
 
@@ -142,8 +137,7 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
   }, [currentSong?.id]);
 
   return (
-    <PlayerContext.Provider
-      value={{bottomSheetModalRef, handlePresentModalPress, showBottomSheet}}>
+    <PlayerContext.Provider value={{bottomSheetModalRef, showBottomSheet}}>
       {children}
     </PlayerContext.Provider>
   );

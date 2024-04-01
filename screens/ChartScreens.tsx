@@ -20,20 +20,21 @@ import getThumbnail from '../utils/getThumnail';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import nodejs from 'nodejs-mobile-react-native';
+import useThemeStore from '../store/themeStore';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const ChartScreens = () => {
   const [data, setData] = useState<any>([]);
   const [loading, setLoading] = useState(true);
-
+  const COLOR = useThemeStore(state => state.COLOR);
   const scrollY = React.useRef(new Animated.Value(0)).current;
 
   const headerColor = useMemo(
     () =>
       scrollY.interpolate({
-        inputRange: [0, SCREEN_WIDTH * 0.6, SCREEN_WIDTH * 0.8],
-        outputRange: ['transparent', 'transparent', '#121212'],
+        inputRange: [0, SCREEN_WIDTH * 0.79, SCREEN_WIDTH * 0.8],
+        outputRange: ['transparent', 'transparent', COLOR.BACKGROUND],
         extrapolate: 'clamp',
       }),
     [scrollY],
@@ -66,23 +67,25 @@ const ChartScreens = () => {
   const navigation = useNavigation<any>();
   if (loading) {
     return (
-      <View className="flex-1 items-center justify-center bg-[#121212]">
-        <ActivityIndicator size="large" color="#DA291C" />
+      <View
+        className="flex-1 items-center justify-center"
+        style={{backgroundColor: COLOR.BACKGROUND}}>
+        <ActivityIndicator size="large" color={COLOR.PRIMARY} />
       </View>
     );
   }
   return (
-    <View className="flex-1 bg-[#121212]">
+    <View className="flex-1 " style={{backgroundColor: COLOR.BACKGROUND}}>
       <Animated.View
         className="absolute top-0 pt-[35px] left-0 right-0 z-30 h-20  justify-between items-center flex-row px-6"
         style={{backgroundColor: headerColor}}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color="#ffffff" />
+          <Ionicons name="arrow-back" size={24} color={COLOR.TEXT_PRIMARY} />
         </TouchableOpacity>
         <View className="justify-center items-center">
           <Animated.Text
-            style={{opacity: headerTitleOpacity}}
-            className="text-white font-bold">
+            style={{opacity: headerTitleOpacity, color: COLOR.TEXT_PRIMARY}}
+            className="font-bold">
             Bảng xếp hạng
           </Animated.Text>
         </View>
@@ -111,6 +114,8 @@ const ChartScreens = () => {
 };
 
 const Dot = ({scrollX}: any) => {
+  const COLOR = useThemeStore(state => state.COLOR);
+
   return (
     <View className="flex flex-row gap-2">
       {Array(3)
@@ -124,13 +129,14 @@ const Dot = ({scrollX}: any) => {
           return (
             <Animated.View
               key={i}
-              className={'w-2 h-2 rounded-full mx-1 bg-[#ffffff]'}
+              className={'w-2 h-2 rounded-full mx-1'}
               style={{
                 opacity: scrollX.interpolate({
                   inputRange,
                   outputRange: [0.3, 1, 0.3],
                   extrapolate: 'clamp',
                 }),
+                backgroundColor: COLOR.SECONDARY,
               }}></Animated.View>
           );
         })}
@@ -138,6 +144,8 @@ const Dot = ({scrollX}: any) => {
   );
 };
 const ChartHeader = ({data, handlePlaySong}: any) => {
+  const COLOR = useThemeStore(state => state.COLOR);
+
   const scrollX = React.useRef(new Animated.Value(0)).current;
   const scrollViewRef = useRef<ScrollView>(null);
 
@@ -166,7 +174,7 @@ const ChartHeader = ({data, handlePlaySong}: any) => {
         );
       })}
       <LinearGradient
-        colors={['transparent', '#121212']}
+        colors={['transparent', COLOR.BACKGROUND]}
         className="bottom-0 w-full h-full absolute"
       />
       <View className="absolute bottom-0 z-50">
@@ -216,27 +224,34 @@ const ChartHeader = ({data, handlePlaySong}: any) => {
               />
               <View className="mt-4">
                 <Animated.Text
-                  className="text-white font-xl font-bold uppercase text-center"
+                  className="font-xl font-bold uppercase text-center"
                   style={{
                     maxWidth: SCREEN_WIDTH * 0.6,
                     opacity: titleOpacity,
+                    color: COLOR.TEXT_PRIMARY,
                   }}>
                   {item.title}
                 </Animated.Text>
                 <Animated.Text
-                  className="text-zinc-500 font-bold text-center"
+                  className=" font-bold text-center"
                   style={{
                     maxWidth: SCREEN_WIDTH * 0.6,
                     opacity: titleOpacity,
+                    color: COLOR.TEXT_SECONDARY,
                   }}>
                   {item.artistsNames}
                 </Animated.Text>
               </View>
               <TouchableOpacity
                 onPress={() => handlePlaySong(item)}
-                className="bg-[#DA291C] px-4 py-2 rounded-full mt-4 flex flex-row">
-                <Entypo name="controller-play" size={20} color="#ffffff" />
-                <Text className="text-white">Play now</Text>
+                className="px-4 py-2 rounded-full mt-4 flex flex-row"
+                style={{backgroundColor: COLOR.PRIMARY}}>
+                <Entypo
+                  name="controller-play"
+                  size={20}
+                  color={COLOR.TEXT_PRIMARY}
+                />
+                <Text style={{color: COLOR.TEXT_PRIMARY}}>Play now</Text>
               </TouchableOpacity>
             </View>
           );
@@ -247,12 +262,16 @@ const ChartHeader = ({data, handlePlaySong}: any) => {
 };
 const ChartItem = React.memo(({item, index, onPlay}: any) => {
   console.log('chart item');
+  const COLOR = useThemeStore(state => state.COLOR);
+
   return (
     <TouchableOpacity
       activeOpacity={0.8}
       className="flex flex-row  items-center mx-4 my-2"
       onPress={() => onPlay(item)}>
-      <Text className="text-[#FBE122] font-bold mr-4 text-2xl">
+      <Text
+        className=" font-bold mr-4 text-2xl"
+        style={{color: COLOR.SECONDARY}}>
         {index + 3 < 10 ? `0${index + 3}` : index + 3}
       </Text>
       <Image
@@ -266,12 +285,15 @@ const ChartItem = React.memo(({item, index, onPlay}: any) => {
           numberOfLines={1}
           style={{
             fontWeight: 'bold',
-            color: 'white',
+            color: COLOR.TEXT_PRIMARY,
           }}>
           {item?.title}
         </Text>
 
-        <Text numberOfLines={1} className="text-zinc-500 font-semibold">
+        <Text
+          numberOfLines={1}
+          className="font-semibold"
+          style={{color: COLOR.TEXT_SECONDARY}}>
           {item?.artistsNames}
         </Text>
       </View>

@@ -4,11 +4,11 @@ import {useNavigation} from '@react-navigation/native';
 import {usePlayerStore} from '../../../store/playerStore';
 import LinearGradient from 'react-native-linear-gradient';
 import Entypo from 'react-native-vector-icons/Entypo';
-import {COLOR} from '../../../constants';
+import useThemeStore from '../../../store/themeStore';
 
 const Playlist = () => {
   const likedSongs = usePlayerStore(state => state.likedSongs);
-
+  const {COLOR} = useThemeStore(state => state);
   const navigation = useNavigation<any>();
   return (
     <View style={{flex: 1, marginHorizontal: 10, marginTop: 20}}>
@@ -21,15 +21,17 @@ const Playlist = () => {
         activeOpacity={0.8}
         className="flex-row items-center">
         <LinearGradient
-          colors={[COLOR.PRIMARY, '#bdbdbd']}
+          colors={[COLOR.PRIMARY, COLOR.GRADIENT]}
           className="w-16 h-16 justify-center items-center">
-          <Entypo name="heart" size={36} color={COLOR.SECONDARY} />
+          <Entypo name="heart" size={36} color={COLOR.TEXT_PRIMARY} />
         </LinearGradient>
         <View style={{marginLeft: 10}}>
-          <Text className="text-white font-bold mb-[5px]">
+          <Text
+            className="font-bold mb-[5px]"
+            style={{color: COLOR.TEXT_PRIMARY}}>
             Bài hát đã thích
           </Text>
-          <Text style={{color: '#bdbdbd'}}>
+          <Text style={{color: COLOR.TEXT_SECONDARY}}>
             Danh sách phát • {likedSongs.length} bài hát
           </Text>
         </View>

@@ -3,10 +3,10 @@ import React from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import LocalSong from './components/LocalSong';
 import Playlist from './components/Playlist';
-import {COLOR} from '../../constants';
+import useThemeStore from '../../store/themeStore';
 const LibrarySrceens = () => {
   const [selectedTab, setSelectedTab] = React.useState(0);
-
+  const {COLOR} = useThemeStore(state => state);
   return (
     <View style={styles.container}>
       <View style={styles.top}>
@@ -16,10 +16,16 @@ const LibrarySrceens = () => {
             style={styles.avatar}
             source={require('../../assets/evil.png')}
           />
-          <Text style={styles.txt}>Thư viện</Text>
+          <Text style={{...styles.txt, color: COLOR.TEXT_PRIMARY}}>
+            Thư viện
+          </Text>
         </View>
         <TouchableOpacity>
-          <AntDesign name="plus" size={24} style={styles.plusIcon} />
+          <AntDesign
+            name="plus"
+            size={24}
+            style={{color: COLOR.TEXT_PRIMARY, ...styles.plusIcon}}
+          />
         </TouchableOpacity>
       </View>
       <View className="h-10 flex-row items-center">
@@ -28,12 +34,11 @@ const LibrarySrceens = () => {
             onPress={() => setSelectedTab(index)}
             key={index}
             style={{
-              borderColor: !selectedTab ? '#dbdbdb' : 'none',
               backgroundColor:
                 selectedTab === index ? COLOR.PRIMARY : 'transparent',
             }}
             className="items-center justify-center mx-2 rounded-full px-2 py-1">
-            <Text style={{color: '#fff'}}>{item}</Text>
+            <Text style={{color: COLOR.TEXT_PRIMARY}}>{item}</Text>
           </TouchableOpacity>
         ))}
       </View>
@@ -49,7 +54,6 @@ export default LibrarySrceens;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#121212',
     paddingTop: 35,
   },
   avatar: {
@@ -71,10 +75,8 @@ const styles = StyleSheet.create({
   txt: {
     fontWeight: 'bold',
     fontSize: 24,
-    color: '#fff',
+
     marginLeft: 10,
   },
-  plusIcon: {
-    color: '#bdbdbd',
-  },
+  plusIcon: {},
 });

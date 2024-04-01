@@ -15,10 +15,10 @@ import {LinearGradient} from 'react-native-linear-gradient';
 import {FlashList} from '@shopify/flash-list';
 import {handlePlaySongInLocal} from '../../utils/musicControl';
 import {useNavigation} from '@react-navigation/native';
-import {COLOR, DEFAULT_IMG} from '../../constants';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import useGetLocalSong from '../../hooks/useGetLocalSong';
-import Feather from 'react-native-vector-icons/Feather';
+import Entypo from 'react-native-vector-icons/Entypo';
+import useThemeStore from '../../store/themeStore';
+import {DEFAULT_IMG} from '../../constants';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const LocalSong = ({route}: any) => {
@@ -27,12 +27,13 @@ const LocalSong = ({route}: any) => {
   const scrollY = React.useRef(new Animated.Value(0)).current;
 
   const navigation = useNavigation<any>();
+  const COLOR = useThemeStore(state => state.COLOR);
 
   const headerColor = useMemo(
     () =>
       scrollY.interpolate({
-        inputRange: [0, SCREEN_WIDTH * 0.6, SCREEN_WIDTH * 0.8],
-        outputRange: ['transparent', 'transparent', '#121212'],
+        inputRange: [SCREEN_WIDTH * 0.79, SCREEN_WIDTH * 0.8],
+        outputRange: ['transparent', COLOR.BACKGROUND],
         extrapolate: 'clamp',
       }),
     [scrollY],
@@ -68,23 +69,28 @@ const LocalSong = ({route}: any) => {
         className="flex-1 justify-center items-center"
         style={{backgroundColor: COLOR.BACKGROUND}}>
         <ActivityIndicator size={'large'} color={COLOR.PRIMARY} />
+        <Text className=" mt-2" style={{color: COLOR.TEXT_PRIMARY}}>
+          Đang quét nhạc trên thiết bị...
+        </Text>
       </View>
     );
   }
 
   return (
-    <View className="flex-1 bg-[#121212] w-full">
-      <StatusBar backgroundColor="#00000030" />
+    <View
+      className="flex-1  w-full"
+      style={{backgroundColor: COLOR.BACKGROUND}}>
+      <StatusBar backgroundColor={`${COLOR.BACKGROUND}30`} />
       <Animated.View
         className="absolute top-0 pt-[35px] left-0 right-0 z-30 h-20  justify-between items-center flex-row px-6"
         style={{backgroundColor: headerColor}}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color="#ffffff" />
+          <Ionicons name="arrow-back" size={24} color={COLOR.TEXT_PRIMARY} />
         </TouchableOpacity>
         <View className="justify-center items-center">
           <Animated.Text
-            style={{opacity: headerTitleOpacity}}
-            className="text-white font-bold">
+            style={{opacity: headerTitleOpacity, color: COLOR.TEXT_PRIMARY}}
+            className=" font-bold">
             Bài hát trên thiết bị
           </Animated.Text>
         </View>
@@ -104,11 +110,11 @@ const LocalSong = ({route}: any) => {
                 className="flex justify-end items-center pb-4"
                 style={{height: SCREEN_WIDTH * 0.8}}>
                 <LinearGradient
-                  colors={['transparent', '#121212']}
+                  colors={['transparent', COLOR.BACKGROUND]}
                   className="absolute bottom-0 h-40 left-0 right-0 z-50"
                 />
                 <LinearGradient
-                  colors={['transparent', COLOR.PRIMARY]}
+                  colors={[COLOR.PRIMARY, 'transparent']}
                   style={[
                     StyleSheet.absoluteFill,
                     {
@@ -118,7 +124,7 @@ const LocalSong = ({route}: any) => {
                   ]}
                 />
                 <LinearGradient
-                  colors={[COLOR.PRIMARY, '#bdbdbd']}
+                  colors={[COLOR.PRIMARY, COLOR.GRADIENT]}
                   style={[
                     {
                       width: SCREEN_WIDTH * 0.6,
@@ -126,13 +132,13 @@ const LocalSong = ({route}: any) => {
                     },
                   ]}
                   className="justify-center items-center rounded-lg z-[99]">
-                  <Feather name="folder" size={120} color={COLOR.SECONDARY} />
+                  <Entypo name="folder" size={120} color={COLOR.TEXT_PRIMARY} />
                 </LinearGradient>
               </View>
               <View className="z-50 mt-4 px-6 mb-4">
                 <Animated.Text
-                  style={{opacity: titleOpacity}}
-                  className="text-white text-center text-3xl font-bold">
+                  style={{opacity: titleOpacity, color: COLOR.TEXT_PRIMARY}}
+                  className="text-center text-3xl font-bold">
                   {'Bài hát trên thiết bị'}
                 </Animated.Text>
               </View>
@@ -156,6 +162,7 @@ const LocalSong = ({route}: any) => {
   );
 };
 const Item = React.memo(({item, onPress}: any) => {
+  const {COLOR} = useThemeStore(state => state);
   return (
     <TouchableOpacity
       onPress={() => onPress(item)}
@@ -165,8 +172,14 @@ const Item = React.memo(({item, onPress}: any) => {
         className="w-14 h-14 justify-center items-center rounded-md"
       />
       <View style={{marginLeft: 10}}>
-        <Text className="text-white font-bold mb-[5px]">{item.title}</Text>
-        <Text className="text-zinc-400  mb-[5px]">{item.artistsNames}</Text>
+        <Text
+          className=" font-bold mb-[5px]"
+          style={{color: COLOR.TEXT_PRIMARY}}>
+          {item.title}
+        </Text>
+        <Text className="  mb-[5px]" style={{color: COLOR.TEXT_SECONDARY}}>
+          {item.artistsNames}
+        </Text>
       </View>
     </TouchableOpacity>
   );

@@ -12,7 +12,6 @@ import Toast from './components/toast/Toast';
 import {addEventListener} from '@react-native-community/netinfo';
 import useToastStore from './store/toastStore';
 import React from 'react';
-import {BottomSheetProvider} from '@gorhom/bottom-sheet/lib/typescript/contexts';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 export default function App() {
   useEffect(() => {

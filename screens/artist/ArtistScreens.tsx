@@ -17,6 +17,7 @@ import {StatusBar} from 'expo-status-bar';
 import {useNavigation} from '@react-navigation/native';
 import nodejs from 'nodejs-mobile-react-native';
 import PlayListCover from '../../components/PlayListCover';
+import useThemeStore from '../../store/themeStore';
 interface artistType {
   id: string;
   name: string;
@@ -36,7 +37,7 @@ const ArtistScreens = ({route}: any) => {
   const {name} = route.params;
   const [loading, setLoading] = React.useState(true);
   const [dataDetailArtist, setDataDetailArtist] = useState<artistType>();
-
+  const COLOR = useThemeStore(state => state.COLOR);
   useEffect(() => {
     setLoading(true);
     nodejs.channel.addListener('getArtist', (data: any) => {
@@ -50,8 +51,8 @@ const ArtistScreens = ({route}: any) => {
   const scrollY = React.useRef(new Animated.Value(0)).current;
 
   const headerColor = scrollY.interpolate({
-    inputRange: [0, SCREEN_WIDTH * 0.4, SCREEN_WIDTH * 0.6],
-    outputRange: ['transparent', 'transparent', '#121212'],
+    inputRange: [SCREEN_WIDTH * 0.59, SCREEN_WIDTH * 0.6],
+    outputRange: ['transparent', COLOR.BACKGROUND],
     extrapolate: 'clamp',
   });
 
@@ -65,23 +66,31 @@ const ArtistScreens = ({route}: any) => {
   //    },
   //    [data],
   //  );
+  const {darkMode} = useThemeStore(state => state);
   if (loading) {
     return (
-      <View className="flex-1 items-center justify-center bg-[#121212]">
-        <ActivityIndicator size="large" color="#DA291C" />
+      <View
+        style={{backgroundColor: COLOR.BACKGROUND}}
+        className="flex-1 items-center justify-center">
+        <ActivityIndicator size="large" color={COLOR.PRIMARY} />
       </View>
     );
   }
   return (
-    <View className="bg-[#121212]  flex-1">
-      <StatusBar backgroundColor={`#00000030`} style="light" />
+    <View className=" flex-1" style={{backgroundColor: COLOR.BACKGROUND}}>
+      <StatusBar
+        backgroundColor={`${COLOR.BACKGROUND}30`}
+        style={darkMode ? 'light' : 'dark'}
+      />
       <Animated.View
         className="absolute top-0 pt-[35px] left-0 right-0 z-[999] h-20  items-center flex-row px-6"
         style={{backgroundColor: headerColor}}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color="#ffffff" />
+          <Ionicons name="arrow-back" size={24} color={COLOR.TEXT_PRIMARY} />
         </TouchableOpacity>
-        <Animated.Text className="text-white font-bold ml-4">
+        <Animated.Text
+          className=" font-bold ml-4"
+          style={{color: COLOR.TEXT_PRIMARY}}>
           {dataDetailArtist?.name}
         </Animated.Text>
       </Animated.View>
@@ -97,7 +106,7 @@ const ArtistScreens = ({route}: any) => {
             style={{
               height: SCREEN_WIDTH * 1.2,
               width: SCREEN_WIDTH,
-              backgroundColor: '#00000050',
+              backgroundColor: darkMode ? '#00000050' : '#ffffff50',
             }}
           />
           <Image
@@ -111,7 +120,9 @@ const ArtistScreens = ({route}: any) => {
             ]}
           />
           <View className="absolute bottom-0 z-20">
-            <Text className="text-white font-bold text-xl p-4 ">
+            <Text
+              className=" font-bold text-xl p-4 "
+              style={{color: COLOR.TEXT_PRIMARY}}>
               {dataDetailArtist?.name}
             </Text>
           </View>
@@ -119,8 +130,10 @@ const ArtistScreens = ({route}: any) => {
 
         {/* top */}
         <View>
-          <View className="text-white text-lg font-semibold px-4 py-4 justify-between items-center flex-row">
-            <Text className="text-white font-bold text-lg">
+          <View className=" text-lg font-semibold px-4 py-4 justify-between items-center flex-row">
+            <Text
+              className=" font-bold text-lg"
+              style={{color: COLOR.TEXT_PRIMARY}}>
               Bài hát nổi bật
             </Text>
           </View>
@@ -145,8 +158,10 @@ const ArtistScreens = ({route}: any) => {
                   className="rounded-md h-14 w-14"
                 />
                 <View>
-                  <Text className="text-white ml-4">{item.title}</Text>
-                  <Text className="text-zinc-500 ml-4">
+                  <Text style={{color: COLOR.TEXT_PRIMARY}} className="ml-4">
+                    {item.title}
+                  </Text>
+                  <Text className=" ml-4" style={{color: COLOR.TEXT_SECONDARY}}>
                     {item.artistsNames}
                   </Text>
                 </View>
@@ -154,14 +169,17 @@ const ArtistScreens = ({route}: any) => {
             ))}
           <View className="w-full justify-center items-center my-2">
             <TouchableOpacity
-              className="w-32 p-2 rounded-full items-center border-[#DA291C] border"
+              style={{borderColor: COLOR.PRIMARY}}
+              className="w-32 p-2 rounded-full items-center  border"
               onPress={() => {
                 navigation.push('ArtistsSong', {
                   id: dataDetailArtist?.id,
                   name: dataDetailArtist?.alias,
                 });
               }}>
-              <Text className="text-white text-sm">Xem thêm</Text>
+              <Text style={{color: COLOR.TEXT_PRIMARY}} className=" text-sm">
+                Xem thêm
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -172,7 +190,9 @@ const ArtistScreens = ({route}: any) => {
             .filter((type: any) => type.sectionId === 'aPlaylist')
             .map((item: any, index: number) => (
               <View key={index} className="mb-4">
-                <Text className="text-white text-lg font-semibold px-4 py-4">
+                <Text
+                  style={{color: COLOR.TEXT_PRIMARY}}
+                  className="text-lg font-semibold px-4 py-4">
                   {item.title}
                 </Text>
                 <ScrollView
@@ -194,7 +214,9 @@ const ArtistScreens = ({route}: any) => {
 
         {/* Single */}
         <View>
-          <Text className="text-white text-lg font-semibold px-4 py-4">
+          <Text
+            style={{color: COLOR.TEXT_PRIMARY}}
+            className="text-lg font-semibold px-4 py-4">
             Đĩa đơn
           </Text>
           <ScrollView
@@ -216,7 +238,9 @@ const ArtistScreens = ({route}: any) => {
         {/* Relate artis */}
 
         <View>
-          <Text className="text-white text-lg font-semibold px-4 py-4">
+          <Text
+            className="text-lg font-semibold px-4 py-4"
+            style={{color: COLOR.TEXT_PRIMARY}}>
             Có thể bạn thích
           </Text>
           <ScrollView
@@ -238,10 +262,14 @@ const ArtistScreens = ({route}: any) => {
                     className="w-40 h-40 rounded-full"
                   />
                   <View>
-                    <Text className="text-white text-center mt-2">
+                    <Text
+                      className=" text-center mt-2"
+                      style={{color: COLOR.TEXT_PRIMARY}}>
                       {item.name}
                     </Text>
-                    <Text className="text-zinc-400 text-center">
+                    <Text
+                      className=" text-center"
+                      style={{color: COLOR.TEXT_SECONDARY}}>
                       {item.totalFollow} quan tâm
                     </Text>
                   </View>
@@ -252,20 +280,24 @@ const ArtistScreens = ({route}: any) => {
 
         {/* info */}
         <View className="px-4 flex flex-col gap-2 py-4">
-          <Text className="text-white text-lg font-semibold py-2">
+          <Text
+            className=" text-lg font-semibold py-2"
+            style={{color: COLOR.TEXT_PRIMARY}}>
             Thông tin
           </Text>
-          <Text className="text-zinc-400">
+          <Text style={{color: COLOR.TEXT_SECONDARY}}>
             Tên thật: {dataDetailArtist?.realname}
           </Text>
-          <Text className="text-zinc-400">
+          <Text style={{color: COLOR.TEXT_SECONDARY}}>
             Ngày sinh: {dataDetailArtist?.birthday || 'Không rõ'}
           </Text>
 
-          <Text className="text-zinc-400">
+          <Text style={{color: COLOR.TEXT_SECONDARY}}>
             {dataDetailArtist?.sortBiography}
           </Text>
-          <Text className="text-zinc-400">{dataDetailArtist?.biography}</Text>
+          <Text style={{color: COLOR.TEXT_SECONDARY}}>
+            {dataDetailArtist?.biography}
+          </Text>
         </View>
       </ScrollView>
     </View>

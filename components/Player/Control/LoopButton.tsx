@@ -2,11 +2,11 @@ import {TouchableOpacity} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import TrackPlayer, {RepeatMode} from 'react-native-track-player';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {COLOR} from '../../../constants';
+import useThemeStore from '../../../store/themeStore';
 
 const LoopButton = () => {
   const [repeatMode, setRepeatMode] = useState(RepeatMode.Queue);
-
+  const {COLOR} = useThemeStore(state => state);
   useEffect(() => {
     (async () => {
       const repeatMode = await TrackPlayer.getRepeatMode();
@@ -31,7 +31,9 @@ const LoopButton = () => {
       <MaterialIcons
         name="loop"
         size={24}
-        color={repeatMode === RepeatMode.Queue ? '#fff' : COLOR.PRIMARY}
+        color={
+          repeatMode === RepeatMode.Queue ? COLOR.TEXT_PRIMARY : COLOR.PRIMARY
+        }
       />
     </TouchableOpacity>
   );

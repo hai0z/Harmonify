@@ -3,6 +3,7 @@ import React from 'react';
 import getThumbnail from '../utils/getThumnail';
 import {useNavigation} from '@react-navigation/native';
 import {Image} from 'react-native';
+import useThemeStore from '../store/themeStore';
 interface coverProps {
   title: string;
   sortDescription?: string;
@@ -17,6 +18,7 @@ const PlayListCover = ({
   encodeId,
 }: coverProps) => {
   const navigation = useNavigation<any>();
+  const COLOR = useThemeStore(state => state.COLOR);
   return (
     <TouchableOpacity
       className="w-40"
@@ -33,10 +35,16 @@ const PlayListCover = ({
         source={{uri: getThumbnail(thumbnail) || ''}}
         className="w-40 h-40 rounded-md object-cover"
       />
-      <Text numberOfLines={2} className="text-left text-[16px] mt-1 text-white">
+      <Text
+        numberOfLines={2}
+        className="text-left text-[16px] mt-1"
+        style={{color: COLOR.TEXT_PRIMARY}}>
         {title}
       </Text>
-      <Text numberOfLines={2} className="text-left text-[12px] text-zinc-500">
+      <Text
+        numberOfLines={2}
+        className="text-left text-[12px] "
+        style={{color: COLOR.TEXT_SECONDARY}}>
         {sortDescription ? sortDescription : ''}
       </Text>
     </TouchableOpacity>

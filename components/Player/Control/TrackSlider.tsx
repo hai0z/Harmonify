@@ -3,8 +3,10 @@ import React, {useCallback, useRef} from 'react';
 import TrackPlayer, {useProgress} from 'react-native-track-player';
 import Slider from '@react-native-assets/slider';
 import caculateTime from '../../../utils/caculateMusicTime';
+import useThemeStore from '../../../store/themeStore';
 
 const TrackSlider = () => {
+  const COLOR = useThemeStore(state => state.COLOR);
   const progess = useProgress(500);
 
   const time = caculateTime(progess.duration, progess.position);
@@ -15,6 +17,7 @@ const TrackSlider = () => {
     await TrackPlayer.play();
   }, []);
 
+  const {darkMode} = useThemeStore(state => state);
   return (
     <View>
       <Slider
@@ -32,20 +35,24 @@ const TrackSlider = () => {
         }}
         trackStyle={{
           height: 3.5,
-          backgroundColor: '#ffffff95',
+          backgroundColor: darkMode ? '#ffffff90' : '#F875AA',
         }}
         minTrackStyle={{
-          backgroundColor: '#ffffff',
+          backgroundColor: darkMode ? '#ffffff' : '#F7A76C',
         }}
         style={{
           height: 20,
         }}
       />
       <View className="mt-2 flex flex-row justify-between items-center">
-        <Text className="text-white/70 text-[12px] font-medium">
+        <Text
+          className="text-[12px] font-medium"
+          style={{color: COLOR.TEXT_PRIMARY}}>
           {time.currentMin}:{time.currentSecond}
         </Text>
-        <Text className="text-white/70 text-[12px] font-medium">
+        <Text
+          className="text-[12px] font-medium"
+          style={{color: COLOR.TEXT_PRIMARY}}>
           {time.totalTime}
         </Text>
       </View>

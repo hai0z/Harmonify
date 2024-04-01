@@ -13,8 +13,10 @@ import useDarkColor from '../hooks/useDarkColor';
 import {useNavigation} from '@react-navigation/native';
 import {usePlayerStore} from '../store/playerStore';
 import TextTicker from 'react-native-text-ticker';
-import {COLOR, MINI_PLAYER_HEIGHT, TABBAR_HEIGHT} from '../constants';
+import {MINI_PLAYER_HEIGHT, TABBAR_HEIGHT} from '../constants';
 import useToggleLikeSong from '../hooks/useToggleLikeSong';
+import useThemeStore from '../store/themeStore';
+import tinycolor from 'tinycolor2';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const MiniPlayer = () => {
@@ -25,6 +27,7 @@ const MiniPlayer = () => {
   const {color, currentSong, isLoadingTrack, tempSong, isPlayFromLocal} =
     usePlayerStore(state => state);
 
+  const {darkMode, COLOR} = useThemeStore(state => state);
   const playerState = usePlaybackState();
 
   const progress = useProgress(1000);
@@ -32,6 +35,10 @@ const MiniPlayer = () => {
   const track = useActiveTrack();
 
   const {handleAddToLikedList, isLiked} = useToggleLikeSong();
+
+  const gradientColor = darkMode
+    ? useDarkColor(color.dominant!, 35)
+    : tinycolor(color.dominant!).brighten(50).toString();
 
   const togglePlay = useCallback(async (state: State | undefined) => {
     if (state !== State.Playing) {
@@ -69,7 +76,7 @@ const MiniPlayer = () => {
             width: '100%',
             height: '100%',
             zIndex: 2,
-            backgroundColor: useDarkColor(color.dominant!, 35),
+            backgroundColor: gradientColor,
           }}>
           <View
             style={{
@@ -97,7 +104,7 @@ const MiniPlayer = () => {
                 repeatSpacer={50}
                 marqueeDelay={3000}
                 style={{
-                  color: 'white',
+                  color: COLOR.TEXT_PRIMARY,
                   fontWeight: '600',
                   fontSize: 14,
                 }}>
@@ -106,7 +113,7 @@ const MiniPlayer = () => {
 
               <Text
                 style={{
-                  color: 'white',
+                  color: COLOR.TEXT_PRIMARY,
                   fontSize: 12,
                 }}
                 numberOfLines={1}>
@@ -130,7 +137,7 @@ const MiniPlayer = () => {
                   <AntDesign
                     name={isLiked ? 'heart' : 'hearto'}
                     size={24}
-                    color={isLiked ? COLOR.PRIMARY : '#ffffff'}
+                    color={isLiked ? COLOR.PRIMARY : COLOR.TEXT_PRIMARY}
                   />
                 </TouchableOpacity>
               )}
@@ -145,7 +152,7 @@ const MiniPlayer = () => {
                       : 'controller-paus'
                   }
                   size={30}
-                  color="#fff"
+                  color={COLOR.TEXT_PRIMARY}
                 />
               </TouchableOpacity>
             </View>

@@ -15,16 +15,14 @@ import {usePlayerStore} from '../store/playerStore';
 import {handlePlay} from '../utils/musicControl';
 import nodejs from 'nodejs-mobile-react-native';
 import {useNavigation} from '@react-navigation/native';
+import useThemeStore from '../store/themeStore';
 const SearchScreens = () => {
   const [text, setText] = useState<string>('');
   const [data, setData] = useState<any>([]);
   const debouncedValue = useDebounce(text, 250);
   const [filterValue, setFilterValue] = useState<number>(0);
   const [filterData, setFilterData] = useState<any>([]);
-  const {setPlayList} = usePlayerStore(state => state);
-
-  const [isSearch, setIsSearch] = useState<boolean | null>(null);
-
+  const {COLOR} = useThemeStore(state => state);
   useEffect(() => {
     nodejs.channel.post('search', debouncedValue);
   }, [debouncedValue]);
@@ -34,30 +32,28 @@ const SearchScreens = () => {
       setData(data);
       setFilterData(data);
     });
-
-    return () => {
-      nodejs.channel.removeListener('search', () => {});
-    };
   }, []);
 
   const navigation = useNavigation<any>();
 
   return (
     <View
-      className="bg-[#121212] h-full w-full pt-[35px]"
+      className=" h-full w-full pt-[35px]"
       style={{
         paddingHorizontal: 16,
+        backgroundColor: COLOR.BACKGROUND,
       }}>
       <View className="flex flex-row items-center gap-2 w-full">
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color="white" />
+          <Ionicons name="arrow-back" size={24} color={COLOR.TEXT_PRIMARY} />
         </TouchableOpacity>
         <TextInput
           value={text}
+          style={{color: COLOR.TEXT_PRIMARY}}
           onChangeText={text => setText(text)}
-          placeholderTextColor={'#b3b3b3'}
+          placeholderTextColor={COLOR.TEXT_SECONDARY}
           placeholder="Nhập tên bài hát, nghệ sĩ..."
-          className="flex-1 h-10 bg-[#282828] rounded-full px-4 text-white"
+          className="flex-1 h-10 rounded-full px-4"
         />
       </View>
 
@@ -66,7 +62,8 @@ const SearchScreens = () => {
           <View className="flex flex-row items-center mr-2" key={index}>
             <TouchableOpacity
               style={{
-                backgroundColor: filterValue === index ? '#DA291C' : '#282828',
+                backgroundColor:
+                  filterValue === index ? COLOR.PRIMARY : 'transparent',
               }}
               className="p-2 items-center justify-center rounded-md "
               onPress={() => {
@@ -90,7 +87,7 @@ const SearchScreens = () => {
                   setFilterData(dt);
                 }
               }}>
-              <Text className="text-white">{e}</Text>
+              <Text style={{color: COLOR.TEXT_PRIMARY}}>{e}</Text>
             </TouchableOpacity>
           </View>
         ))}
@@ -115,10 +112,10 @@ const SearchScreens = () => {
               className="w-14 h-14 rounded-md"
             />
             <View>
-              <Text numberOfLines={1} className="text-white">
+              <Text numberOfLines={1} style={{color: COLOR.TEXT_PRIMARY}}>
                 {e.title}
               </Text>
-              <Text numberOfLines={1} className="text-zinc-500">
+              <Text numberOfLines={1} style={{color: COLOR.TEXT_SECONDARY}}>
                 {e.artistsNames} •{' '}
                 {new Date(e.duration * 1000).toISOString().substring(14, 19)}
               </Text>
@@ -142,10 +139,10 @@ const SearchScreens = () => {
               className="w-14 h-14 rounded-md"
             />
             <View>
-              <Text numberOfLines={1} className="text-white">
+              <Text numberOfLines={1} style={{color: COLOR.TEXT_PRIMARY}}>
                 {e.title}
               </Text>
-              <Text numberOfLines={1} className="text-zinc-500">
+              <Text numberOfLines={1} style={{color: COLOR.TEXT_SECONDARY}}>
                 Playlist • {e.artistsNames}
               </Text>
             </View>
@@ -163,10 +160,10 @@ const SearchScreens = () => {
               className="w-14 h-14 rounded-md"
             />
             <View>
-              <Text numberOfLines={1} className="text-white">
+              <Text numberOfLines={1} style={{color: COLOR.TEXT_PRIMARY}}>
                 {e.name}
               </Text>
-              <Text numberOfLines={1} className="text-zinc-500">
+              <Text numberOfLines={1} style={{color: COLOR.TEXT_SECONDARY}}>
                 Nghệ sĩ
               </Text>
             </View>

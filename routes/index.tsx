@@ -25,10 +25,11 @@ import LikedSong from '../screens/library/LikedSong';
 import MyPlaylist from '../screens/library/MyPlaylist';
 import {useEffect} from 'react';
 import SplashScreen from 'react-native-splash-screen';
-import {COLOR, TABBAR_HEIGHT} from '../constants';
+import {TABBAR_HEIGHT} from '../constants';
 import TrackItemBottomSheet from '../components/bottom-sheet/TrackItemBottomSheet';
-import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import LocalSong from '../screens/library/LocalSong';
+import useThemeStore from '../store/themeStore';
+import SettingScreen from '../screens/SettingScreen';
 export type HomeStackParamsList = {
   Home: undefined;
   Search: undefined;
@@ -45,15 +46,22 @@ export type HomeStackParamsList = {
   Chart: undefined;
   Lib: undefined;
   LocalSong: undefined;
+  Setting: undefined;
 };
 const Stack = createNativeStackNavigator<HomeStackParamsList>();
 
 const Tab = createBottomTabNavigator();
 
 const HomeWrapper = () => {
+  const {darkMode, COLOR} = useThemeStore();
   return (
-    <View className="flex-1 h-full w-full relative bg-[#121212]">
-      <StatusBar backgroundColor="#00000050" style="light" />
+    <View
+      className="flex-1 h-full w-full relative "
+      style={{backgroundColor: COLOR.BACKGROUND}}>
+      <StatusBar
+        backgroundColor={`${COLOR.BACKGROUND}30`}
+        style={darkMode ? 'light' : 'dark'}
+      />
       <HomeTab />
       <TrackItemBottomSheet />
     </View>
@@ -105,6 +113,7 @@ const HomeStack = () => {
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen name="Home" component={HomeScreens} />
       <Stack.Screen name="Search" component={SearchScreens} />
+      <Stack.Screen name="Setting" component={SettingScreen} />
       <Stack.Screen
         name="PlayListDetail"
         component={PlaylistDetail}
@@ -131,6 +140,7 @@ const HomeStack = () => {
 };
 
 const HomeTab = () => {
+  const {COLOR} = useThemeStore();
   return (
     <Tab.Navigator
       tabBar={props => (
@@ -138,7 +148,7 @@ const HomeTab = () => {
           <MiniPlayer />
           <BottomTabBar {...props} />
           <LinearGradient
-            colors={['transparent', '#121212']}
+            colors={['transparent', COLOR.BACKGROUND]}
             className="absolute bottom-0 left-0 right-0"
             style={{
               height: TABBAR_HEIGHT,
@@ -164,7 +174,7 @@ const HomeTab = () => {
           }
         },
         tabBarItemStyle: {
-          backgroundColor: '#12121295',
+          backgroundColor: `${COLOR.BACKGROUND}`,
           height: TABBAR_HEIGHT,
         },
         tabBarStyle: {
@@ -175,10 +185,10 @@ const HomeTab = () => {
           bottom: 0,
           left: 0,
           right: 0,
-          backgroundColor: '#12121295',
+          backgroundColor: `${COLOR.BACKGROUND}`,
         },
         tabBarActiveTintColor: COLOR.PRIMARY,
-        tabBarInactiveTintColor: '#ababab',
+        tabBarInactiveTintColor: COLOR.TEXT_SECONDARY,
       })}>
       <Tab.Screen
         name="HomeTab"

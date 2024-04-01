@@ -15,6 +15,7 @@ import {collection, onSnapshot, query} from 'firebase/firestore';
 import {auth, db} from '../../firebase/config';
 import NewRelease from './components/NewRelease';
 import LinearGradient from 'react-native-linear-gradient';
+import useThemeStore from '../../store/themeStore';
 interface typePlaylistCover {
   items: [];
   title: string;
@@ -29,6 +30,7 @@ function HomeScreens() {
   const [dataNewRelease, setDataNewRelease] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const setLikedSongs = usePlayerStore(state => state.setLikedSongs);
+  const {COLOR, HEADER_GRADIENT} = useThemeStore(state => state);
 
   useEffect(() => {
     const q = query(collection(db, `users/${auth.currentUser?.uid}/likedSong`));
@@ -61,29 +63,32 @@ function HomeScreens() {
 
   if (loading) {
     return (
-      <View className="flex-1 items-center justify-center bg-[#121212]">
-        <ActivityIndicator size="large" color="#DA291C" />
+      <View
+        className="flex-1 items-center justify-center "
+        style={{backgroundColor: COLOR.BACKGROUND}}>
+        <ActivityIndicator size="large" color={COLOR.PRIMARY} />
       </View>
     );
   }
   const timeColor = () => {
     const hour = new Date().getHours();
     if (hour < 12) {
-      return '#3F1D38';
+      return HEADER_GRADIENT.MORNING;
     } else if (hour < 18) {
-      return '#092635';
+      return HEADER_GRADIENT.AFTERNOON;
     } else {
-      return '#534666';
+      return HEADER_GRADIENT.EVENING;
     }
   };
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
-      className="bg-[#121212] h-full w-full pb-[200px]">
+      className=" h-full w-full pb-[200px]"
+      style={{backgroundColor: COLOR.BACKGROUND}}>
       <Header />
-      <View className="h-56 top-0" style={[StyleSheet.absoluteFillObject]}>
+      <View className="h-56 top-0" style={[StyleSheet.absoluteFill]}>
         <LinearGradient
-          colors={[timeColor(), `${timeColor()}50`, '#121212']}
+          colors={[timeColor(), `${timeColor()}50`, COLOR.BACKGROUND]}
           className="h-full"
         />
       </View>
@@ -94,7 +99,9 @@ function HomeScreens() {
         return (
           <View key={index}>
             <View>
-              <Text className="text-xl flex justify-between items-end mt-9 mb-3 uppercase mx-4 text-white">
+              <Text
+                className="text-xl flex justify-between items-end mt-9 mb-3 uppercase mx-4 "
+                style={{color: COLOR.TEXT_PRIMARY}}>
                 {e.title === '' ? e.sectionId.slice(1) : e.title}
               </Text>
             </View>

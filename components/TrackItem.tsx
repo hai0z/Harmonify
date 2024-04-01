@@ -2,6 +2,7 @@ import {View, Text, TouchableOpacity, Image} from 'react-native';
 import React, {useCallback, useContext} from 'react';
 import getThumbnail from '../utils/getThumnail';
 import Feather from 'react-native-vector-icons/Feather';
+import useThemeStore from '../store/themeStore';
 interface Props {
   item: any;
   index?: number;
@@ -12,7 +13,7 @@ interface Props {
 const TrackItem = (props: Props) => {
   console.log('df');
   const {item, index, onClick, isAlbum, showBottomSheet} = props;
-
+  const COLOR = useThemeStore(state => state.COLOR);
   return (
     <TouchableOpacity
       style={{opacity: item?.streamingStatus === 1 ? 1 : 0.5}}
@@ -22,7 +23,9 @@ const TrackItem = (props: Props) => {
       onPress={() => onClick(item)}>
       {isAlbum ? (
         <View className="w-14 h-14 rounded-md flex justify-center items-center">
-          <Text className="text-white font-semibold">{index! + 1}</Text>
+          <Text style={{color: COLOR.TEXT_PRIMARY}} className="font-semibold">
+            {index! + 1}
+          </Text>
         </View>
       ) : (
         <Image
@@ -36,12 +39,12 @@ const TrackItem = (props: Props) => {
           numberOfLines={1}
           style={{
             fontWeight: '400',
-            color: 'white',
+            color: COLOR.TEXT_PRIMARY,
           }}>
           {item?.title}
         </Text>
 
-        <Text numberOfLines={1} className="text-zinc-500">
+        <Text numberOfLines={1} style={{color: COLOR.TEXT_SECONDARY}}>
           {item?.artistsNames}
         </Text>
       </View>

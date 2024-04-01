@@ -20,9 +20,9 @@ import {FlashList} from '@shopify/flash-list';
 import {handlePlay} from '../utils/musicControl';
 import {useNavigation} from '@react-navigation/native';
 import nodejs from 'nodejs-mobile-react-native';
-import {useActiveTrack} from 'react-native-track-player';
 import TrackItem from '../components/TrackItem';
 import {PlayerContext} from '../context/PlayerProvider';
+import useThemeStore from '../store/themeStore';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const PlaylistDetail = ({route}: {route: any}) => {
@@ -38,6 +38,7 @@ const PlaylistDetail = ({route}: {route: any}) => {
 
   const {showBottomSheet} = useContext(PlayerContext);
 
+  const COLOR = useThemeStore(state => state.COLOR);
   useEffect(() => {
     setLoading(true);
     nodejs.channel.addListener('getDetailPlaylist', (data: any) => {
@@ -50,8 +51,8 @@ const PlaylistDetail = ({route}: {route: any}) => {
   const headerColor = useMemo(
     () =>
       scrollY.interpolate({
-        inputRange: [0, SCREEN_WIDTH * 0.6, SCREEN_WIDTH * 0.8],
-        outputRange: ['transparent', 'transparent', '#121212'],
+        inputRange: [SCREEN_WIDTH * 0.79, SCREEN_WIDTH * 0.8],
+        outputRange: ['transparent', COLOR.BACKGROUND],
         extrapolate: 'clamp',
       }),
     [scrollY],
@@ -94,24 +95,28 @@ const PlaylistDetail = ({route}: {route: any}) => {
   };
   if (loading)
     return (
-      <View className="flex-1 justify-center items-center bg-[#121212] ">
-        <ActivityIndicator size={'large'} color={'#DA291C'} />
+      <View
+        className="flex-1 justify-center items-center "
+        style={{backgroundColor: COLOR.BACKGROUND}}>
+        <ActivityIndicator size={'large'} color={COLOR.SECONDARY} />
       </View>
     );
 
   return (
-    <View className="flex-1 bg-[#121212] w-full">
-      <StatusBar backgroundColor="#00000030" />
+    <View
+      className="flex-1  w-full"
+      style={{backgroundColor: COLOR.BACKGROUND}}>
+      <StatusBar backgroundColor={`${COLOR.BACKGROUND}30`} />
       <Animated.View
         className="absolute top-0 pt-[35px] left-0 right-0 z-30 h-20  justify-between items-center flex-row px-6"
         style={{backgroundColor: headerColor}}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color="#ffffff" />
+          <Ionicons name="arrow-back" size={24} color={COLOR.TEXT_PRIMARY} />
         </TouchableOpacity>
         <View className="justify-center items-center">
           <Animated.Text
-            style={{opacity: headerTitleOpacity}}
-            className="text-white font-bold">
+            style={{opacity: headerTitleOpacity, color: COLOR.TEXT_PRIMARY}}
+            className=" font-bold">
             {playlistData?.title}
           </Animated.Text>
         </View>
@@ -131,11 +136,11 @@ const PlaylistDetail = ({route}: {route: any}) => {
                 className="flex justify-end items-center pb-4"
                 style={{height: SCREEN_WIDTH * 0.8}}>
                 <LinearGradient
-                  colors={['transparent', '#121212']}
+                  colors={['transparent', COLOR.BACKGROUND]}
                   className="absolute bottom-0 h-40 left-0 right-0 z-50"
                 />
                 <RNImage
-                  blurRadius={100}
+                  blurRadius={50}
                   src={getThumbnail(playlistData?.thumbnailM)}
                   style={[
                     StyleSheet.absoluteFill,
@@ -161,12 +166,12 @@ const PlaylistDetail = ({route}: {route: any}) => {
               </View>
               <View className="z-50 mt-4 px-6 mb-4">
                 <Animated.Text
-                  style={{opacity: titleOpacity}}
-                  className="text-white text-center text-3xl font-bold">
+                  style={{opacity: titleOpacity, color: COLOR.TEXT_PRIMARY}}
+                  className=" text-center text-3xl font-bold">
                   {playlistData?.title}
                 </Animated.Text>
                 <View className="flex flex-col gap-4 mt-8">
-                  <Text className="text-white">
+                  <Text style={{color: COLOR.TEXT_PRIMARY}}>
                     {playlistData?.artistsNames}
                   </Text>
                   <View className="flex flex-row">
@@ -188,16 +193,18 @@ const PlaylistDetail = ({route}: {route: any}) => {
                     ))}
                   </View>
                   {playlistData?.description && (
-                    <Text className="text-white">
+                    <Text style={{color: COLOR.TEXT_PRIMARY}}>
                       {playlistData?.description}
                     </Text>
                   )}
                   <View className="flex flex-row justify-between">
                     <View className="flex flex-row items-center">
-                      <Text className="text-white">
+                      <Text style={{color: COLOR.TEXT_PRIMARY}}>
                         {playlistData?.song.total} bài hát{' '}
                       </Text>
-                      <Text className="text-white ml-4">
+                      <Text
+                        className="ml-4"
+                        style={{color: COLOR.TEXT_PRIMARY}}>
                         <AntDesign name="heart" size={20} color="#DA291C" />{' '}
                         {playlistData?.like}
                       </Text>
