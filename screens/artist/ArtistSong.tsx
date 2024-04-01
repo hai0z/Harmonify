@@ -136,7 +136,7 @@ const ArtistSong = ({route}: any) => {
       <View className="flex-1">
         <FlashList
           ListFooterComponent={() => {
-            return <View className="h-40"></View>;
+            return <View className="h-80"></View>;
           }}
           onEndReached={() => {
             fetchMoreData();

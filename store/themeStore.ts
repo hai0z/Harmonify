@@ -10,21 +10,25 @@ const headerGradientLight = {
   AFTERNOON: '#F9B572',
   EVENING: '#FF9B9B',
 }
-const lightTheme = {
+export const lightTheme = {
   PRIMARY: '#FF9B9B',
-  SECONDARY: '#FFBB64',
+  SECONDARY: '#F07B3F',
   TEXT_PRIMARY: '#000000',
   TEXT_SECONDARY: '#606060',
   BACKGROUND: '#F8E8EE',
-  GRADIENT: "#F3D7CA"
+  GRADIENT: "#F3D7CA",
+  TEXT_LYRIC: '#FC5185'
+
 }
-const darkTheme = {
+
+export const darkTheme = {
   PRIMARY: '#DA291C',
   SECONDARY: '#FBE122',
   TEXT_PRIMARY: '#FFFFFF',
   TEXT_SECONDARY: '#A9A9A9',
   BACKGROUND: '#121212',
-  GRADIENT: ""
+  GRADIENT: "#dbdbdb",
+  TEXT_LYRIC: '#000000'
 }
 
 

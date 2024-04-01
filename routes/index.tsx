@@ -113,7 +113,11 @@ const HomeStack = () => {
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen name="Home" component={HomeScreens} />
       <Stack.Screen name="Search" component={SearchScreens} />
-      <Stack.Screen name="Setting" component={SettingScreen} />
+      <Stack.Screen
+        name="Setting"
+        component={SettingScreen}
+        options={{animation: 'ios'}}
+      />
       <Stack.Screen
         name="PlayListDetail"
         component={PlaylistDetail}

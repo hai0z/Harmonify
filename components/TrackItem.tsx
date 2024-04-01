@@ -51,7 +51,11 @@ const TrackItem = (props: Props) => {
       <TouchableOpacity
         onPress={() => showBottomSheet(item)}
         hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}>
-        <Feather name="more-vertical" size={20} color="#ffffff90" />
+        <Feather
+          name="more-vertical"
+          size={20}
+          color={`${COLOR.TEXT_PRIMARY}90`}
+        />
       </TouchableOpacity>
     </TouchableOpacity>
   );

@@ -38,7 +38,7 @@ const MiniPlayer = () => {
 
   const gradientColor = darkMode
     ? useDarkColor(color.dominant!, 35)
-    : tinycolor(color.dominant!).brighten(50).toString();
+    : tinycolor(color.dominant!).brighten(75).toString();
 
   const togglePlay = useCallback(async (state: State | undefined) => {
     if (state !== State.Playing) {
@@ -166,14 +166,14 @@ const MiniPlayer = () => {
             marginHorizontal: 8,
             bottom: 4,
             borderRadius: 2.5,
-            backgroundColor: '#ffffff50',
+            backgroundColor: darkMode ? '#ffffff90' : '#00000020',
             zIndex: 2,
           }}>
           <View
             style={{
               width: `${(progress.position / progress.duration) * 100}%`,
               height: 2.5,
-              backgroundColor: 'white',
+              backgroundColor: COLOR.TEXT_PRIMARY,
               position: 'absolute',
               borderTopLeftRadius: 2.5,
               borderBottomLeftRadius: 2.5,

@@ -1,27 +1,37 @@
 import {View, Text, Switch} from 'react-native';
 import React from 'react';
-import useThemeStore from '../store/themeStore';
+import useThemeStore, {darkTheme, lightTheme} from '../store/themeStore';
+import Animated, {useSharedValue, withTiming} from 'react-native-reanimated';
 
 const SettingScreen = () => {
   const {darkMode, setDarkMode, COLOR} = useThemeStore(state => state);
+  const selectedColor = darkMode ? darkTheme.BACKGROUND : lightTheme.BACKGROUND;
+  const bg = useSharedValue(`${selectedColor}`);
+  const handleChangeColor = (color: string) => {
+    bg.value = withTiming(`${color}`, {duration: 500});
+  };
 
   return (
-    <View
-      style={{flex: 1, backgroundColor: COLOR.BACKGROUND}}
+    <Animated.View
+      style={{flex: 1, backgroundColor: bg}}
       className="pt-[35px] px-6">
-      <Text>SettingScreen</Text>
-      <View>
+      <Text style={{color: COLOR.TEXT_PRIMARY}} className="text-lg font-bold">
+        Cài đặt
+      </Text>
+      <View className="flex flex-row items-center justify-between mt-8">
+        <Text style={{color: COLOR.TEXT_PRIMARY}}>Chế độ tối</Text>
         <Switch
-          trackColor={{false: '#767577', true: '#81b0ff'}}
-          thumbColor={darkMode ? '#f5dd4b' : '#f4f3f4'}
           ios_backgroundColor="#3e3e3e"
           onValueChange={() => {
+            handleChangeColor(
+              darkMode ? lightTheme.BACKGROUND : darkTheme.BACKGROUND,
+            );
             setDarkMode();
           }}
           value={darkMode}
         />
       </View>
-    </View>
+    </Animated.View>
   );
 };
 

@@ -39,7 +39,7 @@ const PlayerScreens = () => {
 
   const gradientColor = darkMode
     ? useDarkColor(color.dominant!, 25)
-    : tinycolor(color.dominant!).brighten(50).toString();
+    : tinycolor(color.dominant!).brighten(55).toString();
   return (
     <ScrollView
       style={{backgroundColor: COLOR.BACKGROUND}}

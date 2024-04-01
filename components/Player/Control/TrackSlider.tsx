@@ -31,14 +31,14 @@ const TrackSlider = () => {
         thumbStyle={{
           height: 8,
           width: 8,
-          backgroundColor: 'white',
+          backgroundColor: COLOR.TEXT_PRIMARY,
         }}
         trackStyle={{
           height: 3.5,
-          backgroundColor: darkMode ? '#ffffff90' : '#F875AA',
+          backgroundColor: darkMode ? '#ffffff90' : '#00000020',
         }}
         minTrackStyle={{
-          backgroundColor: darkMode ? '#ffffff' : '#F7A76C',
+          backgroundColor: darkMode ? '#ffffff' : '#000000',
         }}
         style={{
           height: 20,

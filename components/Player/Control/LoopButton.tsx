@@ -32,7 +32,7 @@ const LoopButton = () => {
         name="loop"
         size={24}
         color={
-          repeatMode === RepeatMode.Queue ? COLOR.TEXT_PRIMARY : COLOR.PRIMARY
+          repeatMode === RepeatMode.Queue ? COLOR.TEXT_PRIMARY : COLOR.SECONDARY
         }
       />
     </TouchableOpacity>

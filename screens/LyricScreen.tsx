@@ -30,14 +30,14 @@ const LyricScreen = ({route}: {route: any}) => {
       animated: true,
     });
   }, [currentLine]);
-  const {darkMode} = useThemeStore();
+  const {darkMode, COLOR} = useThemeStore();
   const bg = darkMode
     ? bgColor.vibrant === '#0098DB'
       ? tinycolor(bgColor.average).isDark()
         ? tinycolor(bgColor.average).lighten(20).toString()
         : bgColor.average
       : bgColor.vibrant
-    : tinycolor(bgColor.dominant).lighten(50).toString();
+    : tinycolor(bgColor.dominant).lighten(75).toString();
 
   const lyricsRef = React.useRef<FlashList<any>>(null);
   return (
@@ -48,11 +48,15 @@ const LyricScreen = ({route}: {route: any}) => {
       className="pt-[35px] h-full w-full pb-10">
       <View className="flex flex-row items-center justify-between px-6 py-6">
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Entypo name="chevron-down" size={24} color="white" />
+          <Entypo name="chevron-down" size={24} color={COLOR.TEXT_PRIMARY} />
         </TouchableOpacity>
         <View className="flex-1 flex justify-center items-center">
-          <Text className="text-white font-bold">{currentSong?.title}</Text>
-          <Text className="text-white font-bold">{currentSong?.artist}</Text>
+          <Text className=" font-bold" style={{color: COLOR.TEXT_PRIMARY}}>
+            {currentSong?.title}
+          </Text>
+          <Text className=" font-bold" style={{color: COLOR.TEXT_PRIMARY}}>
+            {currentSong?.artist}
+          </Text>
         </View>
       </View>
       <LinearGradient
@@ -80,7 +84,12 @@ const LyricScreen = ({route}: {route: any}) => {
               <Text
                 className=" font-extrabold text-[24px] mb-4"
                 style={{
-                  color: (currentLine as number) >= index ? 'white' : 'black',
+                  color:
+                    (currentLine as number) >= index
+                      ? darkMode
+                        ? 'white'
+                        : COLOR.TEXT_LYRIC
+                      : 'black',
                 }}>
                 {item.data}
               </Text>

@@ -8,7 +8,7 @@ const LibrarySrceens = () => {
   const [selectedTab, setSelectedTab] = React.useState(0);
   const {COLOR} = useThemeStore(state => state);
   return (
-    <View style={styles.container}>
+    <View style={{...styles.container, backgroundColor: COLOR.BACKGROUND}}>
       <View style={styles.top}>
         <View style={styles.topLeft}>
           <Image

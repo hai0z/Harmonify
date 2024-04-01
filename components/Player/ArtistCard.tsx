@@ -24,7 +24,7 @@ const ArtistCard = () => {
         ? tinycolor(bgColor.average).lighten(20).toString()
         : bgColor.average
       : bgColor.vibrant
-    : tinycolor(bgColor.dominant).lighten(50).toString();
+    : tinycolor(bgColor.dominant).brighten(75).toString();
 
   useEffect(() => {
     setData(null);
