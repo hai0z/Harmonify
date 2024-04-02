@@ -27,7 +27,7 @@ const MiniPlayer = () => {
   const {color, currentSong, isLoadingTrack, tempSong, isPlayFromLocal} =
     usePlayerStore(state => state);
 
-  const {darkMode, COLOR} = useThemeStore(state => state);
+  const {theme, COLOR} = useThemeStore(state => state);
   const playerState = usePlaybackState();
 
   const progress = useProgress(1000);
@@ -36,11 +36,12 @@ const MiniPlayer = () => {
 
   const {handleAddToLikedList, isLiked} = useToggleLikeSong();
 
-  const gradientColor = darkMode
-    ? useDarkColor(color.dominant!, 35)
-    : tinycolor(color.dominant!).isDark()
-    ? tinycolor(color.dominant!).lighten(75).toString()
-    : tinycolor(color.dominant!).lighten(25).toString();
+  const gradientColor =
+    theme === 'dark'
+      ? useDarkColor(color.dominant!, 35)
+      : tinycolor(color.dominant!).isDark()
+      ? tinycolor(color.dominant!).lighten(75).toString()
+      : tinycolor(color.dominant!).lighten(25).toString();
 
   const togglePlay = useCallback(async (state: State | undefined) => {
     if (state !== State.Playing) {
@@ -168,7 +169,7 @@ const MiniPlayer = () => {
             marginHorizontal: 8,
             bottom: 4,
             borderRadius: 2.5,
-            backgroundColor: darkMode ? '#ffffff90' : '#00000020',
+            backgroundColor: theme === 'dark' ? '#ffffff90' : '#00000020',
             zIndex: 2,
           }}>
           <View

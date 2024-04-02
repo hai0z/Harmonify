@@ -53,14 +53,14 @@ const LibStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const HomeWrapper = () => {
-  const {darkMode, COLOR} = useThemeStore();
+  const {theme, COLOR} = useThemeStore();
   return (
     <View
       className="flex-1 h-full w-full relative "
       style={{backgroundColor: COLOR.BACKGROUND}}>
       <StatusBar
         backgroundColor={`transparent`}
-        style={darkMode ? 'light' : 'dark'}
+        style={theme === 'dark' ? 'light' : 'dark'}
       />
       <HomeTab />
       <TrackItemBottomSheet />

@@ -5,7 +5,6 @@ import {
   StyleSheet,
   Dimensions,
   Animated,
-  StatusBar,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import React, {useCallback, useContext, useMemo} from 'react';
@@ -73,7 +72,6 @@ const PlaylistDetail = () => {
     <View
       className="flex-1  w-full"
       style={{backgroundColor: COLOR.BACKGROUND}}>
-      <StatusBar backgroundColor={`transparent`} />
       <Animated.View
         className="absolute top-0 pt-[35px] left-0 right-0 z-30 h-20  justify-between items-center flex-row px-6"
         style={{backgroundColor: headerColor}}>

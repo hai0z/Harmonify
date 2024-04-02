@@ -8,12 +8,10 @@ import {
   Animated,
   Text,
   Image,
-  StatusBar,
 } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import React, {useCallback, useContext, useEffect, useMemo} from 'react';
-import {getDetailPlaylist} from '../apis/detailPlaylist';
 import {LinearGradient} from 'react-native-linear-gradient';
 import getThumbnail from '../utils/getThumnail';
 import {FlashList} from '@shopify/flash-list';
@@ -23,7 +21,6 @@ import nodejs from 'nodejs-mobile-react-native';
 import TrackItem from '../components/TrackItem';
 import {PlayerContext} from '../context/PlayerProvider';
 import useThemeStore from '../store/themeStore';
-import {usePlayerStore} from '../store/playerStore';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const PlaylistDetail = ({route}: {route: any}) => {
@@ -88,14 +85,11 @@ const PlaylistDetail = ({route}: {route: any}) => {
     [scrollY],
   );
 
-  const handlePlaySong = useCallback(
-    (song: any) =>
-      handlePlay(song, {
-        id: data.playListId,
-        items: playlistData.song.items,
-      }),
-    [],
-  );
+  const handlePlaySong = (song: any) =>
+    handlePlay(song, {
+      id: data.playListId,
+      items: playlistData?.song?.items,
+    });
 
   if (loading)
     return (
@@ -110,7 +104,6 @@ const PlaylistDetail = ({route}: {route: any}) => {
     <View
       className="flex-1  w-full"
       style={{backgroundColor: COLOR.BACKGROUND}}>
-      <StatusBar backgroundColor={'transparent'} />
       <Animated.View
         className="absolute top-0 pt-[35px] left-0 right-0 z-30 h-20  justify-between items-center flex-row px-6"
         style={{backgroundColor: headerColor}}>

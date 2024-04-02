@@ -30,14 +30,15 @@ const LyricScreen = ({route}: {route: any}) => {
       animated: true,
     });
   }, [currentLine]);
-  const {darkMode, COLOR} = useThemeStore();
-  const bg = darkMode
-    ? bgColor.vibrant === '#0098DB'
-      ? tinycolor(bgColor.average).isDark()
-        ? tinycolor(bgColor.average).lighten(20).toString()
-        : bgColor.average
-      : bgColor.vibrant
-    : tinycolor(bgColor.dominant).lighten(75).toString();
+  const {theme, COLOR} = useThemeStore();
+  const bg =
+    theme === 'dark'
+      ? bgColor.vibrant === '#0098DB'
+        ? tinycolor(bgColor.average).isDark()
+          ? tinycolor(bgColor.average).lighten(20).toString()
+          : bgColor.average
+        : bgColor.vibrant
+      : tinycolor(bgColor.dominant).lighten(75).toString();
 
   const lyricsRef = React.useRef<FlashList<any>>(null);
   return (
@@ -86,7 +87,7 @@ const LyricScreen = ({route}: {route: any}) => {
                 style={{
                   color:
                     (currentLine as number) >= index
-                      ? darkMode
+                      ? theme === 'dark'
                         ? 'white'
                         : COLOR.TEXT_LYRIC
                       : 'black',

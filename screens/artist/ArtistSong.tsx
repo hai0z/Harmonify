@@ -13,7 +13,6 @@ import {FlashList} from '@shopify/flash-list';
 import {LinearGradient} from 'react-native-linear-gradient';
 import {handlePlay} from '../../utils/musicControl';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {StatusBar} from 'expo-status-bar';
 import {useNavigation} from '@react-navigation/native';
 import nodejs from 'nodejs-mobile-react-native';
 import getThumbnail from '../../utils/getThumnail';
@@ -117,10 +116,6 @@ const ArtistSong = ({route}: any) => {
   }
   return (
     <View className=" flex-1" style={{backgroundColor: COLOR.BACKGROUND}}>
-      <StatusBar
-        backgroundColor={`transparent`}
-        style={darkMode ? 'light' : 'dark'}
-      />
       <Animated.View
         className="absolute top-0 pt-[35px] left-0 right-0 z-[999] h-20  items-center flex-row px-6"
         style={{backgroundColor: headerColor}}>

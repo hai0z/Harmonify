@@ -30,17 +30,18 @@ const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 const PlayerScreens = () => {
   const {playList, color} = usePlayerStore(state => state);
-  const {darkMode} = useThemeStore(state => state);
+  const {theme} = useThemeStore(state => state);
   const navigation = useNavigation<any>();
   const track = useActiveTrack();
 
   const {COLOR} = useThemeStore(state => state);
 
-  const gradientColor = darkMode
-    ? useDarkColor(color.dominant!, 35)
-    : tinycolor(color.dominant!).isDark()
-    ? tinycolor(color.dominant!).lighten(55).toString()
-    : tinycolor(color.dominant!).darken(5).toString();
+  const gradientColor =
+    theme === 'dark'
+      ? useDarkColor(color.dominant!, 35)
+      : tinycolor(color.dominant!).isDark()
+      ? tinycolor(color.dominant!).lighten(55).toString()
+      : tinycolor(color.dominant!).darken(5).toString();
 
   return (
     <ScrollView

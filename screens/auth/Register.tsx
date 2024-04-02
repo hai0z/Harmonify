@@ -8,16 +8,15 @@ import {
   Alert,
 } from 'react-native';
 import React from 'react';
-import {StatusBar} from 'expo-status-bar';
 import {auth, db} from '../../firebase/config';
 import {
   getAdditionalUserInfo,
   createUserWithEmailAndPassword,
   getAuth,
 } from 'firebase/auth';
-import {COLOR} from '../../constants';
 import {doc, setDoc} from 'firebase/firestore';
 import {useNavigation} from '@react-navigation/native';
+import useThemeStore from '../../store/themeStore';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
@@ -25,6 +24,7 @@ const Login = () => {
   const [email, setEmail] = React.useState<string>('');
   const [password, setPassword] = React.useState<string>('');
   const [confirmPassword, setConfirmPassword] = React.useState<string>('');
+  const {COLOR} = useThemeStore(state => state);
   const handleSignUp = async () => {
     if (password !== confirmPassword || password.length < 6) {
       Alert.alert('Thất bại', 'Mật khẩu nhập lại không đúng');
@@ -56,7 +56,6 @@ const Login = () => {
   const navigation = useNavigation<any>();
   return (
     <View className="bg-[#121212] flex-1  items-center px-8">
-      <StatusBar style="light" backgroundColor="#12121230" />
       <View
         className="flex justify-center gap-4 w-full"
         style={{marginTop: SCREEN_HEIGHT / 6}}>

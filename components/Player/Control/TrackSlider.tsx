@@ -17,7 +17,7 @@ const TrackSlider = () => {
     await TrackPlayer.play();
   }, []);
 
-  const {darkMode} = useThemeStore(state => state);
+  const {theme} = useThemeStore(state => state);
   return (
     <View>
       <Slider
@@ -35,10 +35,10 @@ const TrackSlider = () => {
         }}
         trackStyle={{
           height: 3.5,
-          backgroundColor: darkMode ? '#ffffff90' : '#00000020',
+          backgroundColor: theme === 'dark' ? '#ffffff90' : '#00000020',
         }}
         minTrackStyle={{
-          backgroundColor: darkMode ? '#ffffff' : '#000000',
+          backgroundColor: theme === 'dark' ? '#ffffff' : '#000000',
         }}
         style={{
           height: 20,
