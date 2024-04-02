@@ -10,6 +10,7 @@ import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import {BottomSheetModalMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
 import useBottomSheetStore from '../store/bottomSheetStore';
 import {NULL_URL} from '../constants';
+import useThemeStore from '../store/themeStore';
 
 interface ContextType {
   bottomSheetModalRef: React.RefObject<BottomSheetModalMethods>;
@@ -57,6 +58,15 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
     setData(item);
   }, []);
 
+  const getTheme = async () => {
+    const data = await getData('theme');
+    if (data != null) {
+      useThemeStore.getState().setTheme(data);
+      return data;
+    } else {
+      useThemeStore.getState().setTheme('light');
+    }
+  };
   const getLatestSong = async () => {
     const data = await getData('currentSong');
     if (data != null) {
@@ -113,6 +123,7 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
   };
 
   useEffect(() => {
+    getTheme();
     getLatestSong();
     getDataPlaylist();
     getPlayFromLocal();

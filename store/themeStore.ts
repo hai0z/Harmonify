@@ -1,12 +1,18 @@
 import tinycolor from "tinycolor2";
 import { create } from "zustand";
 
-type Theme = "light" | "dark" | "lemon" | "pastel" | 'garden'
+type Theme = "light" | "dark" | "lemon" | "pastel" | 'garden' | 'OZ'
 
 const headerGradientDark = {
   MORNING: tinycolor('#641ae6').darken(30).toString(),
   AFTERNOON: tinycolor('#d926a9').darken(30).toString(),
   EVENING: tinycolor('#1fb2a6').darken(30).toString(),
+}
+const headerGradientOZ = {
+  MORNING: '#ef6d53',
+  AFTERNOON: "#7db1d1",
+  EVENING: '#939ad8',
+
 }
 const headerGradientLight = {
   MORNING: '#65c3c8',
@@ -59,6 +65,14 @@ export const pastelTheme = {
   BACKGROUND: '#ffffff',
 
 }
+export const OZTheme = {
+  PRIMARY: '#ef6d53',
+  SECONDARY: '#17367a',
+  TEXT_PRIMARY: '#000000',
+  TEXT_SECONDARY: '#606060',
+  BACKGROUND: '#ece0f0',
+
+}
 export const darkTheme = {
   PRIMARY: '#641ae6',
   SECONDARY: '#d926a9',
@@ -79,7 +93,8 @@ export const themeMap = {
   'dark': darkTheme,
   'lemon': lemonTheme,
   'pastel': pastelTheme,
-  'garden': gardenTheme
+  'garden': gardenTheme,
+  'OZ': OZTheme
 }
 
 const gradientHeaderMap = {
@@ -87,7 +102,8 @@ const gradientHeaderMap = {
   'dark': headerGradientDark,
   'lemon': headerGradientLemon,
   'pastel': headerGradientPastel,
-  'garden': headerGradientGarden
+  'garden': headerGradientGarden,
+  'OZ': headerGradientOZ
 }
 
 const useThemeStore = create<ThemeState>((set) => ({

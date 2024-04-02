@@ -96,7 +96,7 @@ const PlaylistDetail = ({route}: {route: any}) => {
       <View
         className="flex-1 justify-center items-center "
         style={{backgroundColor: COLOR.BACKGROUND}}>
-        <ActivityIndicator size={'large'} color={COLOR.SECONDARY} />
+        <ActivityIndicator size={'large'} color={COLOR.PRIMARY} />
       </View>
     );
 

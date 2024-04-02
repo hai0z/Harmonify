@@ -1,16 +1,19 @@
 import { Track } from "react-native-track-player";
 import { create } from "zustand";
+import useThemeStore from "./themeStore";
 
-export const DefaultColor = {
-  average: "#49494949",
-  darkMuted: "#49494949",
-  darkVibrant: "#49494949",
-  dominant: "#49494949",
-  lightMuted: "#49494949",
-  lightVibrant: "#49494949",
-  muted: "#49494949",
+const defaultColor = useThemeStore().theme === 'dark' ? '#494949' : '#ffffff';
+
+export const defaultColorObj = {
+  average: defaultColor,
+  darkMuted: defaultColor,
+  darkVibrant: defaultColor,
+  dominant: defaultColor,
+  lightMuted: defaultColor,
+  lightVibrant: defaultColor,
+  muted: defaultColor,
   platform: "android",
-  vibrant: "#49494949",
+  vibrant: defaultColor,
 }
 export interface IPlaylist {
   id: string,
@@ -50,7 +53,7 @@ export const usePlayerStore = create<PlayerStore>((set) => ({
     id: "",
     items: [],
   },
-  color: DefaultColor as Partial<Color>,
+  color: defaultColorObj as Partial<Color>,
   setColor: (color: Partial<Color>) => set({ color }),
   setPlayList: (playlist: IPlaylist) => set({ playList: playlist }),
   lyrics: [],
