@@ -21,7 +21,7 @@ const Playlist = () => {
         activeOpacity={0.8}
         className="flex-row items-center">
         <LinearGradient
-          colors={[COLOR.PRIMARY, COLOR.GRADIENT]}
+          colors={[COLOR.PRIMARY, COLOR.SECONDARY]}
           className="w-16 h-16 justify-center items-center">
           <Entypo name="heart" size={36} color={COLOR.TEXT_PRIMARY} />
         </LinearGradient>

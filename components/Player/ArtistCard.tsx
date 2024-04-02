@@ -25,7 +25,9 @@ const ArtistCard = () => {
           ? tinycolor(bgColor.average).lighten(20).toString()
           : bgColor.average
         : bgColor.vibrant
-      : tinycolor(bgColor.dominant).brighten(75).toString();
+      : tinycolor(bgColor.dominant!).isDark()
+      ? tinycolor(bgColor.dominant!).lighten(55).toString()
+      : tinycolor(bgColor.dominant!).darken(5).toString();
 
   useEffect(() => {
     setData(null);
@@ -45,6 +47,9 @@ const ArtistCard = () => {
   return (
     <TouchableOpacity
       activeOpacity={1}
+      style={{
+        elevation: 10,
+      }}
       className="w-full rounded-2xl h-[320px] mt-8"
       onPress={() =>
         navigation.navigate('Artists', {

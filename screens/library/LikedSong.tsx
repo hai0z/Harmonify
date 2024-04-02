@@ -115,7 +115,7 @@ const PlaylistDetail = () => {
                   ]}
                 />
                 <LinearGradient
-                  colors={[COLOR.PRIMARY, COLOR.GRADIENT]}
+                  colors={[COLOR.PRIMARY, COLOR.SECONDARY]}
                   style={[
                     {
                       width: SCREEN_WIDTH * 0.6,
@@ -123,7 +123,7 @@ const PlaylistDetail = () => {
                     },
                   ]}
                   className="justify-center items-center rounded-lg z-[99]">
-                  <Entypo name="heart" size={120} color={COLOR.SECONDARY} />
+                  <Entypo name="heart" size={120} color={COLOR.TEXT_PRIMARY} />
                 </LinearGradient>
               </View>
               <View className="z-50 mt-4 px-6 mb-4">

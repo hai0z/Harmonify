@@ -37,7 +37,9 @@ const Lyric = () => {
           ? tinycolor(bgColor.average).lighten(20).toString()
           : bgColor.average
         : bgColor.vibrant
-      : tinycolor(bgColor.dominant).brighten(75).toString();
+      : tinycolor(bgColor.dominant!).isDark()
+      ? tinycolor(bgColor.dominant!).lighten(55).toString()
+      : tinycolor(bgColor.dominant!).darken(5).toString();
 
   return (
     lyrics?.length > 0 &&
@@ -49,6 +51,7 @@ const Lyric = () => {
         style={{
           backgroundColor: bg,
           height: 320,
+          elevation: 10,
         }}>
         <LinearGradient
           colors={[bg!, bg!, 'transparent']}
@@ -80,7 +83,7 @@ const Lyric = () => {
                       (currentLine as number) >= index
                         ? theme === 'dark'
                           ? 'white'
-                          : COLOR.TEXT_LYRIC
+                          : 'brown'
                         : 'black',
                   }}>
                   {item.data}

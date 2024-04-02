@@ -11,6 +11,7 @@ const SongInfoCard = () => {
   const currentSong = usePlayerStore(state => state.currentSong);
 
   const {theme, COLOR} = useThemeStore(state => state);
+
   const bg =
     theme === 'dark'
       ? bgColor.vibrant === '#0098DB'
@@ -18,7 +19,9 @@ const SongInfoCard = () => {
           ? tinycolor(bgColor.average).lighten(20).toString()
           : bgColor.average
         : bgColor.vibrant
-      : tinycolor(bgColor.dominant).brighten(75).toString();
+      : tinycolor(bgColor.dominant!).isDark()
+      ? tinycolor(bgColor.dominant!).lighten(55).toString()
+      : tinycolor(bgColor.dominant!).darken(5).toString();
 
   const [data, setData] = useState<any>(null);
 
@@ -42,7 +45,7 @@ const SongInfoCard = () => {
   }
   return (
     <View
-      style={{backgroundColor: bg}}
+      style={{backgroundColor: bg, elevation: 10}}
       className="w-full mt-8 rounded-2xl px-4 py-2 flex justify-between">
       <Text
         className="font-bold text-[18px]"

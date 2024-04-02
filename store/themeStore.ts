@@ -4,9 +4,9 @@ import { create } from "zustand";
 type Theme = "light" | "dark" | "lemon" | "pastel" | 'garden'
 
 const headerGradientDark = {
-  MORNING: tinycolor('#ff7ac6').darken(50).toString(),
-  AFTERNOON: tinycolor('#bf95f9').darken(50).toString(),
-  EVENING: tinycolor('#ffb86b').darken(50).toString(),
+  MORNING: tinycolor('#641ae6').darken(30).toString(),
+  AFTERNOON: tinycolor('#d926a9').darken(30).toString(),
+  EVENING: tinycolor('#1fb2a6').darken(30).toString(),
 }
 const headerGradientLight = {
   MORNING: '#65c3c8',
@@ -24,9 +24,9 @@ const headerGradientPastel = {
   EVENING: '#b4e9d6',
 }
 const headerGradientGarden = {
-  MORNING: '#f50076',
-  AFTERNOON: '#8f4263',
-  EVENING: '#5c7f67',
+  MORNING: '#d1ea56',
+  AFTERNOON: '#07b25f',
+  EVENING: '#ba86d6',
 }
 export const lemonTheme = {
   PRIMARY: '#529b03',
@@ -34,8 +34,6 @@ export const lemonTheme = {
   TEXT_PRIMARY: '#000000',
   TEXT_SECONDARY: '#606060',
   BACKGROUND: '#ffffff',
-  GRADIENT: "#dff2a1",
-  TEXT_LYRIC: "#f7e488"
 
 }
 export const lightTheme = {
@@ -44,18 +42,13 @@ export const lightTheme = {
   TEXT_PRIMARY: '#000000',
   TEXT_SECONDARY: '#606060',
   BACKGROUND: '#faf7f5',
-  GRADIENT: "#36d399",
-  TEXT_LYRIC: "#eeaf3a"
-
 }
 export const gardenTheme = {
-  PRIMARY: '#f50076',
-  SECONDARY: '#8f4263',
+  PRIMARY: '#d1ea56',
+  SECONDARY: '#07b25f',
   TEXT_PRIMARY: '#000000',
   TEXT_SECONDARY: '#606060',
-  BACKGROUND: '#e9e7e7',
-  GRADIENT: "#36d399",
-  TEXT_LYRIC: "#fbbd23"
+  BACKGROUND: '#fcfcfd',
 
 }
 export const pastelTheme = {
@@ -64,18 +57,14 @@ export const pastelTheme = {
   TEXT_PRIMARY: '#000000',
   TEXT_SECONDARY: '#606060',
   BACKGROUND: '#ffffff',
-  GRADIENT: "#36d399",
-  TEXT_LYRIC: "#fbbd23"
 
 }
 export const darkTheme = {
-  PRIMARY: '#ff7ac6',
-  SECONDARY: '#bf95f9',
+  PRIMARY: '#641ae6',
+  SECONDARY: '#d926a9',
   TEXT_PRIMARY: '#FFFFFF',
   TEXT_SECONDARY: '#A9A9A9',
   BACKGROUND: '#121212',
-  GRADIENT: "#52fa7c",
-  TEXT_LYRIC: '#ffffff'
 }
 
 interface ThemeState {

@@ -122,7 +122,7 @@ const LocalSong = ({route}: any) => {
                   ]}
                 />
                 <LinearGradient
-                  colors={[COLOR.PRIMARY, COLOR.GRADIENT]}
+                  colors={[COLOR.PRIMARY, COLOR.SECONDARY]}
                   style={[
                     {
                       width: SCREEN_WIDTH * 0.6,

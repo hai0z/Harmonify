@@ -140,7 +140,7 @@ const MiniPlayer = () => {
                   <AntDesign
                     name={isLiked ? 'heart' : 'hearto'}
                     size={24}
-                    color={isLiked ? COLOR.PRIMARY : COLOR.TEXT_PRIMARY}
+                    color={isLiked ? COLOR.SECONDARY : COLOR.TEXT_PRIMARY}
                   />
                 </TouchableOpacity>
               )}
