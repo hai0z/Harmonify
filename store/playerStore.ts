@@ -1,8 +1,7 @@
 import { Track } from "react-native-track-player";
 import { create } from "zustand";
-import useThemeStore from "./themeStore";
 
-const defaultColor = useThemeStore().theme === 'dark' ? '#494949' : '#ffffff';
+const defaultColor = "#494949"
 
 export const defaultColorObj = {
   average: defaultColor,

@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 
-import {handlePlay} from '../../utils/musicControl';
+import {handlePlay} from '../../service/trackPlayerService';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import nodejs from 'nodejs-mobile-react-native';

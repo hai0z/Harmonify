@@ -15,7 +15,7 @@ import React, {useCallback, useContext, useEffect, useMemo} from 'react';
 import {LinearGradient} from 'react-native-linear-gradient';
 import getThumbnail from '../utils/getThumnail';
 import {FlashList} from '@shopify/flash-list';
-import {handlePlay} from '../utils/musicControl';
+import {handlePlay} from '../service/trackPlayerService';
 import {useNavigation} from '@react-navigation/native';
 import nodejs from 'nodejs-mobile-react-native';
 import TrackItem from '../components/TrackItem';

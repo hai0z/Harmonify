@@ -4,7 +4,7 @@ import {getColors} from 'react-native-image-colors';
 import TrackPlayer from 'react-native-track-player';
 import nodejs from 'nodejs-mobile-react-native';
 import {getData, storeData} from '../utils/localStorage';
-import {objectToTrack} from '../utils/musicControl';
+import {objectToTrack} from '../service/trackPlayerService';
 import getThumbnail from '../utils/getThumnail';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import {BottomSheetModalMethods} from '@gorhom/bottom-sheet/lib/typescript/types';

@@ -10,7 +10,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import React, {useCallback, useContext, useMemo} from 'react';
 import {LinearGradient} from 'react-native-linear-gradient';
 import {FlashList} from '@shopify/flash-list';
-import {handlePlay} from '../../utils/musicControl';
+import {handlePlay} from '../../service/trackPlayerService';
 import {useNavigation} from '@react-navigation/native';
 import {useActiveTrack} from 'react-native-track-player';
 import {usePlayerStore} from '../../store/playerStore';

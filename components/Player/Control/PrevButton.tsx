@@ -1,7 +1,7 @@
 import {View, Text, TouchableOpacity} from 'react-native';
 import React from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {PrevTrack} from '../../../utils/musicControl';
+import {PrevTrack} from '../../../service/trackPlayerService';
 import useThemeStore from '../../../store/themeStore';
 const PrevButton = () => {
   const {COLOR} = useThemeStore(state => state);

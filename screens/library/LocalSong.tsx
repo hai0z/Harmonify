@@ -12,7 +12,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import React, {useCallback, useMemo} from 'react';
 import {LinearGradient} from 'react-native-linear-gradient';
 import {FlashList} from '@shopify/flash-list';
-import {handlePlaySongInLocal} from '../../utils/musicControl';
+import {handlePlaySongInLocal} from '../../service/trackPlayerService';
 import {useNavigation} from '@react-navigation/native';
 import useGetLocalSong from '../../hooks/useGetLocalSong';
 import Entypo from 'react-native-vector-icons/Entypo';

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { usePlayerStore } from '../store/playerStore';
 import { Track, useActiveTrack } from 'react-native-track-player';
-import { addToLikedList } from '../utils/firebase';
+import { addToLikedList } from '../service/firebase';
 import useToastStore, { ToastTime } from '../store/toastStore';
 
 const useToggleLikeSong = (trackId = null) => {

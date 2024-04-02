@@ -11,7 +11,7 @@ import {
 import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {FlashList} from '@shopify/flash-list';
 import {LinearGradient} from 'react-native-linear-gradient';
-import {handlePlay} from '../../utils/musicControl';
+import {handlePlay} from '../../service/trackPlayerService';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import nodejs from 'nodejs-mobile-react-native';

@@ -14,7 +14,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {getChart} from '../apis/chart';
 import {FlashList} from '@shopify/flash-list';
-import {handlePlay} from '../utils/musicControl';
+import {handlePlay} from '../service/trackPlayerService';
 import {LinearGradient} from 'react-native-linear-gradient';
 import getThumbnail from '../utils/getThumnail';
 import Ionicons from 'react-native-vector-icons/Ionicons';

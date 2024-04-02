@@ -1,6 +1,6 @@
 import { defaultColorObj, IPlaylist, usePlayerStore } from '../store/playerStore';
 import TrackPlayer, { Event } from "react-native-track-player";
-import getThumbnail from "./getThumnail";
+import getThumbnail from "../utils/getThumnail";
 import nodejs from "nodejs-mobile-react-native";
 import { NULL_URL } from '../constants';
 import useToastStore, { ToastTime } from '../store/toastStore';

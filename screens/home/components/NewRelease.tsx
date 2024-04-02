@@ -10,7 +10,7 @@ import {
 import React, {useCallback, useContext, useEffect} from 'react';
 import {FlashList} from '@shopify/flash-list';
 import TrackItem from '../../../components/TrackItem';
-import {handlePlay} from '../../../utils/musicControl';
+import {handlePlay} from '../../../service/trackPlayerService';
 import {PlayerContext} from '../../../context/PlayerProvider';
 import useBottomSheetStore from '../../../store/bottomSheetStore';
 import useThemeStore from '../../../store/themeStore';

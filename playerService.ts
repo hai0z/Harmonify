@@ -1,6 +1,6 @@
 import { AppKilledPlaybackBehavior, Capability, Event, RepeatMode } from 'react-native-track-player';
 import TrackPlayer from 'react-native-track-player';
-import { NextTrack, PrevTrack } from './utils/musicControl';
+import { NextTrack, PrevTrack } from './service/trackPlayerService';
 import { setupPlayer } from 'react-native-track-player/lib/trackPlayer';
 import Entypo from 'react-native-vector-icons/Entypo';
 

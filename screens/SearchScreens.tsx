@@ -11,7 +11,7 @@ import React, {useEffect, useState} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useDebounce} from '../hooks/useDebounce';
 import getThumbnail from '../utils/getThumnail';
-import {handlePlay} from '../utils/musicControl';
+import {handlePlay} from '../service/trackPlayerService';
 import nodejs from 'nodejs-mobile-react-native';
 import {useNavigation} from '@react-navigation/native';
 import useThemeStore from '../store/themeStore';
