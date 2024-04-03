@@ -12,7 +12,6 @@ import {
 import Entypo from 'react-native-vector-icons/Entypo';
 
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {getChart} from '../apis/chart';
 import {FlashList} from '@shopify/flash-list';
 import {handlePlay} from '../service/trackPlayerService';
 import {LinearGradient} from 'react-native-linear-gradient';
@@ -33,11 +32,11 @@ const ChartScreens = () => {
   const headerColor = useMemo(
     () =>
       scrollY.interpolate({
-        inputRange: [0, SCREEN_WIDTH * 0.79, SCREEN_WIDTH * 0.8],
-        outputRange: ['transparent', 'transparent', COLOR.BACKGROUND],
+        inputRange: [SCREEN_WIDTH * 0.79, SCREEN_WIDTH * 0.8],
+        outputRange: ['transparent', COLOR.BACKGROUND],
         extrapolate: 'clamp',
       }),
-    [scrollY],
+    [scrollY, COLOR.BACKGROUND],
   );
 
   const headerTitleOpacity = useMemo(

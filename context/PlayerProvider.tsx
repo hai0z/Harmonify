@@ -15,6 +15,7 @@ import useThemeStore from '../store/themeStore';
 interface ContextType {
   bottomSheetModalRef: React.RefObject<BottomSheetModalMethods>;
   showBottomSheet: (item: any) => void;
+  isLoading: boolean;
 }
 
 export const PlayerContext = React.createContext({} as ContextType);
@@ -48,7 +49,7 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
       ).then(usePlayerStore.getState().setColor);
     }
   };
-
+  const [isLoading, setIsLoading] = React.useState(true);
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   const {setData} = useBottomSheetStore(state => state);
@@ -62,9 +63,10 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
     const data = await getData('theme');
     if (data != null) {
       useThemeStore.getState().setTheme(data);
-      return data;
+      setIsLoading(false);
     } else {
       useThemeStore.getState().setTheme('light');
+      setIsLoading(false);
     }
   };
   const getLatestSong = async () => {
@@ -148,8 +150,9 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
   }, [currentSong?.id]);
 
   return (
-    <PlayerContext.Provider value={{bottomSheetModalRef, showBottomSheet}}>
-      {children}
+    <PlayerContext.Provider
+      value={{bottomSheetModalRef, showBottomSheet, isLoading}}>
+      {!isLoading && children}
     </PlayerContext.Provider>
   );
 };

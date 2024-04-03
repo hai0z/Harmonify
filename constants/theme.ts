@@ -9,14 +9,14 @@ export const headerGradientDark = {
   EVENING: tinycolor('#1fb2a6').darken(30).toString(),
 }
 const headerGradientSynthWave = {
-  MORNING: tinycolor('#e779c1').darken(30).toString(),
-  AFTERNOON: tinycolor('#58c7f3').darken(30).toString(),
-  EVENING: tinycolor('#f3cc30').darken(30).toString(),
+  MORNING: tinycolor('#e779c1').darken(45).toString(),
+  AFTERNOON: tinycolor('#58c7f3').darken(40).toString(),
+  EVENING: tinycolor('#f3cc30').darken(40).toString(),
 }
 const headerGradientCoffee = {
-  MORNING: tinycolor('#dc944c').darken(30).toString(),
-  AFTERNOON: tinycolor('#263f40').darken(30).toString(),
-  EVENING: tinycolor('#11596f').darken(30).toString(),
+  MORNING: tinycolor('#dc944c').darken(35).toString(),
+  AFTERNOON: tinycolor('#263f40').darken(0).toString(),
+  EVENING: tinycolor('#11596f').darken(10).toString(),
 }
 const headerGradientAmoled = {
   MORNING: tinycolor('#343232').darken(30).toString(),
@@ -24,9 +24,9 @@ const headerGradientAmoled = {
   EVENING: tinycolor('#343232').darken(30).toString(),
 }
 const headerGradientNight = {
-  MORNING: tinycolor('#3abff8').darken(30).toString(),
-  AFTERNOON: tinycolor('#828df8').darken(30).toString(),
-  EVENING: tinycolor('#f471b5').darken(30).toString(),
+  MORNING: tinycolor('#3abff8').darken(45).toString(),
+  AFTERNOON: tinycolor('#828df8').darken(55).toString(),
+  EVENING: tinycolor('#f471b5').darken(50).toString(),
 }
 //light header
 const headerGradientGrey = {
@@ -36,13 +36,13 @@ const headerGradientGrey = {
 
 }
 export const headerGradientLight = {
-  MORNING: '#65c3c8',
-  AFTERNOON: '#ef9fbc',
-  EVENING: '#eeaf3a',
+  MORNING: tinycolor('#65c3c8').lighten().toString(),
+  AFTERNOON: tinycolor('#ef9fbc').lighten().toString(),
+  EVENING: tinycolor('#eeaf3a').lighten().toString(),
 }
 const headerGradientLemon = {
-  MORNING: '#529b03',
-  AFTERNOON: '#e9e92f',
+  MORNING: tinycolor('#529b03').lighten(25).toString(),
+  AFTERNOON: tinycolor('#e9e92f').lighten().toString(),
   EVENING: '#f6f9c8',
 }
 const headerGradientPastel = {
@@ -51,9 +51,9 @@ const headerGradientPastel = {
   EVENING: '#b4e9d6',
 }
 const headerGradientGarden = {
-  MORNING: '#d1ea56',
-  AFTERNOON: '#07b25f',
-  EVENING: '#ba86d6',
+  MORNING: tinycolor('#d1ea56').lighten().toString(),
+  AFTERNOON: tinycolor('#07b25f').lighten(40).toString(),
+  EVENING: tinycolor('#ba86d6').lighten(10).toString(),
 }
 
 //light theme
@@ -108,7 +108,7 @@ export const darkTheme = {
   SECONDARY: '#d926a9',
   TEXT_PRIMARY: '#FFFFFF',
   TEXT_SECONDARY: '#A9A9A9',
-  BACKGROUND: '#121212',
+  BACKGROUND: '#1d232a',
   isDark: true,
 }
 export const synthWaveTheme = {
