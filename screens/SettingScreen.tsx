@@ -5,7 +5,7 @@ import Animated, {useSharedValue, withTiming} from 'react-native-reanimated';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {storeData} from '../utils/localStorage';
 import {themeMap} from '../constants/theme';
-
+import {auth} from '../firebase/config';
 const SettingScreen = () => {
   const {theme, setTheme, COLOR} = useThemeStore(state => state);
 
@@ -17,7 +17,7 @@ const SettingScreen = () => {
     bg.value = withTiming(`${color}`, {duration: 550});
   };
   return (
-    <Animated.View
+    <Animated.ScrollView
       style={{flex: 1, backgroundColor: bg}}
       className="pt-[35px] px-6">
       <Text style={{color: COLOR?.TEXT_PRIMARY}} className="text-xl font-bold">
@@ -114,7 +114,25 @@ const SettingScreen = () => {
           ),
         )}
       </View>
-    </Animated.View>
+      <View className="mt-8 flex justify-center items-center">
+        <TouchableOpacity
+          onPress={() => {
+            auth.signOut();
+          }}
+          style={{
+            backgroundColor: COLOR?.PRIMARY,
+            borderRadius: 10,
+          }}
+          className="flex justify-center items-center w-28 h-10">
+          <Text
+            style={{
+              color: COLOR?.TEXT_PRIMARY,
+            }}>
+            Đăng xuất
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </Animated.ScrollView>
   );
 };
 

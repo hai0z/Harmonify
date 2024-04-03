@@ -18,6 +18,7 @@ import {
 import {doc, setDoc} from 'firebase/firestore';
 import {useNavigation} from '@react-navigation/native';
 import useThemeStore from '../../store/themeStore';
+import tinycolor from 'tinycolor2';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
@@ -52,8 +53,13 @@ const Login = () => {
   };
   const navigation = useNavigation<any>();
   return (
-    <View className="bg-[#121212] flex-1  items-center px-8">
-      <StatusBar style="light" backgroundColor="transparent" />
+    <View
+      className="flex-1  items-center px-8"
+      style={{backgroundColor: COLOR.BACKGROUND}}>
+      <StatusBar
+        style={COLOR.isDark ? 'light' : 'dark'}
+        backgroundColor="transparent"
+      />
       <View
         className="flex justify-center gap-4 w-full"
         style={{marginTop: SCREEN_HEIGHT / 6}}>
@@ -61,19 +67,37 @@ const Login = () => {
           source={require('../../assets/evil.png')}
           className="w-28 h-28 mb-4 self-center"
         />
-        <Text className="text-white font-bold uppercase">Đăng nhập</Text>
+        <Text
+          className="font-bold uppercase"
+          style={{color: COLOR.TEXT_PRIMARY}}>
+          Đăng nhập
+        </Text>
         <TextInput
           value={email}
           onChangeText={text => setEmail(text)}
           placeholder="Email"
-          className="bg-white/50 rounded-full h-10 p-2"
+          placeholderTextColor={COLOR.TEXT_SECONDARY}
+          className=" rounded-full h-10 p-2 "
+          style={{
+            color: COLOR.TEXT_PRIMARY,
+            backgroundColor: COLOR.isDark
+              ? tinycolor(COLOR.BACKGROUND).lighten(5).toString()
+              : tinycolor(COLOR.BACKGROUND).darken(5).toString(),
+          }}
         />
         <TextInput
           secureTextEntry
           value={password}
           onChangeText={text => setPassword(text)}
+          placeholderTextColor={COLOR.TEXT_SECONDARY}
           placeholder="Mật khẩu"
-          className="bg-white/50 rounded-full h-10 p-2"
+          className=" rounded-full h-10 p-2"
+          style={{
+            color: COLOR.TEXT_PRIMARY,
+            backgroundColor: COLOR.isDark
+              ? tinycolor(COLOR.BACKGROUND).lighten(5).toString()
+              : tinycolor(COLOR.BACKGROUND).darken(5).toString(),
+          }}
         />
 
         <TouchableOpacity
@@ -81,11 +105,15 @@ const Login = () => {
           style={{
             backgroundColor: COLOR.PRIMARY,
           }}
-          className="rounded-full h-10 p-2 justify-center items-center">
-          <Text className="text-white">Đăng nhập</Text>
+          className="rounded-full h-10 p-2 justify-center items-center ">
+          <Text style={{color: COLOR.TEXT_PRIMARY}}>Đăng nhập</Text>
         </TouchableOpacity>
         <View>
-          <Text className="text-white text-[12px] self-center mb-4">OR</Text>
+          <Text
+            style={{color: COLOR.TEXT_PRIMARY}}
+            className="ext-[12px] self-center mb-4">
+            OR
+          </Text>
           <TouchableOpacity
             onPress={() => navigation.navigate('Register')}
             className="justify-center items-center flex h-10 p-2 rounded-full"
@@ -93,7 +121,7 @@ const Login = () => {
               borderWidth: 1,
               borderColor: COLOR.PRIMARY,
             }}>
-            <Text style={{color: COLOR.PRIMARY}}>Đăng kí</Text>
+            <Text style={{color: COLOR.TEXT_PRIMARY}}>Đăng kí</Text>
           </TouchableOpacity>
         </View>
       </View>

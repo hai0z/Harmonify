@@ -17,6 +17,7 @@ import {
 import {doc, setDoc} from 'firebase/firestore';
 import {useNavigation} from '@react-navigation/native';
 import useThemeStore from '../../store/themeStore';
+import tinycolor from 'tinycolor2';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
@@ -55,7 +56,9 @@ const Login = () => {
   };
   const navigation = useNavigation<any>();
   return (
-    <View className="bg-[#121212] flex-1  items-center px-8">
+    <View
+      className="flex-1  items-center px-8"
+      style={{backgroundColor: COLOR.BACKGROUND}}>
       <View
         className="flex justify-center gap-4 w-full"
         style={{marginTop: SCREEN_HEIGHT / 6}}>
@@ -63,27 +66,52 @@ const Login = () => {
           source={require('../../assets/evil.png')}
           className="w-28 h-28 mb-4 self-center"
         />
-        <Text className="text-white font-bold uppercase">Đăng kí</Text>
+        <Text
+          className=" font-bold uppercase"
+          style={{color: COLOR.TEXT_PRIMARY}}>
+          Đăng kí
+        </Text>
         <TextInput
           onChangeText={text => setEmail(text)}
           placeholder="Email"
           value={email}
           keyboardType="email-address"
-          className="bg-white/50 rounded-full h-10 p-2"
+          placeholderTextColor={COLOR.TEXT_SECONDARY}
+          style={{
+            backgroundColor: COLOR.isDark
+              ? tinycolor(COLOR.BACKGROUND).lighten(5).toString()
+              : tinycolor(COLOR.BACKGROUND).darken(5).toString(),
+            color: COLOR.TEXT_PRIMARY,
+          }}
+          className="rounded-full h-10 p-2"
         />
         <TextInput
           secureTextEntry
           onChangeText={text => setPassword(text)}
           placeholder="Mật khẩu"
           value={password}
-          className="bg-white/50 rounded-full h-10 p-2"
+          placeholderTextColor={COLOR.TEXT_SECONDARY}
+          style={{
+            backgroundColor: COLOR.isDark
+              ? tinycolor(COLOR.BACKGROUND).lighten(5).toString()
+              : tinycolor(COLOR.BACKGROUND).darken(5).toString(),
+            color: COLOR.TEXT_PRIMARY,
+          }}
+          className="rounded-full h-10 p-2"
         />
         <TextInput
           secureTextEntry
           onChangeText={text => setConfirmPassword(text)}
           placeholder="Nhập lại mật khẩu"
           value={confirmPassword}
-          className="bg-white/50 rounded-full h-10 p-2"
+          placeholderTextColor={COLOR.TEXT_SECONDARY}
+          style={{
+            backgroundColor: COLOR.isDark
+              ? tinycolor(COLOR.BACKGROUND).lighten(5).toString()
+              : tinycolor(COLOR.BACKGROUND).darken(5).toString(),
+            color: COLOR.TEXT_PRIMARY,
+          }}
+          className="rounded-full h-10 p-2"
         />
 
         <TouchableOpacity
@@ -92,10 +120,14 @@ const Login = () => {
             backgroundColor: COLOR.PRIMARY,
           }}
           className="rounded-full h-10 p-2 justify-center items-center">
-          <Text className="text-white">Đăng kí</Text>
+          <Text style={{color: COLOR.TEXT_PRIMARY}}>Đăng kí</Text>
         </TouchableOpacity>
         <View>
-          <Text className="text-white text-[12px] self-center mb-4">OR</Text>
+          <Text
+            className="text-[12px] self-center mb-4"
+            style={{color: COLOR.TEXT_PRIMARY}}>
+            OR
+          </Text>
           <TouchableOpacity
             onPress={() => navigation.navigate('Login')}
             className="justify-center items-center flex h-10 p-2 rounded-full"
@@ -103,7 +135,7 @@ const Login = () => {
               borderWidth: 1,
               borderColor: COLOR.PRIMARY,
             }}>
-            <Text style={{color: COLOR.PRIMARY}}>Đăng nhập</Text>
+            <Text style={{color: COLOR.TEXT_PRIMARY}}>Đăng nhập</Text>
           </TouchableOpacity>
         </View>
       </View>

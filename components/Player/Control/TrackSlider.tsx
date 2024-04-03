@@ -35,10 +35,10 @@ const TrackSlider = () => {
         }}
         trackStyle={{
           height: 3.5,
-          backgroundColor: theme === 'dark' ? '#ffffff90' : '#00000020',
+          backgroundColor: COLOR.isDark ? '#ffffff90' : '#00000020',
         }}
         minTrackStyle={{
-          backgroundColor: theme === 'dark' ? '#ffffff' : '#000000',
+          backgroundColor: COLOR.isDark ? '#ffffff' : '#000000',
         }}
         style={{
           height: 20,
