@@ -15,7 +15,7 @@ import {handlePlay} from '../service/trackPlayerService';
 import nodejs from 'nodejs-mobile-react-native';
 import {useNavigation} from '@react-navigation/native';
 import useThemeStore from '../store/themeStore';
-import TrackPlayer from 'react-native-track-player';
+
 const SearchScreens = () => {
   const [text, setText] = useState<string>('');
   const [data, setData] = useState<any>([]);

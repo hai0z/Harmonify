@@ -1,5 +1,5 @@
 import {View, Text, TouchableOpacity, Animated, Dimensions} from 'react-native';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {usePlayerStore} from '../store/playerStore';
 import {FlashList} from '@shopify/flash-list';
 import useSyncLyric from '../hooks/useSyncLyric';
@@ -30,16 +30,20 @@ const LyricScreen = ({route}: {route: any}) => {
       animated: true,
     });
   }, [currentLine]);
-  const {theme, COLOR} = useThemeStore();
-  const bg = COLOR.isDark
-    ? bgColor.vibrant === '#0098DB'
-      ? tinycolor(bgColor.average).isDark()
-        ? tinycolor(bgColor.average).lighten(20).toString()
-        : bgColor.average
-      : bgColor.vibrant
-    : tinycolor(bgColor.dominant!).isDark()
-    ? tinycolor(bgColor.dominant!).lighten(55).toString()
-    : tinycolor(bgColor.dominant!).darken(5).toString();
+
+  const {COLOR} = useThemeStore();
+
+  const bg = useMemo(() => {
+    return COLOR.isDark
+      ? bgColor.vibrant === '#0098DB'
+        ? tinycolor(bgColor.average).isDark()
+          ? tinycolor(bgColor.average).lighten(20).toString()
+          : bgColor.average
+        : bgColor.vibrant
+      : tinycolor(bgColor.dominant!).isDark()
+      ? tinycolor(bgColor.dominant!).lighten(55).toString()
+      : tinycolor(bgColor.dominant!).darken(5).toString();
+  }, [bgColor.dominant, COLOR]);
 
   const lyricsRef = React.useRef<FlashList<any>>(null);
   return (

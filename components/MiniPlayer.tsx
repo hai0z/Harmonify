@@ -1,5 +1,5 @@
 import {View, Text, Image, TouchableOpacity, Dimensions} from 'react-native';
-import React, {useCallback} from 'react';
+import React, {useCallback, useMemo} from 'react';
 import useKeyBoardStatus from '../hooks/useKeyBoardStatus';
 import TrackPlayer, {
   State,
@@ -36,11 +36,13 @@ const MiniPlayer = () => {
 
   const {handleAddToLikedList, isLiked} = useToggleLikeSong();
 
-  const gradientColor = COLOR.isDark
-    ? useDarkColor(color.dominant!, 35)
-    : tinycolor(color.dominant!).isDark()
-    ? tinycolor(color.dominant!).lighten(75).toString()
-    : tinycolor(color.dominant!).lighten(25).toString();
+  const gradientColor = useMemo(() => {
+    return COLOR.isDark
+      ? useDarkColor(color.dominant!, 35)
+      : tinycolor(color.dominant!).isDark()
+      ? tinycolor(color.dominant!).lighten(75).toString()
+      : tinycolor(color.dominant!).lighten(25).toString();
+  }, [COLOR, color.dominant]);
 
   const togglePlay = useCallback(async (state: State | undefined) => {
     if (state !== State.Playing) {

@@ -4,7 +4,7 @@ import { useProgress } from "react-native-track-player";
 
 export default function useSyncLyric(lyrics: any[]) {
   const [currentLine, setCurrentLine] = useState<number | undefined>(-1);
-  const progress = useProgress(125);
+  const progress = useProgress(100);
   useEffect(() => {
     if (lyrics) {
       let low = 0;

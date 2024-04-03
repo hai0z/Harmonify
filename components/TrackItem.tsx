@@ -50,6 +50,7 @@ const TrackItem = (props: Props) => {
         </Text>
       </View>
       <TouchableOpacity
+        disabled={item?.streamingStatus === 2}
         onPress={() => showBottomSheet(item)}
         hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}>
         <Feather

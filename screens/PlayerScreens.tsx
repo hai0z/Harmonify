@@ -8,7 +8,7 @@ import {
   Image,
 } from 'react-native';
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {LinearGradient} from 'react-native-linear-gradient';
 import {usePlayerStore} from '../store/playerStore';

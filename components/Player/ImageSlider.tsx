@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useMemo} from 'react';
 import {FlashList} from '@shopify/flash-list';
 import {
   NativeScrollEvent,
@@ -16,11 +16,15 @@ import TrackPlayer, {useActiveTrack} from 'react-native-track-player';
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('screen');
 
 const ImageSlider = () => {
-  const {playList} = usePlayerStore(state => state);
+  const playList = usePlayerStore(state => state.playList);
+
+  console.log('img slider');
 
   const currentSong = useActiveTrack();
-  const currentSongIndex = playList.items.findIndex(
-    (s: any) => s.encodeId == currentSong?.id,
+
+  const currentSongIndex = useMemo(
+    () => playList.items.findIndex((s: any) => s.encodeId == currentSong?.id),
+    [currentSong?.id],
   );
 
   const flatListRef = React.useRef<FlashList<any>>(null);
@@ -67,26 +71,32 @@ const ImageSlider = () => {
         estimatedItemSize={SCREEN_WIDTH}
         data={playList.items}
         renderItem={({item, index}: any) => (
-          <View
-            key={index}
-            style={{
-              width: SCREEN_WIDTH,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Image
-              src={getThumbnail(item.thumbnail)}
-              className="rounded-md z-20"
-              style={{
-                height: SCREEN_WIDTH * 0.85,
-                width: SCREEN_WIDTH * 0.85,
-              }}
-            />
-          </View>
+          <SliderItem item={item} index={index} />
         )}
       />
     </View>
   );
 };
 
-export default ImageSlider;
+const SliderItem = React.memo(({item, index}: any) => {
+  return (
+    <View
+      key={index}
+      style={{
+        width: SCREEN_WIDTH,
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}>
+      <Image
+        src={getThumbnail(item.thumbnail)}
+        className="rounded-md z-20"
+        style={{
+          height: SCREEN_WIDTH * 0.85,
+          width: SCREEN_WIDTH * 0.85,
+        }}
+      />
+    </View>
+  );
+});
+
+export default React.memo(ImageSlider);

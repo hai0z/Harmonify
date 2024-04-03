@@ -1,6 +1,5 @@
 import {
   View,
-  Image as RNImage,
   TouchableOpacity,
   StyleSheet,
   Dimensions,
@@ -11,7 +10,7 @@ import {
 } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import React, {useCallback, useContext, useEffect, useMemo} from 'react';
+import React, {useContext, useEffect, useMemo} from 'react';
 import {LinearGradient} from 'react-native-linear-gradient';
 import getThumbnail from '../utils/getThumnail';
 import {FlashList} from '@shopify/flash-list';
@@ -21,6 +20,7 @@ import nodejs from 'nodejs-mobile-react-native';
 import TrackItem from '../components/TrackItem';
 import {PlayerContext} from '../context/PlayerProvider';
 import useThemeStore from '../store/themeStore';
+
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const PlaylistDetail = ({route}: {route: any}) => {
@@ -136,7 +136,7 @@ const PlaylistDetail = ({route}: {route: any}) => {
                   colors={['transparent', COLOR.BACKGROUND]}
                   className="absolute bottom-0 h-40 left-0 right-0 z-50"
                 />
-                <RNImage
+                <Image
                   blurRadius={50}
                   src={getThumbnail(playlistData?.thumbnailM)}
                   style={[
@@ -182,7 +182,7 @@ const PlaylistDetail = ({route}: {route: any}) => {
                         }
                         key={item.id}
                         className="mr-2">
-                        <RNImage
+                        <Image
                           src={item.thumbnailM}
                           className="w-10 h-10 rounded-full"
                         />
