@@ -60,7 +60,7 @@ const HomeWrapper = () => {
       style={{backgroundColor: COLOR.BACKGROUND}}>
       <StatusBar
         backgroundColor={`transparent`}
-        style={theme === 'dark' ? 'light' : 'dark'}
+        style={COLOR.isDark ? 'light' : 'dark'}
       />
       <HomeTab />
       <TrackItemBottomSheet />

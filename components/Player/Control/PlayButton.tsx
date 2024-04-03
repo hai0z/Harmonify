@@ -31,7 +31,7 @@ const PlayButton = () => {
             : 'controller-paus'
         }
         size={36}
-        color={theme === 'dark' ? 'black' : 'white'}
+        color={COLOR.isDark ? 'black' : 'white'}
       />
     </TouchableOpacity>
   );

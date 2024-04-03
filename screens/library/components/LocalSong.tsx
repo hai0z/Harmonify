@@ -28,7 +28,7 @@ const LocalSong = () => {
         activeOpacity={0.8}
         className="flex-row items-center mt-[20px] mx-[16px]">
         <LinearGradient
-          colors={[COLOR.PRIMARY, COLOR.SECONDARY]}
+          colors={[COLOR.SECONDARY, COLOR.PRIMARY]}
           className="w-16 h-16 justify-center items-center">
           <Entypo name="folder" size={24} color={COLOR.TEXT_PRIMARY} />
         </LinearGradient>

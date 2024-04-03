@@ -115,7 +115,7 @@ const PlaylistDetail = () => {
                   ]}
                 />
                 <LinearGradient
-                  colors={[COLOR.PRIMARY, COLOR.SECONDARY]}
+                  colors={[COLOR.SECONDARY, COLOR.PRIMARY]}
                   style={[
                     {
                       width: SCREEN_WIDTH * 0.6,

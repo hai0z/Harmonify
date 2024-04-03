@@ -12,16 +12,15 @@ const SongInfoCard = () => {
 
   const {theme, COLOR} = useThemeStore(state => state);
 
-  const bg =
-    theme === 'dark'
-      ? bgColor.vibrant === '#0098DB'
-        ? tinycolor(bgColor.average).isDark()
-          ? tinycolor(bgColor.average).lighten(20).toString()
-          : bgColor.average
-        : bgColor.vibrant
-      : tinycolor(bgColor.dominant!).isDark()
-      ? tinycolor(bgColor.dominant!).lighten(55).toString()
-      : tinycolor(bgColor.dominant!).darken(5).toString();
+  const bg = COLOR.isDark
+    ? bgColor.vibrant === '#0098DB'
+      ? tinycolor(bgColor.average).isDark()
+        ? tinycolor(bgColor.average).lighten(20).toString()
+        : bgColor.average
+      : bgColor.vibrant
+    : tinycolor(bgColor.dominant!).isDark()
+    ? tinycolor(bgColor.dominant!).lighten(55).toString()
+    : tinycolor(bgColor.dominant!).darken(5).toString();
 
   const [data, setData] = useState<any>(null);
 

@@ -30,16 +30,15 @@ const Lyric = () => {
 
   const lyricsRef = React.useRef<FlashList<any>>(null);
   const {theme, COLOR} = useThemeStore(state => state);
-  const bg =
-    theme === 'dark'
-      ? bgColor.vibrant === '#0098DB'
-        ? tinycolor(bgColor.average).isDark()
-          ? tinycolor(bgColor.average).lighten(20).toString()
-          : bgColor.average
-        : bgColor.vibrant
-      : tinycolor(bgColor.dominant!).isDark()
-      ? tinycolor(bgColor.dominant!).lighten(55).toString()
-      : tinycolor(bgColor.dominant!).darken(5).toString();
+  const bg = COLOR.isDark
+    ? bgColor.vibrant === '#0098DB'
+      ? tinycolor(bgColor.average).isDark()
+        ? tinycolor(bgColor.average).lighten(20).toString()
+        : bgColor.average
+      : bgColor.vibrant
+    : tinycolor(bgColor.dominant!).isDark()
+    ? tinycolor(bgColor.dominant!).lighten(55).toString()
+    : tinycolor(bgColor.dominant!).darken(5).toString();
 
   return (
     lyrics?.length > 0 &&
@@ -81,7 +80,7 @@ const Lyric = () => {
                   style={{
                     color:
                       (currentLine as number) >= index
-                        ? theme === 'dark'
+                        ? COLOR.isDark
                           ? 'white'
                           : 'brown'
                         : 'black',

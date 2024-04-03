@@ -36,12 +36,11 @@ const MiniPlayer = () => {
 
   const {handleAddToLikedList, isLiked} = useToggleLikeSong();
 
-  const gradientColor =
-    theme === 'dark'
-      ? useDarkColor(color.dominant!, 35)
-      : tinycolor(color.dominant!).isDark()
-      ? tinycolor(color.dominant!).lighten(75).toString()
-      : tinycolor(color.dominant!).lighten(25).toString();
+  const gradientColor = COLOR.isDark
+    ? useDarkColor(color.dominant!, 35)
+    : tinycolor(color.dominant!).isDark()
+    ? tinycolor(color.dominant!).lighten(75).toString()
+    : tinycolor(color.dominant!).lighten(25).toString();
 
   const togglePlay = useCallback(async (state: State | undefined) => {
     if (state !== State.Playing) {
@@ -169,7 +168,7 @@ const MiniPlayer = () => {
             marginHorizontal: 8,
             bottom: 4,
             borderRadius: 2.5,
-            backgroundColor: theme === 'dark' ? '#ffffff90' : '#00000020',
+            backgroundColor: COLOR.isDark ? '#ffffff90' : '#00000020',
             zIndex: 2,
           }}>
           <View
