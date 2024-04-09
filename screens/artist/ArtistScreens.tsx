@@ -17,6 +17,7 @@ import {useNavigation} from '@react-navigation/native';
 import nodejs from 'nodejs-mobile-react-native';
 import PlayListCover from '../../components/PlayListCover';
 import useThemeStore from '../../store/themeStore';
+import {usePlayerStore} from '../../store/playerStore';
 interface artistType {
   id: string;
   name: string;
@@ -34,9 +35,15 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const ArtistScreens = ({route}: any) => {
   const {name} = route.params;
+
   const [loading, setLoading] = React.useState(true);
+
   const [dataDetailArtist, setDataDetailArtist] = useState<artistType>();
+
   const COLOR = useThemeStore(state => state.COLOR);
+
+  const setPlayFrom = usePlayerStore(state => state.setPlayFrom);
+
   useEffect(() => {
     setLoading(true);
     nodejs.channel.addListener('getArtist', (data: any) => {
@@ -50,22 +57,18 @@ const ArtistScreens = ({route}: any) => {
   const scrollY = React.useRef(new Animated.Value(0)).current;
 
   const headerColor = scrollY.interpolate({
-    inputRange: [SCREEN_WIDTH * 0.59, SCREEN_WIDTH * 0.6],
+    inputRange: [SCREEN_WIDTH, SCREEN_WIDTH],
     outputRange: ['transparent', COLOR.BACKGROUND],
+    extrapolate: 'clamp',
+  });
+  const headerOpacity = scrollY.interpolate({
+    inputRange: [SCREEN_WIDTH, SCREEN_WIDTH],
+    outputRange: [0, 1],
     extrapolate: 'clamp',
   });
 
   const navigation = useNavigation<any>();
-  //  const handlePlaySong = useCallback(
-  //    (song: any) => {
-  //      return handlePlay(song, {
-  //        id: 'artist' + ,
-  //        items: data,
-  //      });
-  //    },
-  //    [data],
-  //  );
-  const {darkMode} = useThemeStore(state => state);
+
   if (loading) {
     return (
       <View
@@ -85,15 +88,16 @@ const ArtistScreens = ({route}: any) => {
         </TouchableOpacity>
         <Animated.Text
           className=" font-bold ml-4"
-          style={{color: COLOR.TEXT_PRIMARY}}>
+          style={{color: COLOR.TEXT_PRIMARY, opacity: headerOpacity}}>
           {dataDetailArtist?.name}
         </Animated.Text>
       </Animated.View>
-      <ScrollView
+      <Animated.ScrollView
+        showsVerticalScrollIndicator={false}
         contentContainerStyle={{paddingBottom: 200}}
         onScroll={Animated.event(
           [{nativeEvent: {contentOffset: {y: scrollY}}}],
-          {useNativeDriver: false},
+          {useNativeDriver: true},
         )}>
         <View className="relative" style={{height: SCREEN_WIDTH * 1.2}}>
           <View
@@ -101,7 +105,7 @@ const ArtistScreens = ({route}: any) => {
             style={{
               height: SCREEN_WIDTH * 1.2,
               width: SCREEN_WIDTH,
-              backgroundColor: darkMode ? '#00000050' : '#ffffff50',
+              backgroundColor: COLOR.isDark ? '#00000050' : '#ffffff50',
             }}
           />
           <Image
@@ -146,6 +150,10 @@ const ArtistScreens = ({route}: any) => {
                       (type: any) => type.sectionId === 'aSongs',
                     )[0].items,
                   });
+                  setPlayFrom({
+                    id: 'artist',
+                    name: dataDetailArtist.name,
+                  });
                 }}>
                 <Image
                   source={{uri: item.thumbnail}}
@@ -177,6 +185,33 @@ const ArtistScreens = ({route}: any) => {
               </Text>
             </TouchableOpacity>
           </View>
+        </View>
+        {/* albm */}
+        <View>
+          {dataDetailArtist?.sections
+            .filter((type: any) => type.sectionId === 'aAlbum')
+            .map((item: any, index: number) => (
+              <View key={index} className="mb-4">
+                <Text
+                  style={{color: COLOR.TEXT_PRIMARY}}
+                  className="text-lg font-semibold px-4 py-4">
+                  {'Albums'}
+                </Text>
+                <ScrollView
+                  horizontal
+                  contentContainerStyle={{paddingHorizontal: 16, gap: 10}}>
+                  {item.items.map((item: any, index: number) => (
+                    <PlayListCover
+                      key={index}
+                      encodeId={item.encodeId}
+                      sortDescription={item.sortDescription}
+                      title={item.title}
+                      thumbnail={item.thumbnail}
+                    />
+                  ))}
+                </ScrollView>
+              </View>
+            ))}
         </View>
 
         {/* playlist */}
@@ -233,11 +268,15 @@ const ArtistScreens = ({route}: any) => {
         {/* Relate artis */}
 
         <View>
-          <Text
-            className="text-lg font-semibold px-4 py-4"
-            style={{color: COLOR.TEXT_PRIMARY}}>
-            Có thể bạn thích
-          </Text>
+          {dataDetailArtist?.sections.filter(
+            (type: any) => type.sectionId === 'aReArtist',
+          )[0].items.length > 0 && (
+            <Text
+              className="text-lg font-semibold px-4 py-4"
+              style={{color: COLOR.TEXT_PRIMARY}}>
+              Có thể bạn thích
+            </Text>
+          )}
           <ScrollView
             horizontal
             contentContainerStyle={{paddingHorizontal: 16, gap: 10}}>
@@ -294,7 +333,7 @@ const ArtistScreens = ({route}: any) => {
             {dataDetailArtist?.biography}
           </Text>
         </View>
-      </ScrollView>
+      </Animated.ScrollView>
     </View>
   );
 };

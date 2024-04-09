@@ -10,6 +10,7 @@ rn_bridge.channel.on('home', async () => {
   rn_bridge.channel.post('home', data.data.items);
 });
 rn_bridge.channel.on('getSong', async track => {
+  if (!track) return;
   const data = await ZingMp3.getSong(track.id);
   rn_bridge.channel.post('getSong', {
     data: data.data !== undefined ? data.data : 'NULL',
@@ -24,6 +25,7 @@ rn_bridge.channel.on('downloadSong', async track => {
   });
 });
 rn_bridge.channel.on('getSongInfo', async id => {
+  if (!id) return;
   const data = await ZingMp3.getInfoSong(id);
   rn_bridge.channel.post('getSongInfo', data.data);
 });
@@ -45,10 +47,12 @@ rn_bridge.channel.on('getListArtistSong', async data => {
   rn_bridge.channel.post('getListArtistSong', result.data);
 });
 rn_bridge.channel.on('getArtist', async name => {
+  if (!name) return;
   const data = await ZingMp3.getArtist(name);
   rn_bridge.channel.post('getArtist', data.data);
 });
 rn_bridge.channel.on('getArtistBySongId', async songId => {
+  if (!songId) return;
   const song = await ZingMp3.getInfoSong(songId);
   const artist = await ZingMp3.getArtist(song.data?.artists[0]?.alias);
   rn_bridge.channel.post('getArtistBySongId', artist.data);

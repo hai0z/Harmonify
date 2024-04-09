@@ -53,7 +53,7 @@ const LibStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const HomeWrapper = () => {
-  const {theme, COLOR} = useThemeStore();
+  const {COLOR} = useThemeStore();
   return (
     <View
       className="flex-1 h-full w-full relative "
@@ -152,7 +152,8 @@ const HomeTab = () => {
           <MiniPlayer />
           <BottomTabBar {...props} />
           <LinearGradient
-            colors={['transparent', COLOR.BACKGROUND]}
+            locations={[0, 0.6]}
+            colors={['transparent', `${COLOR.BACKGROUND}`]}
             className="absolute bottom-0 left-0 right-0"
             style={{
               height: TABBAR_HEIGHT,
@@ -177,9 +178,11 @@ const HomeTab = () => {
               );
           }
         },
+
         tabBarItemStyle: {
-          backgroundColor: `${COLOR.BACKGROUND}`,
+          backgroundColor: `${COLOR.BACKGROUND}90`,
           height: TABBAR_HEIGHT,
+          elevation: 0,
         },
         tabBarStyle: {
           position: 'absolute',
@@ -189,7 +192,8 @@ const HomeTab = () => {
           bottom: 0,
           left: 0,
           right: 0,
-          backgroundColor: `${COLOR.BACKGROUND}`,
+          backgroundColor: `${COLOR.BACKGROUND}95`,
+          elevation: 0,
         },
         tabBarActiveTintColor: COLOR.PRIMARY,
         tabBarInactiveTintColor: COLOR.TEXT_SECONDARY,

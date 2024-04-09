@@ -81,6 +81,7 @@ const MiniPlayer = () => {
             height: '100%',
             zIndex: 2,
             backgroundColor: gradientColor,
+            // elevation: COLOR.isDark ? 0 : 1,
           }}>
           <View
             style={{

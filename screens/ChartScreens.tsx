@@ -20,14 +20,20 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import nodejs from 'nodejs-mobile-react-native';
 import useThemeStore from '../store/themeStore';
+import {usePlayerStore} from '../store/playerStore';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const ChartScreens = () => {
   const [data, setData] = useState<any>([]);
+
   const [loading, setLoading] = useState(true);
+
   const COLOR = useThemeStore(state => state.COLOR);
+
   const scrollY = React.useRef(new Animated.Value(0)).current;
+
+  const setPlayFrom = usePlayerStore(state => state.setPlayFrom);
 
   const headerColor = useMemo(
     () =>
@@ -61,6 +67,10 @@ const ChartScreens = () => {
       id: 'chart',
       items: data,
     });
+    setPlayFrom({
+      id: 'chart',
+      name: 'Bảng xếp hạng V-POP',
+    });
   };
 
   const navigation = useNavigation<any>();
@@ -91,6 +101,7 @@ const ChartScreens = () => {
         <View className="w-10"></View>
       </Animated.View>
       <FlashList
+        showsVerticalScrollIndicator={false}
         onScroll={Animated.event(
           [{nativeEvent: {contentOffset: {y: scrollY}}}],
           {useNativeDriver: false},

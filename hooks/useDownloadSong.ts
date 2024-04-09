@@ -16,7 +16,7 @@ nodejs.channel.addListener("downloadSong", async data => {
       useDownloadManager: true,
       notification: true,
       title: data.track.title,
-      path: downloads + '/' + data.track.title + '.mp3',
+      path: downloads + '/' + data.track.title + Math.random() + '.mp3',
       description: 'Tải xuống bài hát',
     }
   })

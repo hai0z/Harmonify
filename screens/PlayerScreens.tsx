@@ -8,10 +8,10 @@ import {
   Image,
 } from 'react-native';
 
-import React, {useEffect} from 'react';
+import React, {useContext} from 'react';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {LinearGradient} from 'react-native-linear-gradient';
-import {usePlayerStore} from '../store/playerStore';
+import {playFromMapping, usePlayerStore} from '../store/playerStore';
 import Player from '../components/Player/Player';
 import {useNavigation} from '@react-navigation/native';
 import Lyric from '../components/Player/Lyric';
@@ -24,16 +24,19 @@ import useDarkColor from '../hooks/useDarkColor';
 import useThemeStore from '../store/themeStore';
 import tinycolor from 'tinycolor2';
 import {DEFAULT_IMG} from '../constants';
+import {PlayerContext} from '../context/PlayerProvider';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 const PlayerScreens = () => {
-  const {playList, color} = usePlayerStore(state => state);
+  const {playList, color, playFrom} = usePlayerStore(state => state);
   const navigation = useNavigation<any>();
   const track = useActiveTrack();
 
   const {COLOR} = useThemeStore(state => state);
+
+  const {showBottomSheet} = useContext(PlayerContext);
 
   const gradientColor = COLOR.isDark
     ? useDarkColor(color.dominant!, 35)
@@ -70,14 +73,25 @@ const PlayerScreens = () => {
             onPress={() => navigation.goBack()}>
             <Entypo name="chevron-down" size={24} color={COLOR.TEXT_PRIMARY} />
           </TouchableOpacity>
-          <Text className=" font-bold" style={{color: COLOR.TEXT_PRIMARY}}>
-            Đang phát từ thư viện
-          </Text>
-          <Entypo
-            name="dots-three-vertical"
-            size={20}
-            color={COLOR.TEXT_PRIMARY}
-          />
+          <View>
+            <Text
+              className=" uppercase text-center text-[12px]"
+              style={{color: COLOR.TEXT_PRIMARY}}>
+              Đang phát từ {playFromMapping[playFrom.id]}
+            </Text>
+            <Text
+              className=" font-semibold text-center"
+              style={{color: COLOR.TEXT_PRIMARY}}>
+              {playFrom.name}
+            </Text>
+          </View>
+          <TouchableOpacity onPress={() => showBottomSheet(track)}>
+            <Entypo
+              name="dots-three-vertical"
+              size={20}
+              color={COLOR.TEXT_PRIMARY}
+            />
+          </TouchableOpacity>
         </View>
         {playList?.items?.length > 0 ? (
           <ImageSlider />

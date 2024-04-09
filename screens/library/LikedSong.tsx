@@ -27,7 +27,7 @@ const PlaylistDetail = () => {
   const COLOR = useThemeStore(state => state.COLOR);
   const navigation = useNavigation<any>();
 
-  const {likedSongs: likedSong} = usePlayerStore(state => state);
+  const {likedSongs: likedSong, setPlayFrom} = usePlayerStore(state => state);
   const headerColor = useMemo(
     () =>
       scrollY.interpolate({
@@ -60,11 +60,17 @@ const PlaylistDetail = () => {
   );
 
   const handlePlaySong = useCallback(
-    (song: any) =>
+    (song: any) => {
       handlePlay(song, {
         id: `${likedSong.length}-likedSong`,
         items: likedSong,
-      }),
+      });
+      setPlayFrom({
+        id: 'liked',
+        name: 'Bài hát đã thích',
+      });
+    },
+
     [],
   );
 

@@ -14,6 +14,7 @@ import {handlePlay} from '../../../service/trackPlayerService';
 import {PlayerContext} from '../../../context/PlayerProvider';
 import useBottomSheetStore from '../../../store/bottomSheetStore';
 import useThemeStore from '../../../store/themeStore';
+import {usePlayerStore} from '../../../store/playerStore';
 
 function paginateArray(data: any[], itemsPerPage: number) {
   const totalPages = Math.ceil(data?.length / itemsPerPage);
@@ -44,6 +45,7 @@ const NewRelease = ({data}: Props) => {
 
   const listRef = React.useRef<FlashList<any>>(null);
 
+  const setPlayFrom = usePlayerStore(state => state.setPlayFrom);
   const scrollX = React.useRef(new Animated.Value(0)).current;
   const COLOR = useThemeStore(state => state.COLOR);
 
@@ -53,7 +55,7 @@ const NewRelease = ({data}: Props) => {
 
   const dataList = [allPage, vPopPage, othersPage];
   const handlePlaySong = useCallback((song: any) => {
-    return handlePlay(song, {
+    handlePlay(song, {
       id: 'new-release' + tabIndex,
       items:
         tabIndex === 0
@@ -61,6 +63,10 @@ const NewRelease = ({data}: Props) => {
           : tabIndex === 1
           ? data?.items?.vPop
           : data?.items?.others,
+    });
+    setPlayFrom({
+      id: 'playlist',
+      name: 'Bài hát mới phát hành',
     });
   }, []);
 

@@ -1,5 +1,6 @@
 import { Track } from "react-native-track-player";
 import { create } from "zustand";
+import { storeData } from "../utils/localStorage";
 
 const defaultColor = "#494949"
 
@@ -29,7 +30,27 @@ export interface Color {
   platform: string;
   vibrant: string;
 }
+
+type PlayFrom = "local" | "search" | "playlist" | "liked" | "album" | "artist" | "chart"
+
+export const playFromMapping = {
+  "local": "Hệ thống",
+  "search": "Tìm kiếm",
+  "playlist": "Danh sách phát",
+  "liked": "Thư viện",
+  "album": "Album",
+  "artist": "Nghệ sĩ",
+  "chart": "Bảng xếp hạng"
+}
+
+export interface IPLayFrom {
+  id: PlayFrom
+  name: string
+}
+
 interface PlayerStore {
+  playFrom: IPLayFrom,
+  setPlayFrom: (playFrom: IPLayFrom) => void
   color: Partial<Color>,
   playList: IPlaylist,
   setColor: (color: Partial<Color>) => void,
@@ -48,6 +69,14 @@ interface PlayerStore {
   setIsPlayFromLocal: (isPlayFromLocal: boolean) => void
 }
 export const usePlayerStore = create<PlayerStore>((set) => ({
+  playFrom: {
+    id: "local",
+    name: "Bài hát trên thiết bị"
+  },
+  setPlayFrom: async (playFrom: IPLayFrom) => {
+    set({ playFrom })
+    await storeData("playFrom", playFrom)
+  },
   playList: {
     id: "",
     items: [],

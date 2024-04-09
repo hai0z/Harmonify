@@ -35,6 +35,7 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
     setCurrentSong,
     isPlayFromLocal,
     setIsPlayFromLocal,
+    setPlayFrom,
   } = usePlayerStore(state => state);
 
   const getSongColors = async () => {
@@ -71,9 +72,12 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
   };
   const getLatestSong = async () => {
     const data = await getData('currentSong');
-    if (data != null) {
+    const playfrom = await getData('playFrom');
+
+    if (data != null && playfrom != null) {
       setCurrentSong(data);
       getSongColors();
+      setPlayFrom(playfrom);
       return data;
     }
   };

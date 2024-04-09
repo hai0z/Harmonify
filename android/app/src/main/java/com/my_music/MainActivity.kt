@@ -17,7 +17,7 @@ class MainActivity : ReactActivity() {
  override fun onCreate(savedInstanceState: Bundle?) {
     // Ẩn splash screen khi activity được tạo
     SplashScreen.show(this)
-    super.onCreate(savedInstanceState)
+    super.onCreate(null)
   }
   /**
    * Returns the instance of the [ReactActivityDelegate]. We use [DefaultReactActivityDelegate]

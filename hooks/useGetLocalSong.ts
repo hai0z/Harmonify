@@ -47,7 +47,6 @@ const useGetLocalSong = () => {
           sortBy: SortSongFields.TITLE,
           sortOrder: SortSongOrder.DESC,
         });
-
         if (typeof songsOrError === 'string') {
           setIsLoading(false)
           useToastStore.getState().show(songsOrError, ToastTime.SHORT);
@@ -69,6 +68,7 @@ const useGetLocalSong = () => {
     };
     getLocalSong();
   }, []);
+
   return (
     { isLoading, localSong }
   )

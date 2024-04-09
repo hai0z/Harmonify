@@ -20,6 +20,7 @@ import nodejs from 'nodejs-mobile-react-native';
 import TrackItem from '../components/TrackItem';
 import {PlayerContext} from '../context/PlayerProvider';
 import useThemeStore from '../store/themeStore';
+import {usePlayerStore} from '../store/playerStore';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -37,6 +38,9 @@ const PlaylistDetail = ({route}: {route: any}) => {
   const {showBottomSheet} = useContext(PlayerContext);
 
   const COLOR = useThemeStore(state => state.COLOR);
+
+  const setPlayFrom = usePlayerStore(state => state.setPlayFrom);
+
   useEffect(() => {
     setLoading(true);
     nodejs.channel.addListener('getDetailPlaylist', (data: any) => {
@@ -85,11 +89,16 @@ const PlaylistDetail = ({route}: {route: any}) => {
     [scrollY],
   );
 
-  const handlePlaySong = (song: any) =>
+  const handlePlaySong = (song: any) => {
     handlePlay(song, {
       id: data.playListId,
       items: playlistData?.song?.items,
     });
+    setPlayFrom({
+      id: playlistData?.isAlbum ? 'album' : 'playlist',
+      name: playlistData?.title,
+    });
+  };
 
   if (loading)
     return (

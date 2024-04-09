@@ -15,7 +15,6 @@ import {handlePlay} from '../../service/trackPlayerService';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import nodejs from 'nodejs-mobile-react-native';
-import getThumbnail from '../../utils/getThumnail';
 import TrackItem from '../../components/TrackItem';
 import {PlayerContext} from '../../context/PlayerProvider';
 import useThemeStore from '../../store/themeStore';
@@ -39,7 +38,9 @@ const ArtistSong = ({route}: any) => {
   const [dataDetailArtist, setDataDetailArtist] = useState<artistType>();
   const [hasLoadMore, setHasLoadMore] = useState(true);
   const [page, setPage] = useState(1);
-  const {darkMode, COLOR} = useThemeStore(state => state);
+  const {COLOR} = useThemeStore(state => state);
+
+  const setPlayFrom = usePlayerStore(state => state.setPlayFrom);
 
   useEffect(() => {
     setLoading(true);
@@ -98,9 +99,13 @@ const ArtistSong = ({route}: any) => {
   const {showBottomSheet} = useContext(PlayerContext);
   const handlePlaySong = useCallback(
     (song: any) => {
-      return handlePlay(song, {
+      handlePlay(song, {
         id: 'artist' + id,
         items: data,
+      });
+      setPlayFrom({
+        id: 'artist',
+        name: dataDetailArtist?.name as string,
       });
     },
     [data],
@@ -130,6 +135,7 @@ const ArtistSong = ({route}: any) => {
       </Animated.View>
       <View className="flex-1">
         <FlashList
+          showsVerticalScrollIndicator={false}
           ListFooterComponent={() => {
             return <View className="h-80"></View>;
           }}

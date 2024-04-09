@@ -18,16 +18,17 @@ import useGetLocalSong from '../../hooks/useGetLocalSong';
 import Entypo from 'react-native-vector-icons/Entypo';
 import useThemeStore from '../../store/themeStore';
 import {DEFAULT_IMG} from '../../constants';
+import {usePlayerStore} from '../../store/playerStore';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
-const LocalSong = ({route}: any) => {
+const LocalSong = () => {
   const {isLoading, localSong} = useGetLocalSong();
 
   const scrollY = React.useRef(new Animated.Value(0)).current;
 
   const navigation = useNavigation<any>();
   const COLOR = useThemeStore(state => state.COLOR);
-
+  const {setPlayFrom} = usePlayerStore(state => state);
   const headerColor = useMemo(
     () =>
       scrollY.interpolate({
@@ -58,10 +59,13 @@ const LocalSong = ({route}: any) => {
     [scrollY],
   );
 
-  const handlePlaySong = useCallback(
-    (song: any) => handlePlaySongInLocal(song),
-    [],
-  );
+  const handlePlaySong = useCallback((song: any) => {
+    handlePlaySongInLocal(song);
+    setPlayFrom({
+      id: 'local',
+      name: 'Bài hát trên thiết bị',
+    });
+  }, []);
   if (isLoading) {
     return (
       <View
@@ -150,7 +154,6 @@ const LocalSong = ({route}: any) => {
         nestedScrollEnabled
         data={localSong}
         estimatedItemSize={72}
-        extraData={[localSong]}
         keyExtractor={(item: any, index) => `${item.encodeId}_${index}`}
         renderItem={({item}: any) => {
           return <Item item={item} onPress={handlePlaySong} />;
