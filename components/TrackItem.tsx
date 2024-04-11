@@ -3,17 +3,20 @@ import React, {useCallback, useContext} from 'react';
 import getThumbnail from '../utils/getThumnail';
 import Feather from 'react-native-vector-icons/Feather';
 import useThemeStore from '../store/themeStore';
+import FastImage from 'react-native-fast-image';
+import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
+import {usePlayerStore} from '../store/playerStore';
 interface Props {
   item: any;
   index?: number;
   isAlbum?: boolean;
   onClick: (item: any) => void;
   showBottomSheet: (item: any) => void;
-  isActive?: boolean;
 }
+
 const TrackItem = (props: Props) => {
   console.log('df');
-  const {item, index, onClick, isAlbum, showBottomSheet, isActive} = props;
+  const {item, index, onClick, isAlbum, showBottomSheet} = props;
   const COLOR = useThemeStore(state => state.COLOR);
   return (
     <TouchableOpacity
@@ -23,16 +26,21 @@ const TrackItem = (props: Props) => {
       className="flex flex-row  items-center mx-4 my-2"
       onPress={() => onClick(item)}>
       {isAlbum ? (
-        <View className="w-14 h-14 rounded-md flex justify-center items-center">
+        <View
+          className="rounded-md flex justify-center items-center"
+          style={{width: wp(14), height: wp(14)}}>
           <Text style={{color: COLOR.TEXT_PRIMARY}} className="font-semibold">
             {index! + 1}
           </Text>
         </View>
       ) : (
-        <Image
-          source={{uri: getThumbnail(item.thumbnail)}}
+        <FastImage
+          source={{
+            uri: getThumbnail(item.thumbnail),
+          }}
           key={item.encodeId}
-          className="w-14 h-14 rounded-md"
+          className="rounded-md"
+          style={{width: wp(14), height: wp(14)}}
         />
       )}
       <View className="flex justify-center ml-2 flex-1 ">
@@ -40,12 +48,15 @@ const TrackItem = (props: Props) => {
           className="font-semibold"
           numberOfLines={1}
           style={{
-            color: isActive ? COLOR.PRIMARY : COLOR.TEXT_PRIMARY,
+            color: COLOR.TEXT_PRIMARY,
+            fontSize: wp(4),
           }}>
           {item?.title}
         </Text>
 
-        <Text numberOfLines={1} style={{color: COLOR.TEXT_SECONDARY}}>
+        <Text
+          numberOfLines={1}
+          style={{color: COLOR.TEXT_SECONDARY, fontSize: wp(3.5)}}>
           {item?.artistsNames}
         </Text>
       </View>

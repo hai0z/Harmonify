@@ -16,6 +16,7 @@ import {auth, db} from '../../firebase/config';
 import NewRelease from './components/NewRelease';
 import LinearGradient from 'react-native-linear-gradient';
 import useThemeStore from '../../store/themeStore';
+import {getData, storeData} from '../../utils/localStorage';
 interface typePlaylistCover {
   items: [];
   title: string;
@@ -29,9 +30,13 @@ function HomeScreens() {
   const [dataHome, setdataHome] = useState<any>([]);
   const [dataNewRelease, setDataNewRelease] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const setLikedSongs = usePlayerStore(state => state.setLikedSongs);
+  const {setLikedSongs, setPlayFrom} = usePlayerStore(state => state);
   const {COLOR, HEADER_GRADIENT} = useThemeStore(state => state);
 
+  const getPlayFrom = async () => {
+    const playFrom = await getData('playFrom');
+    setPlayFrom(playFrom);
+  };
   useEffect(() => {
     const q = query(collection(db, `users/${auth.currentUser?.uid}/likedSong`));
     const unsub = onSnapshot(q, querySnapshot => {
@@ -41,6 +46,8 @@ function HomeScreens() {
       });
       setLikedSongs(songs);
     });
+    getPlayFrom();
+
     return () => {
       unsub();
     };
@@ -56,9 +63,6 @@ function HomeScreens() {
       setLoading(false);
     });
     nodejs.channel.post('home');
-    // return () => {
-    //   nodejs.channel.removeListener('home', () => {});
-    // };
   }, []);
 
   if (loading) {
@@ -93,7 +97,9 @@ function HomeScreens() {
         />
       </View>
 
-      <View>{dataNewRelease && <NewRelease data={dataNewRelease} />}</View>
+      <View style={{minHeight: 3}}>
+        {dataNewRelease && <NewRelease data={dataNewRelease} />}
+      </View>
 
       {dataHome?.map((e: any, index: number) => {
         return (

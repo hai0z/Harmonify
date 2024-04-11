@@ -35,7 +35,6 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
     setCurrentSong,
     isPlayFromLocal,
     setIsPlayFromLocal,
-    setPlayFrom,
   } = usePlayerStore(state => state);
 
   const getSongColors = async () => {
@@ -72,12 +71,9 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
   };
   const getLatestSong = async () => {
     const data = await getData('currentSong');
-    const playfrom = await getData('playFrom');
-
-    if (data != null && playfrom != null) {
+    if (data != null) {
       setCurrentSong(data);
       getSongColors();
-      setPlayFrom(playfrom);
       return data;
     }
   };
@@ -108,15 +104,20 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
     }
     console.log({storedSong, dataPlaylist});
     if (dataPlaylist.items.length > 0 && dataPlaylist.id !== '' && storedSong) {
+      const index = dataPlaylist.items.findIndex(
+        (item: any) => item?.encodeId === storedSong?.id,
+      );
+      if (index === -1) {
+        setCurrentSong(storedSong);
+        await TrackPlayer.add(storedSong);
+        return;
+      }
       await TrackPlayer.reset();
       setPlayList(dataPlaylist);
       await TrackPlayer.add(
         dataPlaylist.items.map((item: any) => objectToTrack(item)),
       );
-      const index = dataPlaylist.items.findIndex(
-        (item: any) => item?.encodeId === storedSong?.id,
-      );
-      await TrackPlayer.skip(index === -1 ? 0 : index);
+      await TrackPlayer.skip(index);
     } else {
       if (storedSong !== null && storedSong.url === NULL_URL) {
         setCurrentSong(objectToTrack(storedSong));

@@ -30,7 +30,7 @@ const SettingScreen = () => {
       </View>
       <View className="flex mt-4">
         <Text style={{color: COLOR?.TEXT_PRIMARY}}>Chủ đề sáng</Text>
-        {['light', 'lemon', 'pastel', 'garden', 'grey'].map((item, index) => (
+        {['light', 'lemon', 'pastel', 'garden', 'silky'].map((item, index) => (
           <TouchableOpacity
             key={index}
             className="flex flex-row gap-2 my-1"

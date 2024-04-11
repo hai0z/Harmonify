@@ -8,7 +8,7 @@ import useSyncLyric from '../../hooks/useSyncLyric';
 import tinycolor from 'tinycolor2';
 import useThemeStore from '../../store/themeStore';
 
-const OFFSET = 2;
+const OFFSET = 1;
 
 const Lyric = () => {
   const lyrics = usePlayerStore(state => state.lyrics);
@@ -48,16 +48,12 @@ const Lyric = () => {
       <TouchableOpacity
         onPress={() => nativgation.navigate('Lyric', {lyrics})}
         activeOpacity={1}
-        className="rounded-2xl mt-10"
+        className="rounded-2xl mt-4"
         style={{
           backgroundColor: bg,
           height: 320,
           elevation: 10,
         }}>
-        <LinearGradient
-          colors={[bg!, bg!, 'transparent']}
-          className="absolute top-0 left-0 right-0 bottom-0 h-10 z-[2] rounded-t-2xl"
-        />
         <View className="px-4 py-4">
           <Text
             className=" font-bold z-[3] "
@@ -70,7 +66,9 @@ const Lyric = () => {
             ref={lyricsRef}
             contentContainerStyle={{padding: 16}}
             data={lyrics}
-            initialScrollIndex={(currentLine as number) - OFFSET}
+            initialScrollIndex={
+              (currentLine as number) - OFFSET < 0 ? 1 : currentLine! - OFFSET
+            }
             estimatedItemSize={16}
             showsVerticalScrollIndicator={false}
             extraData={[currentLine]}
@@ -78,7 +76,7 @@ const Lyric = () => {
               return (
                 <Text
                   key={index}
-                  className=" font-bold text-[20px] mb-4"
+                  className=" font-bold text-[20px] mb-3"
                   style={{
                     color:
                       (currentLine as number) >= index
@@ -95,8 +93,8 @@ const Lyric = () => {
           />
         </View>
         <LinearGradient
-          colors={['transparent', bg!]}
-          className="absolute  left-0 right-0 bottom-0 h-20 z-[2] rounded-b-xl"
+          colors={['transparent', bg!, bg!]}
+          className="absolute  left-0 right-0 bottom-0 h-16 z-[2] rounded-b-xl"
         />
       </TouchableOpacity>
     )

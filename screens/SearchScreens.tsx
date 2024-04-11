@@ -15,6 +15,7 @@ import {handlePlay} from '../service/trackPlayerService';
 import nodejs from 'nodejs-mobile-react-native';
 import {useNavigation} from '@react-navigation/native';
 import useThemeStore from '../store/themeStore';
+import {usePlayerStore} from '../store/playerStore';
 
 const SearchScreens = () => {
   const [text, setText] = useState<string>('');
@@ -23,6 +24,7 @@ const SearchScreens = () => {
   const [filterValue, setFilterValue] = useState<number>(0);
   const [filterData, setFilterData] = useState<any>([]);
   const {COLOR} = useThemeStore(state => state);
+  const setPlayFrom = usePlayerStore(state => state.setPlayFrom);
   useEffect(() => {
     nodejs.channel.post('search', debouncedValue);
   }, [debouncedValue]);
@@ -105,6 +107,10 @@ const SearchScreens = () => {
               handlePlay(e, {
                 id: e.encodeId,
                 items: [e],
+              });
+              setPlayFrom({
+                id: 'search',
+                name: e.title,
               });
             }}>
             <Image

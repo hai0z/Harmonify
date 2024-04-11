@@ -39,7 +39,7 @@ const PlaylistDetail = ({route}: {route: any}) => {
 
   const COLOR = useThemeStore(state => state.COLOR);
 
-  const setPlayFrom = usePlayerStore(state => state.setPlayFrom);
+  const {setPlayFrom, currentSong} = usePlayerStore(state => state);
 
   useEffect(() => {
     setLoading(true);
@@ -119,14 +119,13 @@ const PlaylistDetail = ({route}: {route: any}) => {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back" size={24} color={COLOR.TEXT_PRIMARY} />
         </TouchableOpacity>
-        <View className="justify-center items-center">
+        <View className="justify-center items-center flex-1">
           <Animated.Text
             style={{opacity: headerTitleOpacity, color: COLOR.TEXT_PRIMARY}}
             className=" font-bold">
             {playlistData?.title}
           </Animated.Text>
         </View>
-        <View className="w-10"></View>
       </Animated.View>
       <FlashList
         showsVerticalScrollIndicator={false}

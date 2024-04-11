@@ -8,7 +8,7 @@ import {
   Image,
 } from 'react-native';
 
-import React, {useContext} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {LinearGradient} from 'react-native-linear-gradient';
 import {playFromMapping, usePlayerStore} from '../store/playerStore';
@@ -25,12 +25,22 @@ import useThemeStore from '../store/themeStore';
 import tinycolor from 'tinycolor2';
 import {DEFAULT_IMG} from '../constants';
 import {PlayerContext} from '../context/PlayerProvider';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Animated, {
+  FadeIn,
+  FadeOut,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
+import HeartButton from '../components/HeartButton';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 const PlayerScreens = () => {
-  const {playList, color, playFrom} = usePlayerStore(state => state);
+  const {playList, color, playFrom, isPlayFromLocal} = usePlayerStore(
+    state => state,
+  );
   const navigation = useNavigation<any>();
   const track = useActiveTrack();
 
@@ -42,7 +52,15 @@ const PlayerScreens = () => {
     ? useDarkColor(color.dominant!, 35)
     : tinycolor(color.dominant!).isDark()
     ? tinycolor(color.dominant!).lighten(55).toString()
-    : tinycolor(color.dominant!).darken(5).toString();
+    : tinycolor(color.dominant!).darken(10).toString();
+
+  const bgAnimated = useSharedValue(`transparent`);
+
+  useEffect(() => {
+    bgAnimated.value = withTiming(`${gradientColor}`, {
+      duration: 750,
+    });
+  }, [gradientColor]);
 
   return (
     <ScrollView
@@ -58,12 +76,24 @@ const PlayerScreens = () => {
           backgroundColor: COLOR.BACKGROUND,
         }}>
         <LinearGradient
-          colors={[gradientColor, COLOR.BACKGROUND]}
+          colors={['transparent', COLOR.BACKGROUND]}
           style={[
             StyleSheet.absoluteFill,
             {
               width: SCREEN_WIDTH,
               height: SCREEN_HEIGHT,
+              bottom: 0,
+              zIndex: 1,
+            },
+          ]}
+        />
+        <Animated.View
+          style={[
+            StyleSheet.absoluteFill,
+            {
+              width: SCREEN_WIDTH,
+              height: SCREEN_HEIGHT,
+              backgroundColor: bgAnimated,
             },
           ]}
         />
@@ -73,7 +103,7 @@ const PlayerScreens = () => {
             onPress={() => navigation.goBack()}>
             <Entypo name="chevron-down" size={24} color={COLOR.TEXT_PRIMARY} />
           </TouchableOpacity>
-          <View>
+          <View className="flex-1">
             <Text
               className=" uppercase text-center text-[12px]"
               style={{color: COLOR.TEXT_PRIMARY}}>
@@ -108,7 +138,9 @@ const PlayerScreens = () => {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              <Image
+              <Animated.Image
+                entering={FadeIn.duration(300).springify()}
+                exiting={FadeOut.duration(300).springify()}
                 source={{uri: track?.artwork || DEFAULT_IMG}}
                 className="rounded-md z-20"
                 style={{
@@ -120,11 +152,11 @@ const PlayerScreens = () => {
           </View>
         )}
         <View
-          className="flex flex-row justify-between px-6"
+          className="flex flex-row justify-between px-6 items-center "
           style={{
             marginTop: SCREEN_HEIGHT * 0.1,
           }}>
-          <View className="z-50">
+          <View className="z-50 flex-1 mr-4">
             <TextTicker
               style={{color: COLOR.TEXT_PRIMARY}}
               className=" font-bold text-lg"
@@ -141,11 +173,21 @@ const PlayerScreens = () => {
               {track?.artist}
             </Text>
           </View>
+          {!isPlayFromLocal && <HeartButton heartIconSize={28} />}
         </View>
       </View>
       <View className="px-6 w-full">
         <View className="mt-4">
           <Player />
+        </View>
+        <View className="flex flex-row justify-end mt-2">
+          <TouchableOpacity onPress={() => navigation.navigate('Queue')}>
+            <MaterialIcons
+              name="queue-music"
+              size={24}
+              color={COLOR.TEXT_PRIMARY}
+            />
+          </TouchableOpacity>
         </View>
         <Lyric />
         <ArtistCard />

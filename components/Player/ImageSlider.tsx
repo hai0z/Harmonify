@@ -12,6 +12,7 @@ import {
 import {usePlayerStore} from '../../store/playerStore';
 import getThumbnail from '../../utils/getThumnail';
 import TrackPlayer, {useActiveTrack} from 'react-native-track-player';
+import Animated, {FadeIn, FadeOut} from 'react-native-reanimated';
 
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('screen');
 
@@ -87,7 +88,9 @@ const SliderItem = React.memo(({item, index}: any) => {
         justifyContent: 'center',
         alignItems: 'center',
       }}>
-      <Image
+      <Animated.Image
+        entering={FadeIn.duration(300).springify()}
+        exiting={FadeOut.duration(300).springify()}
         src={getThumbnail(item.thumbnail)}
         className="rounded-md z-20"
         style={{

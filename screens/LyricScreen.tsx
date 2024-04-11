@@ -1,4 +1,4 @@
-import {View, Text, TouchableOpacity, Animated, Dimensions} from 'react-native';
+import {View, Text, TouchableOpacity, Dimensions} from 'react-native';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {usePlayerStore} from '../store/playerStore';
 import {FlashList} from '@shopify/flash-list';
@@ -11,6 +11,7 @@ import PlayButton from '../components/Player/Control/PlayButton';
 import {LinearGradient} from 'react-native-linear-gradient';
 import tinycolor from 'tinycolor2';
 import useThemeStore from '../store/themeStore';
+import Animated, {FadeInDown, FadeInUp} from 'react-native-reanimated';
 const OFFSET = 3;
 const DEFAULT_LINE = -1;
 const LyricScreen = ({route}: {route: any}) => {
@@ -21,16 +22,29 @@ const LyricScreen = ({route}: {route: any}) => {
   const currentSong = useActiveTrack();
   const navigation = useNavigation<any>();
 
+  const [isScrolling, setIsScrolling] = useState(true);
+
   useEffect(() => {
-    lyricsRef.current?.scrollToIndex({
-      index:
-        (currentLine as number) === DEFAULT_LINE
-          ? 0
-          : (currentLine as number) - OFFSET,
-      animated: true,
-    });
+    setIsScrolling(false);
+    !isScrolling &&
+      lyricsRef.current?.scrollToIndex({
+        index:
+          (currentLine as number) === DEFAULT_LINE
+            ? 0
+            : (currentLine as number) - OFFSET,
+        animated: true,
+      });
   }, [currentLine]);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsScrolling(false);
+    }, 3000);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []);
   const {COLOR} = useThemeStore();
 
   const bg = useMemo(() => {
@@ -57,21 +71,31 @@ const LyricScreen = ({route}: {route: any}) => {
           <Entypo name="chevron-down" size={24} color={COLOR.TEXT_PRIMARY} />
         </TouchableOpacity>
         <View className="flex-1 flex justify-center items-center">
-          <Text className=" font-bold" style={{color: COLOR.TEXT_PRIMARY}}>
+          <Animated.Text
+            entering={FadeInUp.duration(300).delay(300).springify()}
+            className=" font-bold z-30"
+            style={{color: COLOR.TEXT_PRIMARY}}>
             {currentSong?.title}
-          </Text>
-          <Text className=" font-bold" style={{color: COLOR.TEXT_PRIMARY}}>
+          </Animated.Text>
+          <Animated.Text
+            entering={FadeInDown.duration(400).springify().delay(400)}
+            className=" font-bold z-30"
+            style={{color: COLOR.TEXT_PRIMARY}}>
             {currentSong?.artist}
-          </Text>
+          </Animated.Text>
         </View>
+        <View className="w-4" />
+        <LinearGradient
+          colors={[bg!, bg!, 'transparent']}
+          className="absolute -bottom-10 left-0 right-0 h-16 z-[2]"
+        />
       </View>
-      <LinearGradient
-        colors={[bg!, bg!, 'transparent']}
-        className="absolute top-24 left-0 right-0 bottom-0 h-16 z-[2]"
-      />
 
       <View className="flex-1">
         <FlashList
+          onScroll={({nativeEvent}) => {
+            setIsScrolling(true);
+          }}
           scrollEventThrottle={16}
           ref={lyricsRef}
           contentContainerStyle={{
@@ -103,13 +127,13 @@ const LyricScreen = ({route}: {route: any}) => {
           )}
           keyExtractor={(_, index) => index.toString()}
         />
-        <LinearGradient
-          colors={['transparent', bg!, bg!]}
-          className="absolute bottom-0 left-0 right-0 h-8 z-[2]"
-        />
       </View>
       <View className="px-6 py-1 justify-center items-center">
-        <View className="w-full">
+        <LinearGradient
+          colors={['transparent', bg!, bg!]}
+          className="absolute -top-10 left-0 right-0 h-16 z-[2]"
+        />
+        <View className="w-full z-30">
           <TrackSlider />
         </View>
         <PlayButton />

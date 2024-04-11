@@ -1,5 +1,5 @@
 import {View, Text, Image, TouchableOpacity, Dimensions} from 'react-native';
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback, useEffect, useMemo} from 'react';
 import useKeyBoardStatus from '../hooks/useKeyBoardStatus';
 import TrackPlayer, {
   State,
@@ -17,6 +17,12 @@ import {MINI_PLAYER_HEIGHT, TABBAR_HEIGHT} from '../constants';
 import useToggleLikeSong from '../hooks/useToggleLikeSong';
 import useThemeStore from '../store/themeStore';
 import tinycolor from 'tinycolor2';
+import Animated, {
+  useSharedValue,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated';
+import HeartButton from './HeartButton';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const MiniPlayer = () => {
@@ -27,22 +33,23 @@ const MiniPlayer = () => {
   const {color, currentSong, isLoadingTrack, tempSong, isPlayFromLocal} =
     usePlayerStore(state => state);
 
-  const {theme, COLOR} = useThemeStore(state => state);
+  const {COLOR} = useThemeStore(state => state);
+
   const playerState = usePlaybackState();
 
   const progress = useProgress(1000);
 
   const track = useActiveTrack();
 
-  const {handleAddToLikedList, isLiked} = useToggleLikeSong();
-
   const gradientColor = useMemo(() => {
     return COLOR.isDark
       ? useDarkColor(color.dominant!, 35)
       : tinycolor(color.dominant!).isDark()
-      ? tinycolor(color.dominant!).lighten(75).toString()
-      : tinycolor(color.dominant!).lighten(25).toString();
-  }, [COLOR, color.dominant]);
+      ? tinycolor(color.dominant!).lighten(55).toString()
+      : tinycolor(color.dominant!).lighten(10).toString();
+  }, [color.dominant, COLOR]);
+
+  const bgAnimated = useSharedValue(`transparent`);
 
   const togglePlay = useCallback(async (state: State | undefined) => {
     if (state !== State.Playing) {
@@ -52,6 +59,11 @@ const MiniPlayer = () => {
     }
   }, []);
 
+  useEffect(() => {
+    bgAnimated.value = withTiming(`${gradientColor}`, {
+      duration: 500,
+    });
+  }, [color.dominant, gradientColor]);
   if (
     track === undefined ||
     track === null ||
@@ -62,26 +74,25 @@ const MiniPlayer = () => {
 
   return (
     !keyboardVisible && (
-      <View
+      <Animated.View
         className=" flex flex-col justify-center absolute mb-[-1px]"
         style={{
           width: SCREEN_WIDTH * 0.96,
           height: MINI_PLAYER_HEIGHT,
           bottom: TABBAR_HEIGHT,
           transform: [{translateX: (SCREEN_WIDTH * 0.04) / 2}],
+          backgroundColor: bgAnimated,
+          borderRadius: 6,
         }}>
         <TouchableOpacity
-          onPress={() => navigation.navigate('Player')}
+          onPress={() => navigation.navigate('PlayerStack')}
           activeOpacity={1}
           style={{
             flexDirection: 'column',
-            borderRadius: 6,
             justifyContent: 'center',
             width: '100%',
             height: '100%',
             zIndex: 2,
-            backgroundColor: gradientColor,
-            // elevation: COLOR.isDark ? 0 : 1,
           }}>
           <View
             style={{
@@ -132,20 +143,9 @@ const MiniPlayer = () => {
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                gap: 16,
+                gap: 8,
               }}>
-              {!isPlayFromLocal && (
-                <TouchableOpacity
-                  onPress={() => {
-                    handleAddToLikedList(tempSong);
-                  }}>
-                  <AntDesign
-                    name={isLiked ? 'heart' : 'hearto'}
-                    size={24}
-                    color={isLiked ? '#ff0000' : COLOR.TEXT_PRIMARY}
-                  />
-                </TouchableOpacity>
-              )}
+              {!isPlayFromLocal && <HeartButton heartIconSize={24} />}
 
               <TouchableOpacity
                 className=" mr-4"
@@ -185,7 +185,7 @@ const MiniPlayer = () => {
             }}
           />
         </View>
-      </View>
+      </Animated.View>
     )
   );
 };

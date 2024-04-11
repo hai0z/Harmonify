@@ -30,6 +30,7 @@ import TrackItemBottomSheet from '../components/bottom-sheet/TrackItemBottomShee
 import LocalSong from '../screens/library/LocalSong';
 import useThemeStore from '../store/themeStore';
 import SettingScreen from '../screens/SettingScreen';
+import Queue from '../screens/Queue';
 export type HomeStackParamsList = {
   Home: undefined;
   Search: undefined;
@@ -47,6 +48,8 @@ export type HomeStackParamsList = {
   Lib: undefined;
   LocalSong: undefined;
   Setting: undefined;
+  Queue: undefined;
+  PlayerStack: undefined;
 };
 const Stack = createNativeStackNavigator<HomeStackParamsList>();
 const LibStack = createNativeStackNavigator();
@@ -230,6 +233,18 @@ const HomeTab = () => {
   );
 };
 
+const PlayerStack = () => {
+  return (
+    <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen name="Player" component={PlayerScreens} />
+      <Stack.Screen
+        name="Queue"
+        component={Queue}
+        options={{animation: 'none'}}
+      />
+    </Stack.Navigator>
+  );
+};
 function App() {
   const {isLogin} = useAuth();
   useEffect(() => {
@@ -242,8 +257,8 @@ function App() {
           <>
             <Stack.Screen name="Home" component={HomeWrapper} />
             <Stack.Screen
-              name="Player"
-              component={PlayerScreens}
+              name="PlayerStack"
+              component={PlayerStack}
               options={{
                 animation: 'slide_from_bottom',
               }}

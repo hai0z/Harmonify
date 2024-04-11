@@ -25,6 +25,7 @@ const Toast = () => {
         width: SCREEN_WIDTH * 0.96,
         transform: [{translateX: (SCREEN_WIDTH * 0.04) / 2}],
         bottom: TABBAR_HEIGHT + MINI_PLAYER_HEIGHT + PADDING,
+        elevation: 10,
       }}>
       <Text className="text-black ml-2">{message}</Text>
     </View>

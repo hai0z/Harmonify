@@ -285,7 +285,7 @@ const ChartItem = React.memo(({item, index, onPlay}: any) => {
         {index + 3 < 10 ? `0${index + 3}` : index + 3}
       </Text>
       <Image
-        source={{uri: item?.thumbnail}}
+        source={{uri: getThumbnail(item.thumbnail)}}
         key={item.encodeId}
         className="w-12 h-12 rounded-md"
       />
