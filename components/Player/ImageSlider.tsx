@@ -19,8 +19,6 @@ const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('screen');
 const ImageSlider = () => {
   const playList = usePlayerStore(state => state.playList);
 
-  console.log('img slider');
-
   const currentSong = useActiveTrack();
 
   const currentSongIndex = useMemo(
@@ -89,7 +87,7 @@ const SliderItem = React.memo(({item, index}: any) => {
         alignItems: 'center',
       }}>
       <Animated.Image
-        entering={FadeIn.duration(300).springify()}
+        entering={FadeIn.duration(300).springify().delay(300)}
         exiting={FadeOut.duration(300).springify()}
         src={getThumbnail(item.thumbnail)}
         className="rounded-md z-20"

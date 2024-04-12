@@ -148,7 +148,6 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
   useEffect(() => {
     if (!isPlayFromLocal) {
       if (currentSong) getSongColors();
-      setLyrics([]);
       nodejs.channel.post('getLyric', currentSong?.id);
     }
     storeData('currentSong', currentSong);

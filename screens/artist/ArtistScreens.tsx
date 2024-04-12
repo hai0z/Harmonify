@@ -18,6 +18,7 @@ import nodejs from 'nodejs-mobile-react-native';
 import PlayListCover from '../../components/PlayListCover';
 import useThemeStore from '../../store/themeStore';
 import {usePlayerStore} from '../../store/playerStore';
+import LinearGradient from 'react-native-linear-gradient';
 interface artistType {
   id: string;
   name: string;
@@ -57,12 +58,12 @@ const ArtistScreens = ({route}: any) => {
   const scrollY = React.useRef(new Animated.Value(0)).current;
 
   const headerColor = scrollY.interpolate({
-    inputRange: [SCREEN_WIDTH, SCREEN_WIDTH],
+    inputRange: [SCREEN_WIDTH * 0.8, SCREEN_WIDTH * 0.8],
     outputRange: ['transparent', COLOR.BACKGROUND],
     extrapolate: 'clamp',
   });
   const headerOpacity = scrollY.interpolate({
-    inputRange: [SCREEN_WIDTH, SCREEN_WIDTH],
+    inputRange: [SCREEN_WIDTH * 0.8, SCREEN_WIDTH],
     outputRange: [0, 1],
     extrapolate: 'clamp',
   });
@@ -100,12 +101,12 @@ const ArtistScreens = ({route}: any) => {
           {useNativeDriver: true},
         )}>
         <View className="relative" style={{height: SCREEN_WIDTH * 1.2}}>
-          <View
+          <LinearGradient
+            colors={['transparent', COLOR.BACKGROUND]}
             className="absolute top-0 left-0 right-0 bottom-0 z-10"
             style={{
               height: SCREEN_WIDTH * 1.2,
               width: SCREEN_WIDTH,
-              backgroundColor: COLOR.isDark ? '#00000050' : '#ffffff50',
             }}
           />
           <Image
@@ -185,33 +186,6 @@ const ArtistScreens = ({route}: any) => {
               </Text>
             </TouchableOpacity>
           </View>
-        </View>
-        {/* albm */}
-        <View>
-          {dataDetailArtist?.sections
-            .filter((type: any) => type.sectionId === 'aAlbum')
-            .map((item: any, index: number) => (
-              <View key={index} className="mb-4">
-                <Text
-                  style={{color: COLOR.TEXT_PRIMARY}}
-                  className="text-lg font-semibold px-4 py-4">
-                  {'Albums'}
-                </Text>
-                <ScrollView
-                  horizontal
-                  contentContainerStyle={{paddingHorizontal: 16, gap: 10}}>
-                  {item.items.map((item: any, index: number) => (
-                    <PlayListCover
-                      key={index}
-                      encodeId={item.encodeId}
-                      sortDescription={item.sortDescription}
-                      title={item.title}
-                      thumbnail={item.thumbnail}
-                    />
-                  ))}
-                </ScrollView>
-              </View>
-            ))}
         </View>
 
         {/* playlist */}

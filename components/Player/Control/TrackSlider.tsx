@@ -1,5 +1,5 @@
 import {View, Text} from 'react-native';
-import React, {useCallback, useRef} from 'react';
+import React, {useCallback} from 'react';
 import TrackPlayer, {useProgress} from 'react-native-track-player';
 import Slider from '@react-native-assets/slider';
 import caculateTime from '../../../utils/caculateMusicTime';
@@ -17,7 +17,6 @@ const TrackSlider = () => {
     await TrackPlayer.play();
   }, []);
 
-  const {theme} = useThemeStore(state => state);
   return (
     <View>
       <Slider

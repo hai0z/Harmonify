@@ -14,17 +14,13 @@ const HeartButton = ({heartIconSize}: Props) => {
   const heartScale = useSharedValue(1);
   const {tempSong} = usePlayerStore(state => state);
   const {COLOR} = useThemeStore(state => state);
+
   useEffect(() => {
-    if (isLiked) {
-      heartScale.value = withTiming(1.2, {duration: 250}, () => {
-        heartScale.value = withTiming(1, {duration: 250});
-      });
-    } else {
-      heartScale.value = withTiming(1.2, {duration: 250}, () => {
-        heartScale.value = withTiming(1, {duration: 250});
-      });
-    }
+    heartScale.value = withTiming(1.2, {duration: 250}, () => {
+      heartScale.value = withTiming(1, {duration: 250});
+    });
   }, [isLiked]);
+
   return (
     <Animated.View style={{transform: [{scale: heartScale}], zIndex: 2}}>
       <TouchableOpacity

@@ -1,11 +1,10 @@
 import {View, Text, TouchableOpacity, Image} from 'react-native';
-import React, {useCallback, useContext} from 'react';
+import React from 'react';
 import getThumbnail from '../utils/getThumnail';
 import Feather from 'react-native-vector-icons/Feather';
 import useThemeStore from '../store/themeStore';
 import FastImage from 'react-native-fast-image';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
-import {usePlayerStore} from '../store/playerStore';
 interface Props {
   item: any;
   index?: number;

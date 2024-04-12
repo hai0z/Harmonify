@@ -54,6 +54,7 @@ rn_bridge.channel.on('getArtist', async name => {
 rn_bridge.channel.on('getArtistBySongId', async songId => {
   if (!songId) return;
   const song = await ZingMp3.getInfoSong(songId);
+  if (!song.data.artists) return;
   const artist = await ZingMp3.getArtist(song.data?.artists[0]?.alias);
   rn_bridge.channel.post('getArtistBySongId', artist.data);
 });

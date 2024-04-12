@@ -38,7 +38,7 @@ const ChartScreens = () => {
   const headerColor = useMemo(
     () =>
       scrollY.interpolate({
-        inputRange: [SCREEN_WIDTH * 0.79, SCREEN_WIDTH * 0.8],
+        inputRange: [SCREEN_WIDTH * 0.8, SCREEN_WIDTH * 0.8],
         outputRange: ['transparent', COLOR.BACKGROUND],
         extrapolate: 'clamp',
       }),
@@ -48,7 +48,7 @@ const ChartScreens = () => {
   const headerTitleOpacity = useMemo(
     () =>
       scrollY.interpolate({
-        inputRange: [0, SCREEN_WIDTH * 0.6, SCREEN_WIDTH * 0.8],
+        inputRange: [0, SCREEN_WIDTH * 0.8, SCREEN_WIDTH * 0.8],
         outputRange: [0, 0, 1],
         extrapolate: 'clamp',
       }),

@@ -28,7 +28,13 @@ import {PlayerContext} from '../context/PlayerProvider';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Animated, {
   FadeIn,
+  FadeInDown,
+  FadeInUp,
   FadeOut,
+  FlipInEasyX,
+  SlideInUp,
+  StretchInX,
+  ZoomIn,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
@@ -37,6 +43,7 @@ import HeartButton from '../components/HeartButton';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
+const TextAnimated = Animated.createAnimatedComponent(TextTicker);
 const PlayerScreens = () => {
   const {playList, color, playFrom, isPlayFromLocal} = usePlayerStore(
     state => state,
@@ -139,7 +146,7 @@ const PlayerScreens = () => {
                 alignItems: 'center',
               }}>
               <Animated.Image
-                entering={FadeIn.duration(300).springify()}
+                entering={FadeIn.duration(300).springify().delay(300)}
                 exiting={FadeOut.duration(300).springify()}
                 source={{uri: track?.artwork || DEFAULT_IMG}}
                 className="rounded-md z-20"
@@ -156,8 +163,13 @@ const PlayerScreens = () => {
           style={{
             marginTop: SCREEN_HEIGHT * 0.1,
           }}>
-          <View className="z-50 flex-1 mr-4">
-            <TextTicker
+          <Animated.View
+            className="z-50 flex-1 mr-4"
+            key={track?.id}
+            entering={FadeInUp.duration(300).springify().delay(300)}
+            exiting={FadeOut.duration(300)}>
+            <TextAnimated
+              key={track?.id}
               style={{color: COLOR.TEXT_PRIMARY}}
               className=" font-bold text-lg"
               duration={10000}
@@ -166,13 +178,13 @@ const PlayerScreens = () => {
               repeatSpacer={50}
               marqueeDelay={3000}>
               {track?.title}
-            </TextTicker>
-            <Text
+            </TextAnimated>
+            <Animated.Text
               className=" font-semibold"
               style={{color: COLOR.TEXT_SECONDARY}}>
               {track?.artist}
-            </Text>
-          </View>
+            </Animated.Text>
+          </Animated.View>
           {!isPlayFromLocal && <HeartButton heartIconSize={28} />}
         </View>
       </View>

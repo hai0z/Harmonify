@@ -7,6 +7,7 @@ import {useNavigation} from '@react-navigation/native';
 import useSyncLyric from '../../hooks/useSyncLyric';
 import tinycolor from 'tinycolor2';
 import useThemeStore from '../../store/themeStore';
+import Animated, {FadeIn, FadeOut} from 'react-native-reanimated';
 
 const OFFSET = 1;
 
@@ -45,58 +46,60 @@ const Lyric = () => {
   return (
     lyrics?.length > 0 &&
     !isPlayFromLocal && (
-      <TouchableOpacity
-        onPress={() => nativgation.navigate('Lyric', {lyrics})}
-        activeOpacity={1}
-        className="rounded-2xl mt-4"
-        style={{
-          backgroundColor: bg,
-          height: 320,
-          elevation: 10,
-        }}>
-        <View className="px-4 py-4">
-          <Text
-            className=" font-bold z-[3] "
-            style={{color: COLOR.TEXT_PRIMARY}}>
-            Lời bài hát
-          </Text>
-        </View>
-        <View className="flex-1">
-          <FlashList
-            ref={lyricsRef}
-            contentContainerStyle={{padding: 16}}
-            data={lyrics}
-            initialScrollIndex={
-              (currentLine as number) - OFFSET < 0 ? 1 : currentLine! - OFFSET
-            }
-            estimatedItemSize={16}
-            showsVerticalScrollIndicator={false}
-            extraData={[currentLine]}
-            renderItem={({item, index}: any) => {
-              return (
-                <Text
-                  key={index}
-                  className=" font-bold text-[20px] mb-3"
-                  style={{
-                    color:
-                      (currentLine as number) >= index
-                        ? COLOR.isDark
-                          ? 'white'
-                          : 'brown'
-                        : 'black',
-                  }}>
-                  {item.data}
-                </Text>
-              );
-            }}
-            keyExtractor={(_, index) => index.toString()}
+      <Animated.View>
+        <TouchableOpacity
+          onPress={() => nativgation.navigate('Lyric', {lyrics})}
+          activeOpacity={1}
+          className="rounded-2xl mt-4"
+          style={{
+            backgroundColor: bg,
+            height: 320,
+            elevation: 10,
+          }}>
+          <View className="px-4 py-4">
+            <Text
+              className=" font-bold z-[3] "
+              style={{color: COLOR.TEXT_PRIMARY}}>
+              Lời bài hát
+            </Text>
+          </View>
+          <View className="flex-1">
+            <FlashList
+              ref={lyricsRef}
+              contentContainerStyle={{padding: 16}}
+              data={lyrics}
+              initialScrollIndex={
+                (currentLine as number) - OFFSET < 0 ? 1 : currentLine! - OFFSET
+              }
+              estimatedItemSize={16}
+              showsVerticalScrollIndicator={false}
+              extraData={[currentLine]}
+              renderItem={({item, index}: any) => {
+                return (
+                  <Text
+                    key={index}
+                    className=" font-bold text-[20px] mb-3"
+                    style={{
+                      color:
+                        (currentLine as number) >= index
+                          ? COLOR.isDark
+                            ? 'white'
+                            : 'brown'
+                          : 'black',
+                    }}>
+                    {item.data}
+                  </Text>
+                );
+              }}
+              keyExtractor={(_, index) => index.toString()}
+            />
+          </View>
+          <LinearGradient
+            colors={['transparent', bg!, bg!]}
+            className="absolute  left-0 right-0 bottom-0 h-16 z-[2] rounded-b-xl"
           />
-        </View>
-        <LinearGradient
-          colors={['transparent', bg!, bg!]}
-          className="absolute  left-0 right-0 bottom-0 h-16 z-[2] rounded-b-xl"
-        />
-      </TouchableOpacity>
+        </TouchableOpacity>
+      </Animated.View>
     )
   );
 };

@@ -18,6 +18,13 @@ import useToggleLikeSong from '../hooks/useToggleLikeSong';
 import useThemeStore from '../store/themeStore';
 import tinycolor from 'tinycolor2';
 import Animated, {
+  FadeIn,
+  FadeInDown,
+  FadeInUp,
+  FadeOut,
+  Layout,
+  LinearTransition,
+  SlideInRight,
   useSharedValue,
   withSpring,
   withTiming,
@@ -49,7 +56,7 @@ const MiniPlayer = () => {
       : tinycolor(color.dominant!).lighten(10).toString();
   }, [color.dominant, COLOR]);
 
-  const bgAnimated = useSharedValue(`transparent`);
+  const bgAnimated = useSharedValue(`${gradientColor}`);
 
   const togglePlay = useCallback(async (state: State | undefined) => {
     if (state !== State.Playing) {
@@ -64,6 +71,7 @@ const MiniPlayer = () => {
       duration: 500,
     });
   }, [color.dominant, gradientColor]);
+
   if (
     track === undefined ||
     track === null ||
@@ -112,7 +120,11 @@ const MiniPlayer = () => {
                 zIndex: 10,
               }}
             />
-            <View style={{marginLeft: 10, flex: 1, paddingRight: 20}}>
+            <Animated.View
+              style={{marginLeft: 10, flex: 1, paddingRight: 20}}
+              key={currentSong?.id}
+              entering={FadeIn.duration(300).springify().delay(300)}
+              exiting={FadeOut.duration(300).springify()}>
               <TextTicker
                 duration={10000}
                 loop
@@ -135,7 +147,7 @@ const MiniPlayer = () => {
                 numberOfLines={1}>
                 {currentSong?.artist || currentSong?.artistName}
               </Text>
-            </View>
+            </Animated.View>
 
             <View
               style={{

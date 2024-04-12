@@ -31,7 +31,7 @@ const PlaylistDetail = () => {
   const headerColor = useMemo(
     () =>
       scrollY.interpolate({
-        inputRange: [SCREEN_WIDTH * 0.79, SCREEN_WIDTH * 0.8],
+        inputRange: [SCREEN_WIDTH * 0.8, SCREEN_WIDTH * 0.8],
         outputRange: ['transparent', COLOR.BACKGROUND],
         extrapolate: 'clamp',
       }),

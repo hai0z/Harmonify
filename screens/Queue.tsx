@@ -15,7 +15,9 @@ import {FlashList} from '@shopify/flash-list';
 import Animated, {
   FadeIn,
   FadeInDown,
+  FadeInUp,
   FadeOut,
+  LinearTransition,
   ReduceMotion,
   SharedTransition,
 } from 'react-native-reanimated';
@@ -106,6 +108,14 @@ const Queue = () => {
       </View>
       <View className="mt-4 flex-1 px-6">
         <FlashList
+          ListFooterComponent={() => <View className="h-10" />}
+          ListEmptyComponent={() => (
+            <View className="flex justify-center items-center pt-10">
+              <Text style={{color: COLOR.TEXT_PRIMARY}} className="text-center">
+                Hàng chờ trống...
+              </Text>
+            </View>
+          )}
           showsVerticalScrollIndicator={false}
           ListHeaderComponent={() => (
             <View>
@@ -114,7 +124,7 @@ const Queue = () => {
                   Đang phát
                 </Text>
                 <View>
-                  <Animated.View className="flex flex-row mt-2">
+                  <View className="flex flex-row mt-2">
                     <Image
                       className="rounded-md"
                       src={currentSong?.artwork}
@@ -139,7 +149,7 @@ const Queue = () => {
                         {playList.items[trackIndex].artistsNames}
                       </Text>
                     </View>
-                  </Animated.View>
+                  </View>
                 </View>
               </View>
               <View className="mt-6">
@@ -154,12 +164,17 @@ const Queue = () => {
           keyExtractor={item => item.encodeId}
           renderItem={({item, index}) => {
             return (
-              <TrackItem
-                COLOR={COLOR}
-                item={item}
-                index={index}
-                onClick={handlePlay}
-              />
+              <Animated.View
+                key={item.encodeId}
+                layout={LinearTransition.delay(200)}
+                entering={FadeIn.duration(300).springify()}>
+                <TrackItem
+                  COLOR={COLOR}
+                  item={item}
+                  index={index}
+                  onClick={handlePlay}
+                />
+              </Animated.View>
             );
           }}
         />

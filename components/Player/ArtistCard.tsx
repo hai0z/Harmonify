@@ -17,7 +17,7 @@ const ArtistCard = () => {
 
   const navigation = useNavigation<any>();
 
-  const {theme, COLOR} = useThemeStore(state => state);
+  const {COLOR} = useThemeStore(state => state);
   const bg = COLOR.isDark
     ? bgColor.vibrant === '#0098DB'
       ? tinycolor(bgColor.average).isDark()

@@ -4,9 +4,9 @@ import {
   StyleSheet,
   Dimensions,
   ActivityIndicator,
-  Animated,
   Text,
   Image,
+  Animated,
 } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -21,6 +21,7 @@ import TrackItem from '../components/TrackItem';
 import {PlayerContext} from '../context/PlayerProvider';
 import useThemeStore from '../store/themeStore';
 import {usePlayerStore} from '../store/playerStore';
+import RNAnimated, {FadeIn} from 'react-native-reanimated';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -53,7 +54,7 @@ const PlaylistDetail = ({route}: {route: any}) => {
   const headerColor = useMemo(
     () =>
       scrollY.interpolate({
-        inputRange: [SCREEN_WIDTH * 0.79, SCREEN_WIDTH * 0.8],
+        inputRange: [SCREEN_WIDTH * 0.8, SCREEN_WIDTH * 0.8],
         outputRange: ['transparent', COLOR.BACKGROUND],
         extrapolate: 'clamp',
       }),
@@ -110,7 +111,8 @@ const PlaylistDetail = ({route}: {route: any}) => {
     );
 
   return (
-    <View
+    <RNAnimated.View
+      entering={FadeIn}
       className="flex-1  w-full"
       style={{backgroundColor: COLOR.BACKGROUND}}>
       <Animated.View
@@ -239,7 +241,7 @@ const PlaylistDetail = ({route}: {route: any}) => {
           );
         }}
       />
-    </View>
+    </RNAnimated.View>
   );
 };
 

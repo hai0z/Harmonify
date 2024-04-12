@@ -5,6 +5,7 @@ import dayjs from 'dayjs';
 import nodejs from 'nodejs-mobile-react-native';
 import tinycolor from 'tinycolor2';
 import useThemeStore from '../../store/themeStore';
+import Animated, {FadeIn, FadeOut} from 'react-native-reanimated';
 const SongInfoCard = () => {
   const {color: bgColor} = usePlayerStore(state => state);
 
@@ -43,7 +44,7 @@ const SongInfoCard = () => {
     return null;
   }
   return (
-    <View
+    <Animated.View
       style={{backgroundColor: bg, elevation: 10}}
       className="w-full mt-8 rounded-2xl px-4 py-2 flex justify-between">
       <Text
@@ -62,7 +63,7 @@ const SongInfoCard = () => {
         Nghệ sĩ: {data?.artists?.map((e: any) => e?.name).join(', ')}
       </Text>
       <Text style={{color: COLOR.TEXT_PRIMARY}}>{data?.like} lượt thích</Text>
-    </View>
+    </Animated.View>
   );
 };
 
