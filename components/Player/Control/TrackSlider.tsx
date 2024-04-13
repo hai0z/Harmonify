@@ -1,5 +1,5 @@
 import {View, Text} from 'react-native';
-import React, {useCallback} from 'react';
+import React, {useCallback, useMemo} from 'react';
 import TrackPlayer, {useProgress} from 'react-native-track-player';
 import Slider from '@react-native-assets/slider';
 import caculateTime from '../../../utils/caculateMusicTime';
@@ -9,7 +9,9 @@ const TrackSlider = () => {
   const COLOR = useThemeStore(state => state.COLOR);
   const progess = useProgress(500);
 
-  const time = caculateTime(progess.duration, progess.position);
+  const time = useMemo(() => {
+    return caculateTime(progess.duration, progess.position);
+  }, [progess.duration, progess.position]);
 
   const onSlidingComplete = useCallback(async (value: number) => {
     await TrackPlayer.pause();
@@ -45,13 +47,13 @@ const TrackSlider = () => {
       />
       <View className="mt-2 flex flex-row justify-between items-center">
         <Text
-          className="text-[12px] font-medium"
-          style={{color: COLOR.TEXT_PRIMARY}}>
+          className="text-[12px] font-semibold"
+          style={{color: `${COLOR.TEXT_PRIMARY}90`}}>
           {time.currentMin}:{time.currentSecond}
         </Text>
         <Text
-          className="text-[12px] font-medium"
-          style={{color: COLOR.TEXT_PRIMARY}}>
+          className="text-[12px] font-semibold"
+          style={{color: `${COLOR.TEXT_PRIMARY}90`}}>
           {time.totalTime}
         </Text>
       </View>

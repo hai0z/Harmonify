@@ -106,16 +106,19 @@ const NewRelease = ({data}: Props) => {
           keyExtractor={(_, index) => index.toString()}
           data={dataList[tabIndex]}
           renderItem={({item}) => (
-            <View style={{width: SCREEN_WIDTH}} className="flex-1">
-              <FlatList
+            <View
+              style={{width: SCREEN_WIDTH, minHeight: 3}}
+              className="flex-1">
+              <FlashList
                 data={item}
+                estimatedItemSize={70}
                 renderItem={({item}) => (
                   <TrackItem
                     item={item}
                     onClick={handlePlaySong}
                     showBottomSheet={showBottomSheet}
                   />
-                )}></FlatList>
+                )}></FlashList>
             </View>
           )}
         />

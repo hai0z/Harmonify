@@ -20,6 +20,8 @@ import Animated, {
   LinearTransition,
   ReduceMotion,
   SharedTransition,
+  useSharedValue,
+  withTiming,
 } from 'react-native-reanimated';
 import PlayButton from '../components/Player/Control/PlayButton';
 import PrevButton from '../components/Player/Control/PrevButton';
@@ -49,8 +51,8 @@ const Queue = () => {
     return COLOR.isDark
       ? useDarkColor(color.dominant!, 35)
       : tinycolor(color.dominant!).isDark()
-      ? tinycolor(color.dominant!).lighten(55).toString()
-      : tinycolor(color.dominant!).lighten(10).toString();
+      ? tinycolor(color.dominant!).lighten(40).toString()
+      : tinycolor(color.dominant!).darken(10).toString();
   }, [color.dominant, COLOR]);
 
   const handlePlay = async (item: any) => {
@@ -59,7 +61,7 @@ const Queue = () => {
     );
     await TrackPlayer.skip(index);
   };
-
+  const $bg = useSharedValue(`transparent`);
   useEffect(() => {
     setCopyPlaylist(
       playList.items
@@ -67,14 +69,22 @@ const Queue = () => {
         .splice(trackIndex, playList.items.length - trackIndex),
     );
   }, [currentSong?.id]);
+
+  useEffect(() => {
+    $bg.value = withTiming(`${gradientColor}`, {duration: 750});
+  }, [gradientColor]);
   return (
     <View
       className="pt-[35px] flex-1"
       style={{backgroundColor: COLOR.BACKGROUND}}>
-      <LinearGradient
-        colors={[gradientColor!, `${gradientColor}50`, COLOR.BACKGROUND]}
+      <Animated.View
         className="absolute top-0 left-0 right-0"
-        style={{height: hp(25)}}
+        style={{height: hp(35), backgroundColor: $bg}}
+      />
+      <LinearGradient
+        style={{height: hp(35)}}
+        colors={[`transparent`, `${COLOR.BACKGROUND}`]}
+        className="absolute top-0 left-0 right-0 h-full"
       />
       <View className="flex flex-row items-center justify-between px-6">
         <Animated.View entering={FadeIn.duration(300)} exiting={FadeOut}>
@@ -217,9 +227,7 @@ const TrackItem = React.memo((props: any) => {
   const {item, onClick, COLOR} = props;
   return (
     <TouchableOpacity
-      style={{opacity: item?.streamingStatus === 1 ? 1 : 0.5}}
       activeOpacity={0.8}
-      disabled={item?.streamingStatus === 2}
       className="flex flex-row  items-center my-2"
       onPress={() => onClick(item)}>
       <Image

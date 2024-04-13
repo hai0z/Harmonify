@@ -39,8 +39,8 @@ const Lyric = () => {
           : bgColor.average
         : bgColor.vibrant
       : tinycolor(bgColor.dominant!).isDark()
-      ? tinycolor(bgColor.dominant!).lighten(55).toString()
-      : tinycolor(bgColor.dominant!).darken(5).toString();
+      ? tinycolor(bgColor.dominant!).lighten(40).toString()
+      : tinycolor(bgColor.dominant!).darken().toString();
   }, [bgColor.dominant, COLOR]);
 
   return (
@@ -81,11 +81,7 @@ const Lyric = () => {
                     className=" font-bold text-[20px] mb-3"
                     style={{
                       color:
-                        (currentLine as number) >= index
-                          ? COLOR.isDark
-                            ? 'white'
-                            : 'brown'
-                          : 'black',
+                        (currentLine as number) >= index ? 'white' : 'black',
                     }}>
                     {item.data}
                   </Text>

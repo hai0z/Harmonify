@@ -58,8 +58,8 @@ const PlayerScreens = () => {
   const gradientColor = COLOR.isDark
     ? useDarkColor(color.dominant!, 35)
     : tinycolor(color.dominant!).isDark()
-    ? tinycolor(color.dominant!).lighten(55).toString()
-    : tinycolor(color.dominant!).darken(10).toString();
+    ? tinycolor(color.dominant!).lighten(40).toString()
+    : tinycolor(color.dominant!).darken().toString();
 
   const bgAnimated = useSharedValue(`transparent`);
 

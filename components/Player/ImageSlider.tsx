@@ -4,15 +4,12 @@ import {
   NativeScrollEvent,
   NativeSyntheticEvent,
   Dimensions,
-  FlatList,
   Image,
   View,
-  Text,
 } from 'react-native';
 import {usePlayerStore} from '../../store/playerStore';
 import getThumbnail from '../../utils/getThumnail';
 import TrackPlayer, {useActiveTrack} from 'react-native-track-player';
-import Animated, {FadeIn, FadeOut} from 'react-native-reanimated';
 
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('screen');
 
@@ -50,7 +47,10 @@ const ImageSlider = () => {
   useEffect(() => {
     flatListRef.current?.scrollToIndex({
       index: currentSongIndex == -1 ? 0 : currentSongIndex,
-      animated: true,
+      animated:
+        currentSongIndex == 0 || currentSongIndex === playList.items.length - 1
+          ? false
+          : true,
     });
   }, [currentSong?.id]);
 
@@ -65,6 +65,7 @@ const ImageSlider = () => {
         ref={flatListRef}
         pagingEnabled
         horizontal
+        scrollEventThrottle={64}
         initialScrollIndex={currentSongIndex}
         onMomentumScrollEnd={swpipeToChangeSong}
         estimatedItemSize={SCREEN_WIDTH}
@@ -86,9 +87,7 @@ const SliderItem = React.memo(({item, index}: any) => {
         justifyContent: 'center',
         alignItems: 'center',
       }}>
-      <Animated.Image
-        entering={FadeIn.duration(300).springify().delay(300)}
-        exiting={FadeOut.duration(300).springify()}
+      <Image
         src={getThumbnail(item.thumbnail)}
         className="rounded-md z-20"
         style={{

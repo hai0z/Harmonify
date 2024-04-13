@@ -21,7 +21,6 @@ import TrackItem from '../components/TrackItem';
 import {PlayerContext} from '../context/PlayerProvider';
 import useThemeStore from '../store/themeStore';
 import {usePlayerStore} from '../store/playerStore';
-import RNAnimated, {FadeIn} from 'react-native-reanimated';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -46,6 +45,7 @@ const PlaylistDetail = ({route}: {route: any}) => {
     setLoading(true);
     nodejs.channel.addListener('getDetailPlaylist', (data: any) => {
       setPlaylistData(data);
+
       setLoading(false);
     });
     nodejs.channel.post('getDetailPlaylist', data.playListId);
@@ -111,8 +111,7 @@ const PlaylistDetail = ({route}: {route: any}) => {
     );
 
   return (
-    <RNAnimated.View
-      entering={FadeIn}
+    <View
       className="flex-1  w-full"
       style={{backgroundColor: COLOR.BACKGROUND}}>
       <Animated.View
@@ -147,7 +146,7 @@ const PlaylistDetail = ({route}: {route: any}) => {
                   className="absolute bottom-0 h-40 left-0 right-0 z-50"
                 />
                 <Image
-                  blurRadius={50}
+                  blurRadius={1000}
                   src={getThumbnail(playlistData?.thumbnailM)}
                   style={[
                     StyleSheet.absoluteFill,
@@ -241,7 +240,7 @@ const PlaylistDetail = ({route}: {route: any}) => {
           );
         }}
       />
-    </RNAnimated.View>
+    </View>
   );
 };
 

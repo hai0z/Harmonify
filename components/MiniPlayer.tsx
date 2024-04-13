@@ -18,13 +18,21 @@ import useToggleLikeSong from '../hooks/useToggleLikeSong';
 import useThemeStore from '../store/themeStore';
 import tinycolor from 'tinycolor2';
 import Animated, {
+  BounceIn,
   FadeIn,
   FadeInDown,
   FadeInUp,
   FadeOut,
   Layout,
+  LightSpeedInLeft,
+  LightSpeedInRight,
   LinearTransition,
   SlideInRight,
+  SlideOutLeft,
+  SlideOutRight,
+  ZoomInDown,
+  ZoomOut,
+  ZoomOutLeft,
   useSharedValue,
   withSpring,
   withTiming,
@@ -37,8 +45,7 @@ const MiniPlayer = () => {
 
   const keyboardVisible = useKeyBoardStatus();
 
-  const {color, currentSong, isLoadingTrack, tempSong, isPlayFromLocal} =
-    usePlayerStore(state => state);
+  const {color, currentSong, isPlayFromLocal} = usePlayerStore(state => state);
 
   const {COLOR} = useThemeStore(state => state);
 
@@ -46,14 +53,12 @@ const MiniPlayer = () => {
 
   const progress = useProgress(1000);
 
-  const track = useActiveTrack();
-
   const gradientColor = useMemo(() => {
     return COLOR.isDark
       ? useDarkColor(color.dominant!, 35)
       : tinycolor(color.dominant!).isDark()
-      ? tinycolor(color.dominant!).lighten(55).toString()
-      : tinycolor(color.dominant!).lighten(10).toString();
+      ? tinycolor(color.dominant!).lighten(40).toString()
+      : tinycolor(color.dominant!).darken(10).toString();
   }, [color.dominant, COLOR]);
 
   const bgAnimated = useSharedValue(`${gradientColor}`);
@@ -70,15 +75,7 @@ const MiniPlayer = () => {
     bgAnimated.value = withTiming(`${gradientColor}`, {
       duration: 500,
     });
-  }, [color.dominant, gradientColor]);
-
-  if (
-    track === undefined ||
-    track === null ||
-    currentSong === null ||
-    isLoadingTrack
-  )
-    return null;
+  }, [color.dominant, gradientColor, keyboardVisible]);
 
   return (
     !keyboardVisible && (
@@ -91,6 +88,7 @@ const MiniPlayer = () => {
           transform: [{translateX: (SCREEN_WIDTH * 0.04) / 2}],
           backgroundColor: bgAnimated,
           borderRadius: 6,
+          overflow: 'hidden',
         }}>
         <TouchableOpacity
           onPress={() => navigation.navigate('PlayerStack')}
@@ -121,16 +119,22 @@ const MiniPlayer = () => {
               }}
             />
             <Animated.View
-              style={{marginLeft: 10, flex: 1, paddingRight: 20}}
+              style={{
+                marginLeft: 10,
+                flex: 1,
+                paddingRight: 20,
+                zIndex: 1,
+                overflow: 'hidden',
+              }}
               key={currentSong?.id}
-              entering={FadeIn.duration(300).springify().delay(300)}
-              exiting={FadeOut.duration(300).springify()}>
+              entering={LightSpeedInLeft.duration(300).springify().delay(300)}
+              exiting={FadeOut}>
               <TextTicker
-                duration={10000}
+                duration={6000}
                 loop
                 bounce
                 repeatSpacer={50}
-                marqueeDelay={3000}
+                marqueeDelay={1000}
                 style={{
                   color: COLOR.TEXT_PRIMARY,
                   fontWeight: '600',

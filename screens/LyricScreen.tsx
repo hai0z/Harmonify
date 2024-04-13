@@ -55,8 +55,8 @@ const LyricScreen = ({route}: {route: any}) => {
           : bgColor.average
         : bgColor.vibrant
       : tinycolor(bgColor.dominant!).isDark()
-      ? tinycolor(bgColor.dominant!).lighten(55).toString()
-      : tinycolor(bgColor.dominant!).darken(5).toString();
+      ? tinycolor(bgColor.dominant!).lighten(40).toString()
+      : tinycolor(bgColor.dominant!).darken().toString();
   }, [bgColor.dominant, COLOR]);
 
   const lyricsRef = React.useRef<FlashList<any>>(null);
@@ -114,12 +114,7 @@ const LyricScreen = ({route}: {route: any}) => {
               <Text
                 className=" font-extrabold text-[24px] mb-4"
                 style={{
-                  color:
-                    (currentLine as number) >= index
-                      ? COLOR.isDark
-                        ? 'white'
-                        : 'brown'
-                      : 'black',
+                  color: (currentLine as number) >= index ? 'white' : 'black',
                 }}>
                 {item.data}
               </Text>

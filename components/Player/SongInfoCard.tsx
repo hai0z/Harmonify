@@ -20,8 +20,8 @@ const SongInfoCard = () => {
         : bgColor.average
       : bgColor.vibrant
     : tinycolor(bgColor.dominant!).isDark()
-    ? tinycolor(bgColor.dominant!).lighten(55).toString()
-    : tinycolor(bgColor.dominant!).darken(5).toString();
+    ? tinycolor(bgColor.dominant!).lighten(30).toString()
+    : tinycolor(bgColor.dominant!).darken().toString();
 
   const [data, setData] = useState<any>(null);
 

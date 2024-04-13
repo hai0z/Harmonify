@@ -25,8 +25,8 @@ const ArtistCard = () => {
         : bgColor.average
       : bgColor.vibrant
     : tinycolor(bgColor.dominant!).isDark()
-    ? tinycolor(bgColor.dominant!).lighten(55).toString()
-    : tinycolor(bgColor.dominant!).darken(5).toString();
+    ? tinycolor(bgColor.dominant!).lighten(30).toString()
+    : tinycolor(bgColor.dominant!).darken().toString();
 
   useEffect(() => {
     setData(null);
@@ -55,7 +55,7 @@ const ArtistCard = () => {
           name: data.alias,
         })
       }>
-      <View className="absolute w-full h-full bg-black/30 z-10 rounded-2xl " />
+      {/* <View className="absolute w-full h-full bg-black/30 z-10 rounded-2xl " /> */}
       <Image
         style={[StyleSheet.absoluteFillObject]}
         source={{
