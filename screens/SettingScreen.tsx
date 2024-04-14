@@ -1,9 +1,8 @@
-import {View, Text, Switch} from 'react-native';
+import {View, Text} from 'react-native';
 import React from 'react';
 import useThemeStore from '../store/themeStore';
 import Animated, {useSharedValue, withTiming} from 'react-native-reanimated';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {storeData} from '../utils/localStorage';
 import {themeMap} from '../constants/theme';
 import {auth} from '../firebase/config';
 const SettingScreen = () => {
@@ -39,7 +38,6 @@ const SettingScreen = () => {
               handleChangeColor(
                 themeMap[item as keyof typeof themeMap]?.BACKGROUND,
               );
-              storeData('theme', item);
             }}>
             <View
               className="items-center justify-center"
@@ -81,7 +79,6 @@ const SettingScreen = () => {
                 handleChangeColor(
                   themeMap[item as keyof typeof themeMap]?.BACKGROUND,
                 );
-                storeData('theme', item);
               }}>
               <View
                 className="items-center justify-center"

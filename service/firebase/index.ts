@@ -19,3 +19,13 @@ export const addToLikedList = async (
     console.log(err.message);
   }
 };
+
+export const followArtist = async (artistId: string) => {
+  try {
+    const user = auth.currentUser?.uid;
+    const docRef = doc(db, `users/${user}/followedArtist`, artistId);
+    await setDoc(docRef, { artistId });
+  } catch (err: any) {
+    console.log(err.message);
+  }
+};

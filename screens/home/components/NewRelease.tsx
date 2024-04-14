@@ -12,7 +12,6 @@ import {FlashList} from '@shopify/flash-list';
 import TrackItem from '../../../components/TrackItem';
 import {handlePlay} from '../../../service/trackPlayerService';
 import {PlayerContext} from '../../../context/PlayerProvider';
-import useBottomSheetStore from '../../../store/bottomSheetStore';
 import useThemeStore from '../../../store/themeStore';
 import {usePlayerStore} from '../../../store/playerStore';
 
@@ -46,7 +45,6 @@ const NewRelease = ({data}: Props) => {
   const listRef = React.useRef<FlashList<any>>(null);
 
   const setPlayFrom = usePlayerStore(state => state.setPlayFrom);
-  const scrollX = React.useRef(new Animated.Value(0)).current;
   const COLOR = useThemeStore(state => state.COLOR);
 
   useEffect(() => {

@@ -10,6 +10,7 @@ import {
 import {usePlayerStore} from '../../store/playerStore';
 import getThumbnail from '../../utils/getThumnail';
 import TrackPlayer, {useActiveTrack} from 'react-native-track-player';
+import Animated from 'react-native-reanimated';
 
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('screen');
 
@@ -55,7 +56,7 @@ const ImageSlider = () => {
   }, [currentSong?.id]);
 
   return (
-    <View
+    <Animated.View
       style={{
         marginTop: SCREEN_HEIGHT * 0.1,
         zIndex: 100,
@@ -74,7 +75,7 @@ const ImageSlider = () => {
           <SliderItem item={item} index={index} />
         )}
       />
-    </View>
+    </Animated.View>
   );
 };
 
@@ -87,7 +88,7 @@ const SliderItem = React.memo(({item, index}: any) => {
         justifyContent: 'center',
         alignItems: 'center',
       }}>
-      <Image
+      <Animated.Image
         src={getThumbnail(item.thumbnail)}
         className="rounded-md z-20"
         style={{

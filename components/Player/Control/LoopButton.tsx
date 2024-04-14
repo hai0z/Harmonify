@@ -1,4 +1,4 @@
-import {TouchableOpacity} from 'react-native';
+import {ToastAndroid, TouchableOpacity} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import TrackPlayer, {RepeatMode} from 'react-native-track-player';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -18,9 +18,11 @@ const LoopButton = () => {
     if (repeatMode === RepeatMode.Track) {
       TrackPlayer.setRepeatMode(RepeatMode.Queue);
       setRepeatMode(RepeatMode.Queue);
+      ToastAndroid.show('Lặp lại: Tắt', ToastAndroid.SHORT);
     } else {
       TrackPlayer.setRepeatMode(RepeatMode.Track);
       setRepeatMode(RepeatMode.Track);
+      ToastAndroid.show('Lặp lại: Bật', ToastAndroid.SHORT);
     }
   };
 

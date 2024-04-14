@@ -3,19 +3,18 @@ import {usePlayerStore} from '../store/playerStore';
 import {getColors} from 'react-native-image-colors';
 import TrackPlayer from 'react-native-track-player';
 import nodejs from 'nodejs-mobile-react-native';
-import {getData, storeData} from '../utils/localStorage';
 import {objectToTrack} from '../service/trackPlayerService';
 import getThumbnail from '../utils/getThumnail';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import {BottomSheetModalMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
 import useBottomSheetStore from '../store/bottomSheetStore';
 import {NULL_URL} from '../constants';
-import useThemeStore from '../store/themeStore';
+import {collection, onSnapshot, query} from 'firebase/firestore';
+import {auth, db} from '../firebase/config';
 
 interface ContextType {
   bottomSheetModalRef: React.RefObject<BottomSheetModalMethods>;
   showBottomSheet: (item: any) => void;
-  isLoading: boolean;
 }
 
 export const PlayerContext = React.createContext({} as ContextType);
@@ -27,29 +26,19 @@ nodejs.channel.addListener('getLyric', async data => {
 });
 
 const PlayerProvider = ({children}: {children: React.ReactNode}) => {
-  const {
-    setLyrics,
-    playList,
-    setPlayList,
-    currentSong,
-    setCurrentSong,
-    isPlayFromLocal,
-    setIsPlayFromLocal,
-  } = usePlayerStore(state => state);
+  const {playList, currentSong, isPlayFromLocal, setColor, setLikedSongs} =
+    usePlayerStore(state => state);
 
   const getSongColors = async () => {
-    if (usePlayerStore.getState().currentSong?.artwork !== null) {
-      getColors(
-        getThumbnail(usePlayerStore.getState().currentSong?.artwork!, 32),
-        {
-          fallback: '#0098DB',
-          cache: true,
-          key: usePlayerStore.getState().currentSong?.id,
-        },
-      ).then(usePlayerStore.getState().setColor);
+    if (currentSong?.artwork !== null) {
+      getColors(getThumbnail(currentSong?.artwork!, 32), {
+        fallback: '#0098DB',
+        cache: true,
+        key: currentSong?.id,
+      }).then(setColor);
     }
   };
-  const [isLoading, setIsLoading] = React.useState(true);
+
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   const {setData} = useBottomSheetStore(state => state);
@@ -59,104 +48,58 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
     setData(item);
   }, []);
 
-  const getTheme = async () => {
-    const data = await getData('theme');
-    if (data != null) {
-      useThemeStore.getState().setTheme(data);
-      setIsLoading(false);
-    } else {
-      useThemeStore.getState().setTheme('light');
-      setIsLoading(false);
-    }
-  };
-  const getLatestSong = async () => {
-    const data = await getData('currentSong');
-    if (data != null) {
-      setCurrentSong(data);
-      getSongColors();
-      return data;
-    }
-  };
-
-  const getDataPlaylist = async () => {
-    const data = await getData('playlist');
-    if (data != null) {
-      setPlayList(data);
-      return data;
-    }
-  };
-  const getPlayFromLocal = async () => {
-    const data = await getData('isPlayFromLocal');
-    if (data != null) {
-      setIsPlayFromLocal(data);
-      return data;
-    }
-  };
-
   const initPlayer = async () => {
-    let dataPlaylist = await getData('playlist');
-    let storedSong = await getData('currentSong');
-    let iplc = await getData('isPlayFromLocal');
-    if (iplc === null) {
-      setIsPlayFromLocal(false);
-    } else {
-      setIsPlayFromLocal(iplc);
-    }
-    console.log({storedSong, dataPlaylist});
-    if (dataPlaylist.items.length > 0 && dataPlaylist.id !== '' && storedSong) {
-      const index = dataPlaylist.items.findIndex(
-        (item: any) => item?.encodeId === storedSong?.id,
+    console.log(currentSong);
+    if (playList.items.length > 0 && playList.id !== '' && currentSong) {
+      const index = playList.items.findIndex(
+        (item: any) => item?.encodeId === currentSong?.id,
       );
       if (index === -1) {
-        setCurrentSong(storedSong);
-        await TrackPlayer.add(storedSong);
+        await TrackPlayer.add(currentSong);
         return;
       }
       await TrackPlayer.reset();
-      setPlayList(dataPlaylist);
       await TrackPlayer.add(
-        dataPlaylist.items.map((item: any) => objectToTrack(item)),
+        playList.items.map((item: any) => objectToTrack(item)),
       );
       await TrackPlayer.skip(index);
     } else {
-      if (storedSong !== null && storedSong.url === NULL_URL) {
-        setCurrentSong(objectToTrack(storedSong));
-        await TrackPlayer.add(objectToTrack(storedSong));
+      if (currentSong !== null && currentSong.url === NULL_URL) {
+        await TrackPlayer.add(objectToTrack(currentSong));
       } else {
-        setCurrentSong(storedSong);
-        await TrackPlayer.add(storedSong);
+        await TrackPlayer.add(currentSong!);
       }
     }
   };
 
   useEffect(() => {
-    getTheme();
-    getLatestSong();
-    getDataPlaylist();
-    getPlayFromLocal();
-    initPlayer();
+    const q = query(collection(db, `users/${auth.currentUser?.uid}/likedSong`));
+    const unsub = onSnapshot(q, querySnapshot => {
+      const songs = [] as any;
+      querySnapshot.forEach(doc => {
+        songs.push(doc.data());
+      });
+      setLikedSongs(songs);
+    });
+    return () => {
+      unsub();
+    };
   }, []);
 
   useEffect(() => {
-    storeData('isPlayFromLocal', isPlayFromLocal);
-  }, [isPlayFromLocal]);
-
-  useEffect(() => {
-    storeData('playlist', playList);
-  }, [playList.id]);
+    initPlayer();
+  }, []);
 
   useEffect(() => {
     if (!isPlayFromLocal) {
       if (currentSong) getSongColors();
       nodejs.channel.post('getLyric', currentSong?.id);
     }
-    storeData('currentSong', currentSong);
   }, [currentSong?.id]);
 
   return (
-    <PlayerContext.Provider
-      value={{bottomSheetModalRef, showBottomSheet, isLoading}}>
-      {!isLoading && children}
+    <PlayerContext.Provider value={{bottomSheetModalRef, showBottomSheet}}>
+      {children}
     </PlayerContext.Provider>
   );
 };

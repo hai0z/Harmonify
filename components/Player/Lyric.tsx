@@ -39,13 +39,15 @@ const Lyric = () => {
           : bgColor.average
         : bgColor.vibrant
       : tinycolor(bgColor.dominant!).isDark()
-      ? tinycolor(bgColor.dominant!).lighten(40).toString()
+      ? tinycolor(bgColor.dominant!).lighten(30).toString()
       : tinycolor(bgColor.dominant!).darken().toString();
   }, [bgColor.dominant, COLOR]);
 
+  if (isPlayFromLocal) {
+    return null;
+  }
   return (
-    lyrics?.length > 0 &&
-    !isPlayFromLocal && (
+    lyrics?.length > 0 && (
       <Animated.View>
         <TouchableOpacity
           onPress={() => nativgation.navigate('Lyric', {lyrics})}

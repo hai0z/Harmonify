@@ -9,13 +9,14 @@ const Toast = () => {
   const {visible, duration, message} = useToastStore(state => state);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      useToastStore.setState({visible: false});
-    }, duration);
-
-    return () => {
-      clearTimeout(timer);
-    };
+    if (visible) {
+      const timer = setTimeout(() => {
+        useToastStore.setState({visible: false});
+      }, duration);
+      return () => {
+        clearTimeout(timer);
+      };
+    }
   }, [visible]);
   if (!visible) return null;
   return (
@@ -25,7 +26,7 @@ const Toast = () => {
         width: SCREEN_WIDTH * 0.96,
         transform: [{translateX: (SCREEN_WIDTH * 0.04) / 2}],
         bottom: TABBAR_HEIGHT + MINI_PLAYER_HEIGHT + PADDING,
-        elevation: 10,
+        elevation: 4,
       }}>
       <Text className="text-black ml-2">{message}</Text>
     </View>

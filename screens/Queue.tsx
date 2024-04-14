@@ -15,11 +15,7 @@ import {FlashList} from '@shopify/flash-list';
 import Animated, {
   FadeIn,
   FadeInDown,
-  FadeInUp,
   FadeOut,
-  LinearTransition,
-  ReduceMotion,
-  SharedTransition,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
@@ -51,8 +47,8 @@ const Queue = () => {
     return COLOR.isDark
       ? useDarkColor(color.dominant!, 35)
       : tinycolor(color.dominant!).isDark()
-      ? tinycolor(color.dominant!).lighten(40).toString()
-      : tinycolor(color.dominant!).darken(10).toString();
+      ? tinycolor(color.dominant!).lighten(50).toString()
+      : tinycolor(color.dominant!).darken(5).toString();
   }, [color.dominant, COLOR]);
 
   const handlePlay = async (item: any) => {
@@ -79,15 +75,17 @@ const Queue = () => {
       style={{backgroundColor: COLOR.BACKGROUND}}>
       <Animated.View
         className="absolute top-0 left-0 right-0"
-        style={{height: hp(35), backgroundColor: $bg}}
+        style={{height: hp(25), backgroundColor: $bg}}
       />
       <LinearGradient
-        style={{height: hp(35)}}
+        style={{height: hp(25)}}
         colors={[`transparent`, `${COLOR.BACKGROUND}`]}
         className="absolute top-0 left-0 right-0 h-full"
       />
       <View className="flex flex-row items-center justify-between px-6">
-        <Animated.View entering={FadeIn.duration(300)} exiting={FadeOut}>
+        <Animated.View
+          entering={FadeIn.duration(300).delay(300)}
+          exiting={FadeOut}>
           <TouchableOpacity
             className="z-50"
             onPress={() => navigation.goBack()}>
@@ -135,7 +133,7 @@ const Queue = () => {
                 </Text>
                 <View>
                   <View className="flex flex-row mt-2">
-                    <Image
+                    <Animated.Image
                       className="rounded-md"
                       src={currentSong?.artwork}
                       style={{width: wp(14), height: wp(14)}}
@@ -164,7 +162,7 @@ const Queue = () => {
               </View>
               <View className="mt-6">
                 <Text style={{color: COLOR.TEXT_PRIMARY}} className="font-bold">
-                  Phát tiếp từ: {playFrom.name}
+                  Hàng đợi
                 </Text>
               </View>
             </View>
@@ -173,18 +171,14 @@ const Queue = () => {
           estimatedItemSize={70}
           keyExtractor={item => item.encodeId}
           renderItem={({item, index}) => {
+            console.log('fsdfs');
             return (
-              <Animated.View
-                key={item.encodeId}
-                layout={LinearTransition.delay(200)}
-                entering={FadeIn.duration(300).springify()}>
-                <TrackItem
-                  COLOR={COLOR}
-                  item={item}
-                  index={index}
-                  onClick={handlePlay}
-                />
-              </Animated.View>
+              <TrackItem
+                COLOR={COLOR}
+                item={item}
+                index={index}
+                onClick={handlePlay}
+              />
             );
           }}
         />

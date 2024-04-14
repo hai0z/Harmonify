@@ -1,5 +1,7 @@
 import { create } from "zustand";
 import { lightTheme, headerGradientDark, themeMap, gradientHeaderMap, headerGradientLight, Theme } from "../constants/theme";
+import { createJSONStorage, persist } from "zustand/middleware";
+import zustandStorage from "./zustandStorage";
 
 
 interface ThemeState {
@@ -10,7 +12,7 @@ interface ThemeState {
 }
 
 
-const useThemeStore = create<ThemeState>((set) => ({
+const useThemeStore = create<ThemeState>()(persist((set) => ({
   COLOR: lightTheme,
   HEADER_GRADIENT: headerGradientLight,
   theme: "light",
@@ -21,6 +23,9 @@ const useThemeStore = create<ThemeState>((set) => ({
       HEADER_GRADIENT: gradientHeaderMap[theme] || headerGradientLight
     }));
   }
+}), {
+  name: "player-storage",
+  storage: createJSONStorage(() => zustandStorage),
 }));
 
 export default useThemeStore;

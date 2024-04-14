@@ -37,7 +37,9 @@ const ArtistCard = () => {
 
   useEffect(() => {
     setData(null);
-    nodejs.channel.post('getArtistBySongId', currentSong?.id);
+    if (!usePlayerStore.getState().isPlayFromLocal) {
+      nodejs.channel.post('getArtistBySongId', currentSong?.id);
+    }
   }, [currentSong?.id]);
 
   if (data === null || usePlayerStore.getState().isPlayFromLocal) {
@@ -46,16 +48,18 @@ const ArtistCard = () => {
   return (
     <TouchableOpacity
       activeOpacity={1}
-      style={{
-        elevation: 10,
-      }}
+      style={
+        {
+          // elevation: 10,
+        }
+      }
       className="w-full rounded-2xl h-[320px] mt-8"
       onPress={() =>
         navigation.navigate('Artists', {
           name: data.alias,
         })
       }>
-      {/* <View className="absolute w-full h-full bg-black/30 z-10 rounded-2xl " /> */}
+      <View className="absolute w-full h-full bg-black/30 z-10 rounded-2xl " />
       <Image
         style={[StyleSheet.absoluteFillObject]}
         source={{

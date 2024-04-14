@@ -15,12 +15,7 @@ const Player = () => {
       <TrackSlider />
       <Animated.View className="flex flex-row justify-between pt-4">
         <TouchableOpacity
-          onPress={() =>
-            ToastAndroid.show(
-              'Không làm đc tính năng trộn bài hát',
-              ToastAndroid.SHORT,
-            )
-          }
+          onPress={() => ToastAndroid.show('Chưa hỗ trợ', ToastAndroid.SHORT)}
           activeOpacity={1}
           className="w-[60px] h-[60px] items-start justify-center ">
           <MaterialIcons name="shuffle" size={24} color={COLOR.TEXT_PRIMARY} />

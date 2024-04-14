@@ -28,18 +28,13 @@ import {PlayerContext} from '../context/PlayerProvider';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Animated, {
   FadeIn,
-  FadeInDown,
   FadeInUp,
   FadeOut,
-  FlipInEasyX,
-  SlideInUp,
-  StretchInX,
-  ZoomIn,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
 import HeartButton from '../components/HeartButton';
-
+import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
@@ -58,7 +53,7 @@ const PlayerScreens = () => {
   const gradientColor = COLOR.isDark
     ? useDarkColor(color.dominant!, 35)
     : tinycolor(color.dominant!).isDark()
-    ? tinycolor(color.dominant!).lighten(40).toString()
+    ? tinycolor(color.dominant!).lighten(50).toString()
     : tinycolor(color.dominant!).darken().toString();
 
   const bgAnimated = useSharedValue(`transparent`);
@@ -79,7 +74,7 @@ const PlayerScreens = () => {
       <View
         className="pt-[35px]"
         style={{
-          height: SCREEN_HEIGHT * 0.75,
+          height: hp(75) - 35,
           backgroundColor: COLOR.BACKGROUND,
         }}>
         <LinearGradient
@@ -88,7 +83,7 @@ const PlayerScreens = () => {
             StyleSheet.absoluteFill,
             {
               width: SCREEN_WIDTH,
-              height: SCREEN_HEIGHT,
+              height: hp(100),
               bottom: 0,
               zIndex: 1,
             },
@@ -99,7 +94,7 @@ const PlayerScreens = () => {
             StyleSheet.absoluteFill,
             {
               width: SCREEN_WIDTH,
-              height: SCREEN_HEIGHT,
+              height: hp(100),
               backgroundColor: bgAnimated,
             },
           ]}
@@ -135,7 +130,7 @@ const PlayerScreens = () => {
         ) : (
           <View
             style={{
-              marginTop: SCREEN_HEIGHT * 0.1,
+              marginTop: hp(10),
               zIndex: 100,
               width: SCREEN_WIDTH,
             }}>
@@ -161,7 +156,7 @@ const PlayerScreens = () => {
         <View
           className="flex flex-row justify-between px-6 items-center "
           style={{
-            marginTop: SCREEN_HEIGHT * 0.1,
+            marginTop: hp(10),
           }}>
           <Animated.View
             className="z-50 flex-1 mr-4"
@@ -189,17 +184,19 @@ const PlayerScreens = () => {
         </View>
       </View>
       <View className="px-6 w-full">
-        <View className="mt-4">
+        <View style={{marginTop: hp(8)}}>
           <Player />
         </View>
         <View className="flex flex-row justify-end mt-2">
-          <TouchableOpacity onPress={() => navigation.navigate('Queue')}>
-            <MaterialIcons
-              name="queue-music"
-              size={24}
-              color={COLOR.TEXT_PRIMARY}
-            />
-          </TouchableOpacity>
+          {!isPlayFromLocal && (
+            <TouchableOpacity onPress={() => navigation.navigate('Queue')}>
+              <MaterialIcons
+                name="queue-music"
+                size={24}
+                color={COLOR.TEXT_PRIMARY}
+              />
+            </TouchableOpacity>
+          )}
         </View>
         <Lyric />
         <ArtistCard />

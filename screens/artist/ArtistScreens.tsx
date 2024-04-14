@@ -34,6 +34,15 @@ interface artistType {
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
+function isKeyExistsInArrayObjects(arr: any, key: any, value: any) {
+  for (let obj of arr) {
+    if (obj.hasOwnProperty(key) && obj[key] === value) {
+      return true; // Key tồn tại trong ít nhất một object
+    }
+  }
+  return false; // Key không tồn tại trong bất kỳ object nào
+}
+
 const ArtistScreens = ({route}: any) => {
   const {name} = route.params;
 
@@ -58,12 +67,12 @@ const ArtistScreens = ({route}: any) => {
   const scrollY = React.useRef(new Animated.Value(0)).current;
 
   const headerColor = scrollY.interpolate({
-    inputRange: [SCREEN_WIDTH * 0.8, SCREEN_WIDTH * 0.8],
+    inputRange: [SCREEN_WIDTH * 0.6, SCREEN_WIDTH * 0.6],
     outputRange: ['transparent', COLOR.BACKGROUND],
     extrapolate: 'clamp',
   });
   const headerOpacity = scrollY.interpolate({
-    inputRange: [SCREEN_WIDTH * 0.8, SCREEN_WIDTH],
+    inputRange: [SCREEN_WIDTH * 0.6, SCREEN_WIDTH],
     outputRange: [0, 1],
     extrapolate: 'clamp',
   });
@@ -100,12 +109,12 @@ const ArtistScreens = ({route}: any) => {
           [{nativeEvent: {contentOffset: {y: scrollY}}}],
           {useNativeDriver: true},
         )}>
-        <View className="relative" style={{height: SCREEN_WIDTH * 1.2}}>
+        <View className="relative" style={{height: SCREEN_WIDTH}}>
           <LinearGradient
             colors={['transparent', COLOR.BACKGROUND]}
-            className="absolute top-0 left-0 right-0 bottom-0 z-10"
+            className="absolute left-0 right-0 bottom-0 z-10"
             style={{
-              height: SCREEN_WIDTH * 1.2,
+              height: SCREEN_WIDTH * 0.8,
               width: SCREEN_WIDTH,
             }}
           />
@@ -115,10 +124,11 @@ const ArtistScreens = ({route}: any) => {
               StyleSheet.absoluteFillObject,
               {
                 width: SCREEN_WIDTH,
-                height: SCREEN_WIDTH * 1.2,
+                height: SCREEN_WIDTH,
               },
             ]}
           />
+
           <View className="absolute bottom-0 z-20">
             <Text
               className=" font-bold text-xl p-4 "
@@ -129,162 +139,217 @@ const ArtistScreens = ({route}: any) => {
         </View>
 
         {/* top */}
-        <View>
-          <View className=" text-lg font-semibold px-4 py-4 justify-between items-center flex-row">
-            <Text
-              className=" font-bold text-lg"
-              style={{color: COLOR.TEXT_PRIMARY}}>
-              Bài hát nổi bật
-            </Text>
-          </View>
-          {dataDetailArtist?.sections
-            .filter((type: any) => type.sectionId === 'aSongs')[0]
-            ?.items.slice(0, 5)
-            .map((item: any) => (
-              <TouchableOpacity
-                key={item.encodeId}
-                className="flex-row items-center px-4 mb-2"
-                onPress={() => {
-                  handlePlay(item, {
-                    id: name,
-                    items: dataDetailArtist?.sections.filter(
-                      (type: any) => type.sectionId === 'aSongs',
-                    )[0].items,
-                  });
-                  setPlayFrom({
-                    id: 'artist',
-                    name: dataDetailArtist.name,
-                  });
-                }}>
-                <Image
-                  source={{uri: item.thumbnail}}
-                  key={item.encodeId}
-                  className="rounded-md h-14 w-14"
-                />
-                <View>
-                  <Text style={{color: COLOR.TEXT_PRIMARY}} className="ml-4">
-                    {item.title}
-                  </Text>
-                  <Text className=" ml-4" style={{color: COLOR.TEXT_SECONDARY}}>
-                    {item.artistsNames}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            ))}
-          <View className="w-full justify-center items-center my-2">
-            <TouchableOpacity
-              style={{borderColor: COLOR.PRIMARY}}
-              className="w-32 p-2 rounded-full items-center  border"
-              onPress={() => {
-                navigation.push('ArtistsSong', {
-                  id: dataDetailArtist?.id,
-                  name: dataDetailArtist?.alias,
-                });
-              }}>
-              <Text style={{color: COLOR.TEXT_PRIMARY}} className=" text-sm">
-                Xem thêm
+        {isKeyExistsInArrayObjects(
+          dataDetailArtist?.sections,
+          'sectionId',
+          'aSongs',
+        ) && (
+          <View>
+            <View className=" text-lg font-semibold px-4 py-4 justify-between items-center flex-row">
+              <Text
+                className=" font-bold text-lg"
+                style={{color: COLOR.TEXT_PRIMARY}}>
+                Bài hát nổi bật
               </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        {/* playlist */}
-        <View>
-          {dataDetailArtist?.sections
-            .filter((type: any) => type.sectionId === 'aPlaylist')
-            .map((item: any, index: number) => (
-              <View key={index} className="mb-4">
-                <Text
-                  style={{color: COLOR.TEXT_PRIMARY}}
-                  className="text-lg font-semibold px-4 py-4">
-                  {item.title}
-                </Text>
-                <ScrollView
-                  horizontal
-                  contentContainerStyle={{paddingHorizontal: 16, gap: 10}}>
-                  {item.items.map((item: any, index: number) => (
-                    <PlayListCover
-                      key={index}
-                      encodeId={item.encodeId}
-                      sortDescription={item.sortDescription}
-                      title={item.title}
-                      thumbnail={item.thumbnail}
-                    />
-                  ))}
-                </ScrollView>
-              </View>
-            ))}
-        </View>
-
-        {/* Single */}
-        <View>
-          <Text
-            style={{color: COLOR.TEXT_PRIMARY}}
-            className="text-lg font-semibold px-4 py-4">
-            Đĩa đơn
-          </Text>
-          <ScrollView
-            horizontal
-            contentContainerStyle={{paddingHorizontal: 16, gap: 10}}>
+            </View>
             {dataDetailArtist?.sections
-              .filter((type: any) => type.sectionId === 'aSingle')[0]
-              ?.items.map((item: any, index: number) => (
-                <PlayListCover
-                  key={index}
-                  encodeId={item.encodeId}
-                  sortDescription={item.sortDescription}
-                  title={item.title}
-                  thumbnail={item.thumbnail}
-                />
-              ))}
-          </ScrollView>
-        </View>
-        {/* Relate artis */}
-
-        <View>
-          {dataDetailArtist?.sections.filter(
-            (type: any) => type.sectionId === 'aReArtist',
-          )[0].items.length > 0 && (
-            <Text
-              className="text-lg font-semibold px-4 py-4"
-              style={{color: COLOR.TEXT_PRIMARY}}>
-              Có thể bạn thích
-            </Text>
-          )}
-          <ScrollView
-            horizontal
-            contentContainerStyle={{paddingHorizontal: 16, gap: 10}}>
-            {dataDetailArtist?.sections
-              .filter((type: any) => type.sectionId === 'aReArtist')[0]
-              ?.items.map((item: any, index: number) => (
+              ?.filter((type: any) => type.sectionId === 'aSongs')[0]
+              ?.items.slice(0, 5)
+              .map((item: any) => (
                 <TouchableOpacity
-                  key={index}
-                  activeOpacity={1}
+                  key={item.encodeId}
+                  className="flex-row items-center px-4 mb-2"
                   onPress={() => {
-                    navigation.navigate('Artists', {
-                      name: item.alias,
+                    handlePlay(item, {
+                      id: name,
+                      items: dataDetailArtist?.sections.filter(
+                        (type: any) => type.sectionId === 'aSongs',
+                      )[0].items,
+                    });
+                    setPlayFrom({
+                      id: 'artist',
+                      name: dataDetailArtist.name,
                     });
                   }}>
                   <Image
-                    source={{uri: item.thumbnailM}}
-                    className="w-40 h-40 rounded-full"
+                    source={{uri: item.thumbnail}}
+                    key={item.encodeId}
+                    className="rounded-md h-14 w-14"
                   />
                   <View>
-                    <Text
-                      className=" text-center mt-2"
-                      style={{color: COLOR.TEXT_PRIMARY}}>
-                      {item.name}
+                    <Text style={{color: COLOR.TEXT_PRIMARY}} className="ml-4">
+                      {item.title}
                     </Text>
                     <Text
-                      className=" text-center"
+                      className=" ml-4"
                       style={{color: COLOR.TEXT_SECONDARY}}>
-                      {item.totalFollow} quan tâm
+                      {item.artistsNames}
                     </Text>
                   </View>
                 </TouchableOpacity>
               ))}
-          </ScrollView>
-        </View>
+            <View className="w-full justify-center items-center my-2">
+              <TouchableOpacity
+                style={{borderColor: COLOR.PRIMARY}}
+                className="w-32 p-2 rounded-full items-center  border"
+                onPress={() => {
+                  navigation.push('ArtistsSong', {
+                    id: dataDetailArtist?.id,
+                    name: dataDetailArtist?.alias,
+                  });
+                }}>
+                <Text style={{color: COLOR.TEXT_PRIMARY}} className=" text-sm">
+                  Xem thêm
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
+        {isKeyExistsInArrayObjects(
+          dataDetailArtist?.sections,
+          'sectionId',
+          'aAlbum',
+        ) && (
+          <View>
+            <Text
+              style={{color: COLOR.TEXT_PRIMARY}}
+              className="text-lg font-semibold px-4 py-4">
+              Albums
+            </Text>
+            <ScrollView
+              horizontal
+              contentContainerStyle={{paddingHorizontal: 16, gap: 10}}>
+              {dataDetailArtist?.sections
+                ?.filter((type: any) => type.sectionId === 'aAlbum')[0]
+                ?.items.map((item: any, index: number) => (
+                  <PlayListCover
+                    key={index}
+                    encodeId={item.encodeId}
+                    sortDescription={item.sortDescription}
+                    title={item.title}
+                    thumbnail={item.thumbnail}
+                  />
+                ))}
+            </ScrollView>
+          </View>
+        )}
+
+        {/* playlist */}
+        {isKeyExistsInArrayObjects(
+          dataDetailArtist?.sections,
+          'sectionId',
+          'aPlaylist',
+        ) && (
+          <View>
+            {dataDetailArtist?.sections
+              ?.filter((type: any) => type.sectionId === 'aPlaylist')
+              ?.map((item: any, index: number) => (
+                <View key={index} className="mb-4">
+                  <Text
+                    style={{color: COLOR.TEXT_PRIMARY}}
+                    className="text-lg font-semibold px-4 py-4">
+                    {item.title}
+                  </Text>
+                  <ScrollView
+                    horizontal
+                    contentContainerStyle={{paddingHorizontal: 16, gap: 10}}>
+                    {item.items.map((item: any, index: number) => (
+                      <PlayListCover
+                        key={index}
+                        encodeId={item.encodeId}
+                        sortDescription={item.sortDescription}
+                        title={item.title}
+                        thumbnail={item.thumbnail}
+                      />
+                    ))}
+                  </ScrollView>
+                </View>
+              ))}
+          </View>
+        )}
+
+        {/* Single */}
+        {isKeyExistsInArrayObjects(
+          dataDetailArtist?.sections,
+          'sectionId',
+          'aSingle',
+        ) && (
+          <View>
+            <Text
+              style={{color: COLOR.TEXT_PRIMARY}}
+              className="text-lg font-semibold px-4 py-4">
+              Đĩa đơn
+            </Text>
+            <ScrollView
+              horizontal
+              contentContainerStyle={{paddingHorizontal: 16, gap: 10}}>
+              {dataDetailArtist?.sections
+                ?.filter((type: any) => type.sectionId === 'aSingle')[0]
+                ?.items.map((item: any, index: number) => (
+                  <PlayListCover
+                    key={index}
+                    encodeId={item.encodeId}
+                    sortDescription={item.sortDescription}
+                    title={item.title}
+                    thumbnail={item.thumbnail}
+                  />
+                ))}
+            </ScrollView>
+          </View>
+        )}
+
+        {/* Relate artis */}
+
+        {isKeyExistsInArrayObjects(
+          dataDetailArtist?.sections,
+          'sectionId',
+          'aReArtist',
+        ) && (
+          <View>
+            {dataDetailArtist?.sections?.filter(
+              (type: any) => type.sectionId === 'aReArtist',
+            )[0].items.length > 0 && (
+              <Text
+                className="text-lg font-semibold px-4 py-4"
+                style={{color: COLOR.TEXT_PRIMARY}}>
+                Có thể bạn thích
+              </Text>
+            )}
+            <ScrollView
+              horizontal
+              contentContainerStyle={{paddingHorizontal: 16, gap: 10}}>
+              {dataDetailArtist?.sections
+                .filter((type: any) => type.sectionId === 'aReArtist')[0]
+                ?.items.map((item: any, index: number) => (
+                  <TouchableOpacity
+                    key={index}
+                    activeOpacity={1}
+                    onPress={() => {
+                      navigation.navigate('Artists', {
+                        name: item.alias,
+                      });
+                    }}>
+                    <Image
+                      source={{uri: item.thumbnailM}}
+                      className="w-40 h-40 rounded-full"
+                    />
+                    <View>
+                      <Text
+                        className=" text-center mt-2"
+                        style={{color: COLOR.TEXT_PRIMARY}}>
+                        {item.name}
+                      </Text>
+                      <Text
+                        className=" text-center"
+                        style={{color: COLOR.TEXT_SECONDARY}}>
+                        {item.totalFollow} quan tâm
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                ))}
+            </ScrollView>
+          </View>
+        )}
 
         {/* info */}
         <View className="px-4 flex flex-col gap-2 py-4">
@@ -301,10 +366,10 @@ const ArtistScreens = ({route}: any) => {
           </Text>
 
           <Text style={{color: COLOR.TEXT_SECONDARY}}>
-            {dataDetailArtist?.sortBiography}
+            {dataDetailArtist?.sortBiography.replaceAll('<br>', '')}
           </Text>
           <Text style={{color: COLOR.TEXT_SECONDARY}}>
-            {dataDetailArtist?.biography}
+            {dataDetailArtist?.biography.replaceAll('<br>', '')}
           </Text>
         </View>
       </Animated.ScrollView>

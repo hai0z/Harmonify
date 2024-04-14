@@ -1,4 +1,4 @@
-import {NavigationContainer, useNavigation} from '@react-navigation/native';
+import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomeScreens from '../screens/home/HomeScreens';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -10,7 +10,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import PlayerScreens from '../screens/PlayerScreens';
 import LyricScreen from '../screens/LyricScreen';
-import {View, Text} from 'react-native';
+import {View} from 'react-native';
 import PlaylistDetail from '../screens/PlaylistDetail';
 import {BottomTabBar} from '@react-navigation/bottom-tabs';
 import ArtistScreens from '../screens/artist/ArtistScreens';
@@ -240,7 +240,7 @@ const PlayerStack = () => {
       <Stack.Screen
         name="Queue"
         component={Queue}
-        options={{animation: 'none'}}
+        options={{animation: 'slide_from_bottom'}}
       />
     </Stack.Navigator>
   );

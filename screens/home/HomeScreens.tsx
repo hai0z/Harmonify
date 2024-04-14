@@ -1,22 +1,19 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
   ScrollView,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from 'react-native';
 import PlayListCover from '../../components/PlayListCover';
 import Header from '../../components/Header';
 import {usePlayerStore} from '../../store/playerStore';
 import nodejs from 'nodejs-mobile-react-native';
-import {collection, onSnapshot, query} from 'firebase/firestore';
-import {auth, db} from '../../firebase/config';
 import NewRelease from './components/NewRelease';
 import LinearGradient from 'react-native-linear-gradient';
 import useThemeStore from '../../store/themeStore';
-import {getData, storeData} from '../../utils/localStorage';
+import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 interface typePlaylistCover {
   items: [];
   title: string;
@@ -30,28 +27,7 @@ function HomeScreens() {
   const [dataHome, setdataHome] = useState<any>([]);
   const [dataNewRelease, setDataNewRelease] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const {setLikedSongs, setPlayFrom} = usePlayerStore(state => state);
   const {COLOR, HEADER_GRADIENT} = useThemeStore(state => state);
-
-  const getPlayFrom = async () => {
-    const playFrom = await getData('playFrom');
-    setPlayFrom(playFrom);
-  };
-  useEffect(() => {
-    const q = query(collection(db, `users/${auth.currentUser?.uid}/likedSong`));
-    const unsub = onSnapshot(q, querySnapshot => {
-      const songs = [] as any;
-      querySnapshot.forEach(doc => {
-        songs.push(doc.data());
-      });
-      setLikedSongs(songs);
-    });
-    getPlayFrom();
-
-    return () => {
-      unsub();
-    };
-  }, []);
 
   useEffect(() => {
     setLoading(true);
@@ -90,16 +66,16 @@ function HomeScreens() {
       className=" h-full w-full pb-[200px]"
       style={{backgroundColor: COLOR.BACKGROUND}}>
       <Header />
-      <View className="h-56 top-0" style={[StyleSheet.absoluteFill]}>
+      <View
+        className="top-0"
+        style={[StyleSheet.absoluteFill, {height: hp(45)}]}>
         <LinearGradient
           colors={[timeColor(), `${timeColor()}50`, COLOR.BACKGROUND]}
           className="h-full"
         />
       </View>
 
-      <View style={{minHeight: 3}}>
-        {dataNewRelease && <NewRelease data={dataNewRelease} />}
-      </View>
+      <View>{dataNewRelease && <NewRelease data={dataNewRelease} />}</View>
 
       {dataHome?.map((e: any, index: number) => {
         return (

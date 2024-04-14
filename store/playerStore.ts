@@ -1,6 +1,7 @@
 import { Track } from "react-native-track-player";
 import { create } from "zustand";
-import { storeData } from "../utils/localStorage";
+import { createJSONStorage, persist } from "zustand/middleware";
+import zustandStorage from "./zustandStorage";
 
 const defaultColor = "#494949"
 
@@ -68,33 +69,36 @@ interface PlayerStore {
   isPlayFromLocal: boolean
   setIsPlayFromLocal: (isPlayFromLocal: boolean) => void
 }
-export const usePlayerStore = create<PlayerStore>((set) => ({
-  playFrom: {
-    id: "local",
-    name: "Bài hát trên thiết bị"
-  },
-  setPlayFrom: async (playFrom: IPLayFrom) => {
-    set({ playFrom })
-    await storeData("playFrom", playFrom)
-  },
-  playList: {
-    id: "",
-    items: [],
-  },
-  color: defaultColorObj as Partial<Color>,
-  setColor: (color: Partial<Color>) => set({ color }),
-  setPlayList: (playlist: IPlaylist) => set({ playList: playlist }),
-  lyrics: [],
-  setLyrics: (lyrics: any) => set({ lyrics }),
-  isLoadingTrack: false,
-  setisLoadingTrack: (isLoadingTrack: boolean) => set({ isLoadingTrack }),
-  likedSongs: [],
-  setLikedSongs: (likedSongs: any) => set({ likedSongs }),
-  currentSong: null,
-  setCurrentSong: (currentSong: Track | null) => set({ currentSong }),
-  tempSong: null,
-  setTempSong: (tempSong: any | null) => set({ tempSong }),
-  isPlayFromLocal: false,
-  setIsPlayFromLocal: (isPlayFromLocal: boolean) => set({ isPlayFromLocal }),
-}))
+export const usePlayerStore = create<PlayerStore>()(
+  persist((set) => ({
+    playFrom: {
+      id: "local",
+      name: "Bài hát trên thiết bị"
+    },
+    setPlayFrom: async (playFrom: IPLayFrom) => {
+      set({ playFrom })
+    },
+    playList: {
+      id: "",
+      items: [],
+    },
+    color: defaultColorObj as Partial<Color>,
+    setColor: (color: Partial<Color>) => set({ color }),
+    setPlayList: (playlist: IPlaylist) => set({ playList: playlist }),
+    lyrics: [],
+    setLyrics: (lyrics: any) => set({ lyrics }),
+    isLoadingTrack: false,
+    setisLoadingTrack: (isLoadingTrack: boolean) => set({ isLoadingTrack }),
+    likedSongs: [],
+    setLikedSongs: (likedSongs: any) => set({ likedSongs }),
+    currentSong: null,
+    setCurrentSong: (currentSong: Track | null) => set({ currentSong }),
+    tempSong: null,
+    setTempSong: (tempSong: any | null) => set({ tempSong }),
+    isPlayFromLocal: false,
+    setIsPlayFromLocal: (isPlayFromLocal: boolean) => set({ isPlayFromLocal }),
+  }), {
+    name: "player-store",
+    storage: createJSONStorage(() => zustandStorage),
+  }))
 
