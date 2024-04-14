@@ -1,17 +1,17 @@
-import {View, Text} from 'react-native';
+import {Text} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {usePlayerStore} from '../../store/playerStore';
 import dayjs from 'dayjs';
 import nodejs from 'nodejs-mobile-react-native';
 import tinycolor from 'tinycolor2';
 import useThemeStore from '../../store/themeStore';
-import Animated, {FadeIn, FadeOut} from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 const SongInfoCard = () => {
   const {color: bgColor} = usePlayerStore(state => state);
 
   const currentSong = usePlayerStore(state => state.currentSong);
 
-  const {theme, COLOR} = useThemeStore(state => state);
+  const {COLOR} = useThemeStore(state => state);
 
   const bg = COLOR.isDark
     ? bgColor.vibrant === '#0098DB'
@@ -50,7 +50,13 @@ const SongInfoCard = () => {
       <Text
         className="font-bold text-[18px]"
         style={{color: COLOR.TEXT_PRIMARY}}>
-        Phát hành lúc {dayjs.unix(data?.releaseDate).format('DD/MM/YYYY')}
+        {data.releaseDate ? (
+          <Text>
+            Phát hành lúc {dayjs.unix(data?.releaseDate).format('DD/MM/YYYY')}
+          </Text>
+        ) : (
+          'Phát hành lúc: không rõ'
+        )}
       </Text>
       <Text style={{color: COLOR.TEXT_PRIMARY}}>
         Tác giả :{' '}

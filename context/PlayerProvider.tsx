@@ -26,8 +26,14 @@ nodejs.channel.addListener('getLyric', async data => {
 });
 
 const PlayerProvider = ({children}: {children: React.ReactNode}) => {
-  const {playList, currentSong, isPlayFromLocal, setColor, setLikedSongs} =
-    usePlayerStore(state => state);
+  const {
+    playList,
+    currentSong,
+    isPlayFromLocal,
+    setColor,
+    setLikedSongs,
+    setisLoadingTrack,
+  } = usePlayerStore(state => state);
 
   const getSongColors = async () => {
     if (currentSong?.artwork !== null) {
@@ -49,26 +55,34 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
   }, []);
 
   const initPlayer = async () => {
-    console.log(currentSong);
-    if (playList.items.length > 0 && playList.id !== '' && currentSong) {
+    await TrackPlayer.reset();
+    setisLoadingTrack(true);
+    if (
+      playList.items.length > 0 &&
+      playList.id !== '' &&
+      currentSong !== null
+    ) {
       const index = playList.items.findIndex(
         (item: any) => item?.encodeId === currentSong?.id,
       );
       if (index === -1) {
         await TrackPlayer.add(currentSong);
+        setisLoadingTrack(false);
         return;
       }
-      await TrackPlayer.reset();
       await TrackPlayer.add(
         playList.items.map((item: any) => objectToTrack(item)),
       );
-      await TrackPlayer.skip(index);
+      await TrackPlayer.skip(index).finally(() => {
+        setisLoadingTrack(false);
+      });
     } else {
       if (currentSong !== null && currentSong.url === NULL_URL) {
         await TrackPlayer.add(objectToTrack(currentSong));
       } else {
         await TrackPlayer.add(currentSong!);
       }
+      setisLoadingTrack(false);
     }
   };
 
