@@ -1,4 +1,11 @@
-import {View, Text, Image, TouchableOpacity, Dimensions} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  Dimensions,
+  Easing,
+} from 'react-native';
 import React, {useCallback, useEffect, useMemo} from 'react';
 import useKeyBoardStatus from '../hooks/useKeyBoardStatus';
 import TrackPlayer, {
@@ -18,6 +25,8 @@ import tinycolor from 'tinycolor2';
 import Animated, {
   FadeOut,
   LightSpeedInLeft,
+  runOnJS,
+  runOnUI,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
@@ -35,7 +44,7 @@ const MiniPlayer = () => {
 
   const playerState = usePlaybackState();
 
-  const progress = useProgress(1000);
+  const progress = useProgress(1000 / 120); //120fps
 
   const gradientColor = useMemo(() => {
     return COLOR.isDark
@@ -47,7 +56,6 @@ const MiniPlayer = () => {
 
   const bgAnimated = useSharedValue(`transparent`);
 
-  const track = useActiveTrack();
   const togglePlay = useCallback(async (state: State | undefined) => {
     if (state !== State.Playing) {
       await TrackPlayer.play();
@@ -58,27 +66,22 @@ const MiniPlayer = () => {
 
   useEffect(() => {
     bgAnimated.value = withTiming(`${gradientColor}`, {
-      duration: 500,
+      duration: 1000,
     });
-  }, [color.dominant, gradientColor, keyboardVisible]);
+  }, [color.dominant, gradientColor, keyboardVisible, COLOR]);
 
-  if (
-    !currentSong ||
-    track === undefined ||
-    track === null ||
-    keyboardVisible
-  ) {
+  if (!currentSong || keyboardVisible) {
     return null;
   }
   return (
     <Animated.View
-      className=" flex flex-col justify-center absolute mb-[-1px]"
+      className=" flex flex-col justify-center absolute"
       style={{
         width: SCREEN_WIDTH * 0.96,
         height: MINI_PLAYER_HEIGHT,
         bottom: TABBAR_HEIGHT,
-        transform: [{translateX: (SCREEN_WIDTH * 0.04) / 2}],
-        backgroundColor: gradientColor,
+        transform: [{translateX: SCREEN_WIDTH * 0.02}],
+        backgroundColor: bgAnimated,
         borderRadius: 6,
         overflow: 'hidden',
       }}>
@@ -177,7 +180,7 @@ const MiniPlayer = () => {
           maxWidth: '100%',
           position: 'relative',
           marginHorizontal: 8,
-          bottom: 4,
+          bottom: 3,
           borderRadius: 2.5,
           backgroundColor: COLOR.isDark ? '#ffffff90' : '#00000020',
           zIndex: 2,

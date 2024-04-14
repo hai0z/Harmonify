@@ -53,7 +53,7 @@ const PlayerScreens = () => {
   const gradientColor = COLOR.isDark
     ? useDarkColor(color.dominant!, 35)
     : tinycolor(color.dominant!).isDark()
-    ? tinycolor(color.dominant!).lighten(50).toString()
+    ? tinycolor(color.dominant!).lighten(45).toString()
     : tinycolor(color.dominant!).darken().toString();
 
   const bgAnimated = useSharedValue(`transparent`);
@@ -83,7 +83,7 @@ const PlayerScreens = () => {
             StyleSheet.absoluteFill,
             {
               width: SCREEN_WIDTH,
-              height: hp(100),
+              height: hp(125),
               bottom: 0,
               zIndex: 1,
             },
@@ -94,7 +94,7 @@ const PlayerScreens = () => {
             StyleSheet.absoluteFill,
             {
               width: SCREEN_WIDTH,
-              height: hp(100),
+              height: hp(125),
               backgroundColor: bgAnimated,
             },
           ]}

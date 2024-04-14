@@ -31,6 +31,7 @@ import LocalSong from '../screens/library/LocalSong';
 import useThemeStore from '../store/themeStore';
 import SettingScreen from '../screens/SettingScreen';
 import Queue from '../screens/Queue';
+import Entypo from 'react-native-vector-icons/Entypo';
 export type HomeStackParamsList = {
   Home: undefined;
   Search: undefined;
@@ -170,7 +171,7 @@ const HomeTab = () => {
         tabBarIcon: ({color, size}) => {
           switch (route.name) {
             case 'HomeTab':
-              return <AntDesign name="home" size={size} color={color} />;
+              return <Entypo name="home" size={size} color={color} />;
             case 'Chart':
               return <AntDesign name="barschart" size={size} color={color} />;
             case 'Search':

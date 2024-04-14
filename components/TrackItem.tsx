@@ -22,7 +22,7 @@ const TrackItem = (props: Props) => {
       style={{opacity: item?.streamingStatus === 1 ? 1 : 0.5}}
       activeOpacity={0.8}
       disabled={item?.streamingStatus === 2}
-      className="flex flex-row  items-center mx-4 my-2"
+      className="flex flex-row  items-center mx-4 my-2 "
       onPress={() => onClick(item)}>
       {isAlbum ? (
         <View

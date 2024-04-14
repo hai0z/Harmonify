@@ -7,7 +7,7 @@ import {useNavigation} from '@react-navigation/native';
 import useSyncLyric from '../../hooks/useSyncLyric';
 import tinycolor from 'tinycolor2';
 import useThemeStore from '../../store/themeStore';
-import Animated, {FadeIn, FadeOut} from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 
 const OFFSET = 1;
 

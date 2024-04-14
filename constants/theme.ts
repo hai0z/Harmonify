@@ -30,9 +30,9 @@ const headerGradientNight = {
 }
 //light header
 export const headerGradientSilky = {
-  MORNING: tinycolor('#8c0327').lighten(50).toString(),
-  AFTERNOON: tinycolor('#d75050').lighten(20).toString(),
-  EVENING: tinycolor('#d59b6c').lighten(20).toString(),
+  MORNING: tinycolor('#f4c92c').lighten(50).toString(),
+  AFTERNOON: tinycolor('#8c42b7').lighten(20).toString(),
+  EVENING: tinycolor('#3992ad').lighten(20).toString(),
 }
 export const headerGradientLight = {
   MORNING: tinycolor('#65c3c8').lighten().toString(),
@@ -92,11 +92,11 @@ export const pastelTheme = {
 
 }
 export const silkyTheme = {
-  PRIMARY: '#8c0327',
-  SECONDARY: '#d75050',
+  PRIMARY: '#f4c92c',
+  SECONDARY: '#8c42b7',
   TEXT_PRIMARY: '#000000',
   TEXT_SECONDARY: '#606060',
-  BACKGROUND: '#f2f2f2',
+  BACKGROUND: '#f1f3f3',
   isDark: false,
 }
 

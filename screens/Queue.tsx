@@ -47,7 +47,7 @@ const Queue = () => {
     return COLOR.isDark
       ? useDarkColor(color.dominant!, 35)
       : tinycolor(color.dominant!).isDark()
-      ? tinycolor(color.dominant!).lighten(50).toString()
+      ? tinycolor(color.dominant!).lighten(45).toString()
       : tinycolor(color.dominant!).darken(5).toString();
   }, [color.dominant, COLOR]);
 

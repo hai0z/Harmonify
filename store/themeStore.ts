@@ -12,20 +12,21 @@ interface ThemeState {
 }
 
 
-const useThemeStore = create<ThemeState>()(persist((set) => ({
-  COLOR: lightTheme,
-  HEADER_GRADIENT: headerGradientLight,
-  theme: "light",
-  setTheme: (theme: Theme) => {
-    set(() => ({
-      theme,
-      COLOR: themeMap[theme] || lightTheme,
-      HEADER_GRADIENT: gradientHeaderMap[theme] || headerGradientLight
-    }));
-  }
-}), {
-  name: "player-storage",
-  storage: createJSONStorage(() => zustandStorage),
-}));
+const useThemeStore = create<ThemeState>()(
+  persist((set) => ({
+    COLOR: lightTheme,
+    HEADER_GRADIENT: headerGradientLight,
+    theme: "light",
+    setTheme: (theme: Theme) => {
+      set(() => ({
+        theme,
+        COLOR: themeMap[theme] || lightTheme,
+        HEADER_GRADIENT: gradientHeaderMap[theme] || headerGradientLight
+      }));
+    }
+  }), {
+    name: "player-storage",
+    storage: createJSONStorage(() => zustandStorage),
+  }));
 
 export default useThemeStore;
