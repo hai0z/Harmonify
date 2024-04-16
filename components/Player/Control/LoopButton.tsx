@@ -6,7 +6,7 @@ import useThemeStore from '../../../store/themeStore';
 
 const LoopButton = () => {
   const [repeatMode, setRepeatMode] = useState(RepeatMode.Queue);
-  const {COLOR} = useThemeStore(state => state);
+  const {COLOR} = useThemeStore();
   useEffect(() => {
     (async () => {
       const repeatMode = await TrackPlayer.getRepeatMode();
@@ -28,7 +28,7 @@ const LoopButton = () => {
 
   return (
     <TouchableOpacity
-      className="w-[60px] h-[60px] items-end justify-center "
+      className="w-[60px] h-[60px] items-start justify-center "
       onPress={handleLoop}>
       <MaterialIcons
         name="loop"

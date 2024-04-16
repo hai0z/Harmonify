@@ -42,6 +42,7 @@ const ArtistSong = ({route}: any) => {
 
   const setPlayFrom = usePlayerStore(state => state.setPlayFrom);
 
+  const {startMiniPlayerTransition} = useContext(PlayerContext);
   useEffect(() => {
     setLoading(true);
     setData([]);
@@ -107,6 +108,8 @@ const ArtistSong = ({route}: any) => {
         id: 'artist',
         name: dataDetailArtist?.name as string,
       });
+
+      startMiniPlayerTransition();
     },
     [data],
   );

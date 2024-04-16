@@ -8,22 +8,32 @@ import PrevButton from './Control/PrevButton';
 import LoopButton from './Control/LoopButton';
 import useThemeStore from '../../store/themeStore';
 import Animated from 'react-native-reanimated';
+import {usePlayerStore} from '../../store/playerStore';
+import {useNavigation} from '@react-navigation/native';
 const Player = () => {
   const {COLOR} = useThemeStore(state => state);
+  const {isPlayFromLocal} = usePlayerStore();
+  const navigation = useNavigation<any>();
   return (
     <View>
       <TrackSlider />
       <Animated.View className="flex flex-row justify-between pt-4">
-        <TouchableOpacity
-          onPress={() => ToastAndroid.show('Chưa hỗ trợ', ToastAndroid.SHORT)}
-          activeOpacity={1}
-          className="w-[60px] h-[60px] items-start justify-center ">
-          <MaterialIcons name="shuffle" size={24} color={COLOR.TEXT_PRIMARY} />
-        </TouchableOpacity>
+        <LoopButton />
         <PrevButton />
         <PlayButton />
         <NextButton />
-        <LoopButton />
+        {!isPlayFromLocal && (
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Queue')}
+            activeOpacity={1}
+            className="w-[60px] h-[60px] items-end justify-center ">
+            <MaterialIcons
+              name="queue-music"
+              size={24}
+              color={COLOR.TEXT_PRIMARY}
+            />
+          </TouchableOpacity>
+        )}
       </Animated.View>
     </View>
   );

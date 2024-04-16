@@ -35,8 +35,8 @@ const TrackSlider = () => {
           backgroundColor: COLOR.TEXT_PRIMARY,
         }}
         trackStyle={{
-          height: 3.5,
-          backgroundColor: COLOR.isDark ? '#ffffff90' : '#00000020',
+          height: 3.25,
+          backgroundColor: COLOR.isDark ? '#ffffff20' : '#00000020',
         }}
         minTrackStyle={{
           backgroundColor: COLOR.isDark ? '#ffffff' : '#000000',

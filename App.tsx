@@ -17,7 +17,9 @@ export default function App() {
   useEffect(() => {
     const setupPlayer = async () => {
       try {
-        await TrackPlayer.setupPlayer();
+        await TrackPlayer.setupPlayer({
+          autoHandleInterruptions: true,
+        });
         await TrackPlayer.setRepeatMode(RepeatMode.Queue);
         await TrackPlayer.setVolume(1);
         await TrackPlayer.updateOptions({

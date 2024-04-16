@@ -87,7 +87,7 @@ export const usePlayerStore = create<PlayerStore>()(
     setPlayList: (playlist: IPlaylist) => set({ playList: playlist }),
     lyrics: [],
     setLyrics: (lyrics: any) => set({ lyrics }),
-    isLoadingTrack: false,
+    isLoadingTrack: true,
     setisLoadingTrack: (isLoadingTrack: boolean) => set({ isLoadingTrack }),
     likedSongs: [],
     setLikedSongs: (likedSongs: any) => set({ likedSongs }),

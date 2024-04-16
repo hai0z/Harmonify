@@ -8,13 +8,16 @@ import getThumbnail from '../utils/getThumnail';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import {BottomSheetModalMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
 import useBottomSheetStore from '../store/bottomSheetStore';
-import {NULL_URL} from '../constants';
+import {NULL_URL, TABBAR_HEIGHT} from '../constants';
 import {collection, onSnapshot, query} from 'firebase/firestore';
 import {auth, db} from '../firebase/config';
+import {SharedValue, useSharedValue, withTiming} from 'react-native-reanimated';
 
 interface ContextType {
   bottomSheetModalRef: React.RefObject<BottomSheetModalMethods>;
   showBottomSheet: (item: any) => void;
+  miniPlayerPosition: any;
+  startMiniPlayerTransition: () => void;
 }
 
 export const PlayerContext = React.createContext({} as ContextType);
@@ -47,6 +50,13 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
+  const miniPlayerPosition = useSharedValue(TABBAR_HEIGHT);
+
+  const startMiniPlayerTransition = () => {
+    miniPlayerPosition.value = withTiming(40, {duration: 500}, () => {
+      miniPlayerPosition.value = withTiming(TABBAR_HEIGHT, {duration: 500});
+    });
+  };
   const {setData} = useBottomSheetStore(state => state);
 
   const showBottomSheet = useCallback((item: any) => {
@@ -112,7 +122,13 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
   }, [currentSong?.id]);
 
   return (
-    <PlayerContext.Provider value={{bottomSheetModalRef, showBottomSheet}}>
+    <PlayerContext.Provider
+      value={{
+        bottomSheetModalRef,
+        showBottomSheet,
+        miniPlayerPosition,
+        startMiniPlayerTransition,
+      }}>
       {children}
     </PlayerContext.Provider>
   );

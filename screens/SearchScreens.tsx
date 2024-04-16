@@ -7,7 +7,7 @@ import {
   Image,
 } from 'react-native';
 
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useDebounce} from '../hooks/useDebounce';
 import getThumbnail from '../utils/getThumnail';
@@ -16,6 +16,7 @@ import nodejs from 'nodejs-mobile-react-native';
 import {useNavigation} from '@react-navigation/native';
 import useThemeStore from '../store/themeStore';
 import {usePlayerStore} from '../store/playerStore';
+import {PlayerContext} from '../context/PlayerProvider';
 
 const SearchScreens = () => {
   const [text, setText] = useState<string>('');
@@ -37,6 +38,8 @@ const SearchScreens = () => {
   }, []);
 
   const navigation = useNavigation<any>();
+
+  const {startMiniPlayerTransition} = useContext(PlayerContext);
 
   return (
     <View
@@ -112,6 +115,7 @@ const SearchScreens = () => {
                 id: 'search',
                 name: e.title,
               });
+              startMiniPlayerTransition();
             }}>
             <Image
               source={{uri: getThumbnail(e.thumbnail) || ''}}

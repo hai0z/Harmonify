@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 
 import {handlePlay} from '../../service/trackPlayerService';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -19,6 +19,7 @@ import PlayListCover from '../../components/PlayListCover';
 import useThemeStore from '../../store/themeStore';
 import {usePlayerStore} from '../../store/playerStore';
 import LinearGradient from 'react-native-linear-gradient';
+import {PlayerContext} from '../../context/PlayerProvider';
 interface artistType {
   id: string;
   name: string;
@@ -79,6 +80,7 @@ const ArtistScreens = ({route}: any) => {
 
   const navigation = useNavigation<any>();
 
+  const {startMiniPlayerTransition} = useContext(PlayerContext);
   if (loading) {
     return (
       <View
@@ -170,6 +172,7 @@ const ArtistScreens = ({route}: any) => {
                       id: 'artist',
                       name: dataDetailArtist.name,
                     });
+                    startMiniPlayerTransition();
                   }}>
                   <Image
                     source={{uri: item.thumbnail}}

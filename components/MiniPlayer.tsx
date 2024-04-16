@@ -6,7 +6,7 @@ import {
   Dimensions,
   Easing,
 } from 'react-native';
-import React, {useCallback, useEffect, useMemo} from 'react';
+import React, {useCallback, useContext, useEffect, useMemo} from 'react';
 import useKeyBoardStatus from '../hooks/useKeyBoardStatus';
 import TrackPlayer, {
   State,
@@ -23,14 +23,18 @@ import {MINI_PLAYER_HEIGHT, TABBAR_HEIGHT} from '../constants';
 import useThemeStore from '../store/themeStore';
 import tinycolor from 'tinycolor2';
 import Animated, {
+  Extrapolate,
   FadeOut,
   LightSpeedInLeft,
+  interpolate,
   runOnJS,
   runOnUI,
+  useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
 import HeartButton from './HeartButton';
+import {PlayerContext} from '../context/PlayerProvider';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const MiniPlayer = () => {
@@ -43,6 +47,8 @@ const MiniPlayer = () => {
   const {COLOR} = useThemeStore(state => state);
 
   const playerState = usePlaybackState();
+
+  const {miniPlayerPosition} = useContext(PlayerContext);
 
   const progress = useProgress(1000 / 120); //120fps
 
@@ -70,21 +76,29 @@ const MiniPlayer = () => {
     });
   }, [color.dominant, gradientColor, keyboardVisible, COLOR]);
 
+  const animatedStyles = useAnimatedStyle(() => ({
+    opacity: interpolate(miniPlayerPosition.value, [TABBAR_HEIGHT, 40], [1, 0]),
+  }));
+
   if (!currentSong || keyboardVisible) {
     return null;
   }
+
   return (
     <Animated.View
       className=" flex flex-col justify-center absolute"
-      style={{
-        width: SCREEN_WIDTH * 0.96,
-        height: MINI_PLAYER_HEIGHT,
-        bottom: TABBAR_HEIGHT,
-        transform: [{translateX: SCREEN_WIDTH * 0.02}],
-        backgroundColor: bgAnimated,
-        borderRadius: 6,
-        overflow: 'hidden',
-      }}>
+      style={[
+        animatedStyles,
+        {
+          width: SCREEN_WIDTH * 0.96,
+          height: MINI_PLAYER_HEIGHT,
+          bottom: miniPlayerPosition,
+          transform: [{translateX: SCREEN_WIDTH * 0.02}],
+          backgroundColor: bgAnimated,
+          borderRadius: 6,
+          overflow: 'hidden',
+        },
+      ]}>
       <TouchableOpacity
         onPress={() => navigation.navigate('PlayerStack')}
         activeOpacity={1}

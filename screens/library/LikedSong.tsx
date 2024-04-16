@@ -27,6 +27,7 @@ const PlaylistDetail = () => {
   const COLOR = useThemeStore(state => state.COLOR);
   const navigation = useNavigation<any>();
 
+  const {startMiniPlayerTransition} = useContext(PlayerContext);
   const {likedSongs: likedSong, setPlayFrom} = usePlayerStore(state => state);
   const headerColor = useMemo(
     () =>
@@ -69,6 +70,7 @@ const PlaylistDetail = () => {
         id: 'liked',
         name: 'Bài hát đã thích',
       });
+      startMiniPlayerTransition();
     },
 
     [],

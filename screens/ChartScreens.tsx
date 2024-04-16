@@ -11,7 +11,14 @@ import {
 } from 'react-native';
 import Entypo from 'react-native-vector-icons/Entypo';
 
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {FlashList} from '@shopify/flash-list';
 import {handlePlay} from '../service/trackPlayerService';
 import {LinearGradient} from 'react-native-linear-gradient';
@@ -21,6 +28,7 @@ import {useNavigation} from '@react-navigation/native';
 import nodejs from 'nodejs-mobile-react-native';
 import useThemeStore from '../store/themeStore';
 import {usePlayerStore} from '../store/playerStore';
+import {PlayerContext} from '../context/PlayerProvider';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -35,6 +43,7 @@ const ChartScreens = () => {
 
   const setPlayFrom = usePlayerStore(state => state.setPlayFrom);
 
+  const {startMiniPlayerTransition} = useContext(PlayerContext);
   const headerColor = useMemo(
     () =>
       scrollY.interpolate({
@@ -62,16 +71,20 @@ const ChartScreens = () => {
     nodejs.channel.post('charthome');
   }, []);
 
-  const handlePlaySong = (song: any) => {
-    handlePlay(song, {
-      id: 'chart',
-      items: data,
-    });
-    setPlayFrom({
-      id: 'chart',
-      name: 'Bảng xếp hạng V-POP',
-    });
-  };
+  const handlePlaySong = useCallback(
+    (song: any) => {
+      handlePlay(song, {
+        id: 'chart',
+        items: data,
+      });
+      setPlayFrom({
+        id: 'chart',
+        name: 'Bảng xếp hạng V-POP',
+      });
+      startMiniPlayerTransition();
+    },
+    [data],
+  );
 
   const navigation = useNavigation<any>();
   if (loading) {

@@ -52,7 +52,7 @@ const Lyric = () => {
         <TouchableOpacity
           onPress={() => nativgation.navigate('Lyric', {lyrics})}
           activeOpacity={1}
-          className="rounded-2xl mt-4"
+          className="rounded-2xl mt-10"
           style={{
             backgroundColor: bg,
             height: 320,

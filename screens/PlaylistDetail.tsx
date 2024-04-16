@@ -39,8 +39,9 @@ const PlaylistDetail = ({route}: {route: any}) => {
 
   const COLOR = useThemeStore(state => state.COLOR);
 
-  const {setPlayFrom, currentSong} = usePlayerStore(state => state);
+  const {setPlayFrom} = usePlayerStore(state => state);
 
+  const {startMiniPlayerTransition} = useContext(PlayerContext);
   useEffect(() => {
     setLoading(true);
     nodejs.channel.addListener('getDetailPlaylist', (data: any) => {
@@ -99,6 +100,7 @@ const PlaylistDetail = ({route}: {route: any}) => {
       id: playlistData?.isAlbum ? 'album' : 'playlist',
       name: playlistData?.title,
     });
+    startMiniPlayerTransition();
   };
 
   if (loading)

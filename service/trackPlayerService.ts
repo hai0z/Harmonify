@@ -26,9 +26,8 @@ TrackPlayer.addEventListener(Event.PlaybackActiveTrackChanged, async event => {
     if (
       event.index !== undefined && event.track !== undefined &&
       event.track.url === NULL_URL) {
-      console.log(event.track);
       !usePlayerStore.getState().isLoadingTrack &&
-        nodejs.channel.post('getSong', event.track);
+        nodejs.channel.post('getSong', event.track!);
     }
   } else {
     usePlayerStore.getState().setCurrentSong(event.track!);
@@ -66,14 +65,9 @@ const handlePlay = async (song: any, playlist: IPlaylist = {
   const index = playlist.items.findIndex(
     (item: any) => item?.encodeId === song?.encodeId,
   )
-  if (index === -1) {
+  await TrackPlayer.skip(index).finally(() => {
     usePlayerStore.getState().setisLoadingTrack(false);
-    await TrackPlayer.reset();
-  } else {
-    await TrackPlayer.skip(index).finally(() => {
-      usePlayerStore.getState().setisLoadingTrack(false);
-    })
-  }
+  })
   usePlayerStore.getState().setCurrentSong(objectToTrack(song));
   await TrackPlayer.play();
 
@@ -94,12 +88,6 @@ const handlePlaySongInLocal = async (song: any) => {
   await TrackPlayer.play();
 }
 
-const NextTrack = async () => {
-  await TrackPlayer.skipToNext()
-};
 
-const PrevTrack = async () => {
-  await TrackPlayer.skipToPrevious()
-}
 
-export { NextTrack, PrevTrack, handlePlay, handlePlaySongInLocal }
+export { handlePlay, handlePlaySongInLocal }

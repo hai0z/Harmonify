@@ -2,12 +2,12 @@ import {TouchableOpacity} from 'react-native';
 import React from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
-import {NextTrack} from '../../../service/trackPlayerService';
 import useThemeStore from '../../../store/themeStore';
+import TrackPlayer from 'react-native-track-player';
 const NextButton = () => {
   const {COLOR} = useThemeStore(state => state);
   const handleNext = async () => {
-    NextTrack();
+    await TrackPlayer.skipToNext();
   };
   return (
     <TouchableOpacity

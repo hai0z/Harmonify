@@ -51,6 +51,7 @@ const NewRelease = ({data}: Props) => {
     listRef.current?.scrollToIndex({index: 0});
   }, [tabIndex]);
 
+  const {startMiniPlayerTransition} = useContext(PlayerContext);
   const dataList = [allPage, vPopPage, othersPage];
   const handlePlaySong = useCallback((song: any) => {
     handlePlay(song, {
@@ -66,6 +67,8 @@ const NewRelease = ({data}: Props) => {
       id: 'playlist',
       name: 'Bài hát mới phát hành',
     });
+
+    startMiniPlayerTransition();
   }, []);
 
   const {showBottomSheet} = useContext(PlayerContext);

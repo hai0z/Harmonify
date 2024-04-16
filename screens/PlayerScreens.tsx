@@ -36,7 +36,6 @@ import Animated, {
 import HeartButton from '../components/HeartButton';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 const SCREEN_WIDTH = Dimensions.get('window').width;
-const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 const TextAnimated = Animated.createAnimatedComponent(TextTicker);
 const PlayerScreens = () => {
@@ -44,8 +43,8 @@ const PlayerScreens = () => {
     state => state,
   );
   const navigation = useNavigation<any>();
-  const track = useActiveTrack();
 
+  const currentSong = useActiveTrack();
   const {COLOR} = useThemeStore(state => state);
 
   const {showBottomSheet} = useContext(PlayerContext);
@@ -83,7 +82,7 @@ const PlayerScreens = () => {
             StyleSheet.absoluteFill,
             {
               width: SCREEN_WIDTH,
-              height: hp(125),
+              height: hp(100),
               bottom: 0,
               zIndex: 1,
             },
@@ -94,7 +93,7 @@ const PlayerScreens = () => {
             StyleSheet.absoluteFill,
             {
               width: SCREEN_WIDTH,
-              height: hp(125),
+              height: hp(100),
               backgroundColor: bgAnimated,
             },
           ]}
@@ -117,7 +116,7 @@ const PlayerScreens = () => {
               {playFrom.name}
             </Text>
           </View>
-          <TouchableOpacity onPress={() => showBottomSheet(track)}>
+          <TouchableOpacity onPress={() => showBottomSheet(currentSong)}>
             <Entypo
               name="dots-three-vertical"
               size={20}
@@ -143,7 +142,7 @@ const PlayerScreens = () => {
               <Animated.Image
                 entering={FadeIn.duration(300).springify().delay(300)}
                 exiting={FadeOut.duration(300).springify()}
-                source={{uri: track?.artwork || DEFAULT_IMG}}
+                source={{uri: currentSong?.artwork || DEFAULT_IMG}}
                 className="rounded-md z-20"
                 style={{
                   height: SCREEN_WIDTH * 0.85,
@@ -160,11 +159,11 @@ const PlayerScreens = () => {
           }}>
           <Animated.View
             className="z-50 flex-1 mr-4"
-            key={track?.id}
+            key={currentSong?.id}
             entering={FadeInUp.duration(300).springify().delay(300)}
             exiting={FadeOut.duration(300)}>
             <TextAnimated
-              key={track?.id}
+              key={currentSong?.id}
               style={{color: COLOR.TEXT_PRIMARY}}
               className=" font-bold text-lg"
               duration={10000}
@@ -172,12 +171,12 @@ const PlayerScreens = () => {
               bounce
               repeatSpacer={50}
               marqueeDelay={3000}>
-              {track?.title}
+              {currentSong?.title}
             </TextAnimated>
             <Animated.Text
               className=" font-semibold"
               style={{color: COLOR.TEXT_SECONDARY}}>
-              {track?.artist}
+              {currentSong?.artist}
             </Animated.Text>
           </Animated.View>
           {!isPlayFromLocal && <HeartButton heartIconSize={28} />}
@@ -187,17 +186,7 @@ const PlayerScreens = () => {
         <View style={{marginTop: hp(8)}}>
           <Player />
         </View>
-        <View className="flex flex-row justify-end mt-2">
-          {!isPlayFromLocal && (
-            <TouchableOpacity onPress={() => navigation.navigate('Queue')}>
-              <MaterialIcons
-                name="queue-music"
-                size={24}
-                color={COLOR.TEXT_PRIMARY}
-              />
-            </TouchableOpacity>
-          )}
-        </View>
+
         <Lyric />
         <ArtistCard />
         <SongInfoCard />

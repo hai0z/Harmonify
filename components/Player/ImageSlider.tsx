@@ -15,10 +15,9 @@ import Animated from 'react-native-reanimated';
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('screen');
 
 const ImageSlider = () => {
-  const playList = usePlayerStore(state => state.playList);
+  const {playList} = usePlayerStore();
 
   const currentSong = useActiveTrack();
-
   const currentSongIndex = useMemo(
     () => playList.items.findIndex((s: any) => s.encodeId == currentSong?.id),
     [currentSong?.id],
@@ -48,10 +47,7 @@ const ImageSlider = () => {
   useEffect(() => {
     flatListRef.current?.scrollToIndex({
       index: currentSongIndex == -1 ? 0 : currentSongIndex,
-      animated:
-        currentSongIndex == 0 || currentSongIndex === playList.items.length - 1
-          ? false
-          : true,
+      animated: true,
     });
   }, [currentSong?.id]);
 

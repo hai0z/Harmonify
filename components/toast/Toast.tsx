@@ -2,7 +2,11 @@ import {View, Text, Dimensions, LayoutAnimation} from 'react-native';
 import React, {useEffect, useRef} from 'react';
 import useToastStore from '../../store/toastStore';
 import {MINI_PLAYER_HEIGHT, TABBAR_HEIGHT} from '../../constants';
-import Animated, {FadeInDown, FadeOut} from 'react-native-reanimated';
+import Animated, {
+  FadeInDown,
+  FadeOut,
+  FadeOutDown,
+} from 'react-native-reanimated';
 import useThemeStore from '../../store/themeStore';
 
 const PADDING = 8;
@@ -25,7 +29,7 @@ const Toast = () => {
   return (
     <Animated.View
       entering={FadeInDown.duration(300).springify()}
-      exiting={FadeOut.duration(300).springify()}>
+      exiting={FadeOutDown.duration(300).springify()}>
       <View
         className="h-12 rounded-md flex-col justify-center flex absolute"
         style={{
