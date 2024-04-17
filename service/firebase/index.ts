@@ -1,6 +1,7 @@
-import { deleteDoc, doc, setDoc } from "firebase/firestore";
+import { Timestamp, deleteDoc, doc, setDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase/config";
 import { usePlayerStore } from "../../store/playerStore";
+import { Track } from "react-native-track-player";
 
 
 export const addToLikedList = async (
@@ -29,3 +30,16 @@ export const followArtist = async (artistId: string) => {
     console.log(err.message);
   }
 };
+
+export const saveToHistory = async (song: any) => {
+  try {
+    const user = auth.currentUser?.uid;
+    const docRef = doc(db, `users/${user}/history`, song.encodeId);
+    await setDoc(docRef, {
+      ...song,
+      timestamp: Date.now(),
+    });
+  } catch (err: any) {
+    console.log(err.message);
+  }
+}

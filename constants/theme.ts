@@ -30,7 +30,7 @@ const headerGradientNight = {
 }
 //light header
 export const headerGradientSilky = {
-  MORNING: tinycolor('#f4c92c').lighten(50).toString(),
+  MORNING: tinycolor('#f4c92c').lighten(20).toString(),
   AFTERNOON: tinycolor('#8c42b7').lighten(20).toString(),
   EVENING: tinycolor('#3992ad').lighten(20).toString(),
 }

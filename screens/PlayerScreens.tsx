@@ -50,7 +50,7 @@ const PlayerScreens = () => {
   const {showBottomSheet} = useContext(PlayerContext);
 
   const gradientColor = COLOR.isDark
-    ? useDarkColor(color.dominant!, 35)
+    ? useDarkColor(color.dominant!, 20)
     : tinycolor(color.dominant!).isDark()
     ? tinycolor(color.dominant!).lighten(45).toString()
     : tinycolor(color.dominant!).darken().toString();

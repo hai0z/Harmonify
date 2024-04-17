@@ -32,7 +32,7 @@ export interface Color {
   vibrant: string;
 }
 
-type PlayFrom = "local" | "search" | "playlist" | "liked" | "album" | "artist" | "chart"
+type PlayFrom = "local" | "search" | "playlist" | "liked" | "album" | "artist" | "chart" | "history"
 
 export const playFromMapping = {
   "local": "Hệ thống",
@@ -41,7 +41,8 @@ export const playFromMapping = {
   "liked": "Thư viện",
   "album": "Album",
   "artist": "Nghệ sĩ",
-  "chart": "Bảng xếp hạng"
+  "chart": "Bảng xếp hạng",
+  "history": "Lịch sử nghe"
 }
 
 export interface IPLayFrom {

@@ -31,6 +31,7 @@ import Animated, {
   runOnUI,
   useAnimatedStyle,
   useSharedValue,
+  withDelay,
   withTiming,
 } from 'react-native-reanimated';
 import HeartButton from './HeartButton';
@@ -54,7 +55,7 @@ const MiniPlayer = () => {
 
   const gradientColor = useMemo(() => {
     return COLOR.isDark
-      ? useDarkColor(color.dominant!, 35)
+      ? useDarkColor(color.dominant!, 20)
       : tinycolor(color.dominant!).isDark()
       ? tinycolor(color.dominant!).lighten(45).toString()
       : tinycolor(color.dominant!).darken(10).toString();
@@ -71,9 +72,12 @@ const MiniPlayer = () => {
   }, []);
 
   useEffect(() => {
-    bgAnimated.value = withTiming(`${gradientColor}`, {
-      duration: 1000,
-    });
+    bgAnimated.value = withDelay(
+      250,
+      withTiming(`${gradientColor}`, {
+        duration: 750,
+      }),
+    );
   }, [color.dominant, gradientColor, keyboardVisible, COLOR]);
 
   const animatedStyles = useAnimatedStyle(() => ({
@@ -136,7 +140,7 @@ const MiniPlayer = () => {
               overflow: 'hidden',
             }}
             key={currentSong?.id}
-            entering={LightSpeedInLeft.duration(300).springify().delay(300)}
+            entering={LightSpeedInLeft.duration(300).springify().delay(750)}
             exiting={FadeOut}>
             <TextTicker
               duration={6000}

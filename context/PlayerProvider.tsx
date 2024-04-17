@@ -12,11 +12,12 @@ import {NULL_URL, TABBAR_HEIGHT} from '../constants';
 import {collection, onSnapshot, query} from 'firebase/firestore';
 import {auth, db} from '../firebase/config';
 import {SharedValue, useSharedValue, withTiming} from 'react-native-reanimated';
+import {saveToHistory} from '../service/firebase';
 
 interface ContextType {
   bottomSheetModalRef: React.RefObject<BottomSheetModalMethods>;
   showBottomSheet: (item: any) => void;
-  miniPlayerPosition: any;
+  miniPlayerPosition: SharedValue<number>;
   startMiniPlayerTransition: () => void;
 }
 
@@ -36,7 +37,8 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
     setColor,
     setLikedSongs,
     setisLoadingTrack,
-  } = usePlayerStore(state => state);
+    tempSong,
+  } = usePlayerStore();
 
   const getSongColors = async () => {
     if (currentSong?.artwork !== null) {
@@ -75,11 +77,6 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
       const index = playList.items.findIndex(
         (item: any) => item?.encodeId === currentSong?.id,
       );
-      if (index === -1) {
-        await TrackPlayer.add(currentSong);
-        setisLoadingTrack(false);
-        return;
-      }
       await TrackPlayer.add(
         playList.items.map((item: any) => objectToTrack(item)),
       );
@@ -87,11 +84,7 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
         setisLoadingTrack(false);
       });
     } else {
-      if (currentSong !== null && currentSong.url === NULL_URL) {
-        await TrackPlayer.add(objectToTrack(currentSong));
-      } else {
-        await TrackPlayer.add(currentSong!);
-      }
+      await TrackPlayer.add(currentSong!);
       setisLoadingTrack(false);
     }
   };
@@ -120,6 +113,11 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
       nodejs.channel.post('getLyric', currentSong?.id);
     }
   }, [currentSong?.id]);
+
+  useEffect(() => {
+    console.log('ok');
+    saveToHistory(tempSong);
+  }, [tempSong.encodeId]);
 
   return (
     <PlayerContext.Provider

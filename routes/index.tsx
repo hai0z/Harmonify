@@ -32,6 +32,7 @@ import useThemeStore from '../store/themeStore';
 import SettingScreen from '../screens/SettingScreen';
 import Queue from '../screens/Queue';
 import Entypo from 'react-native-vector-icons/Entypo';
+import HistoryScreens from '../screens/HistoryScreens';
 export type HomeStackParamsList = {
   Home: undefined;
   Search: undefined;
@@ -51,6 +52,7 @@ export type HomeStackParamsList = {
   Setting: undefined;
   Queue: undefined;
   PlayerStack: undefined;
+  History: undefined;
 };
 const Stack = createNativeStackNavigator<HomeStackParamsList>();
 const LibStack = createNativeStackNavigator();
@@ -117,6 +119,13 @@ const HomeStack = () => {
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen name="Home" component={HomeScreens} />
       <Stack.Screen name="Search" component={SearchScreens} />
+      <Stack.Screen
+        name="History"
+        component={HistoryScreens}
+        options={{
+          animation: 'ios',
+        }}
+      />
       <Stack.Screen
         name="Setting"
         component={SettingScreen}

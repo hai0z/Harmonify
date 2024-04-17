@@ -75,10 +75,10 @@ const Queue = () => {
       style={{backgroundColor: COLOR.BACKGROUND}}>
       <Animated.View
         className="absolute top-0 left-0 right-0"
-        style={{height: hp(25), backgroundColor: $bg}}
+        style={{height: hp(15), backgroundColor: $bg}}
       />
       <LinearGradient
-        style={{height: hp(25)}}
+        style={{height: hp(15)}}
         colors={[`transparent`, `${COLOR.BACKGROUND}`]}
         className="absolute top-0 left-0 right-0 h-full"
       />
