@@ -1,10 +1,11 @@
 import { useEffect } from "react";
 import { useProgress } from "react-native-track-player";
 import { create } from "zustand";
+import { usePlayerStore } from "../store/playerStore";
 
 
 const syncLyricStore = create<{
-  currentLine: number | undefined,
+  currentLine: number,
   setCurrent: (currentLine: number | undefined) => void
 }>(
   (set) => ({
@@ -13,8 +14,9 @@ const syncLyricStore = create<{
   })
 )
 
-export default function useSyncLyric(lyrics: any[]) {
+export default function useSyncLyric() {
   const [currentLine, setCurrentLine] = syncLyricStore((state) => [state.currentLine, state.setCurrent]);
+  const lyrics = usePlayerStore(state => state.lyrics);
   const progress = useProgress(100);
   useEffect(() => {
     if (lyrics) {
@@ -37,7 +39,6 @@ export default function useSyncLyric(lyrics: any[]) {
     }
   }, [progress.position]);
 
-  return {
-    currentLine,
-  };
+  return currentLine
+
 }

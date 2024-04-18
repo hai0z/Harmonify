@@ -43,7 +43,9 @@ const MiniPlayer = () => {
 
   const keyboardVisible = useKeyBoardStatus();
 
-  const {color, currentSong, isPlayFromLocal} = usePlayerStore(state => state);
+  const {color, currentSong, isPlayFromLocal, lastPosition} = usePlayerStore(
+    state => state,
+  );
 
   const {COLOR} = useThemeStore(state => state);
 
@@ -79,6 +81,13 @@ const MiniPlayer = () => {
       }),
     );
   }, [color.dominant, gradientColor, keyboardVisible, COLOR]);
+
+  // useEffect(() => {
+  //   (async () => {
+  //     console.log(lastPosition);
+  //     await TrackPlayer.seekTo(lastPosition);
+  //   })();
+  // }, []);
 
   const animatedStyles = useAnimatedStyle(() => ({
     opacity: interpolate(miniPlayerPosition.value, [TABBAR_HEIGHT, 40], [1, 0]),

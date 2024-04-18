@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import React, {useContext, useEffect, useMemo} from 'react';
+import React, {useCallback, useContext, useEffect, useMemo} from 'react';
 import {LinearGradient} from 'react-native-linear-gradient';
 import getThumbnail from '../utils/getThumnail';
 import {FlashList} from '@shopify/flash-list';
@@ -25,7 +25,7 @@ import {usePlayerStore} from '../store/playerStore';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const PlaylistDetail = ({route}: {route: any}) => {
-  const [playlistData, setPlaylistData] = React.useState<any>([]);
+  const [playlistData, setPlaylistData] = React.useState<any>({});
 
   const {data} = route.params;
 
@@ -39,13 +39,21 @@ const PlaylistDetail = ({route}: {route: any}) => {
 
   const COLOR = useThemeStore(state => state.COLOR);
 
-  const {setPlayFrom} = usePlayerStore(state => state);
+  const {setPlayFrom, currentSong} = usePlayerStore();
 
   const {startMiniPlayerTransition} = useContext(PlayerContext);
+
   useEffect(() => {
     setLoading(true);
     nodejs.channel.addListener('getDetailPlaylist', (data: any) => {
-      setPlaylistData(data);
+      setPlaylistData({
+        ...data,
+        song: {
+          items: data.song.items.filter(
+            (item: any) => item.streamingStatus === 1,
+          ),
+        },
+      });
 
       setLoading(false);
     });
@@ -90,11 +98,10 @@ const PlaylistDetail = ({route}: {route: any}) => {
       }),
     [scrollY],
   );
-
   const handlePlaySong = (song: any) => {
     handlePlay(song, {
       id: data.playListId,
-      items: playlistData?.song?.items,
+      items: playlistData?.song.items,
     });
     setPlayFrom({
       id: playlistData?.isAlbum ? 'album' : 'playlist',

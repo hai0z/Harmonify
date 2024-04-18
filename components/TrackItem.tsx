@@ -1,4 +1,4 @@
-import {View, Text, TouchableOpacity, Image} from 'react-native';
+import {View, Text, TouchableOpacity} from 'react-native';
 import React from 'react';
 import getThumbnail from '../utils/getThumnail';
 import Feather from 'react-native-vector-icons/Feather';
@@ -14,9 +14,11 @@ interface Props {
 }
 
 const TrackItem = (props: Props) => {
-  console.log('df');
   const {item, index, onClick, isAlbum, showBottomSheet} = props;
+
   const COLOR = useThemeStore(state => state.COLOR);
+
+  console.log('track renderItem');
   return (
     <TouchableOpacity
       style={{opacity: item?.streamingStatus === 1 ? 1 : 0.5}}
@@ -47,7 +49,7 @@ const TrackItem = (props: Props) => {
           className="font-semibold"
           numberOfLines={1}
           style={{
-            color: COLOR.TEXT_PRIMARY,
+            color: item.isActive ? COLOR.PRIMARY : COLOR.TEXT_PRIMARY,
             fontSize: wp(4),
           }}>
           {item?.title}

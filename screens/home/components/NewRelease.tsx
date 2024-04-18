@@ -1,12 +1,4 @@
-import {
-  View,
-  Text,
-  ScrollView,
-  FlatList,
-  Dimensions,
-  TouchableOpacity,
-  Animated,
-} from 'react-native';
+import {View, Text, Dimensions, TouchableOpacity} from 'react-native';
 import React, {useCallback, useContext, useEffect} from 'react';
 import {FlashList} from '@shopify/flash-list';
 import TrackItem from '../../../components/TrackItem';
@@ -38,9 +30,9 @@ interface Props {
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const NewRelease = ({data}: Props) => {
   const [tabIndex, setTabIndex] = React.useState(0);
-  const allPage = paginateArray(data?.items?.all, 3);
-  const vPopPage = paginateArray(data?.items?.vPop, 3);
-  const othersPage = paginateArray(data?.items?.others, 3);
+  const allPage = paginateArray(data?.items?.all, 4);
+  const vPopPage = paginateArray(data?.items?.vPop, 4);
+  const othersPage = paginateArray(data?.items?.others, 4);
 
   const listRef = React.useRef<FlashList<any>>(null);
 
@@ -53,23 +45,26 @@ const NewRelease = ({data}: Props) => {
 
   const {startMiniPlayerTransition} = useContext(PlayerContext);
   const dataList = [allPage, vPopPage, othersPage];
-  const handlePlaySong = useCallback((song: any) => {
-    handlePlay(song, {
-      id: 'new-release' + tabIndex,
-      items:
-        tabIndex === 0
-          ? data?.items?.all
-          : tabIndex === 1
-          ? data?.items?.vPop
-          : data?.items?.others,
-    });
-    setPlayFrom({
-      id: 'playlist',
-      name: 'Bài hát mới phát hành',
-    });
+  const handlePlaySong = useCallback(
+    (song: any) => {
+      handlePlay(song, {
+        id: 'new-release' + tabIndex,
+        items:
+          tabIndex === 0
+            ? data?.items?.all
+            : tabIndex === 1
+            ? data?.items?.vPop
+            : data?.items?.others,
+      });
+      setPlayFrom({
+        id: 'playlist',
+        name: 'Bài hát mới phát hành',
+      });
 
-    startMiniPlayerTransition();
-  }, []);
+      startMiniPlayerTransition();
+    },
+    [tabIndex],
+  );
 
   const {showBottomSheet} = useContext(PlayerContext);
   return (

@@ -1,11 +1,5 @@
 import {View, Text, Image, ActivityIndicator} from 'react-native';
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import React, {useContext, useEffect, useMemo, useState} from 'react';
 import useThemeStore from '../store/themeStore';
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -76,13 +70,11 @@ const HistoryScreens = () => {
     };
   }, []);
 
-  const gradientColor = useMemo(() => {
-    return COLOR.isDark
-      ? useDarkColor(color.dominant!, 20)
-      : tinycolor(color.dominant!).isDark()
-      ? tinycolor(color.dominant!).lighten(45).toString()
-      : tinycolor(color.dominant!).darken(5).toString();
-  }, [color.dominant, COLOR]);
+  const gradientColor = COLOR.isDark
+    ? useDarkColor(color.dominant!, 20)
+    : tinycolor(color.dominant!).isDark()
+    ? tinycolor(color.dominant!).lighten(45).toString()
+    : tinycolor(color.dominant!).darken().toString();
 
   const handlePlaySong = (item: any) => {
     handlePlay(item, {

@@ -16,6 +16,10 @@ import Animated, {
   FadeIn,
   FadeInDown,
   FadeOut,
+  LightSpeedInRight,
+  LightSpeedOutRight,
+  SlideInLeft,
+  SlideOutRight,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
@@ -116,22 +120,24 @@ const Queue = () => {
       </View>
       <View className="mt-4 flex-1 px-6">
         <FlashList
-          ListFooterComponent={() => <View className="h-10" />}
-          ListEmptyComponent={() => (
+          ListFooterComponent={<View className="h-10" />}
+          ListEmptyComponent={
             <View className="flex justify-center items-center pt-10">
               <Text style={{color: COLOR.TEXT_PRIMARY}} className="text-center">
                 Hàng chờ trống...
               </Text>
             </View>
-          )}
+          }
           showsVerticalScrollIndicator={false}
-          ListHeaderComponent={() => (
+          ListHeaderComponent={
             <View>
               <View>
                 <Text style={{color: COLOR.TEXT_PRIMARY}} className="font-bold">
                   Đang phát
                 </Text>
-                <View>
+                <Animated.View
+                  entering={SlideInLeft.duration(300)}
+                  key={currentSong?.id}>
                   <View className="flex flex-row mt-2">
                     <Animated.Image
                       className="rounded-md"
@@ -158,7 +164,7 @@ const Queue = () => {
                       </Text>
                     </View>
                   </View>
-                </View>
+                </Animated.View>
               </View>
               <View className="mt-6">
                 <Text style={{color: COLOR.TEXT_PRIMARY}} className="font-bold">
@@ -166,12 +172,11 @@ const Queue = () => {
                 </Text>
               </View>
             </View>
-          )}
-          data={copyPlaylist}
+          }
+          data={[...copyPlaylist]}
           estimatedItemSize={70}
           keyExtractor={item => item.encodeId}
           renderItem={({item, index}) => {
-            console.log('fsdfs');
             return (
               <TrackItem
                 COLOR={COLOR}

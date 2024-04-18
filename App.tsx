@@ -20,9 +20,11 @@ export default function App() {
         await TrackPlayer.setupPlayer({
           autoHandleInterruptions: true,
         });
+
         await TrackPlayer.setRepeatMode(RepeatMode.Queue);
         await TrackPlayer.setVolume(1);
         await TrackPlayer.updateOptions({
+          progressUpdateEventInterval: 1,
           capabilities: [
             Capability.Play,
             Capability.Pause,

@@ -157,6 +157,7 @@ const ArtistScreens = ({route}: any) => {
             {dataDetailArtist?.sections
               ?.filter((type: any) => type.sectionId === 'aSongs')[0]
               ?.items.slice(0, 5)
+              .filter((i: any) => i.streamingStatus === 1)
               .map((item: any) => (
                 <TouchableOpacity
                   key={item.encodeId}
@@ -164,9 +165,9 @@ const ArtistScreens = ({route}: any) => {
                   onPress={() => {
                     handlePlay(item, {
                       id: name,
-                      items: dataDetailArtist?.sections.filter(
-                        (type: any) => type.sectionId === 'aSongs',
-                      )[0].items,
+                      items: dataDetailArtist?.sections
+                        .filter((type: any) => type.sectionId === 'aSongs')[0]
+                        .itemsfilter((i: any) => i.streamingStatus === 1),
                     });
                     setPlayFrom({
                       id: 'artist',
@@ -216,12 +217,15 @@ const ArtistScreens = ({route}: any) => {
           <View>
             <Text
               style={{color: COLOR.TEXT_PRIMARY}}
-              className="text-lg font-semibold px-4 py-4">
+              className="text-lg font-semibold px-4 mb-4">
               Albums
             </Text>
             <ScrollView
               horizontal
-              contentContainerStyle={{paddingHorizontal: 16, gap: 10}}>
+              contentContainerStyle={{
+                paddingHorizontal: 16,
+                gap: 10,
+              }}>
               {dataDetailArtist?.sections
                 ?.filter((type: any) => type.sectionId === 'aAlbum')[0]
                 ?.items.map((item: any, index: number) => (
@@ -247,7 +251,7 @@ const ArtistScreens = ({route}: any) => {
             {dataDetailArtist?.sections
               ?.filter((type: any) => type.sectionId === 'aPlaylist')
               ?.map((item: any, index: number) => (
-                <View key={index} className="mb-4">
+                <View key={index}>
                   <Text
                     style={{color: COLOR.TEXT_PRIMARY}}
                     className="text-lg font-semibold px-4 py-4">
@@ -255,7 +259,11 @@ const ArtistScreens = ({route}: any) => {
                   </Text>
                   <ScrollView
                     horizontal
-                    contentContainerStyle={{paddingHorizontal: 16, gap: 10}}>
+                    contentContainerStyle={{
+                      paddingHorizontal: 16,
+                      gap: 10,
+                      minWidth: SCREEN_WIDTH,
+                    }}>
                     {item.items.map((item: any, index: number) => (
                       <PlayListCover
                         key={index}
@@ -285,7 +293,11 @@ const ArtistScreens = ({route}: any) => {
             </Text>
             <ScrollView
               horizontal
-              contentContainerStyle={{paddingHorizontal: 16, gap: 10}}>
+              contentContainerStyle={{
+                paddingHorizontal: 16,
+                gap: 10,
+                minWidth: SCREEN_WIDTH,
+              }}>
               {dataDetailArtist?.sections
                 ?.filter((type: any) => type.sectionId === 'aSingle')[0]
                 ?.items.map((item: any, index: number) => (

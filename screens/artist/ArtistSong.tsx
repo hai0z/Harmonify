@@ -102,7 +102,7 @@ const ArtistSong = ({route}: any) => {
     (song: any) => {
       handlePlay(song, {
         id: 'artist' + id,
-        items: data,
+        items: data.filter((i: any) => i.streamingStatus === 1),
       });
       setPlayFrom({
         id: 'artist',
@@ -149,50 +149,48 @@ const ArtistSong = ({route}: any) => {
             [{nativeEvent: {contentOffset: {y: scrollY}}}],
             {useNativeDriver: false},
           )}
-          ListHeaderComponent={() => {
-            return (
-              <View className="mb-8">
-                <View
-                  className="flex justify-end items-center pb-4"
-                  style={{
-                    width: SCREEN_WIDTH,
-                    height: SCREEN_WIDTH * 0.8,
-                  }}>
-                  <LinearGradient
-                    colors={['transparent', COLOR.BACKGROUND]}
-                    className="absolute bottom-0 h-40 left-0 right-0 z-10"
-                  />
+          ListHeaderComponent={
+            <View className="mb-8">
+              <View
+                className="flex justify-end items-center pb-4"
+                style={{
+                  width: SCREEN_WIDTH,
+                  height: SCREEN_WIDTH * 0.8,
+                }}>
+                <LinearGradient
+                  colors={['transparent', COLOR.BACKGROUND]}
+                  className="absolute bottom-0 h-40 left-0 right-0 z-10"
+                />
 
-                  <Image
-                    src={dataDetailArtist?.thumbnailM}
-                    blurRadius={100}
-                    style={[
-                      StyleSheet.absoluteFillObject,
-                      {width: SCREEN_WIDTH, height: SCREEN_WIDTH * 0.8},
-                    ]}
-                  />
-                  <Image
-                    src={dataDetailArtist?.thumbnailM}
-                    className="rounded-lg z-50"
-                    style={[
-                      {
-                        width: SCREEN_WIDTH * 0.6,
-                        height: SCREEN_WIDTH * 0.6,
-                      },
-                    ]}
-                  />
-                </View>
-                <Text
-                  className=" font-bold text-3xl text-left mt-4 px-4"
-                  style={{color: COLOR.TEXT_PRIMARY}}>
-                  {dataDetailArtist?.name}
-                </Text>
+                <Image
+                  src={dataDetailArtist?.thumbnailM}
+                  blurRadius={100}
+                  style={[
+                    StyleSheet.absoluteFillObject,
+                    {width: SCREEN_WIDTH, height: SCREEN_WIDTH * 0.8},
+                  ]}
+                />
+                <Image
+                  src={dataDetailArtist?.thumbnailM}
+                  className="rounded-lg z-50"
+                  style={[
+                    {
+                      width: SCREEN_WIDTH * 0.6,
+                      height: SCREEN_WIDTH * 0.6,
+                    },
+                  ]}
+                />
               </View>
-            );
-          }}
+              <Text
+                className=" font-bold text-3xl text-left mt-4 px-4"
+                style={{color: COLOR.TEXT_PRIMARY}}>
+                {dataDetailArtist?.name}
+              </Text>
+            </View>
+          }
           estimatedItemSize={70}
-          data={data}
-          renderItem={({item, index}: any) => (
+          data={data.filter((i: any) => i.streamingStatus === 1)}
+          renderItem={({item}: any) => (
             <TrackItem
               item={item}
               showBottomSheet={showBottomSheet}

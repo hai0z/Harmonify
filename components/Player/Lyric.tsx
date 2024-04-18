@@ -16,15 +16,15 @@ const Lyric = () => {
   const isPlayFromLocal = usePlayerStore(state => state.isPlayFromLocal);
   let bgColor = usePlayerStore(state => state.color);
 
-  const {currentLine} = useSyncLyric(lyrics);
+  const currentLine = useSyncLyric();
 
   const nativgation = useNavigation<any>();
 
   useEffect(() => {
+    console.log(currentLine);
     lyricsRef.current &&
       lyricsRef.current.scrollToIndex({
-        index:
-          (currentLine as number) === -1 ? 0 : (currentLine as number) - OFFSET,
+        index: currentLine! === -1 ? 0 : currentLine - OFFSET,
         animated: true,
       });
   }, [currentLine]);
@@ -71,19 +71,18 @@ const Lyric = () => {
               contentContainerStyle={{padding: 16}}
               data={lyrics}
               initialScrollIndex={
-                (currentLine as number) - OFFSET < 0 ? 1 : currentLine! - OFFSET
+                currentLine! === -1 ? 0 : currentLine - OFFSET
               }
-              estimatedItemSize={16}
+              estimatedItemSize={32}
               showsVerticalScrollIndicator={false}
-              extraData={[currentLine]}
+              extraData={currentLine}
               renderItem={({item, index}: any) => {
                 return (
                   <Text
                     key={index}
                     className=" font-bold text-[20px] mb-3"
                     style={{
-                      color:
-                        (currentLine as number) >= index ? 'white' : 'black',
+                      color: currentLine >= index ? 'white' : 'black',
                     }}>
                     {item.data}
                   </Text>

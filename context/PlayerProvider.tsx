@@ -38,6 +38,7 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
     setLikedSongs,
     setisLoadingTrack,
     tempSong,
+    lastPosition,
   } = usePlayerStore();
 
   const getSongColors = async () => {
@@ -115,7 +116,6 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
   }, [currentSong?.id]);
 
   useEffect(() => {
-    console.log('ok');
     saveToHistory(tempSong);
   }, [tempSong.encodeId]);
 

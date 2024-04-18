@@ -12,12 +12,10 @@ import {LinearGradient} from 'react-native-linear-gradient';
 import {FlashList} from '@shopify/flash-list';
 import {handlePlay} from '../../service/trackPlayerService';
 import {useNavigation} from '@react-navigation/native';
-import {useActiveTrack} from 'react-native-track-player';
 import {usePlayerStore} from '../../store/playerStore';
 import Entypo from 'react-native-vector-icons/Entypo';
 import TrackItem from '../../components/TrackItem';
 import {PlayerContext} from '../../context/PlayerProvider';
-import useBottomSheetStore from '../../store/bottomSheetStore';
 import useThemeStore from '../../store/themeStore';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -28,7 +26,11 @@ const PlaylistDetail = () => {
   const navigation = useNavigation<any>();
 
   const {startMiniPlayerTransition} = useContext(PlayerContext);
-  const {likedSongs: likedSong, setPlayFrom} = usePlayerStore(state => state);
+  const {
+    likedSongs: likedSong,
+    setPlayFrom,
+    currentSong,
+  } = usePlayerStore(state => state);
   const headerColor = useMemo(
     () =>
       scrollY.interpolate({
@@ -76,6 +78,9 @@ const PlaylistDetail = () => {
     [],
   );
 
+  const renderData = likedSong.map((item: any) =>
+    item.encodeId === currentSong?.id ? {...item, isActive: true} : item,
+  );
   return (
     <View
       className="flex-1  w-full"
@@ -149,9 +154,8 @@ const PlaylistDetail = () => {
         }}
         ListFooterComponent={() => <View style={{height: SCREEN_WIDTH}} />}
         nestedScrollEnabled
-        data={likedSong}
+        data={renderData}
         estimatedItemSize={72}
-        extraData={[likedSong]}
         keyExtractor={(item: any, index) => `${item.encodeId}_${index}`}
         renderItem={({item}: any) => {
           return (

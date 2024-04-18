@@ -5,6 +5,7 @@ import {useNavigation} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import useThemeStore from '../store/themeStore';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
+import TextTicker from 'react-native-text-ticker';
 interface coverProps {
   title: string;
   sortDescription?: string;
@@ -38,7 +39,7 @@ const PlayListCover = ({
         style={{width: wp(45), height: wp(45)}}
       />
       <Text
-        numberOfLines={2}
+        numberOfLines={1}
         className="text-left mt-1"
         style={{color: COLOR.TEXT_PRIMARY, fontSize: wp(4)}}>
         {title}

@@ -15,6 +15,9 @@ export const objectToTrack = (data: any) => {
     duration: data.duration,
   };
 }
+TrackPlayer.addEventListener(Event.PlaybackProgressUpdated, e => {
+  usePlayerStore.getState().setLastPosition(e.position);
+})
 
 TrackPlayer.addEventListener(Event.PlaybackActiveTrackChanged, async event => {
   if (!usePlayerStore.getState().isPlayFromLocal) {

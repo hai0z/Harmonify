@@ -1,7 +1,6 @@
-import { Timestamp, deleteDoc, doc, setDoc } from "firebase/firestore";
+import { deleteDoc, doc, setDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase/config";
 import { usePlayerStore } from "../../store/playerStore";
-import { Track } from "react-native-track-player";
 
 
 export const addToLikedList = async (

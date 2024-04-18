@@ -119,12 +119,12 @@ const ChartScreens = () => {
           [{nativeEvent: {contentOffset: {y: scrollY}}}],
           {useNativeDriver: false},
         )}
-        ListHeaderComponent={() => (
+        ListHeaderComponent={
           <ChartHeader
             data={[...data].splice(0, 3)}
             handlePlaySong={handlePlaySong}
           />
-        )}
+        }
         ListFooterComponent={() => <View style={{height: 200}} />}
         estimatedItemSize={70}
         data={[...data].splice(3, data.length)}
@@ -166,7 +166,7 @@ const Dot = ({scrollX}: any) => {
     </View>
   );
 };
-const ChartHeader = ({data, handlePlaySong}: any) => {
+const ChartHeader = React.memo(({data, handlePlaySong}: any) => {
   const COLOR = useThemeStore(state => state.COLOR);
 
   const scrollX = React.useRef(new Animated.Value(0)).current;
@@ -282,7 +282,7 @@ const ChartHeader = ({data, handlePlaySong}: any) => {
       </ScrollView>
     </View>
   );
-};
+});
 const ChartItem = React.memo(({item, index, onPlay}: any) => {
   console.log('chart item');
   const COLOR = useThemeStore(state => state.COLOR);

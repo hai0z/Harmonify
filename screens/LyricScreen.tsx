@@ -17,7 +17,7 @@ const DEFAULT_LINE = -1;
 const LyricScreen = ({route}: {route: any}) => {
   const {lyrics} = route.params;
   let {color: bgColor} = usePlayerStore(state => state);
-  const {currentLine} = useSyncLyric(lyrics);
+  const currentLine = useSyncLyric();
 
   const currentSong = useActiveTrack();
   const navigation = useNavigation<any>();
