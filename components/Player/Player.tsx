@@ -1,4 +1,4 @@
-import {View, TouchableOpacity, ToastAndroid} from 'react-native';
+import {View, TouchableOpacity} from 'react-native';
 import React from 'react';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import TrackSlider from './Control/TrackSlider';
@@ -8,11 +8,9 @@ import PrevButton from './Control/PrevButton';
 import LoopButton from './Control/LoopButton';
 import useThemeStore from '../../store/themeStore';
 import Animated from 'react-native-reanimated';
-import {usePlayerStore} from '../../store/playerStore';
 import {useNavigation} from '@react-navigation/native';
 const Player = () => {
   const {COLOR} = useThemeStore(state => state);
-  const {isPlayFromLocal} = usePlayerStore();
   const navigation = useNavigation<any>();
   return (
     <View>
@@ -22,18 +20,17 @@ const Player = () => {
         <PrevButton />
         <PlayButton />
         <NextButton />
-        {!isPlayFromLocal && (
-          <TouchableOpacity
-            onPress={() => navigation.navigate('Queue')}
-            activeOpacity={1}
-            className="w-[60px] h-[60px] items-end justify-center ">
-            <MaterialIcons
-              name="queue-music"
-              size={24}
-              color={COLOR.TEXT_PRIMARY}
-            />
-          </TouchableOpacity>
-        )}
+
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Queue')}
+          activeOpacity={1}
+          className="w-[60px] h-[60px] items-end justify-center ">
+          <MaterialIcons
+            name="queue-music"
+            size={24}
+            color={COLOR.TEXT_PRIMARY}
+          />
+        </TouchableOpacity>
       </Animated.View>
     </View>
   );

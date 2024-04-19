@@ -8,7 +8,6 @@ import {
 } from 'react-native';
 import PlayListCover from '../../components/PlayListCover';
 import Header from '../../components/Header';
-import {usePlayerStore} from '../../store/playerStore';
 import nodejs from 'nodejs-mobile-react-native';
 import NewRelease from './components/NewRelease';
 import LinearGradient from 'react-native-linear-gradient';
@@ -60,6 +59,7 @@ function HomeScreens() {
       return HEADER_GRADIENT.EVENING;
     }
   };
+
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -74,7 +74,6 @@ function HomeScreens() {
           className="h-full"
         />
       </View>
-
       <View>{dataNewRelease && <NewRelease data={dataNewRelease} />}</View>
 
       {dataHome?.map((e: any, index: number) => {

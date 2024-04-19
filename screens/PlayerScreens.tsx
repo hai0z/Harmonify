@@ -142,7 +142,7 @@ const PlayerScreens = () => {
               <Animated.Image
                 entering={FadeIn.duration(300).springify().delay(300)}
                 exiting={FadeOut.duration(300).springify()}
-                source={{uri: currentSong?.artwork || DEFAULT_IMG}}
+                source={{uri: currentSong?.artwork}}
                 className="rounded-md z-20"
                 style={{
                   height: SCREEN_WIDTH * 0.85,

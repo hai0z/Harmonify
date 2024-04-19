@@ -36,6 +36,7 @@ export default function useSyncLyric() {
       if (currentLine !== result) {
         setCurrentLine(result);
       }
+
     }
   }, [progress.position]);
 

@@ -16,10 +16,7 @@ import Animated, {
   FadeIn,
   FadeInDown,
   FadeOut,
-  LightSpeedInRight,
-  LightSpeedOutRight,
   SlideInLeft,
-  SlideOutRight,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
@@ -152,7 +149,7 @@ const Queue = () => {
                           color: COLOR.TEXT_PRIMARY,
                           fontSize: wp(4),
                         }}>
-                        {playList.items[trackIndex].title}
+                        {currentSong?.title}
                       </Text>
                       <Text
                         numberOfLines={1}
@@ -160,7 +157,7 @@ const Queue = () => {
                           color: COLOR.TEXT_SECONDARY,
                           fontSize: wp(3.5),
                         }}>
-                        {playList.items[trackIndex].artistsNames}
+                        {currentSong?.artist}
                       </Text>
                     </View>
                   </View>
@@ -252,7 +249,7 @@ const TrackItem = React.memo((props: any) => {
         <Text
           numberOfLines={1}
           style={{color: COLOR.TEXT_SECONDARY, fontSize: wp(3.5)}}>
-          {item?.artistsNames}
+          {item?.artistsNames || ''}
         </Text>
       </View>
     </TouchableOpacity>

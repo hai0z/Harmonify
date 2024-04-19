@@ -2,7 +2,7 @@ import { defaultColorObj, IPlaylist, usePlayerStore } from '../store/playerStore
 import TrackPlayer, { Event } from "react-native-track-player";
 import getThumbnail from "../utils/getThumnail";
 import nodejs from "nodejs-mobile-react-native";
-import { NULL_URL } from '../constants';
+import { DEFAULT_IMG, NULL_URL } from '../constants';
 import useToastStore, { ToastTime } from '../store/toastStore';
 
 export const objectToTrack = (data: any) => {
@@ -32,8 +32,6 @@ TrackPlayer.addEventListener(Event.PlaybackActiveTrackChanged, async event => {
       !usePlayerStore.getState().isLoadingTrack &&
         nodejs.channel.post('getSong', event.track!);
     }
-  } else {
-    usePlayerStore.getState().setCurrentSong(event.track!);
   }
 
 });
@@ -75,17 +73,21 @@ const handlePlay = async (song: any, playlist: IPlaylist = {
   await TrackPlayer.play();
 
 }
-const handlePlaySongInLocal = async (song: any) => {
+const handlePlaySongInLocal = async (song: any,) => {
   usePlayerStore.getState().setIsPlayFromLocal(true);
-  usePlayerStore.getState().setPlayList({ id: "", items: [] });
+  usePlayerStore.getState().setPlayList({
+    id: "", items: []
+  });
   usePlayerStore.getState().setColor(defaultColorObj);
   await TrackPlayer.reset();
   await TrackPlayer.add({
     ...objectToTrack(song),
+    artwork: song.thumbnail || DEFAULT_IMG,
     url: song.url
   });
   usePlayerStore.getState().setCurrentSong({
     ...objectToTrack(song),
+    artwork: song.thumbnail || DEFAULT_IMG,
     url: song.url
   });
   await TrackPlayer.play();

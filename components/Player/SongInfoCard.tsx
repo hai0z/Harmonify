@@ -19,9 +19,11 @@ const SongInfoCard = () => {
         ? tinycolor(bgColor.average).lighten(20).toString()
         : bgColor.average
       : bgColor.vibrant
-    : tinycolor(bgColor.dominant!).isDark()
-    ? tinycolor(bgColor.dominant!).lighten(30).toString()
-    : tinycolor(bgColor.dominant!).darken().toString();
+    : bgColor.vibrant === '#0098DB'
+    ? tinycolor(bgColor.average).isDark()
+      ? tinycolor(bgColor.average).lighten(50).toString()
+      : bgColor.average
+    : tinycolor(bgColor.vibrant).lighten(20).toString();
 
   const [data, setData] = useState<any>(null);
 

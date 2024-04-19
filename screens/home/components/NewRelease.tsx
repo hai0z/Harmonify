@@ -23,16 +23,20 @@ interface Props {
     items: {
       all: any[];
       vPop: any[];
-      others: any[];
     };
   };
 }
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const NewRelease = ({data}: Props) => {
   const [tabIndex, setTabIndex] = React.useState(0);
-  const allPage = paginateArray(data?.items?.all, 4);
-  const vPopPage = paginateArray(data?.items?.vPop, 4);
-  const othersPage = paginateArray(data?.items?.others, 4);
+  const allPage = paginateArray(
+    data?.items?.all.filter((item: any) => item.streamingStatus === 1),
+    4,
+  );
+  const vPopPage = paginateArray(
+    data?.items?.vPop.filter((item: any) => item.streamingStatus === 1),
+    4,
+  );
 
   const listRef = React.useRef<FlashList<any>>(null);
 
@@ -44,17 +48,17 @@ const NewRelease = ({data}: Props) => {
   }, [tabIndex]);
 
   const {startMiniPlayerTransition} = useContext(PlayerContext);
-  const dataList = [allPage, vPopPage, othersPage];
+  const dataList = [allPage, vPopPage];
   const handlePlaySong = useCallback(
     (song: any) => {
       handlePlay(song, {
         id: 'new-release' + tabIndex,
         items:
           tabIndex === 0
-            ? data?.items?.all
-            : tabIndex === 1
-            ? data?.items?.vPop
-            : data?.items?.others,
+            ? data?.items?.all.filter((item: any) => item.streamingStatus === 1)
+            : data.items?.vPop.filter(
+                (item: any) => item.streamingStatus === 1,
+              ),
       });
       setPlayFrom({
         id: 'playlist',
@@ -75,7 +79,7 @@ const NewRelease = ({data}: Props) => {
         Mới phát hành
       </Text>
       <View className="flex-row gap-4 px-4 py-2">
-        {['Tất cả', 'VPop', 'Khác'].map((item, index) => (
+        {['Tất cả', 'VPop'].map((item, index) => (
           <TouchableOpacity
             key={index}
             onPress={() => setTabIndex(index)}

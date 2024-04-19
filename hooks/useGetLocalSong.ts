@@ -40,9 +40,9 @@ const useGetLocalSong = () => {
       const permissions = await hasPermissions();
       if (permissions) {
         const songsOrError = await getAll({
-          limit: 20,
+
           offset: 0,
-          coverQuality: 50,
+          coverQuality: 100,
           minSongDuration: 1000,
           sortBy: SortSongFields.TITLE,
           sortOrder: SortSongOrder.DESC,
@@ -54,8 +54,8 @@ const useGetLocalSong = () => {
         } else {
           setLocalSong(
             songsOrError.map((song: any, index) => ({
-              title: song.title,
-              artistsNames: song.artist,
+              title: song.title || "không rõ",
+              artistsNames: song.artist || "không rõ",
               duration: song.duration / 1000,
               thumbnail: song.cover,
               url: `file://${song.url}`,

@@ -92,7 +92,7 @@ const HistoryScreens = () => {
 
   useEffect(() => {
     $bg.value = withTiming(`${gradientColor}`, {duration: 1550});
-  }, [gradientColor]);
+  }, [gradientColor, loading]);
 
   if (loading) {
     return (

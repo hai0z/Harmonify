@@ -117,7 +117,7 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
 
   useEffect(() => {
     saveToHistory(tempSong);
-  }, [tempSong.encodeId]);
+  }, [tempSong?.encodeId]);
 
   return (
     <PlayerContext.Provider
