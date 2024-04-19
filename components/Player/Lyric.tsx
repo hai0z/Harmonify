@@ -8,6 +8,7 @@ import useSyncLyric from '../../hooks/useSyncLyric';
 import tinycolor from 'tinycolor2';
 import useThemeStore from '../../store/themeStore';
 import Animated from 'react-native-reanimated';
+import useImageColor from '../../hooks/useImageColor';
 
 const OFFSET = 1;
 
@@ -31,19 +32,7 @@ const Lyric = () => {
 
   const lyricsRef = React.useRef<FlashList<any>>(null);
   const {COLOR} = useThemeStore(state => state);
-  const bg = useMemo(() => {
-    return COLOR.isDark
-      ? bgColor.vibrant === '#0098DB'
-        ? tinycolor(bgColor.average).isDark()
-          ? tinycolor(bgColor.average).lighten(20).toString()
-          : bgColor.average
-        : bgColor.vibrant
-      : bgColor.vibrant === '#0098DB'
-      ? tinycolor(bgColor.average).isDark()
-        ? tinycolor(bgColor.average).lighten(50).toString()
-        : bgColor.average
-      : tinycolor(bgColor.vibrant).lighten(20).toString();
-  }, [bgColor.dominant, COLOR]);
+  const {vibrantColor: bg} = useImageColor();
 
   if (isPlayFromLocal) {
     return null;

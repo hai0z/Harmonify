@@ -9,14 +9,13 @@ import TrackPlayer, {useActiveTrack} from 'react-native-track-player';
 import TrackSlider from '../components/Player/Control/TrackSlider';
 import PlayButton from '../components/Player/Control/PlayButton';
 import {LinearGradient} from 'react-native-linear-gradient';
-import tinycolor from 'tinycolor2';
 import useThemeStore from '../store/themeStore';
 import Animated, {FadeInDown, FadeInUp} from 'react-native-reanimated';
+import useImageColor from '../hooks/useImageColor';
 const OFFSET = 3;
 const DEFAULT_LINE = -1;
 const LyricScreen = ({route}: {route: any}) => {
   const {lyrics} = route.params;
-  let {color: bgColor} = usePlayerStore(state => state);
   const currentLine = useSyncLyric();
 
   const currentSong = useActiveTrack();
@@ -47,17 +46,7 @@ const LyricScreen = ({route}: {route: any}) => {
   }, []);
   const {COLOR} = useThemeStore();
 
-  const bg = useMemo(() => {
-    return COLOR.isDark
-      ? bgColor.vibrant === '#0098DB'
-        ? tinycolor(bgColor.average).isDark()
-          ? tinycolor(bgColor.average).lighten(20).toString()
-          : bgColor.average
-        : bgColor.vibrant
-      : tinycolor(bgColor.dominant!).isDark()
-      ? tinycolor(bgColor.dominant!).lighten(30).toString()
-      : tinycolor(bgColor.dominant!).darken().toString();
-  }, [bgColor.dominant, COLOR]);
+  const {vibrantColor: bg} = useImageColor();
 
   const lyricsRef = React.useRef<FlashList<any>>(null);
   return (

@@ -5,10 +5,9 @@ import {
   Dimensions,
   TouchableOpacity,
   StyleSheet,
-  Image,
 } from 'react-native';
 
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect} from 'react';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {LinearGradient} from 'react-native-linear-gradient';
 import {playFromMapping, usePlayerStore} from '../store/playerStore';
@@ -20,12 +19,8 @@ import ImageSlider from '../components/Player/ImageSlider';
 import ArtistCard from '../components/Player/ArtistCard';
 import SongInfoCard from '../components/Player/SongInfoCard';
 import {useActiveTrack} from 'react-native-track-player';
-import useDarkColor from '../hooks/useDarkColor';
 import useThemeStore from '../store/themeStore';
-import tinycolor from 'tinycolor2';
-import {DEFAULT_IMG} from '../constants';
 import {PlayerContext} from '../context/PlayerProvider';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Animated, {
   FadeIn,
   FadeInUp,
@@ -35,6 +30,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import HeartButton from '../components/HeartButton';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import useImageColor from '../hooks/useImageColor';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const TextAnimated = Animated.createAnimatedComponent(TextTicker);
@@ -49,11 +45,7 @@ const PlayerScreens = () => {
 
   const {showBottomSheet} = useContext(PlayerContext);
 
-  const gradientColor = COLOR.isDark
-    ? useDarkColor(color.dominant!, 20)
-    : tinycolor(color.dominant!).isDark()
-    ? tinycolor(color.dominant!).lighten(45).toString()
-    : tinycolor(color.dominant!).darken().toString();
+  const {dominantColor: gradientColor} = useImageColor();
 
   const bgAnimated = useSharedValue(`transparent`);
 

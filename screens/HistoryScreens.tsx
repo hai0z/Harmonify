@@ -21,8 +21,6 @@ import Animated, {
 } from 'react-native-reanimated';
 import {Track} from 'react-native-track-player';
 import LinearGradient from 'react-native-linear-gradient';
-import useDarkColor from '../hooks/useDarkColor';
-import tinycolor from 'tinycolor2';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {
   collection,
@@ -37,13 +35,14 @@ import RelativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/vi';
 import {handlePlay} from '../service/trackPlayerService';
 import {PlayerContext} from '../context/PlayerProvider';
+import useImageColor from '../hooks/useImageColor';
 dayjs.locale('vi');
 dayjs.extend(RelativeTime);
 
 const HistoryScreens = () => {
   const {COLOR} = useThemeStore(state => state);
 
-  const {color, setPlayFrom} = usePlayerStore(state => state);
+  const {setPlayFrom} = usePlayerStore(state => state);
 
   const navigation = useNavigation<any>();
 
@@ -70,12 +69,7 @@ const HistoryScreens = () => {
     };
   }, []);
 
-  const gradientColor = COLOR.isDark
-    ? useDarkColor(color.dominant!, 20)
-    : tinycolor(color.dominant!).isDark()
-    ? tinycolor(color.dominant!).lighten(45).toString()
-    : tinycolor(color.dominant!).darken().toString();
-
+  const {dominantColor: gradientColor} = useImageColor();
   const handlePlaySong = (item: any) => {
     handlePlay(item, {
       id: Math.random().toString(36).substring(7),

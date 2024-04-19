@@ -13,6 +13,8 @@ import NewRelease from './components/NewRelease';
 import LinearGradient from 'react-native-linear-gradient';
 import useThemeStore from '../../store/themeStore';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import RecentList from './components/RecentList';
+import {getRecentListening} from '../../service/firebase';
 interface typePlaylistCover {
   items: [];
   title: string;
@@ -27,7 +29,7 @@ function HomeScreens() {
   const [dataNewRelease, setDataNewRelease] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const {COLOR, HEADER_GRADIENT} = useThemeStore(state => state);
-
+  const [dataRecent, setDataRecent] = useState<any>([]);
   useEffect(() => {
     setLoading(true);
     nodejs.channel.addListener('home', data => {
@@ -35,8 +37,12 @@ function HomeScreens() {
       setDataNewRelease(
         data.filter((e: any) => e.sectionType === 'new-release')[0],
       );
-      setLoading(false);
     });
+    (async () => {
+      const res = await getRecentListening();
+      setDataRecent(res);
+      setLoading(false);
+    })();
     nodejs.channel.post('home');
   }, []);
 
@@ -74,34 +80,41 @@ function HomeScreens() {
           className="h-full"
         />
       </View>
-      <View>{dataNewRelease && <NewRelease data={dataNewRelease} />}</View>
+      <View>
+        <RecentList data={dataRecent} />
+      </View>
+      <View className="mt-4">
+        {dataNewRelease && <NewRelease data={dataNewRelease} />}
+      </View>
 
-      {dataHome?.map((e: any, index: number) => {
-        return (
-          <View key={index}>
-            <View>
-              <Text
-                className="text-xl flex justify-between items-end mt-9 mb-3 uppercase mx-4 "
-                style={{color: COLOR.TEXT_PRIMARY}}>
-                {e.title === '' ? e.sectionId.slice(1) : e.title}
-              </Text>
+      <View className="-mt-4">
+        {dataHome?.map((e: any, index: number) => {
+          return (
+            <View key={index}>
+              <View>
+                <Text
+                  className="text-xl flex justify-between items-end mt-8 mb-3 uppercase mx-4 "
+                  style={{color: COLOR.TEXT_PRIMARY}}>
+                  {e.title === '' ? e.sectionId.slice(1) : e.title}
+                </Text>
+              </View>
+              <ScrollView
+                horizontal
+                contentContainerStyle={{gap: 10, paddingHorizontal: 16}}>
+                {e.items.map((element: typePlaylistCover, index: number) => (
+                  <PlayListCover
+                    key={index}
+                    title={element.title}
+                    encodeId={`${element.encodeId}`}
+                    thumbnail={element.thumbnail}
+                    sortDescription={element.sortDescription}
+                  />
+                ))}
+              </ScrollView>
             </View>
-            <ScrollView
-              horizontal
-              contentContainerStyle={{gap: 10, paddingHorizontal: 16}}>
-              {e.items.map((element: typePlaylistCover, index: number) => (
-                <PlayListCover
-                  key={index}
-                  title={element.title}
-                  encodeId={`${element.encodeId}`}
-                  thumbnail={element.thumbnail}
-                  sortDescription={element.sortDescription}
-                />
-              ))}
-            </ScrollView>
-          </View>
-        );
-      })}
+          );
+        })}
+      </View>
       <View className="h-48"></View>
     </ScrollView>
   );

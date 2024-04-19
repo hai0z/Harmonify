@@ -1,16 +1,8 @@
-import {
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  Dimensions,
-  Easing,
-} from 'react-native';
+import {View, Text, Image, TouchableOpacity, Dimensions} from 'react-native';
 import React, {useCallback, useContext, useEffect, useMemo} from 'react';
 import useKeyBoardStatus from '../hooks/useKeyBoardStatus';
 import TrackPlayer, {
   State,
-  useActiveTrack,
   usePlaybackState,
   useProgress,
 } from 'react-native-track-player';
@@ -23,12 +15,9 @@ import {MINI_PLAYER_HEIGHT, TABBAR_HEIGHT} from '../constants';
 import useThemeStore from '../store/themeStore';
 import tinycolor from 'tinycolor2';
 import Animated, {
-  Extrapolate,
   FadeOut,
   LightSpeedInLeft,
   interpolate,
-  runOnJS,
-  runOnUI,
   useAnimatedStyle,
   useSharedValue,
   withDelay,
@@ -36,6 +25,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import HeartButton from './HeartButton';
 import {PlayerContext} from '../context/PlayerProvider';
+import useImageColor from '../hooks/useImageColor';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const MiniPlayer = () => {
@@ -55,14 +45,7 @@ const MiniPlayer = () => {
 
   const progress = useProgress(1000 / 120); //120fps
 
-  const gradientColor = useMemo(() => {
-    return COLOR.isDark
-      ? useDarkColor(color.dominant!, 20)
-      : tinycolor(color.dominant!).isDark()
-      ? tinycolor(color.dominant!).lighten(45).toString()
-      : tinycolor(color.dominant!).darken(10).toString();
-  }, [color.dominant, COLOR]);
-
+  const {dominantColor: gradientColor} = useImageColor();
   const bgAnimated = useSharedValue(`transparent`);
 
   const togglePlay = useCallback(async (state: State | undefined) => {

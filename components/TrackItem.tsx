@@ -24,12 +24,12 @@ const TrackItem = (props: Props) => {
       style={{opacity: item?.streamingStatus === 1 ? 1 : 0.5}}
       activeOpacity={0.8}
       disabled={item?.streamingStatus === 2}
-      className="flex flex-row  items-center mx-4 my-2 "
+      className="flex flex-row  items-center mx-4 mb-3"
       onPress={() => onClick(item)}>
       {isAlbum ? (
         <View
           className="rounded-md flex justify-center items-center"
-          style={{width: wp(14), height: wp(14)}}>
+          style={{width: wp(15), height: wp(25)}}>
           <Text style={{color: COLOR.TEXT_PRIMARY}} className="font-semibold">
             {index! + 1}
           </Text>
@@ -40,8 +40,8 @@ const TrackItem = (props: Props) => {
             uri: getThumbnail(item.thumbnail),
           }}
           key={item.encodeId}
-          className="rounded-md"
-          style={{width: wp(14), height: wp(14)}}
+          className="rounded-none"
+          style={{width: wp(15), height: wp(15)}}
         />
       )}
       <View className="flex justify-center ml-2 flex-1 ">

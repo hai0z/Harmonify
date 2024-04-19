@@ -1,5 +1,5 @@
 import {View, Text, Image} from 'react-native';
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import useThemeStore from '../store/themeStore';
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -25,15 +25,12 @@ import PrevButton from '../components/Player/Control/PrevButton';
 import NextButton from '../components/Player/Control/NextButton';
 import TrackPlayer, {useProgress} from 'react-native-track-player';
 import LinearGradient from 'react-native-linear-gradient';
-import useDarkColor from '../hooks/useDarkColor';
-import tinycolor from 'tinycolor2';
 import Entypo from 'react-native-vector-icons/Entypo';
+import useImageColor from '../hooks/useImageColor';
 const Queue = () => {
   const {COLOR} = useThemeStore(state => state);
 
-  const {playFrom, currentSong, playList, color} = usePlayerStore(
-    state => state,
-  );
+  const {playFrom, currentSong, playList} = usePlayerStore(state => state);
 
   const navigation = useNavigation<any>();
 
@@ -44,13 +41,7 @@ const Queue = () => {
 
   const progress = useProgress(100);
 
-  const gradientColor = useMemo(() => {
-    return COLOR.isDark
-      ? useDarkColor(color.dominant!, 35)
-      : tinycolor(color.dominant!).isDark()
-      ? tinycolor(color.dominant!).lighten(45).toString()
-      : tinycolor(color.dominant!).darken(5).toString();
-  }, [color.dominant, COLOR]);
+  const {dominantColor: gradientColor} = useImageColor();
 
   const handlePlay = async (item: any) => {
     const index = playList.items.findIndex(

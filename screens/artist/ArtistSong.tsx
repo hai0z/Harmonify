@@ -85,12 +85,12 @@ const ArtistSong = ({route}: any) => {
   const scrollY = React.useRef(new Animated.Value(0)).current;
 
   const headerColor = scrollY.interpolate({
-    inputRange: [SCREEN_WIDTH * 0.59, SCREEN_WIDTH * 0.6],
+    inputRange: [SCREEN_WIDTH * 0.6, SCREEN_WIDTH * 0.6],
     outputRange: ['transparent', COLOR.BACKGROUND],
     extrapolate: 'clamp',
   });
   const titleOpacity = scrollY.interpolate({
-    inputRange: [SCREEN_WIDTH * 0.59, SCREEN_WIDTH * 0.6],
+    inputRange: [SCREEN_WIDTH * 0.6, SCREEN_WIDTH * 0.6],
     outputRange: [0, 1],
     extrapolate: 'clamp',
   });

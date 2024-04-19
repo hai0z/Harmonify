@@ -3,27 +3,15 @@ import React, {useEffect, useState} from 'react';
 import {usePlayerStore} from '../../store/playerStore';
 import dayjs from 'dayjs';
 import nodejs from 'nodejs-mobile-react-native';
-import tinycolor from 'tinycolor2';
 import useThemeStore from '../../store/themeStore';
 import Animated from 'react-native-reanimated';
+import useImageColor from '../../hooks/useImageColor';
 const SongInfoCard = () => {
-  const {color: bgColor} = usePlayerStore(state => state);
-
   const currentSong = usePlayerStore(state => state.currentSong);
 
   const {COLOR} = useThemeStore(state => state);
 
-  const bg = COLOR.isDark
-    ? bgColor.vibrant === '#0098DB'
-      ? tinycolor(bgColor.average).isDark()
-        ? tinycolor(bgColor.average).lighten(20).toString()
-        : bgColor.average
-      : bgColor.vibrant
-    : bgColor.vibrant === '#0098DB'
-    ? tinycolor(bgColor.average).isDark()
-      ? tinycolor(bgColor.average).lighten(50).toString()
-      : bgColor.average
-    : tinycolor(bgColor.vibrant).lighten(20).toString();
+  const {vibrantColor: bg} = useImageColor();
 
   const [data, setData] = useState<any>(null);
 

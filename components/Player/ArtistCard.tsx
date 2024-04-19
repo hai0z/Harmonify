@@ -6,11 +6,9 @@ import {usePlayerStore} from '../../store/playerStore';
 import {useNavigation} from '@react-navigation/native';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {DEFAULT_IMG} from '../../constants';
-import tinycolor from 'tinycolor2';
 import useThemeStore from '../../store/themeStore';
+import useImageColor from '../../hooks/useImageColor';
 const ArtistCard = () => {
-  const {color: bgColor} = usePlayerStore(state => state);
-
   const currentSong = usePlayerStore(state => state.currentSong);
 
   const [data, setData] = useState<any>(null);
@@ -18,17 +16,8 @@ const ArtistCard = () => {
   const navigation = useNavigation<any>();
 
   const {COLOR} = useThemeStore(state => state);
-  const bg = COLOR.isDark
-    ? bgColor.vibrant === '#0098DB'
-      ? tinycolor(bgColor.average).isDark()
-        ? tinycolor(bgColor.average).lighten(20).toString()
-        : bgColor.average
-      : bgColor.vibrant
-    : bgColor.vibrant === '#0098DB'
-    ? tinycolor(bgColor.average).isDark()
-      ? tinycolor(bgColor.average).lighten(50).toString()
-      : bgColor.average
-    : tinycolor(bgColor.vibrant).lighten(20).toString();
+
+  const {vibrantColor: bg} = useImageColor();
 
   useEffect(() => {
     setData(null);

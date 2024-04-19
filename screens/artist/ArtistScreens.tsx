@@ -20,6 +20,9 @@ import useThemeStore from '../../store/themeStore';
 import {usePlayerStore} from '../../store/playerStore';
 import LinearGradient from 'react-native-linear-gradient';
 import {PlayerContext} from '../../context/PlayerProvider';
+import getThumbnail from '../../utils/getThumnail';
+import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
+
 interface artistType {
   id: string;
   name: string;
@@ -176,17 +179,22 @@ const ArtistScreens = ({route}: any) => {
                     startMiniPlayerTransition();
                   }}>
                   <Image
-                    source={{uri: item.thumbnail}}
+                    source={{uri: getThumbnail(item.thumbnail)}}
                     key={item.encodeId}
-                    className="rounded-md h-14 w-14"
+                    style={{
+                      width: wp(15),
+                      height: wp(15),
+                    }}
                   />
                   <View>
-                    <Text style={{color: COLOR.TEXT_PRIMARY}} className="ml-4">
+                    <Text
+                      style={{color: COLOR.TEXT_PRIMARY, fontSize: wp(4)}}
+                      className="ml-2 font-semibold">
                       {item.title}
                     </Text>
                     <Text
-                      className=" ml-4"
-                      style={{color: COLOR.TEXT_SECONDARY}}>
+                      className=" ml-2"
+                      style={{color: COLOR.TEXT_SECONDARY, fontSize: wp(3.5)}}>
                       {item.artistsNames}
                     </Text>
                   </View>
@@ -225,6 +233,7 @@ const ArtistScreens = ({route}: any) => {
               contentContainerStyle={{
                 paddingHorizontal: 16,
                 gap: 10,
+                minWidth: SCREEN_WIDTH,
               }}>
               {dataDetailArtist?.sections
                 ?.filter((type: any) => type.sectionId === 'aAlbum')[0]

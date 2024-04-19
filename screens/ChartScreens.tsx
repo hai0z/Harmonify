@@ -29,7 +29,7 @@ import nodejs from 'nodejs-mobile-react-native';
 import useThemeStore from '../store/themeStore';
 import {usePlayerStore} from '../store/playerStore';
 import {PlayerContext} from '../context/PlayerProvider';
-
+import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const ChartScreens = () => {
@@ -300,7 +300,7 @@ const ChartItem = React.memo(({item, index, onPlay}: any) => {
       <Image
         source={{uri: getThumbnail(item.thumbnail)}}
         key={item.encodeId}
-        className="w-12 h-12 rounded-md"
+        style={{width: wp(15), height: wp(15)}}
       />
 
       <View className="flex justify-center ml-2 flex-1">
