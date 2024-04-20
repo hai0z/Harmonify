@@ -1,4 +1,4 @@
-import {View, Text, Image} from 'react-native';
+import {View, Text, Image, StyleSheet} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import useThemeStore from '../store/themeStore';
 
@@ -27,6 +27,7 @@ import TrackPlayer, {useProgress} from 'react-native-track-player';
 import LinearGradient from 'react-native-linear-gradient';
 import Entypo from 'react-native-vector-icons/Entypo';
 import useImageColor from '../hooks/useImageColor';
+import getThumbnail, {getThumbnailWithRatio} from '../utils/getThumnail';
 const Queue = () => {
   const {COLOR} = useThemeStore(state => state);
 
@@ -39,7 +40,7 @@ const Queue = () => {
   );
   const [copyPlaylist, setCopyPlaylist] = useState([...playList.items]);
 
-  const progress = useProgress(100);
+  const progress = useProgress(1000 / 120);
 
   const {dominantColor: gradientColor} = useImageColor();
 
@@ -74,6 +75,7 @@ const Queue = () => {
         colors={[`transparent`, `${COLOR.BACKGROUND}`]}
         className="absolute top-0 left-0 right-0 h-full"
       />
+
       <View className="flex flex-row items-center justify-between px-6">
         <Animated.View
           entering={FadeIn.duration(300).delay(300)}
@@ -106,7 +108,7 @@ const Queue = () => {
           />
         </TouchableOpacity>
       </View>
-      <View className="mt-4 flex-1 px-6">
+      <View className="pt-4 flex-1 px-6">
         <FlashList
           ListFooterComponent={<View className="h-10" />}
           ListEmptyComponent={
@@ -126,11 +128,10 @@ const Queue = () => {
                 <Animated.View
                   entering={SlideInLeft.duration(300)}
                   key={currentSong?.id}>
-                  <View className="flex flex-row mt-2">
+                  <View className="flex flex-row mt-4">
                     <Animated.Image
-                      className="rounded-md"
                       src={currentSong?.artwork}
-                      style={{width: wp(14), height: wp(14)}}
+                      style={{width: wp(15), height: wp(15)}}
                     />
                     <View className="flex justify-center ml-2 flex-1 ">
                       <Text
@@ -155,7 +156,9 @@ const Queue = () => {
                 </Animated.View>
               </View>
               <View className="mt-6">
-                <Text style={{color: COLOR.TEXT_PRIMARY}} className="font-bold">
+                <Text
+                  style={{color: COLOR.TEXT_PRIMARY}}
+                  className="font-bold mb-4">
                   Hàng đợi
                 </Text>
               </View>
@@ -215,15 +218,14 @@ const TrackItem = React.memo((props: any) => {
   return (
     <TouchableOpacity
       activeOpacity={0.8}
-      className="flex flex-row  items-center my-2"
+      className="flex flex-row  items-center mb-3"
       onPress={() => onClick(item)}>
       <Image
         source={{
-          uri: item.thumbnail,
+          uri: getThumbnail(item.thumbnail),
         }}
         key={item.encodeId}
-        className="rounded-md"
-        style={{width: wp(14), height: wp(14)}}
+        style={{width: wp(15), height: wp(15)}}
       />
 
       <View className="flex justify-center ml-2 flex-1 ">

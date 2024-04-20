@@ -72,8 +72,8 @@ const NewRelease = ({data}: Props) => {
           data={allPage}
           renderItem={({item}) => (
             <View
-              style={{width: SCREEN_WIDTH, minHeight: 3}}
-              className="flex-1">
+              style={{minHeight: 3, width: SCREEN_WIDTH}}
+              className="flex-1 min-h-[3px]">
               <FlashList
                 data={item}
                 estimatedItemSize={70}

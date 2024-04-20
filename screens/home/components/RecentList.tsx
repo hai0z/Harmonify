@@ -13,8 +13,8 @@ const RecentList = ({data}: any) => {
   const {startMiniPlayerTransition} = useContext(PlayerContext);
   const handlePlaySong = (song: any) => {
     handlePlay(song, {
-      id: 'recent-listening',
-      items: data,
+      id: song.encodeId,
+      items: [song],
     });
     setPlayFrom({
       id: 'history',
@@ -45,8 +45,8 @@ const RecentList = ({data}: any) => {
                 width: wp(45) - 4,
                 backgroundColor: COLOR.isDark
                   ? tinycolor(COLOR.BACKGROUND).brighten().toString()
-                  : '#F9F5F6',
-                elevation: COLOR.isDark ? 0 : 10,
+                  : '#ffffff',
+                elevation: 0.5,
               }}
               className="flex flex-row items-center my-1 rounded-t-md rounded-b-md">
               <Image

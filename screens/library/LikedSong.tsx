@@ -38,7 +38,7 @@ const PlaylistDetail = () => {
         outputRange: ['transparent', COLOR.BACKGROUND],
         extrapolate: 'clamp',
       }),
-    [scrollY],
+    [scrollY, COLOR],
   );
 
   const {showBottomSheet} = useContext(PlayerContext);
@@ -86,7 +86,7 @@ const PlaylistDetail = () => {
       className="flex-1  w-full"
       style={{backgroundColor: COLOR.BACKGROUND}}>
       <Animated.View
-        className="absolute top-0 pt-[35px] left-0 right-0 z-30 h-20  justify-between items-center flex-row px-6"
+        className="absolute top-0  left-0 right-0 z-30 h-20 pt-[35px] justify-between items-center flex-row px-6"
         style={{backgroundColor: headerColor}}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back" size={24} color={COLOR.TEXT_PRIMARY} />

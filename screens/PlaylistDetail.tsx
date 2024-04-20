@@ -136,6 +136,7 @@ const PlaylistDetail = ({route}: {route: any}) => {
             {playlistData?.title}
           </Animated.Text>
         </View>
+        <View className="w-10" />
       </Animated.View>
       <FlashList
         showsVerticalScrollIndicator={false}

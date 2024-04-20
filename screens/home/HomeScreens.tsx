@@ -15,6 +15,7 @@ import useThemeStore from '../../store/themeStore';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import RecentList from './components/RecentList';
 import {getRecentListening} from '../../service/firebase';
+import {StatusBar} from 'expo-status-bar';
 interface typePlaylistCover {
   items: [];
   title: string;
@@ -87,7 +88,7 @@ function HomeScreens() {
         {dataNewRelease && <NewRelease data={dataNewRelease} />}
       </View>
 
-      <View className="-mt-4">
+      <View className="-mt-6">
         {dataHome?.map((e: any, index: number) => {
           return (
             <View key={index}>

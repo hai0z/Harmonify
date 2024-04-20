@@ -36,6 +36,7 @@ import 'dayjs/locale/vi';
 import {handlePlay} from '../service/trackPlayerService';
 import {PlayerContext} from '../context/PlayerProvider';
 import useImageColor from '../hooks/useImageColor';
+import getThumbnail from '../utils/getThumnail';
 dayjs.locale('vi');
 dayjs.extend(RelativeTime);
 
@@ -142,16 +143,16 @@ const HistoryScreens = () => {
           />
         </TouchableOpacity>
       </View>
-      <View className="mt-4 flex-1 px-4">
+      <View className="flex-1 px-4 pt-4">
         <FlashList
-          ListFooterComponent={() => <View className="h-40" />}
-          ListEmptyComponent={() => (
+          ListFooterComponent={<View className="h-40" />}
+          ListEmptyComponent={
             <View className="flex justify-center items-center pt-10">
               <Text style={{color: COLOR.TEXT_PRIMARY}} className="text-center">
                 Bạn chưa nghe bài hát nào gần dây
               </Text>
             </View>
-          )}
+          }
           showsVerticalScrollIndicator={false}
           data={historyData}
           extraData={historyData}
@@ -178,15 +179,14 @@ const TrackItem = React.memo((props: any) => {
   return (
     <TouchableOpacity
       activeOpacity={0.8}
-      className="flex flex-row  items-center my-2"
+      className="flex flex-row  items-center mb-3"
       onPress={() => onClick(item)}>
       <Image
         source={{
-          uri: item?.thumbnail,
+          uri: getThumbnail(item?.thumbnail, 720),
         }}
         key={item?.encodeId}
-        className="rounded-md"
-        style={{width: wp(14), height: wp(14)}}
+        style={{width: wp(15), height: wp(15)}}
       />
 
       <View className="flex justify-center ml-2 flex-1 ">

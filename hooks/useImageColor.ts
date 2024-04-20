@@ -1,5 +1,3 @@
-import { View, Text } from 'react-native'
-import React from 'react'
 import { usePlayerStore } from '../store/playerStore'
 import useThemeStore from '../store/themeStore'
 import useDarkColor from './useDarkColor'
