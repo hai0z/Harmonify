@@ -5,12 +5,12 @@ import {useNavigation} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import useThemeStore from '../store/themeStore';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
-import TextTicker from 'react-native-text-ticker';
 interface coverProps {
   title: string;
   sortDescription?: string;
   thumbnail: string;
   encodeId: string;
+  isAlbum?: boolean;
 }
 
 const PlayListCover = ({
@@ -18,6 +18,7 @@ const PlayListCover = ({
   sortDescription,
   thumbnail,
   encodeId,
+  isAlbum = false,
 }: coverProps) => {
   const navigation = useNavigation<any>();
   const COLOR = useThemeStore(state => state.COLOR);
@@ -44,12 +45,14 @@ const PlayListCover = ({
         style={{color: COLOR.TEXT_PRIMARY, fontSize: wp(4)}}>
         {title}
       </Text>
-      <Text
-        numberOfLines={2}
-        className="text-left"
-        style={{color: COLOR.TEXT_SECONDARY, fontSize: wp(3)}}>
-        {sortDescription ? sortDescription : ''}
-      </Text>
+      {!isAlbum && (
+        <Text
+          numberOfLines={2}
+          className="text-left"
+          style={{color: COLOR.TEXT_SECONDARY, fontSize: wp(3)}}>
+          {sortDescription ? sortDescription : ''}
+        </Text>
+      )}
     </TouchableOpacity>
   );
 };

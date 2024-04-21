@@ -110,6 +110,17 @@ const PlaylistDetail = ({route}: {route: any}) => {
     startMiniPlayerTransition();
   };
 
+  const caculateTotalTime = () => {
+    let total = 0;
+    playlistData?.song.items.forEach((item: any) => {
+      total += item.duration;
+    });
+    const hours = Math.floor(total / 3600);
+    const remainingSeconds = total % 3600;
+    const minutes = Math.floor(remainingSeconds / 60);
+
+    return {hours, minutes};
+  };
   if (loading)
     return (
       <View
@@ -216,7 +227,13 @@ const PlaylistDetail = ({route}: {route: any}) => {
                   <View className="flex flex-row justify-between">
                     <View className="flex flex-row items-center">
                       <Text style={{color: COLOR.TEXT_PRIMARY}}>
-                        {playlistData?.song.total} bài hát{' '}
+                        {playlistData?.song.items.length} bài hát{' • '}
+                      </Text>
+                      <Text style={{color: COLOR.TEXT_PRIMARY}}>
+                        {caculateTotalTime().hours > 0 && (
+                          <Text>{caculateTotalTime().hours} giờ </Text>
+                        )}
+                        {caculateTotalTime().minutes} phút
                       </Text>
                       <Text
                         className="ml-4"

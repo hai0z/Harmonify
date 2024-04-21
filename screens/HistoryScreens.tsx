@@ -24,6 +24,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {
   collection,
+  limit,
   onSnapshot,
   orderBy,
   query,
@@ -37,6 +38,8 @@ import {handlePlay} from '../service/trackPlayerService';
 import {PlayerContext} from '../context/PlayerProvider';
 import useImageColor from '../hooks/useImageColor';
 import getThumbnail from '../utils/getThumnail';
+import TrackItem from '../components/TrackItem';
+import useBottomSheetStore from '../store/bottomSheetStore';
 dayjs.locale('vi');
 dayjs.extend(RelativeTime);
 
@@ -44,6 +47,8 @@ const HistoryScreens = () => {
   const {COLOR} = useThemeStore(state => state);
 
   const {setPlayFrom} = usePlayerStore(state => state);
+
+  const {showBottomSheet} = useContext(PlayerContext);
 
   const navigation = useNavigation<any>();
 
@@ -55,7 +60,7 @@ const HistoryScreens = () => {
     const q = query(
       collection(db, `users/${auth.currentUser?.uid}/history`),
       orderBy('timestamp', 'desc'),
-      where('timestamp', '>=', dayjs().subtract(30, 'day').millisecond()),
+      limit(50),
     );
     const unsub = onSnapshot(q, querySnapshot => {
       const songs = [] as any;
@@ -71,6 +76,7 @@ const HistoryScreens = () => {
   }, []);
 
   const {dominantColor: gradientColor} = useImageColor();
+
   const handlePlaySong = (item: any) => {
     handlePlay(item, {
       id: Math.random().toString(36).substring(7),
@@ -86,21 +92,13 @@ const HistoryScreens = () => {
   const $bg = useSharedValue(`transparent`);
 
   useEffect(() => {
+    console.log('sdfasdf');
     $bg.value = withTiming(`${gradientColor}`, {duration: 1550});
   }, [gradientColor, loading]);
 
-  if (loading) {
-    return (
-      <View
-        style={{backgroundColor: COLOR.BACKGROUND}}
-        className="flex-1 justify-center items-center">
-        <ActivityIndicator size="large" color={COLOR.PRIMARY} />
-      </View>
-    );
-  }
   return (
     <View
-      className="pt-[35px] flex-1"
+      className="flex-1 w-full pt-[35px]"
       style={{backgroundColor: COLOR.BACKGROUND}}>
       <Animated.View
         className="absolute top-0 left-0 right-0"
@@ -135,83 +133,49 @@ const HistoryScreens = () => {
             Đã phát gần đây
           </Animated.Text>
         </View>
-        <TouchableOpacity>
-          <Entypo
-            name="dots-three-vertical"
-            size={20}
-            color={COLOR.TEXT_PRIMARY}
+        <View className="w-5 h-5" />
+      </View>
+      {loading ? (
+        <View className="flex-1 pt-4">
+          <View className="flex-1 flex justify-center items-center">
+            <ActivityIndicator size="large" color={COLOR.PRIMARY} />
+          </View>
+        </View>
+      ) : (
+        <View className="flex-1 pt-2">
+          <FlashList
+            ListHeaderComponent={<View className="h-8"></View>}
+            ListFooterComponent={<View className="h-40" />}
+            ListEmptyComponent={
+              <View className="flex justify-center items-center pt-10">
+                <Text
+                  style={{color: COLOR.TEXT_PRIMARY}}
+                  className="text-center">
+                  Bạn chưa nghe bài hát nào gần dây
+                </Text>
+              </View>
+            }
+            showsVerticalScrollIndicator={false}
+            data={historyData}
+            extraData={historyData}
+            estimatedItemSize={70}
+            nestedScrollEnabled
+            keyExtractor={item => item.encodeId}
+            renderItem={({item, index}) => {
+              return (
+                <TrackItem
+                  showBottomSheet={showBottomSheet}
+                  item={item}
+                  index={index}
+                  onClick={handlePlaySong}
+                />
+              );
+            }}
           />
-        </TouchableOpacity>
-      </View>
-      <View className="flex-1 px-4 pt-4">
-        <FlashList
-          ListFooterComponent={<View className="h-40" />}
-          ListEmptyComponent={
-            <View className="flex justify-center items-center pt-10">
-              <Text style={{color: COLOR.TEXT_PRIMARY}} className="text-center">
-                Bạn chưa nghe bài hát nào gần dây
-              </Text>
-            </View>
-          }
-          showsVerticalScrollIndicator={false}
-          data={historyData}
-          extraData={historyData}
-          estimatedItemSize={70}
-          keyExtractor={item => item.encodeId}
-          renderItem={({item, index}) => {
-            return (
-              <TrackItem
-                COLOR={COLOR}
-                item={item}
-                index={index}
-                onClick={handlePlaySong}
-              />
-            );
-          }}
-        />
-      </View>
+        </View>
+      )}
     </View>
   );
 };
 
-const TrackItem = React.memo((props: any) => {
-  const {item, onClick, COLOR} = props;
-  return (
-    <TouchableOpacity
-      activeOpacity={0.8}
-      className="flex flex-row  items-center mb-3"
-      onPress={() => onClick(item)}>
-      <Image
-        source={{
-          uri: getThumbnail(item?.thumbnail, 720),
-        }}
-        key={item?.encodeId}
-        style={{width: wp(15), height: wp(15)}}
-      />
-
-      <View className="flex justify-center ml-2 flex-1 ">
-        <Text
-          className="font-semibold"
-          numberOfLines={1}
-          style={{
-            color: COLOR.TEXT_PRIMARY,
-            fontSize: wp(4),
-          }}>
-          {item?.title}
-        </Text>
-
-        <View className="flex flex-row justify-between">
-          <Text
-            numberOfLines={1}
-            style={{color: COLOR.TEXT_SECONDARY, fontSize: wp(3.5)}}>
-            {item?.artistsNames}
-          </Text>
-          <Text style={{color: COLOR.TEXT_SECONDARY, fontSize: wp(2.5)}}>
-            {dayjs(item?.timestamp).fromNow()}
-          </Text>
-        </View>
-      </View>
-    </TouchableOpacity>
-  );
-});
 export default HistoryScreens;

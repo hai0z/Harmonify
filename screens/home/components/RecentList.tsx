@@ -42,7 +42,7 @@ const RecentList = ({data}: any) => {
               activeOpacity={0.8}
               key={index}
               style={{
-                width: wp(45) - 4,
+                width: wp(50) - 20,
                 backgroundColor: COLOR.isDark
                   ? tinycolor(COLOR.BACKGROUND).brighten().toString()
                   : '#ffffff',

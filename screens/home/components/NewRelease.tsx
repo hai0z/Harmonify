@@ -1,11 +1,11 @@
 import {View, Text, Dimensions, TouchableOpacity} from 'react-native';
 import React, {useCallback, useContext, useEffect} from 'react';
-import {FlashList} from '@shopify/flash-list';
 import TrackItem from '../../../components/TrackItem';
 import {handlePlay} from '../../../service/trackPlayerService';
 import {PlayerContext} from '../../../context/PlayerProvider';
 import useThemeStore from '../../../store/themeStore';
 import {usePlayerStore} from '../../../store/playerStore';
+import {FlatList} from 'react-native-gesture-handler';
 
 function paginateArray(data: any[], itemsPerPage: number) {
   const totalPages = Math.ceil(data?.length / itemsPerPage);
@@ -22,7 +22,6 @@ interface Props {
   data: {
     items: {
       all: any[];
-      vPop: any[];
     };
   };
 }
@@ -32,8 +31,6 @@ const NewRelease = ({data}: Props) => {
     data?.items?.all.filter((item: any) => item.streamingStatus === 1),
     3,
   );
-
-  const listRef = React.useRef<FlashList<any>>(null);
 
   const setPlayFrom = usePlayerStore(state => state.setPlayFrom);
   const COLOR = useThemeStore(state => state.COLOR);
@@ -61,29 +58,24 @@ const NewRelease = ({data}: Props) => {
         style={{color: COLOR.TEXT_PRIMARY}}>
         Mới phát hành
       </Text>
-
       <View className="flex-1">
-        <FlashList
-          ref={listRef}
+        <FlatList
           horizontal
           pagingEnabled
-          estimatedItemSize={SCREEN_WIDTH}
           keyExtractor={(_, index) => index.toString()}
           data={allPage}
           renderItem={({item}) => (
-            <View
-              style={{minHeight: 3, width: SCREEN_WIDTH}}
-              className="flex-1 min-h-[3px]">
-              <FlashList
+            <View style={{width: SCREEN_WIDTH}} className="flex-1">
+              <FlatList
+                keyExtractor={(_, index) => index.toString()}
                 data={item}
-                estimatedItemSize={70}
                 renderItem={({item}) => (
                   <TrackItem
                     item={item}
                     onClick={handlePlaySong}
                     showBottomSheet={showBottomSheet}
                   />
-                )}></FlashList>
+                )}></FlatList>
             </View>
           )}
         />

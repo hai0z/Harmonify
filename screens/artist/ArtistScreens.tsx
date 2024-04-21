@@ -130,6 +130,7 @@ const ArtistScreens = ({route}: any) => {
               {
                 width: SCREEN_WIDTH,
                 height: SCREEN_WIDTH,
+                zIndex: 2,
               },
             ]}
           />
@@ -150,19 +151,21 @@ const ArtistScreens = ({route}: any) => {
           'aSongs',
         ) && (
           <View>
-            <View className=" text-lg font-semibold px-4 py-4 justify-between items-center flex-row">
+            <View className=" text-lg font-semibold px-4 mt-8 justify-between items-center flex-row">
               <Text
-                className=" font-bold text-lg"
+                className=" font-bold text-lg mb-4"
                 style={{color: COLOR.TEXT_PRIMARY}}>
                 Bài hát nổi bật
               </Text>
             </View>
             {dataDetailArtist?.sections
               ?.filter((type: any) => type.sectionId === 'aSongs')[0]
-              ?.items.slice(0, 5)
-              .filter((i: any) => i.streamingStatus === 1)
+              ?.items.filter((i: any) => i.streamingStatus === 1)
+              .slice(0, 5)
+
               .map((item: any) => (
                 <TouchableOpacity
+                  activeOpacity={0.8}
                   key={item.encodeId}
                   className="flex-row items-center px-4 mb-2"
                   onPress={() => {
@@ -170,7 +173,7 @@ const ArtistScreens = ({route}: any) => {
                       id: name,
                       items: dataDetailArtist?.sections
                         .filter((type: any) => type.sectionId === 'aSongs')[0]
-                        .itemsfilter((i: any) => i.streamingStatus === 1),
+                        .items.filter((i: any) => i.streamingStatus === 1),
                     });
                     setPlayFrom({
                       id: 'artist',
@@ -186,8 +189,9 @@ const ArtistScreens = ({route}: any) => {
                       height: wp(15),
                     }}
                   />
-                  <View>
+                  <View className="flex-1">
                     <Text
+                      numberOfLines={1}
                       style={{color: COLOR.TEXT_PRIMARY, fontSize: wp(4)}}
                       className="ml-2 font-semibold">
                       {item.title}
@@ -239,6 +243,7 @@ const ArtistScreens = ({route}: any) => {
                 ?.filter((type: any) => type.sectionId === 'aAlbum')[0]
                 ?.items.map((item: any, index: number) => (
                   <PlayListCover
+                    isAlbum={true}
                     key={index}
                     encodeId={item.encodeId}
                     sortDescription={item.sortDescription}
@@ -311,6 +316,7 @@ const ArtistScreens = ({route}: any) => {
                 ?.filter((type: any) => type.sectionId === 'aSingle')[0]
                 ?.items.map((item: any, index: number) => (
                   <PlayListCover
+                    isAlbum
                     key={index}
                     encodeId={item.encodeId}
                     sortDescription={item.sortDescription}

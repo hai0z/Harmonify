@@ -1,5 +1,5 @@
 import {View, Text, Image, StyleSheet} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import useThemeStore from '../store/themeStore';
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -25,13 +25,16 @@ import PrevButton from '../components/Player/Control/PrevButton';
 import NextButton from '../components/Player/Control/NextButton';
 import TrackPlayer, {useProgress} from 'react-native-track-player';
 import LinearGradient from 'react-native-linear-gradient';
-import Entypo from 'react-native-vector-icons/Entypo';
 import useImageColor from '../hooks/useImageColor';
-import getThumbnail, {getThumbnailWithRatio} from '../utils/getThumnail';
+import {PlayerContext} from '../context/PlayerProvider';
+import TrackItem from '../components/TrackItem';
+import TrackItemBottomSheet from '../components/bottom-sheet/TrackItemBottomSheet';
 const Queue = () => {
   const {COLOR} = useThemeStore(state => state);
 
-  const {playFrom, currentSong, playList} = usePlayerStore(state => state);
+  const {playFrom, currentSong, playList, tempSong} = usePlayerStore(
+    state => state,
+  );
 
   const navigation = useNavigation<any>();
 
@@ -43,6 +46,7 @@ const Queue = () => {
   const progress = useProgress(1000 / 120);
 
   const {dominantColor: gradientColor} = useImageColor();
+  const {showBottomSheet} = useContext(PlayerContext);
 
   const handlePlay = async (item: any) => {
     const index = playList.items.findIndex(
@@ -100,15 +104,9 @@ const Queue = () => {
             {playFrom.name}
           </Animated.Text>
         </View>
-        <TouchableOpacity>
-          <Entypo
-            name="dots-three-vertical"
-            size={20}
-            color={COLOR.TEXT_PRIMARY}
-          />
-        </TouchableOpacity>
+        <TouchableOpacity className="w-5 h-5"></TouchableOpacity>
       </View>
-      <View className="pt-4 flex-1 px-6">
+      <View className="pt-4 flex-1">
         <FlashList
           ListFooterComponent={<View className="h-10" />}
           ListEmptyComponent={
@@ -122,43 +120,26 @@ const Queue = () => {
           ListHeaderComponent={
             <View>
               <View>
-                <Text style={{color: COLOR.TEXT_PRIMARY}} className="font-bold">
+                <Text
+                  style={{color: COLOR.TEXT_PRIMARY}}
+                  className="font-bold px-6 mb-4">
                   Đang phát
                 </Text>
                 <Animated.View
+                  className="px-2"
                   entering={SlideInLeft.duration(300)}
                   key={currentSong?.id}>
-                  <View className="flex flex-row mt-4">
-                    <Animated.Image
-                      src={currentSong?.artwork}
-                      style={{width: wp(15), height: wp(15)}}
-                    />
-                    <View className="flex justify-center ml-2 flex-1 ">
-                      <Text
-                        className="font-semibold"
-                        numberOfLines={1}
-                        style={{
-                          color: COLOR.TEXT_PRIMARY,
-                          fontSize: wp(4),
-                        }}>
-                        {currentSong?.title}
-                      </Text>
-                      <Text
-                        numberOfLines={1}
-                        style={{
-                          color: COLOR.TEXT_SECONDARY,
-                          fontSize: wp(3.5),
-                        }}>
-                        {currentSong?.artist}
-                      </Text>
-                    </View>
-                  </View>
+                  <TrackItem
+                    item={tempSong}
+                    showBottomSheet={showBottomSheet}
+                    onClick={handlePlay}
+                  />
                 </Animated.View>
               </View>
-              <View className="mt-6">
+              <View className="mt-4">
                 <Text
                   style={{color: COLOR.TEXT_PRIMARY}}
-                  className="font-bold mb-4">
+                  className="font-bold mb-4 px-6">
                   Hàng đợi
                 </Text>
               </View>
@@ -169,12 +150,14 @@ const Queue = () => {
           keyExtractor={item => item.encodeId}
           renderItem={({item, index}) => {
             return (
-              <TrackItem
-                COLOR={COLOR}
-                item={item}
-                index={index}
-                onClick={handlePlay}
-              />
+              <View className="px-2">
+                <TrackItem
+                  showBottomSheet={showBottomSheet}
+                  item={item}
+                  index={index}
+                  onClick={handlePlay}
+                />
+              </View>
             );
           }}
         />
@@ -209,43 +192,9 @@ const Queue = () => {
           <NextButton />
         </Animated.View>
       </View>
+      <TrackItemBottomSheet />
     </View>
   );
 };
 
-const TrackItem = React.memo((props: any) => {
-  const {item, onClick, COLOR} = props;
-  return (
-    <TouchableOpacity
-      activeOpacity={0.8}
-      className="flex flex-row  items-center mb-3"
-      onPress={() => onClick(item)}>
-      <Image
-        source={{
-          uri: getThumbnail(item.thumbnail),
-        }}
-        key={item.encodeId}
-        style={{width: wp(15), height: wp(15)}}
-      />
-
-      <View className="flex justify-center ml-2 flex-1 ">
-        <Text
-          className="font-semibold"
-          numberOfLines={1}
-          style={{
-            color: COLOR.TEXT_PRIMARY,
-            fontSize: wp(4),
-          }}>
-          {item?.title}
-        </Text>
-
-        <Text
-          numberOfLines={1}
-          style={{color: COLOR.TEXT_SECONDARY, fontSize: wp(3.5)}}>
-          {item?.artistsNames || ''}
-        </Text>
-      </View>
-    </TouchableOpacity>
-  );
-});
 export default Queue;

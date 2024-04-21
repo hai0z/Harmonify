@@ -31,11 +31,12 @@ import Animated, {
 import HeartButton from '../components/HeartButton';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import useImageColor from '../hooks/useImageColor';
+import TrackItemBottomSheet from '../components/bottom-sheet/TrackItemBottomSheet';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const TextAnimated = Animated.createAnimatedComponent(TextTicker);
 const PlayerScreens = () => {
-  const {playList, color, playFrom, isPlayFromLocal} = usePlayerStore(
+  const {playList, tempSong, playFrom, isPlayFromLocal} = usePlayerStore(
     state => state,
   );
   const navigation = useNavigation<any>();
@@ -108,7 +109,9 @@ const PlayerScreens = () => {
               {playFrom.name}
             </Text>
           </View>
-          <TouchableOpacity onPress={() => showBottomSheet(currentSong)}>
+          <TouchableOpacity
+            className="z-50"
+            onPress={() => showBottomSheet(tempSong)}>
             <Entypo
               name="dots-three-vertical"
               size={20}
@@ -178,11 +181,11 @@ const PlayerScreens = () => {
         <View style={{marginTop: hp(8)}}>
           <Player />
         </View>
-
         <Lyric />
         <ArtistCard />
         <SongInfoCard />
       </View>
+      <TrackItemBottomSheet />
     </ScrollView>
   );
 };

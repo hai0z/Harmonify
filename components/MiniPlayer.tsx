@@ -190,7 +190,7 @@ const MiniPlayer = () => {
           maxWidth: '100%',
           position: 'relative',
           marginHorizontal: 8,
-          bottom: 3,
+          bottom: 2,
           borderRadius: 2.5,
           backgroundColor: COLOR.isDark ? '#ffffff90' : '#00000020',
           zIndex: 2,
