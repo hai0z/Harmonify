@@ -1,6 +1,5 @@
-import {View, Text, TouchableOpacity, Dimensions} from 'react-native';
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {usePlayerStore} from '../store/playerStore';
+import {View, Text, TouchableOpacity} from 'react-native';
+import React, {useState, useEffect} from 'react';
 import {FlashList} from '@shopify/flash-list';
 import useSyncLyric from '../hooks/useSyncLyric';
 import {useNavigation} from '@react-navigation/native';
@@ -10,8 +9,12 @@ import TrackSlider from '../components/Player/Control/TrackSlider';
 import PlayButton from '../components/Player/Control/PlayButton';
 import {LinearGradient} from 'react-native-linear-gradient';
 import useThemeStore from '../store/themeStore';
+import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
+
 import Animated, {FadeInDown, FadeInUp} from 'react-native-reanimated';
 import useImageColor from '../hooks/useImageColor';
+import useThrottle from '../hooks/useThrottle';
+import use_local_auto_scroll from '../hooks/use_local_auto_scroll';
 const OFFSET = 3;
 const DEFAULT_LINE = -1;
 const LyricScreen = ({route}: {route: any}) => {
@@ -21,11 +24,13 @@ const LyricScreen = ({route}: {route: any}) => {
   const currentSong = useActiveTrack();
   const navigation = useNavigation<any>();
 
-  const [isScrolling, setIsScrolling] = useState(true);
+  const {onScroll, localAutoScroll} = use_local_auto_scroll({
+    autoScroll: true,
+    autoScrollAfterUserScroll: 2000,
+  });
 
   useEffect(() => {
-    setIsScrolling(false);
-    !isScrolling &&
+    if (localAutoScroll) {
       lyricsRef.current?.scrollToIndex({
         index:
           (currentLine as number) === DEFAULT_LINE
@@ -33,17 +38,9 @@ const LyricScreen = ({route}: {route: any}) => {
             : (currentLine as number) - OFFSET,
         animated: true,
       });
-  }, [currentLine]);
+    }
+  }, [currentLine, localAutoScroll]);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsScrolling(false);
-    }, 3000);
-
-    return () => {
-      clearTimeout(timer);
-    };
-  }, []);
   const {COLOR} = useThemeStore();
 
   const {vibrantColor: bg} = useImageColor();
@@ -61,7 +58,7 @@ const LyricScreen = ({route}: {route: any}) => {
         </TouchableOpacity>
         <View className="flex-1 flex justify-center items-center">
           <Animated.Text
-            entering={FadeInUp.duration(300).delay(300).springify()}
+            entering={FadeInDown.duration(300).springify()}
             className=" font-bold z-30"
             style={{color: COLOR.TEXT_PRIMARY}}>
             {currentSong?.title}
@@ -82,9 +79,7 @@ const LyricScreen = ({route}: {route: any}) => {
 
       <View className="flex-1">
         <FlashList
-          onScroll={({nativeEvent}) => {
-            setIsScrolling(true);
-          }}
+          onScroll={onScroll}
           scrollEventThrottle={16}
           ref={lyricsRef}
           contentContainerStyle={{
@@ -99,11 +94,15 @@ const LyricScreen = ({route}: {route: any}) => {
           extraData={currentLine}
           renderItem={({item, index}: any) => (
             <TouchableOpacity
-              onPress={() => TrackPlayer.seekTo(+item.startTime / 1000)}>
+              onPress={() => {
+                TrackPlayer.seekTo(+item.startTime / 1000);
+              }}>
               <Text
-                className=" font-extrabold text-[24px] mb-4"
+                className="mb-4"
                 style={{
                   color: (currentLine as number) >= index ? 'white' : 'black',
+                  fontSize: wp(6),
+                  fontFamily: 'GothamBold',
                 }}>
                 {item.data}
               </Text>

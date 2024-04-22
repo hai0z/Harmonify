@@ -1,4 +1,4 @@
-import {View, Text, Image, StyleSheet} from 'react-native';
+import {View, Text} from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
 import useThemeStore from '../store/themeStore';
 
@@ -62,7 +62,7 @@ const Queue = () => {
   }, [currentSong?.id]);
 
   useEffect(() => {
-    $bg.value = withTiming(`${gradientColor}90`, {duration: 750});
+    $bg.value = withTiming(`${gradientColor}70`, {duration: 750});
   }, [gradientColor]);
   return (
     <View

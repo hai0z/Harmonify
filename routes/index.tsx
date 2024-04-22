@@ -33,6 +33,7 @@ import SettingScreen from '../screens/SettingScreen';
 import Queue from '../screens/Queue';
 import Entypo from 'react-native-vector-icons/Entypo';
 import HistoryScreens from '../screens/HistoryScreens';
+import {withTiming} from 'react-native-reanimated';
 export type HomeStackParamsList = {
   Home: undefined;
   Search: undefined;
@@ -158,6 +159,7 @@ const HomeStack = () => {
 
 const HomeTab = () => {
   const {COLOR} = useThemeStore();
+
   return (
     <Tab.Navigator
       tabBar={props => (
@@ -175,19 +177,21 @@ const HomeTab = () => {
         </View>
       )}
       screenOptions={({route}) => ({
+        tabBarShowLabel: false,
         tabBarHideOnKeyboard: true,
         headerShown: false,
-        tabBarIcon: ({color, size}) => {
+
+        tabBarIcon: ({color}) => {
           switch (route.name) {
             case 'HomeTab':
-              return <Entypo name="home" size={size} color={color} />;
+              return <Entypo name="home" size={28} color={color} />;
             case 'Chart':
-              return <AntDesign name="barschart" size={size} color={color} />;
+              return <AntDesign name="barschart" size={28} color={color} />;
             case 'Search':
-              return <AntDesign name="search1" size={size} color={color} />;
+              return <AntDesign name="search1" size={28} color={color} />;
             case 'LibraryTab':
               return (
-                <MaterialIcons name="library-music" size={size} color={color} />
+                <MaterialIcons name="library-music" size={28} color={color} />
               );
           }
         },
@@ -205,19 +209,15 @@ const HomeTab = () => {
           bottom: 0,
           left: 0,
           right: 0,
-          backgroundColor: `${COLOR.BACKGROUND}95`,
+          backgroundColor: withTiming(`${COLOR.BACKGROUND}95`, {
+            duration: 750,
+          }),
           elevation: 0,
         },
         tabBarActiveTintColor: COLOR.PRIMARY,
         tabBarInactiveTintColor: COLOR.TEXT_SECONDARY,
       })}>
-      <Tab.Screen
-        name="HomeTab"
-        component={HomeStack}
-        options={{
-          title: 'Trang Chủ',
-        }}
-      />
+      <Tab.Screen name="HomeTab" component={HomeStack} />
       <Tab.Screen
         name="Chart"
         component={ChartScreens}

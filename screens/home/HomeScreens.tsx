@@ -15,7 +15,6 @@ import useThemeStore from '../../store/themeStore';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import RecentList from './components/RecentList';
 import {getRecentListening} from '../../service/firebase';
-import {StatusBar} from 'expo-status-bar';
 interface typePlaylistCover {
   items: [];
   title: string;

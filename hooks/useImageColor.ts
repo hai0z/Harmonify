@@ -8,10 +8,10 @@ const useImageColor = () => {
   const { COLOR } = useThemeStore()
 
   const dominantColor = COLOR.isDark
-    ? useDarkColor(color.dominant!, 20)
+    ? useDarkColor(color.dominant!, 30)
     : tinycolor(color.dominant!).isDark()
       ? tinycolor(color.dominant!).lighten(40).toString()
-      : tinycolor(color.dominant!).darken(10).toString();
+      : tinycolor(color.dominant!).darken(5).toString();
 
   const vibrantColor = COLOR.isDark
     ? color.vibrant === '#0098DB'
@@ -23,7 +23,7 @@ const useImageColor = () => {
       ? tinycolor(color.average).isDark()
         ? tinycolor(color.average).lighten(50).toString()
         : color.average
-      : tinycolor(color.vibrant).lighten(20).toString();
+      : tinycolor(color.vibrant).lighten(10).toString();
 
   return {
     dominantColor,

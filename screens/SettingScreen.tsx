@@ -13,7 +13,7 @@ const SettingScreen = () => {
   const bg = useSharedValue(`${selectedColor}`);
 
   const handleChangeColor = (color: string) => {
-    bg.value = withTiming(`${color}`, {duration: 550});
+    bg.value = withTiming(`${color}`, {duration: 750});
   };
   return (
     <Animated.ScrollView

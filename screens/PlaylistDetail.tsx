@@ -142,7 +142,10 @@ const PlaylistDetail = ({route}: {route: any}) => {
         </TouchableOpacity>
         <View className="justify-center items-center flex-1">
           <Animated.Text
-            style={{opacity: headerTitleOpacity, color: COLOR.TEXT_PRIMARY}}
+            style={{
+              opacity: headerTitleOpacity,
+              color: COLOR.TEXT_PRIMARY,
+            }}
             className=" font-bold">
             {playlistData?.title}
           </Animated.Text>
@@ -193,7 +196,10 @@ const PlaylistDetail = ({route}: {route: any}) => {
               </View>
               <View className="z-50 mt-4 px-6 mb-4">
                 <Animated.Text
-                  style={{opacity: titleOpacity, color: COLOR.TEXT_PRIMARY}}
+                  style={{
+                    opacity: titleOpacity,
+                    color: COLOR.TEXT_PRIMARY,
+                  }}
                   className=" text-center text-3xl font-bold">
                   {playlistData?.title}
                 </Animated.Text>

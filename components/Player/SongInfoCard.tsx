@@ -35,7 +35,7 @@ const SongInfoCard = () => {
   }
   return (
     <Animated.View
-      style={{backgroundColor: bg, elevation: 10}}
+      style={{backgroundColor: bg}}
       className="w-full mt-8 rounded-2xl px-4 py-2 flex justify-between">
       <Text
         className="font-bold text-[18px]"

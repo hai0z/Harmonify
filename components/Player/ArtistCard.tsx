@@ -39,9 +39,6 @@ const ArtistCard = () => {
   return (
     <TouchableOpacity
       activeOpacity={1}
-      style={{
-        elevation: 10,
-      }}
       className="w-full rounded-2xl h-[320px] mt-8"
       onPress={() =>
         navigation.navigate('Artists', {
@@ -54,10 +51,17 @@ const ArtistCard = () => {
         source={{
           uri: getThumbnail(data?.thumbnail) || DEFAULT_IMG,
         }}
-        className="w-full h-full rounded-2xl"
+        className="w-full h-[310px] rounded-2xl"
       />
       <View className="z-20 px-4 py-4">
-        <Text className="font-bold text-[16px] z-10" style={{color: '#ffffff'}}>
+        <Text
+          className="font-bold text-[16px] z-10"
+          style={{
+            color: '#ffffff',
+            textShadowOffset: {width: -1, height: 1},
+            textShadowRadius: 1.5,
+            textShadowColor: 'rgba(0, 0, 0, 0.75)',
+          }}>
           Giới thiệu về nghệ sĩ
         </Text>
       </View>

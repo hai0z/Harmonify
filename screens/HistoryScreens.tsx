@@ -93,7 +93,7 @@ const HistoryScreens = () => {
 
   useEffect(() => {
     console.log('sdfasdf');
-    $bg.value = withTiming(`${gradientColor}90`, {duration: 1550});
+    $bg.value = withTiming(`${gradientColor}70`, {duration: 1550});
   }, [gradientColor, loading]);
 
   return (

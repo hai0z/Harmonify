@@ -5,17 +5,16 @@ import {FlashList} from '@shopify/flash-list';
 import {LinearGradient} from 'react-native-linear-gradient';
 import {useNavigation} from '@react-navigation/native';
 import useSyncLyric from '../../hooks/useSyncLyric';
-import tinycolor from 'tinycolor2';
 import useThemeStore from '../../store/themeStore';
 import Animated from 'react-native-reanimated';
 import useImageColor from '../../hooks/useImageColor';
-
+import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 const OFFSET = 1;
 
 const Lyric = () => {
   const lyrics = usePlayerStore(state => state.lyrics);
   const isPlayFromLocal = usePlayerStore(state => state.isPlayFromLocal);
-  let bgColor = usePlayerStore(state => state.color);
 
   const currentLine = useSyncLyric();
 
@@ -47,14 +46,20 @@ const Lyric = () => {
           style={{
             backgroundColor: bg,
             height: 320,
-            elevation: 10,
           }}>
-          <View className="px-4 py-4">
+          <View className="px-4 py-4 justify-between flex flex-row items-center">
             <Text
               className=" font-bold z-[3] "
               style={{color: COLOR.TEXT_PRIMARY}}>
               Lời bài hát
             </Text>
+            <View className="w-7 h-7 bg-[#ffffff80] flex justify-center items-center rounded-full">
+              <AntDesign
+                name="arrowsalt"
+                size={16}
+                color={COLOR.TEXT_PRIMARY}
+              />
+            </View>
           </View>
           <View className="flex-1">
             <FlashList
@@ -71,9 +76,11 @@ const Lyric = () => {
                 return (
                   <Text
                     key={index}
-                    className=" font-bold text-[20px] mb-3"
+                    className="mb-4"
                     style={{
                       color: currentLine >= index ? 'white' : 'black',
+                      fontSize: wp(6),
+                      fontFamily: 'GothamBold',
                     }}>
                     {item.data}
                   </Text>
