@@ -93,7 +93,7 @@ const HistoryScreens = () => {
 
   useEffect(() => {
     console.log('sdfasdf');
-    $bg.value = withTiming(`${gradientColor}`, {duration: 1550});
+    $bg.value = withTiming(`${gradientColor}90`, {duration: 1550});
   }, [gradientColor, loading]);
 
   return (
@@ -102,13 +102,14 @@ const HistoryScreens = () => {
       style={{backgroundColor: COLOR.BACKGROUND}}>
       <Animated.View
         className="absolute top-0 left-0 right-0"
-        style={{height: hp(15), backgroundColor: $bg}}
-      />
-      <LinearGradient
-        style={{height: hp(15)}}
-        colors={[`transparent`, `${COLOR.BACKGROUND}`]}
-        className="absolute top-0 left-0 right-0 h-full"
-      />
+        style={{height: hp(15), backgroundColor: $bg}}>
+        <LinearGradient
+          style={{height: hp(15)}}
+          colors={[`transparent`, `${COLOR.BACKGROUND}`]}
+          className="absolute bottom-0 left-0 right-0 h-full"
+        />
+      </Animated.View>
+
       <View className="flex flex-row items-center justify-between px-4">
         <Animated.View
           entering={FadeIn.duration(300).delay(300)}

@@ -51,7 +51,7 @@ const PlayerScreens = () => {
   const bgAnimated = useSharedValue(`transparent`);
 
   useEffect(() => {
-    bgAnimated.value = withTiming(`${gradientColor}`, {
+    bgAnimated.value = withTiming(`${gradientColor}90`, {
       duration: 750,
     });
   }, [gradientColor]);

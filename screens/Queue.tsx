@@ -32,9 +32,7 @@ import TrackItemBottomSheet from '../components/bottom-sheet/TrackItemBottomShee
 const Queue = () => {
   const {COLOR} = useThemeStore(state => state);
 
-  const {playFrom, currentSong, playList, tempSong} = usePlayerStore(
-    state => state,
-  );
+  const {playFrom, currentSong, playList} = usePlayerStore(state => state);
 
   const navigation = useNavigation<any>();
 
@@ -64,7 +62,7 @@ const Queue = () => {
   }, [currentSong?.id]);
 
   useEffect(() => {
-    $bg.value = withTiming(`${gradientColor}`, {duration: 750});
+    $bg.value = withTiming(`${gradientColor}90`, {duration: 750});
   }, [gradientColor]);
   return (
     <View
@@ -118,28 +116,45 @@ const Queue = () => {
           }
           showsVerticalScrollIndicator={false}
           ListHeaderComponent={
-            <View>
+            <View className="px-6">
               <View>
-                <Text
-                  style={{color: COLOR.TEXT_PRIMARY}}
-                  className="font-bold px-6 mb-4">
+                <Text style={{color: COLOR.TEXT_PRIMARY}} className="font-bold">
                   Đang phát
                 </Text>
                 <Animated.View
-                  className="px-2"
                   entering={SlideInLeft.duration(300)}
                   key={currentSong?.id}>
-                  <TrackItem
-                    item={tempSong}
-                    showBottomSheet={showBottomSheet}
-                    onClick={handlePlay}
-                  />
+                  <View className="flex flex-row mt-4">
+                    <Animated.Image
+                      src={currentSong?.artwork}
+                      style={{width: wp(15), height: wp(15)}}
+                    />
+                    <View className="flex justify-center ml-2 flex-1 ">
+                      <Text
+                        className="font-semibold"
+                        numberOfLines={1}
+                        style={{
+                          color: COLOR.TEXT_PRIMARY,
+                          fontSize: wp(4),
+                        }}>
+                        {currentSong?.title}
+                      </Text>
+                      <Text
+                        numberOfLines={1}
+                        style={{
+                          color: COLOR.TEXT_SECONDARY,
+                          fontSize: wp(3.5),
+                        }}>
+                        {currentSong?.artist}
+                      </Text>
+                    </View>
+                  </View>
                 </Animated.View>
               </View>
-              <View className="mt-4">
+              <View className="mt-6">
                 <Text
                   style={{color: COLOR.TEXT_PRIMARY}}
-                  className="font-bold mb-4 px-6">
+                  className="font-bold mb-4">
                   Hàng đợi
                 </Text>
               </View>

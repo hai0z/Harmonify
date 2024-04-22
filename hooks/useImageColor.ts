@@ -10,7 +10,7 @@ const useImageColor = () => {
   const dominantColor = COLOR.isDark
     ? useDarkColor(color.dominant!, 20)
     : tinycolor(color.dominant!).isDark()
-      ? tinycolor(color.dominant!).lighten(35).toString()
+      ? tinycolor(color.dominant!).lighten(40).toString()
       : tinycolor(color.dominant!).darken(10).toString();
 
   const vibrantColor = COLOR.isDark

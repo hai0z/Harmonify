@@ -29,7 +29,7 @@ const TrackItemBottomSheet = () => {
   const {COLOR} = useThemeStore(state => state);
   // variables
 
-  const snapPoints = useMemo(() => ['55%', '75%'], []);
+  const snapPoints = useMemo(() => ['55%'], []);
 
   const {dismiss} = useBottomSheetModal();
   // renders
