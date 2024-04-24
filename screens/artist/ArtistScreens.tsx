@@ -22,6 +22,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import {PlayerContext} from '../../context/PlayerProvider';
 import getThumbnail from '../../utils/getThumnail';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
+import {followArtist} from '../../service/firebase';
+import {useUserStore} from '../../store/userStore';
 
 interface artistType {
   id: string;
@@ -56,6 +58,7 @@ const ArtistScreens = ({route}: any) => {
 
   const COLOR = useThemeStore(state => state.COLOR);
 
+  const {listFollowArtists} = useUserStore();
   const setPlayFrom = usePlayerStore(state => state.setPlayFrom);
 
   useEffect(() => {
@@ -81,6 +84,7 @@ const ArtistScreens = ({route}: any) => {
     extrapolate: 'clamp',
   });
 
+  console.log(listFollowArtists);
   const navigation = useNavigation<any>();
 
   const {startMiniPlayerTransition} = useContext(PlayerContext);
@@ -145,6 +149,25 @@ const ArtistScreens = ({route}: any) => {
               }}>
               {dataDetailArtist?.name}
             </Text>
+            <TouchableOpacity
+              style={{
+                borderColor: COLOR.PRIMARY,
+                backgroundColor: listFollowArtists.some(
+                  (item: any) => item.id === dataDetailArtist?.id,
+                )
+                  ? COLOR.PRIMARY
+                  : COLOR.BACKGROUND,
+              }}
+              className="w-32 p-2 rounded-full items-center  border mx-4"
+              onPress={() => followArtist(dataDetailArtist)}>
+              <Text style={{color: COLOR.TEXT_PRIMARY}} className=" text-sm">
+                {listFollowArtists.some(
+                  (item: any) => item.id === dataDetailArtist?.id,
+                )
+                  ? 'Đã theo dõi'
+                  : 'Theo dõi'}
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
 

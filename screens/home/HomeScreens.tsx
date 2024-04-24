@@ -18,6 +18,7 @@ import {getRecentListening} from '../../service/firebase';
 import {collection, onSnapshot, query} from 'firebase/firestore';
 import {auth, db} from '../../firebase/config';
 import {usePlayerStore} from '../../store/playerStore';
+import {useUserStore} from '../../store/userStore';
 interface typePlaylistCover {
   items: [];
   title: string;
@@ -34,6 +35,7 @@ function HomeScreens() {
   const {COLOR, HEADER_GRADIENT} = useThemeStore(state => state);
   const [dataRecent, setDataRecent] = useState<any>([]);
   const {setLikedSongs} = usePlayerStore();
+  const {setListFollowArtists} = useUserStore();
   useEffect(() => {
     setLoading(true);
     nodejs.channel.addListener('home', data => {
@@ -59,8 +61,21 @@ function HomeScreens() {
       });
       setLikedSongs(songs);
     });
+
+    const q1 = query(
+      collection(db, `users/${auth.currentUser?.uid}/followedArtist`),
+    );
+    const unsub1 = onSnapshot(q1, querySnapshot => {
+      const followedArtists = [] as any;
+      querySnapshot.forEach(doc => {
+        followedArtists.push(doc.data());
+      });
+      setListFollowArtists(followedArtists);
+    });
+
     return () => {
       unsub();
+      unsub1();
     };
   }, []);
 

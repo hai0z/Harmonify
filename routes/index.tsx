@@ -177,7 +177,6 @@ const HomeTab = () => {
         </View>
       )}
       screenOptions={({route}) => ({
-        tabBarShowLabel: false,
         tabBarHideOnKeyboard: true,
         headerShown: false,
 
@@ -217,7 +216,11 @@ const HomeTab = () => {
         tabBarActiveTintColor: COLOR.PRIMARY,
         tabBarInactiveTintColor: COLOR.TEXT_SECONDARY,
       })}>
-      <Tab.Screen name="HomeTab" component={HomeStack} />
+      <Tab.Screen
+        name="HomeTab"
+        component={HomeStack}
+        options={{title: 'Trang chủ'}}
+      />
       <Tab.Screen
         name="Chart"
         component={ChartScreens}

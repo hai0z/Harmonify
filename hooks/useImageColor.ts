@@ -16,13 +16,13 @@ const useImageColor = () => {
   const vibrantColor = COLOR.isDark
     ? color.vibrant === '#0098DB'
       ? tinycolor(color.average).isDark()
-        ? tinycolor(color.average).lighten(30).toString()
-        : color.average
-      : color.vibrant
+        ? tinycolor(color.average).lighten(20).toString()
+        : tinycolor(color.average).darken(5).toString()
+      : tinycolor(color.vibrant).isDark() ? tinycolor(color.vibrant).toString() : tinycolor(color.vibrant).darken(10).toString()
     : color.vibrant === '#0098DB'
       ? tinycolor(color.average).isDark()
-        ? tinycolor(color.average).lighten(40).toString()
-        : color.average
+        ? tinycolor(color.average).lighten(35).toString()
+        : tinycolor(color.average).darken(5).toString()
       : tinycolor(color.vibrant).lighten(10).toString();
 
   return {

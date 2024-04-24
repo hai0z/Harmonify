@@ -1,6 +1,7 @@
 import { collection, deleteDoc, doc, getDoc, getDocs, limit, orderBy, query, setDoc, where } from "firebase/firestore";
 import { auth, db } from "../../firebase/config";
 import { usePlayerStore } from "../../store/playerStore";
+import { useUserStore } from "../../store/userStore";
 
 
 export const addToLikedList = async (
@@ -20,11 +21,16 @@ export const addToLikedList = async (
   }
 };
 
-export const followArtist = async (artistId: string) => {
+export const followArtist = async (artist: any) => {
   try {
     const user = auth.currentUser?.uid;
-    const docRef = doc(db, `users/${user}/followedArtist`, artistId);
-    await setDoc(docRef, { artistId });
+    const listFollow = useUserStore.getState().listFollowArtists;
+    const docRef = doc(db, `users/${user}/followedArtist`, artist.id);
+    if (listFollow.some((s: any) => s.id == artist.id)) {
+      await deleteDoc(doc(db, `users/${user}/followedArtist`, artist.id));
+    } else {
+      await setDoc(docRef, artist);
+    }
   } catch (err: any) {
     console.log(err.message);
   }

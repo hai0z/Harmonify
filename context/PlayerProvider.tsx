@@ -8,9 +8,7 @@ import getThumbnail from '../utils/getThumnail';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import {BottomSheetModalMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
 import useBottomSheetStore from '../store/bottomSheetStore';
-import {NULL_URL, TABBAR_HEIGHT} from '../constants';
-import {collection, onSnapshot, query} from 'firebase/firestore';
-import {auth, db} from '../firebase/config';
+import {TABBAR_HEIGHT} from '../constants';
 import {SharedValue, useSharedValue, withTiming} from 'react-native-reanimated';
 import {saveToHistory} from '../service/firebase';
 
@@ -41,11 +39,10 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
 
   const getSongColors = async () => {
     if (currentSong?.artwork !== null) {
-      getColors(getThumbnail(currentSong?.artwork!, 1440), {
+      getColors(getThumbnail(currentSong?.artwork!, 720), {
         fallback: '#0098DB',
         cache: true,
         key: currentSong?.id,
-        pixelSpacing: 14,
       }).then(setColor);
     }
   };

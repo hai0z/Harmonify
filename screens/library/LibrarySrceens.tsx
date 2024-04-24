@@ -4,6 +4,8 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import LocalSong from './components/LocalSong';
 import Playlist from './components/Playlist';
 import useThemeStore from '../../store/themeStore';
+import FollowedArtist from './components/FollowedArtists';
+import {ScrollView} from 'react-native-gesture-handler';
 const LibrarySrceens = () => {
   const [selectedTab, setSelectedTab] = React.useState(0);
   const {COLOR} = useThemeStore(state => state);
@@ -42,10 +44,11 @@ const LibrarySrceens = () => {
           </TouchableOpacity>
         ))}
       </View>
-      <View className="flex-1">
+      <ScrollView className=" flex-1" showsVerticalScrollIndicator={false}>
         {selectedTab === 0 && <Playlist />}
         {selectedTab === 2 && <LocalSong />}
-      </View>
+        {selectedTab === 1 && <FollowedArtist />}
+      </ScrollView>
     </View>
   );
 };
@@ -53,8 +56,8 @@ const LibrarySrceens = () => {
 export default LibrarySrceens;
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     paddingTop: 35,
+    flex: 1,
   },
   avatar: {
     width: 35,
