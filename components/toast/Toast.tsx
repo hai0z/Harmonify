@@ -1,28 +1,24 @@
-import {View, Text, Dimensions, LayoutAnimation} from 'react-native';
-import React, {useEffect, useRef} from 'react';
+import {View, Text, Dimensions} from 'react-native';
+import React, {useEffect} from 'react';
 import useToastStore from '../../store/toastStore';
 import {MINI_PLAYER_HEIGHT, TABBAR_HEIGHT} from '../../constants';
-import Animated, {
-  FadeInDown,
-  FadeOut,
-  FadeOutDown,
-} from 'react-native-reanimated';
+import Animated, {FadeInDown, FadeOutDown} from 'react-native-reanimated';
 import useThemeStore from '../../store/themeStore';
+import useDebounce from '../../hooks/use_debounce';
 
 const PADDING = 8;
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const Toast = () => {
   const {visible, duration, message} = useToastStore(state => state);
   const {COLOR} = useThemeStore();
+
   useEffect(() => {
-    if (visible) {
-      const timer = setTimeout(() => {
-        useToastStore.setState({visible: false});
-      }, duration);
-      return () => {
-        clearTimeout(timer);
-      };
-    }
+    const timer = setTimeout(() => {
+      useToastStore.setState({visible: false});
+    }, duration);
+    return () => {
+      clearTimeout(timer);
+    };
   }, [visible]);
 
   if (!visible) return null;
@@ -36,7 +32,7 @@ const Toast = () => {
           width: SCREEN_WIDTH * 0.96,
           transform: [{translateX: (SCREEN_WIDTH * 0.04) / 2}],
           bottom: TABBAR_HEIGHT + MINI_PLAYER_HEIGHT + PADDING,
-          backgroundColor: COLOR.isDark ? 'white' : '#e4d8b4',
+          backgroundColor: COLOR.isDark ? 'white' : '#FEECE2',
         }}>
         <Text className="text-black ml-2">{message}</Text>
       </View>

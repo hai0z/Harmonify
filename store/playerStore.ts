@@ -70,7 +70,7 @@ interface PlayerStore {
   isPlayFromLocal: boolean
   setIsPlayFromLocal: (isPlayFromLocal: boolean) => void
   lastPosition: number
-  setLastPosition: (lastPosition: number) => void
+  setLastPosition: (lastPosition: number) => void,
 }
 export const usePlayerStore = create<PlayerStore>()(
   persist((set) => ({
@@ -102,6 +102,7 @@ export const usePlayerStore = create<PlayerStore>()(
     setIsPlayFromLocal: (isPlayFromLocal: boolean) => set({ isPlayFromLocal }),
     lastPosition: 0,
     setLastPosition: (lastPosition: number) => set({ lastPosition }),
+
   }), {
     name: "player-store",
     storage: createJSONStorage(() => zustandStorage),

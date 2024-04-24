@@ -11,12 +11,14 @@ import {LinearGradient} from 'react-native-linear-gradient';
 import useThemeStore from '../store/themeStore';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 
-import Animated, {FadeInDown, FadeInUp} from 'react-native-reanimated';
+import Animated, {FadeInDown} from 'react-native-reanimated';
 import useImageColor from '../hooks/useImageColor';
-import useThrottle from '../hooks/useThrottle';
 import use_local_auto_scroll from '../hooks/use_local_auto_scroll';
+
 const OFFSET = 3;
+
 const DEFAULT_LINE = -1;
+
 const LyricScreen = ({route}: {route: any}) => {
   const {lyrics} = route.params;
   const currentLine = useSyncLyric();
@@ -52,7 +54,7 @@ const LyricScreen = ({route}: {route: any}) => {
         backgroundColor: bg,
       }}
       className="pt-[35px] h-full w-full pb-10">
-      <View className="flex flex-row items-center justify-between px-6 py-6">
+      <View className="flex flex-row items-center justify-between px-6 py-6 ">
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Entypo name="chevron-down" size={24} color={COLOR.TEXT_PRIMARY} />
         </TouchableOpacity>
@@ -77,7 +79,7 @@ const LyricScreen = ({route}: {route: any}) => {
         />
       </View>
 
-      <View className="flex-1">
+      <View className="flex-1 ">
         <FlashList
           onScroll={onScroll}
           scrollEventThrottle={16}

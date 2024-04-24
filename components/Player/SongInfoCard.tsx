@@ -58,7 +58,7 @@ const SongInfoCard = () => {
       <Text style={{color: COLOR.TEXT_PRIMARY}}>
         Nghệ sĩ: {data?.artists?.map((e: any) => e?.name).join(', ')}
       </Text>
-      <Text style={{color: COLOR.TEXT_PRIMARY}}>{data?.like} lượt thích</Text>
+      <Text style={{color: COLOR.TEXT_PRIMARY}}>Lượt thích: {data?.like} </Text>
     </Animated.View>
   );
 };

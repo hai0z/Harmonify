@@ -46,13 +46,13 @@ export const saveToHistory = async (song: any) => {
 export const getRecentListening = async () => {
   try {
     const user = auth.currentUser?.uid;
-    const q = query(collection(db, `users/${user}/history`), orderBy("timestamp", "desc"), limit(6));
+    const q = query(collection(db, `users/${user}/history`), orderBy("timestamp", "desc"), limit(7));
     const querySnapshot = await getDocs(q);
     const recentListening: any = []
     querySnapshot.forEach((doc) => {
       recentListening.push(doc.data());
     });
-    return recentListening
+    return recentListening.slice(1, 7)
   } catch (err: any) {
     console.log(err.message);
   }

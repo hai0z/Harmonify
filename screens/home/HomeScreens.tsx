@@ -15,6 +15,9 @@ import useThemeStore from '../../store/themeStore';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import RecentList from './components/RecentList';
 import {getRecentListening} from '../../service/firebase';
+import {collection, onSnapshot, query} from 'firebase/firestore';
+import {auth, db} from '../../firebase/config';
+import {usePlayerStore} from '../../store/playerStore';
 interface typePlaylistCover {
   items: [];
   title: string;
@@ -30,6 +33,7 @@ function HomeScreens() {
   const [loading, setLoading] = useState<boolean>(true);
   const {COLOR, HEADER_GRADIENT} = useThemeStore(state => state);
   const [dataRecent, setDataRecent] = useState<any>([]);
+  const {setLikedSongs} = usePlayerStore();
   useEffect(() => {
     setLoading(true);
     nodejs.channel.addListener('home', data => {
@@ -38,12 +42,26 @@ function HomeScreens() {
         data.filter((e: any) => e.sectionType === 'new-release')[0],
       );
     });
-    (async () => {
+    const getRecentList = async () => {
       const res = await getRecentListening();
       setDataRecent(res);
       setLoading(false);
-    })();
-    nodejs.channel.post('home');
+    };
+    Promise.all([getRecentList(), nodejs.channel.post('home')]);
+  }, []);
+
+  useEffect(() => {
+    const q = query(collection(db, `users/${auth.currentUser?.uid}/likedSong`));
+    const unsub = onSnapshot(q, querySnapshot => {
+      const songs = [] as any;
+      querySnapshot.forEach(doc => {
+        songs.push(doc.data());
+      });
+      setLikedSongs(songs);
+    });
+    return () => {
+      unsub();
+    };
   }, []);
 
   if (loading) {

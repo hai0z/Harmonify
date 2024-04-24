@@ -6,7 +6,7 @@ import {LinearGradient} from 'react-native-linear-gradient';
 import {useNavigation} from '@react-navigation/native';
 import useSyncLyric from '../../hooks/useSyncLyric';
 import useThemeStore from '../../store/themeStore';
-import Animated from 'react-native-reanimated';
+import Animated, {withTiming} from 'react-native-reanimated';
 import useImageColor from '../../hooks/useImageColor';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -20,8 +20,9 @@ const Lyric = () => {
 
   const nativgation = useNavigation<any>();
 
+  const lyricsRef = React.useRef<FlashList<any>>(null);
+
   useEffect(() => {
-    console.log(currentLine);
     lyricsRef.current &&
       lyricsRef.current.scrollToIndex({
         index: currentLine! === -1 ? 0 : currentLine - OFFSET,
@@ -29,7 +30,6 @@ const Lyric = () => {
       });
   }, [currentLine]);
 
-  const lyricsRef = React.useRef<FlashList<any>>(null);
   const {COLOR} = useThemeStore(state => state);
   const {vibrantColor: bg} = useImageColor();
 
@@ -45,45 +45,56 @@ const Lyric = () => {
           className="rounded-2xl mt-10"
           style={{
             backgroundColor: bg,
-            height: 320,
+            height: 340,
           }}>
-          <View className="px-4 py-4 justify-between flex flex-row items-center">
+          <View className="px-4 py-4 justify-between flex flex-row items-center ">
             <Text
               className=" font-bold z-[3] "
               style={{color: COLOR.TEXT_PRIMARY}}>
               Lời bài hát
             </Text>
-            <View className="w-7 h-7 bg-[#ffffff80] flex justify-center items-center rounded-full">
+            <View
+              className="w-7 h-7 flex justify-center items-center rounded-full z-[3]"
+              style={{
+                backgroundColor: COLOR.isDark ? '#00000020' : '#ffffff80',
+              }}>
               <AntDesign
                 name="arrowsalt"
                 size={16}
                 color={COLOR.TEXT_PRIMARY}
               />
             </View>
+            {/* <LinearGradient
+              colors={[bg!, bg!, 'transparent']}
+              style={{
+                bottom: currentLine < 2 ? -10 : -40,
+              }}
+              className="absolute left-0 right-0 h-16 z-[1] rounded-t-xl"
+            /> */}
           </View>
-          <View className="flex-1">
+          <View className="flex-1 pt-2">
             <FlashList
               ref={lyricsRef}
-              contentContainerStyle={{padding: 16}}
+              contentContainerStyle={{
+                paddingHorizontal: 16,
+              }}
               data={lyrics}
-              initialScrollIndex={
-                currentLine! === -1 ? 0 : currentLine - OFFSET
-              }
+              initialScrollIndex={currentLine === -1 ? 0 : currentLine - OFFSET}
               estimatedItemSize={32}
               showsVerticalScrollIndicator={false}
               extraData={currentLine}
               renderItem={({item, index}: any) => {
                 return (
-                  <Text
+                  <Animated.Text
                     key={index}
-                    className="mb-4"
+                    className="mb-3"
                     style={{
                       color: currentLine >= index ? 'white' : 'black',
                       fontSize: wp(6),
                       fontFamily: 'GothamBold',
                     }}>
                     {item.data}
-                  </Text>
+                  </Animated.Text>
                 );
               }}
               keyExtractor={(_, index) => index.toString()}

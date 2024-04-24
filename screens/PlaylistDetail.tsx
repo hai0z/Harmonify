@@ -39,7 +39,7 @@ const PlaylistDetail = ({route}: {route: any}) => {
 
   const COLOR = useThemeStore(state => state.COLOR);
 
-  const {setPlayFrom, currentSong} = usePlayerStore();
+  const {setPlayFrom} = usePlayerStore();
 
   const {startMiniPlayerTransition} = useContext(PlayerContext);
 

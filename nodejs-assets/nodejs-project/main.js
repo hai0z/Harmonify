@@ -2,7 +2,6 @@
 // The main.js file will be overwritten in updates/reinstalls.
 
 var rn_bridge = require('rn-bridge');
-
 const {ZingMp3} = require('zingmp3-api-full');
 
 rn_bridge.channel.on('home', async () => {

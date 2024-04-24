@@ -29,7 +29,10 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import HeartButton from '../components/HeartButton';
-import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
+} from 'react-native-responsive-screen';
 import useImageColor from '../hooks/useImageColor';
 import TrackItemBottomSheet from '../components/bottom-sheet/TrackItemBottomSheet';
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -159,8 +162,11 @@ const PlayerScreens = () => {
             exiting={FadeOut.duration(300)}>
             <TextAnimated
               key={currentSong?.id}
-              style={{color: COLOR.TEXT_PRIMARY}}
-              className=" font-bold text-lg"
+              style={{
+                color: COLOR.TEXT_PRIMARY,
+                fontFamily: 'GothamBold',
+                fontSize: wp(5),
+              }}
               duration={10000}
               loop
               bounce

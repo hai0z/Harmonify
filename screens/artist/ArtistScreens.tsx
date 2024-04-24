@@ -137,8 +137,12 @@ const ArtistScreens = ({route}: any) => {
 
           <View className="absolute bottom-0 z-20">
             <Text
-              className=" font-bold text-xl p-4 "
-              style={{color: COLOR.TEXT_PRIMARY}}>
+              className="p-4 "
+              style={{
+                color: COLOR.TEXT_PRIMARY,
+                fontFamily: 'GothamBold',
+                fontSize: wp(6.5),
+              }}>
               {dataDetailArtist?.name}
             </Text>
           </View>

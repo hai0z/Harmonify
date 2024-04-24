@@ -35,18 +35,17 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
     currentSong,
     isPlayFromLocal,
     setColor,
-    setLikedSongs,
     setisLoadingTrack,
     tempSong,
-    lastPosition,
   } = usePlayerStore();
 
   const getSongColors = async () => {
     if (currentSong?.artwork !== null) {
-      getColors(getThumbnail(currentSong?.artwork!, 32), {
+      getColors(getThumbnail(currentSong?.artwork!, 1440), {
         fallback: '#0098DB',
         cache: true,
         key: currentSong?.id,
+        pixelSpacing: 14,
       }).then(setColor);
     }
   };
@@ -91,27 +90,15 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
   };
 
   useEffect(() => {
-    const q = query(collection(db, `users/${auth.currentUser?.uid}/likedSong`));
-    const unsub = onSnapshot(q, querySnapshot => {
-      const songs = [] as any;
-      querySnapshot.forEach(doc => {
-        songs.push(doc.data());
-      });
-      setLikedSongs(songs);
-    });
-    return () => {
-      unsub();
-    };
-  }, []);
-
-  useEffect(() => {
     initPlayer();
   }, []);
 
   useEffect(() => {
     if (!isPlayFromLocal) {
-      if (currentSong) getSongColors();
-      nodejs.channel.post('getLyric', currentSong?.id);
+      Promise.all([
+        nodejs.channel.post('getLyric', currentSong?.id),
+        getSongColors(),
+      ]);
     }
   }, [currentSong?.id]);
 

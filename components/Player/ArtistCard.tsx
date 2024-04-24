@@ -70,21 +70,21 @@ const ArtistCard = () => {
         className="absolute bottom-0 h-20  w-full rounded-b-2xl px-4 py-2 flex justify-between flex-row z-20">
         <View className="flex justify-between">
           <Text
-            className="font-bold text-[16px]"
-            style={{color: COLOR.TEXT_PRIMARY}}>
+            className="text-[16px]"
+            style={{color: COLOR.TEXT_PRIMARY, fontFamily: 'GothamBold'}}>
             {data?.name}
           </Text>
-          <Text
-            className=" font-bold text-[12px]"
-            style={{color: COLOR.TEXT_PRIMARY}}>
+          <Text className="text-[12px]" style={{color: COLOR.TEXT_PRIMARY}}>
             Ngày sinh: {data?.birthday || 'không rõ'}
           </Text>
           <Text className="  text-[12px]" style={{color: COLOR.TEXT_PRIMARY}}>
-            {data?.follow} người theo dõi
+            Người theo dõi: {data?.follow}
           </Text>
         </View>
-        <View className="flex justify-center rounded-full h-8 w-8 bg-white/50 self-center items-center">
-          <Entypo name="chevron-right" size={24} color="black" />
+        <View
+          style={{backgroundColor: COLOR.isDark ? '#00000020' : '#ffffff80'}}
+          className="flex justify-center rounded-full h-8 w-8 self-center items-center">
+          <Entypo name="chevron-right" size={24} color={COLOR.TEXT_PRIMARY} />
         </View>
       </View>
     </TouchableOpacity>
