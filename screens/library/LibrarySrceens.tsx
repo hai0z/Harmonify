@@ -6,9 +6,15 @@ import Playlist from './components/Playlist';
 import useThemeStore from '../../store/themeStore';
 import FollowedArtist from './components/FollowedArtists';
 import {ScrollView} from 'react-native-gesture-handler';
+import tinycolor from 'tinycolor2';
+import {Octicons} from '@expo/vector-icons';
+import {widthPercentageToDP} from 'react-native-responsive-screen';
+import useLibraryStore from '../../store/useLibraryStore';
+
 const LibrarySrceens = () => {
   const [selectedTab, setSelectedTab] = React.useState(0);
-  const {COLOR} = useThemeStore(state => state);
+  const {COLOR} = useThemeStore();
+  const {viewType, setViewType} = useLibraryStore();
   return (
     <View style={{...styles.container, backgroundColor: COLOR.BACKGROUND}}>
       <View style={styles.top}>
@@ -30,24 +36,54 @@ const LibrarySrceens = () => {
           />
         </TouchableOpacity>
       </View>
-      <View className="h-10 flex-row items-center mx-4">
-        {['Danh sách phát', 'Nghệ sĩ', 'Đã tải xuống'].map((item, index) => (
+      <View>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{
+            paddingHorizontal: 16,
+            gap: 10,
+            minWidth: widthPercentageToDP(100),
+          }}>
+          {['Danh sách phát', 'Nghệ sĩ', 'Đã tải xuống'].map((item, index) => (
+            <TouchableOpacity
+              onPress={() => setSelectedTab(index)}
+              key={index}
+              style={{
+                backgroundColor:
+                  selectedTab === index
+                    ? COLOR.PRIMARY
+                    : !COLOR.isDark
+                    ? tinycolor(COLOR.BACKGROUND).darken(5).toString()
+                    : tinycolor(COLOR.BACKGROUND).lighten(10).toString(),
+              }}
+              className="items-center justify-center rounded-full px-2 py-2">
+              <Text style={{color: COLOR.TEXT_PRIMARY}}>{item}</Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+        <View className="flex flex-row justify-end px-4 items-center py-2">
           <TouchableOpacity
-            onPress={() => setSelectedTab(index)}
-            key={index}
-            style={{
-              backgroundColor:
-                selectedTab === index ? COLOR.PRIMARY : 'transparent',
+            onPress={() => {
+              setViewType(viewType === 'grid' ? 'list' : 'grid');
             }}
-            className="items-center justify-center mr-2 rounded-full px-2 py-1">
-            <Text style={{color: COLOR.TEXT_PRIMARY}}>{item}</Text>
+            hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}>
+            {viewType === 'list' ? (
+              <Octicons name="apps" size={18} color={COLOR.TEXT_PRIMARY} />
+            ) : (
+              <Octicons
+                name="list-unordered"
+                size={18}
+                color={COLOR.TEXT_PRIMARY}
+              />
+            )}
           </TouchableOpacity>
-        ))}
+        </View>
       </View>
       <ScrollView className=" flex-1" showsVerticalScrollIndicator={false}>
         {selectedTab === 0 && <Playlist />}
-        {selectedTab === 2 && <LocalSong />}
         {selectedTab === 1 && <FollowedArtist />}
+        {selectedTab === 2 && <LocalSong />}
       </ScrollView>
     </View>
   );

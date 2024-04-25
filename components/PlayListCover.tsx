@@ -24,7 +24,7 @@ const PlayListCover = ({
   const COLOR = useThemeStore(state => state.COLOR);
   return (
     <TouchableOpacity
-      className="w-40"
+      style={{width: wp(45)}}
       activeOpacity={0.9}
       onPress={() =>
         navigation.push('PlayListDetail', {
@@ -36,7 +36,7 @@ const PlayListCover = ({
       }>
       <FastImage
         source={{uri: getThumbnail(thumbnail) || ''}}
-        className="w-40 h-40 rounded-md object-cover"
+        className="rounded-md object-cover"
         style={{width: wp(45), height: wp(45)}}
       />
       <Text

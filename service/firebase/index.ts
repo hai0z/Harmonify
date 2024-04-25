@@ -20,6 +20,24 @@ export const addToLikedList = async (
     console.log(err.message);
   }
 };
+export const addToLikedPlaylist = async (
+  playlist: any,
+) => {
+  try {
+    const user = auth.currentUser?.uid;
+    const likedPlaylist = useUserStore.getState().likedPlaylists;
+    const docRef = doc(db, `users/${user}/likedPlaylists`, playlist.encodeId);
+    if (likedPlaylist.some((pl: any) => pl.encodeId == playlist.encodeId)) {
+      await deleteDoc(docRef);
+      return false;
+    } else {
+      await setDoc(docRef, playlist);
+      return true;
+    }
+  } catch (err: any) {
+    console.log(err.message);
+  }
+};
 
 export const followArtist = async (artist: any) => {
   try {
@@ -52,13 +70,13 @@ export const saveToHistory = async (song: any) => {
 export const getRecentListening = async () => {
   try {
     const user = auth.currentUser?.uid;
-    const q = query(collection(db, `users/${user}/history`), orderBy("timestamp", "desc"), limit(7));
+    const q = query(collection(db, `users/${user}/history`), orderBy("timestamp", "desc"), limit(50));
     const querySnapshot = await getDocs(q);
     const recentListening: any = []
     querySnapshot.forEach((doc) => {
       recentListening.push(doc.data());
     });
-    return recentListening.slice(1, 7)
+    return recentListening.sort(() => Math.random() - 0.5).slice(0, 6)
   } catch (err: any) {
     console.log(err.message);
   }

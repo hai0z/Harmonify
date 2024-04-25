@@ -21,6 +21,9 @@ import TrackItem from '../components/TrackItem';
 import {PlayerContext} from '../context/PlayerProvider';
 import useThemeStore from '../store/themeStore';
 import {usePlayerStore} from '../store/playerStore';
+import {addToLikedPlaylist} from '../service/firebase';
+import useToastStore, {ToastTime} from '../store/toastStore';
+import {useUserStore} from '../store/userStore';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -37,10 +40,11 @@ const PlaylistDetail = ({route}: {route: any}) => {
 
   const {showBottomSheet} = useContext(PlayerContext);
 
+  const {show} = useToastStore();
   const COLOR = useThemeStore(state => state.COLOR);
 
   const {setPlayFrom} = usePlayerStore();
-
+  const {likedPlaylists} = useUserStore();
   const {startMiniPlayerTransition} = useContext(PlayerContext);
 
   useEffect(() => {
@@ -241,13 +245,34 @@ const PlaylistDetail = ({route}: {route: any}) => {
                         )}
                         {caculateTotalTime().minutes} phút
                       </Text>
-                      <Text
-                        className="ml-4"
-                        style={{color: COLOR.TEXT_PRIMARY}}>
-                        <AntDesign name="heart" size={20} color="#DA291C" />{' '}
-                        {playlistData?.like}
-                      </Text>
                     </View>
+                    <TouchableOpacity
+                      onPress={async () => {
+                        const rs = await addToLikedPlaylist({
+                          encodeId: playlistData?.encodeId,
+                          thumbnail: playlistData?.thumbnailM,
+                          title: playlistData?.title,
+                          type: playlistData?.isAlbum ? 'album' : 'playlist',
+                          totalSong: playlistData?.song.items.length,
+                        });
+                        if (rs) {
+                          show('Đã thêm vào thư viện', ToastTime.SHORT);
+                        } else {
+                          show('Đã xóa khỏi thư viện', ToastTime.SHORT);
+                        }
+                      }}>
+                      <AntDesign
+                        name={
+                          likedPlaylists.some(
+                            item => item.encodeId === playlistData?.encodeId,
+                          )
+                            ? 'heart'
+                            : 'hearto'
+                        }
+                        size={24}
+                        color="red"
+                      />
+                    </TouchableOpacity>
                   </View>
                 </View>
               </View>

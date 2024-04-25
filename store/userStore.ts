@@ -8,7 +8,9 @@ type UserState = {
   likedSongs: any[],
   setLikedSongs: (data: any[]) => void
   listFollowArtists: any[],
-  setListFollowArtists: (data: any[]) => void
+  setListFollowArtists: (data: any[]) => void,
+  likedPlaylists: any[],
+  setLikedPlaylists: (data: any[]) => void
 }
 
 export const useUserStore = create<UserState>()(persist((set) => ({
@@ -18,6 +20,8 @@ export const useUserStore = create<UserState>()(persist((set) => ({
   setLikedSongs: (data: any[]) => set({ likedSongs: data }),
   listFollowArtists: [],
   setListFollowArtists: (data: any[]) => set({ listFollowArtists: data }),
+  likedPlaylists: [],
+  setLikedPlaylists: (data: any[]) => set({ likedPlaylists: data }),
 }), {
   name: 'player-store',
   storage: createJSONStorage(() => zustandStorage),

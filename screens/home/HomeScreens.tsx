@@ -12,7 +12,10 @@ import nodejs from 'nodejs-mobile-react-native';
 import NewRelease from './components/NewRelease';
 import LinearGradient from 'react-native-linear-gradient';
 import useThemeStore from '../../store/themeStore';
-import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP,
+} from 'react-native-responsive-screen';
 import RecentList from './components/RecentList';
 import {getRecentListening} from '../../service/firebase';
 import {collection, onSnapshot, query} from 'firebase/firestore';
@@ -35,7 +38,7 @@ function HomeScreens() {
   const {COLOR, HEADER_GRADIENT} = useThemeStore(state => state);
   const [dataRecent, setDataRecent] = useState<any>([]);
   const {setLikedSongs} = usePlayerStore();
-  const {setListFollowArtists} = useUserStore();
+  const {setListFollowArtists, setLikedPlaylists} = useUserStore();
   useEffect(() => {
     setLoading(true);
     nodejs.channel.addListener('home', data => {
@@ -72,10 +75,21 @@ function HomeScreens() {
       });
       setListFollowArtists(followedArtists);
     });
+    const q2 = query(
+      collection(db, `users/${auth.currentUser?.uid}/likedPlaylists`),
+    );
+    const unsub2 = onSnapshot(q2, querySnapshot => {
+      const likedPlaylists = [] as any;
+      querySnapshot.forEach(doc => {
+        likedPlaylists.push(doc.data());
+      });
+      setLikedPlaylists(likedPlaylists);
+    });
 
     return () => {
       unsub();
       unsub1();
+      unsub2();
     };
   }, []);
 
@@ -133,7 +147,11 @@ function HomeScreens() {
               </View>
               <ScrollView
                 horizontal
-                contentContainerStyle={{gap: 10, paddingHorizontal: 16}}>
+                contentContainerStyle={{
+                  gap: 16,
+                  paddingHorizontal: 16,
+                  minWidth: widthPercentageToDP(100),
+                }}>
                 {e.items.map((element: typePlaylistCover, index: number) => (
                   <PlayListCover
                     key={index}
