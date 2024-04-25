@@ -148,7 +148,7 @@ function HomeScreens() {
               <ScrollView
                 horizontal
                 contentContainerStyle={{
-                  gap: 16,
+                  gap: 10,
                   paddingHorizontal: 16,
                   minWidth: widthPercentageToDP(100),
                 }}>

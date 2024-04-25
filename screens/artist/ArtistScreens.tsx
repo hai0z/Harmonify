@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import React, {useCallback, useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 
 import {handlePlay} from '../../service/trackPlayerService';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -59,6 +59,7 @@ const ArtistScreens = ({route}: any) => {
   const COLOR = useThemeStore(state => state.COLOR);
 
   const {listFollowArtists} = useUserStore();
+
   const setPlayFrom = usePlayerStore(state => state.setPlayFrom);
 
   useEffect(() => {
@@ -83,11 +84,8 @@ const ArtistScreens = ({route}: any) => {
     outputRange: [0, 1],
     extrapolate: 'clamp',
   });
-
-  console.log(listFollowArtists);
   const navigation = useNavigation<any>();
 
-  const {startMiniPlayerTransition} = useContext(PlayerContext);
   if (loading) {
     return (
       <View
@@ -156,7 +154,7 @@ const ArtistScreens = ({route}: any) => {
                   (item: any) => item.id === dataDetailArtist?.id,
                 )
                   ? COLOR.PRIMARY
-                  : COLOR.BACKGROUND,
+                  : 'transparent',
               }}
               className="w-32 p-2 rounded-full items-center  border mx-4"
               onPress={() => followArtist(dataDetailArtist)}>
@@ -189,48 +187,52 @@ const ArtistScreens = ({route}: any) => {
               ?.filter((type: any) => type.sectionId === 'aSongs')[0]
               ?.items.filter((i: any) => i.streamingStatus === 1)
               .slice(0, 5)
-
-              .map((item: any) => (
-                <TouchableOpacity
-                  activeOpacity={0.8}
-                  key={item.encodeId}
-                  className="flex-row items-center px-4 mb-2"
-                  onPress={() => {
-                    handlePlay(item, {
-                      id: name,
-                      items: dataDetailArtist?.sections
-                        .filter((type: any) => type.sectionId === 'aSongs')[0]
-                        .items.filter((i: any) => i.streamingStatus === 1),
-                    });
-                    setPlayFrom({
-                      id: 'artist',
-                      name: dataDetailArtist.name,
-                    });
-                    startMiniPlayerTransition();
-                  }}>
-                  <Image
-                    source={{uri: getThumbnail(item.thumbnail)}}
+              .map((item: any) => {
+                return (
+                  <TouchableOpacity
+                    activeOpacity={0.8}
                     key={item.encodeId}
-                    style={{
-                      width: wp(15),
-                      height: wp(15),
-                    }}
-                  />
-                  <View className="flex-1">
-                    <Text
-                      numberOfLines={1}
-                      style={{color: COLOR.TEXT_PRIMARY, fontSize: wp(4)}}
-                      className="ml-2 font-semibold">
-                      {item.title}
-                    </Text>
-                    <Text
-                      className=" ml-2"
-                      style={{color: COLOR.TEXT_SECONDARY, fontSize: wp(3.5)}}>
-                      {item.artistsNames}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              ))}
+                    className="flex-row items-center px-4 mb-2"
+                    onPress={() => {
+                      handlePlay(item, {
+                        id: name,
+                        items: dataDetailArtist?.sections
+                          .filter((type: any) => type.sectionId === 'aSongs')[0]
+                          .items.filter((i: any) => i.streamingStatus === 1),
+                      });
+                      setPlayFrom({
+                        id: 'artist',
+                        name: dataDetailArtist.name,
+                      });
+                      // startMiniPlayerTransition();
+                    }}>
+                    <Image
+                      source={{uri: getThumbnail(item.thumbnail)}}
+                      key={item.encodeId}
+                      style={{
+                        width: wp(15),
+                        height: wp(15),
+                      }}
+                    />
+                    <View className="flex-1">
+                      <Text
+                        numberOfLines={1}
+                        style={{color: COLOR.TEXT_PRIMARY, fontSize: wp(4)}}
+                        className="ml-2 font-semibold">
+                        {item.title}
+                      </Text>
+                      <Text
+                        className=" ml-2"
+                        style={{
+                          color: COLOR.TEXT_SECONDARY,
+                          fontSize: wp(3.5),
+                        }}>
+                        {item.artistsNames}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                );
+              })}
             <View className="w-full justify-center items-center my-2">
               <TouchableOpacity
                 style={{borderColor: COLOR.PRIMARY}}

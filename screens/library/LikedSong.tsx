@@ -26,11 +26,7 @@ const PlaylistDetail = () => {
   const navigation = useNavigation<any>();
 
   const {startMiniPlayerTransition} = useContext(PlayerContext);
-  const {
-    likedSongs: likedSong,
-    setPlayFrom,
-    currentSong,
-  } = usePlayerStore(state => state);
+  const {likedSongs: likedSong, setPlayFrom} = usePlayerStore(state => state);
   const headerColor = useMemo(
     () =>
       scrollY.interpolate({
@@ -78,9 +74,6 @@ const PlaylistDetail = () => {
     [],
   );
 
-  const renderData = likedSong.map((item: any) =>
-    item.encodeId === currentSong?.id ? {...item, isActive: true} : item,
-  );
   return (
     <View
       className="flex-1  w-full"
@@ -154,7 +147,7 @@ const PlaylistDetail = () => {
         }}
         ListFooterComponent={() => <View style={{height: SCREEN_WIDTH}} />}
         nestedScrollEnabled
-        data={renderData}
+        data={likedSong}
         estimatedItemSize={72}
         keyExtractor={(item: any, index) => `${item.encodeId}_${index}`}
         renderItem={({item}: any) => {

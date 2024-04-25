@@ -150,7 +150,7 @@ const PlaylistDetail = ({route}: {route: any}) => {
               opacity: headerTitleOpacity,
               color: COLOR.TEXT_PRIMARY,
             }}
-            className=" font-bold">
+            className=" font-bold text-center">
             {playlistData?.title}
           </Animated.Text>
         </View>

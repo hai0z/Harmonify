@@ -1,4 +1,4 @@
-import {View, Text, Platform, Image, TouchableOpacity} from 'react-native';
+import {View, Text, Image, TouchableOpacity} from 'react-native';
 import React from 'react';
 
 import {useNavigation} from '@react-navigation/native';
@@ -30,7 +30,7 @@ const FollowedArtist = () => {
                   })
                 }
                 activeOpacity={0.8}
-                className="flex-row items-center mt-[16px] mx-[16px]">
+                className="flex-row items-center mb-2">
                 <Image
                   source={{uri: item?.thumbnailM}}
                   className="rounded-full"
@@ -66,7 +66,7 @@ const FollowedArtist = () => {
                   })
                 }
                 activeOpacity={0.8}
-                className="flex-col items-center my-1 justify-center content-start">
+                className="flex-col items-center mb-4">
                 <Image
                   source={{uri: item?.thumbnailM}}
                   className="rounded-full"
@@ -74,7 +74,7 @@ const FollowedArtist = () => {
                 />
                 <View>
                   <Text
-                    className="font-bold text-center"
+                    className="font-semibold"
                     style={{color: COLOR.TEXT_PRIMARY, fontSize: wp(4)}}>
                     {item?.name}
                   </Text>
@@ -82,8 +82,7 @@ const FollowedArtist = () => {
               </TouchableOpacity>
             );
           })}
-          {(listFollowArtists.length % 3 === 2 ||
-            listFollowArtists.length % 3 === 1) && (
+          {listFollowArtists.length % 3 !== 0 && (
             <TouchableOpacity
               style={{width: wp(33) - 16}}
               activeOpacity={0.8}

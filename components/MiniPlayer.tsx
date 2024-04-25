@@ -192,7 +192,7 @@ const MiniPlayer = () => {
           marginHorizontal: 8,
           bottom: 2,
           borderRadius: 2.5,
-          backgroundColor: COLOR.isDark ? '#ffffff90' : '#00000020',
+          backgroundColor: COLOR.isDark ? '#ffffff15' : '#00000025',
           zIndex: 2,
         }}>
         <View

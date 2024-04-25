@@ -109,7 +109,7 @@ const Playlist = () => {
               });
             }}
             activeOpacity={0.8}
-            className="flex-col items-center flex my-1">
+            className="flex-col items-center flex mb-4">
             <LinearGradient
               style={{
                 width: widthPercentageToDP(33) - 16,
@@ -117,10 +117,13 @@ const Playlist = () => {
               }}
               colors={[COLOR.SECONDARY, COLOR.PRIMARY]}
               className="justify-center items-center">
-              <Entypo name="heart" size={36} color={COLOR.TEXT_PRIMARY} />
+              <Entypo name="heart" size={48} color={COLOR.TEXT_PRIMARY} />
             </LinearGradient>
             <View>
-              <Text className="font-bold" style={{color: COLOR.TEXT_PRIMARY}}>
+              <Text
+                className="font-bold"
+                style={{color: COLOR.TEXT_PRIMARY}}
+                numberOfLines={2}>
                 Bài hát đã thích
               </Text>
               <Text style={{color: COLOR.TEXT_SECONDARY}} numberOfLines={1}>
@@ -142,7 +145,7 @@ const Playlist = () => {
                   })
                 }
                 activeOpacity={0.8}
-                className="flex-col flex my-1 items-center">
+                className="flex-col flex mb-4 items-center">
                 <Image
                   source={{uri: getThumbnail(pl?.thumbnail)}}
                   style={{
@@ -152,8 +155,8 @@ const Playlist = () => {
                 />
                 <View>
                   <Text
-                    numberOfLines={1}
-                    className="font-bold"
+                    numberOfLines={2}
+                    className="font-semibold"
                     style={{color: COLOR.TEXT_PRIMARY}}>
                     {pl?.title}
                   </Text>
@@ -164,8 +167,7 @@ const Playlist = () => {
               </TouchableOpacity>
             );
           })}
-          {(likedPlaylists.length % 3 === 2 ||
-            likedPlaylists.length % 3 === 1) && (
+          {likedPlaylists.length % 3 !== 0 && (
             <TouchableOpacity
               style={{width: widthPercentageToDP(33) - 16}}
               activeOpacity={0.8}

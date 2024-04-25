@@ -70,7 +70,7 @@ export const saveToHistory = async (song: any) => {
 export const getRecentListening = async () => {
   try {
     const user = auth.currentUser?.uid;
-    const q = query(collection(db, `users/${user}/history`), orderBy("timestamp", "desc"), limit(50));
+    const q = query(collection(db, `users/${user}/history`), orderBy("timestamp", "desc"), limit(20));
     const querySnapshot = await getDocs(q);
     const recentListening: any = []
     querySnapshot.forEach((doc) => {

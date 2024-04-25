@@ -54,10 +54,10 @@ const LibrarySrceens = () => {
                   selectedTab === index
                     ? COLOR.PRIMARY
                     : !COLOR.isDark
-                    ? tinycolor(COLOR.BACKGROUND).darken(5).toString()
+                    ? tinycolor(COLOR.BACKGROUND).darken(10).toString()
                     : tinycolor(COLOR.BACKGROUND).lighten(10).toString(),
               }}
-              className="items-center justify-center rounded-full px-2 py-2">
+              className="items-center justify-center rounded-full px-2 py-1">
               <Text style={{color: COLOR.TEXT_PRIMARY}}>{item}</Text>
             </TouchableOpacity>
           ))}
