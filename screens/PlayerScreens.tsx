@@ -96,6 +96,7 @@ const PlayerScreens = () => {
         />
         <View className="flex flex-row items-center justify-between px-6">
           <TouchableOpacity
+            hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}
             className="z-50"
             onPress={() => navigation.goBack()}>
             <Entypo name="chevron-down" size={24} color={COLOR.TEXT_PRIMARY} />
@@ -113,6 +114,7 @@ const PlayerScreens = () => {
             </Text>
           </View>
           <TouchableOpacity
+            hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}
             className="z-50"
             onPress={() => showBottomSheet(tempSong)}>
             <Entypo
