@@ -1,10 +1,25 @@
-import React, {useCallback, useContext, useMemo, useRef} from 'react';
-import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import React, {
+  forwardRef,
+  useCallback,
+  useContext,
+  useMemo,
+  useRef,
+} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Alert,
+  ToastAndroid,
+} from 'react-native';
 import {
   BottomSheetModal,
   BottomSheetView,
   BottomSheetBackdrop,
   useBottomSheetModal,
+  useBottomSheet,
 } from '@gorhom/bottom-sheet';
 
 import {PlayerContext} from '../../context/PlayerProvider';
@@ -20,16 +35,21 @@ import useDownloadSong from '../../hooks/useDownloadSong';
 import useThemeStore from '../../store/themeStore';
 import tinycolor from 'tinycolor2';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-const TrackItemBottomSheet = () => {
+import SleppTimerModal from './SleepTimerModal';
+import {useModalStore} from '../../store/modalStore';
+import {usePlayerStore} from '../../store/playerStore';
+interface Props {
+  context?: 'player' | null;
+}
+const TrackItemBottomSheet = (props: Props) => {
   // ref
+  const {context} = props;
   const {data} = useBottomSheetStore(state => state);
   const {bottomSheetModalRef} = useContext(PlayerContext);
-
   const {COLOR} = useThemeStore(state => state);
   // variables
 
-  const snapPoints = useMemo(() => ['55%'], []);
+  const snapPoints = useMemo(() => ['55%', '75%'], []);
 
   const {dismiss} = useBottomSheetModal();
   // renders
@@ -47,6 +67,29 @@ const TrackItemBottomSheet = () => {
 
   const navigation = useNavigation<any>();
   const {downloadFile} = useDownloadSong();
+  const {setTimerModalVisible} = useModalStore();
+  const {sleepTimer, setSleepTimer} = usePlayerStore();
+
+  const timerPress = () => {
+    if (!sleepTimer) {
+      setTimerModalVisible(true);
+    } else {
+      Alert.alert('Cảnh báo', 'Xoá bộ hẹn giờ ngủ?', [
+        {
+          text: 'Huỷ',
+          style: 'cancel',
+        },
+        {
+          text: 'Xoá',
+          onPress: () => {
+            setSleepTimer(null);
+            ToastAndroid.show('Đã dừng bộ hẹn giờ ngủ', ToastAndroid.SHORT);
+          },
+          style: 'destructive',
+        },
+      ]);
+    }
+  };
 
   return (
     <BottomSheetModal
@@ -108,8 +151,8 @@ const TrackItemBottomSheet = () => {
                 handleAddToLikedList(data);
                 dismiss();
               }}>
-              <Ionicons
-                name="heart-dislike-outline"
+              <MaterialCommunityIcons
+                name="heart-off-outline"
                 size={24}
                 color={`${COLOR.TEXT_PRIMARY}90`}
               />
@@ -152,6 +195,26 @@ const TrackItemBottomSheet = () => {
               </Text>
             </TouchableOpacity>
           )}
+          {context === 'player' && (
+            <TouchableOpacity
+              onPress={timerPress}
+              className="w-full py-3 flex flex-row items-center  mb-3 gap-2">
+              <MaterialCommunityIcons
+                name="clock-time-nine-outline"
+                size={24}
+                color={sleepTimer ? COLOR.PRIMARY : `${COLOR.TEXT_PRIMARY}90`}
+              />
+              <Text
+                className="text-base"
+                style={{
+                  color: sleepTimer ? COLOR.PRIMARY : COLOR.TEXT_PRIMARY,
+                }}>
+                {sleepTimer
+                  ? `Hẹn giờ ngủ (${Math.ceil(sleepTimer / 60)} phút)`
+                  : 'Hẹn giờ ngủ'}
+              </Text>
+            </TouchableOpacity>
+          )}
           <TouchableOpacity
             className="w-full py-3 flex flex-row items-center  mb-3 gap-2"
             onPress={async () => {
@@ -175,7 +238,6 @@ const TrackItemBottomSheet = () => {
 const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
-
     zIndex: 100,
     paddingHorizontal: 16,
     paddingVertical: 8,

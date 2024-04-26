@@ -90,7 +90,7 @@ const Playlist = () => {
                   <Text style={{color: COLOR.TEXT_SECONDARY}}>
                     {pl.type === 'album'
                       ? 'Album'
-                      : ` Danh sách phát • ${pl.totalSong} bài hát`}
+                      : `Danh sách phát • ${pl.totalSong} bài hát`}
                   </Text>
                 </View>
               </TouchableOpacity>

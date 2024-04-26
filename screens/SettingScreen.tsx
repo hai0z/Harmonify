@@ -5,6 +5,7 @@ import Animated, {useSharedValue, withTiming} from 'react-native-reanimated';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {themeMap} from '../constants/theme';
 import {auth} from '../firebase/config';
+import {Appearance} from 'react-native';
 const SettingScreen = () => {
   const {theme, setTheme, COLOR} = useThemeStore(state => state);
 
@@ -35,6 +36,7 @@ const SettingScreen = () => {
               key={index}
               className="flex flex-row gap-2 my-1"
               onPress={() => {
+                Appearance.setColorScheme('light');
                 setTheme(item as keyof typeof themeMap);
                 handleChangeColor(
                   themeMap[item as keyof typeof themeMap]?.BACKGROUND,
@@ -80,6 +82,7 @@ const SettingScreen = () => {
               className="flex flex-row gap-2 my-1"
               onPress={() => {
                 setTheme(item as keyof typeof themeMap);
+                Appearance.setColorScheme('dark');
                 handleChangeColor(
                   themeMap[item as keyof typeof themeMap]?.BACKGROUND,
                 );

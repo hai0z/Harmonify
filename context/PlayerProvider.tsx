@@ -11,6 +11,8 @@ import useBottomSheetStore from '../store/bottomSheetStore';
 import {TABBAR_HEIGHT} from '../constants';
 import {SharedValue, useSharedValue, withTiming} from 'react-native-reanimated';
 import {saveToHistory} from '../service/firebase';
+import {Appearance} from 'react-native';
+import useThemeStore from '../store/themeStore';
 
 interface ContextType {
   bottomSheetModalRef: React.RefObject<BottomSheetModalMethods>;
@@ -35,8 +37,10 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
     setColor,
     setisLoadingTrack,
     tempSong,
+    setSleepTimer,
   } = usePlayerStore();
 
+  const {COLOR} = useThemeStore();
   const getSongColors = async () => {
     if (currentSong?.artwork !== null) {
       getColors(getThumbnail(currentSong?.artwork!, 720), {
@@ -66,6 +70,8 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
   const initPlayer = async () => {
     await TrackPlayer.reset();
     setisLoadingTrack(true);
+    setSleepTimer(null);
+    Appearance.setColorScheme(COLOR.isDark ? 'dark' : 'light');
     if (
       playList.items.length > 0 &&
       playList.id !== '' &&

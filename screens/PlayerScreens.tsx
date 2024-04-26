@@ -7,7 +7,7 @@ import {
   StyleSheet,
 } from 'react-native';
 
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useRef} from 'react';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {LinearGradient} from 'react-native-linear-gradient';
 import {playFromMapping, usePlayerStore} from '../store/playerStore';
@@ -53,6 +53,7 @@ const PlayerScreens = () => {
 
   const bgAnimated = useSharedValue(`transparent`);
 
+  const sleppTimerRef = useRef<any>(null);
   useEffect(() => {
     bgAnimated.value = withTiming(`${gradientColor}95`, {
       duration: 750,
@@ -193,7 +194,7 @@ const PlayerScreens = () => {
         <ArtistCard />
         <SongInfoCard />
       </View>
-      <TrackItemBottomSheet />
+      <TrackItemBottomSheet context="player" />
     </ScrollView>
   );
 };

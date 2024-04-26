@@ -71,6 +71,8 @@ interface PlayerStore {
   setIsPlayFromLocal: (isPlayFromLocal: boolean) => void
   lastPosition: number
   setLastPosition: (lastPosition: number) => void,
+  sleepTimer: number | null
+  setSleepTimer: (time: number | null) => void
 }
 export const usePlayerStore = create<PlayerStore>()(
   persist((set) => ({
@@ -102,7 +104,8 @@ export const usePlayerStore = create<PlayerStore>()(
     setIsPlayFromLocal: (isPlayFromLocal: boolean) => set({ isPlayFromLocal }),
     lastPosition: 0,
     setLastPosition: (lastPosition: number) => set({ lastPosition }),
-
+    sleepTimer: null,
+    setSleepTimer: (sleepTimer: number | null) => set({ sleepTimer }),
   }), {
     name: "player-store",
     storage: createJSONStorage(() => zustandStorage),

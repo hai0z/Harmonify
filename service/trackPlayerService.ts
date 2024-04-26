@@ -4,6 +4,7 @@ import getThumbnail from "../utils/getThumnail";
 import nodejs from "nodejs-mobile-react-native";
 import { DEFAULT_IMG, NULL_URL } from '../constants';
 import useToastStore, { ToastTime } from '../store/toastStore';
+import { Alert } from 'react-native';
 
 export const objectToTrack = (data: any) => {
   return {
@@ -15,8 +16,24 @@ export const objectToTrack = (data: any) => {
     duration: data.duration,
   };
 }
-TrackPlayer.addEventListener(Event.PlaybackProgressUpdated, e => {
-  usePlayerStore.getState().setLastPosition(e.position);
+
+let counter = 0;
+
+TrackPlayer.addEventListener(Event.PlaybackProgressUpdated, async e => {
+  const timer = usePlayerStore.getState().sleepTimer
+  if (timer !== null) {
+    counter++;
+    if (counter === timer) {
+      await TrackPlayer.pause();
+      usePlayerStore.getState().setSleepTimer(null)
+      counter = 0
+      Alert.alert('Hẹn giờ ngủ', 'Chúc bạn ngủ ngon')
+    }
+  } else {
+    counter = 0
+  }
+  console.log(counter);
+  // usePlayerStore.getState().setLastPosition(e.position);
 })
 
 TrackPlayer.addEventListener(Event.PlaybackActiveTrackChanged, async event => {
@@ -45,6 +62,7 @@ nodejs.channel.addListener('getSong', async data => {
     ...data.track,
     url: data.data['128'],
   })
+
 });
 
 nodejs.channel.addListener('getSongInfo', async data => {
