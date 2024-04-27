@@ -14,7 +14,7 @@ const RecentList = ({data}: any) => {
   const handlePlaySong = (song: any) => {
     handlePlay(song, {
       id: song.encodeId,
-      items: [song],
+      items: data,
     });
     setPlayFrom({
       id: 'history',

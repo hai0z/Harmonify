@@ -1,10 +1,4 @@
-import React, {
-  forwardRef,
-  useCallback,
-  useContext,
-  useMemo,
-  useRef,
-} from 'react';
+import React, {useCallback, useContext, useMemo, useRef} from 'react';
 import {
   View,
   Text,
@@ -19,7 +13,6 @@ import {
   BottomSheetView,
   BottomSheetBackdrop,
   useBottomSheetModal,
-  useBottomSheet,
 } from '@gorhom/bottom-sheet';
 
 import {PlayerContext} from '../../context/PlayerProvider';
@@ -35,9 +28,8 @@ import useDownloadSong from '../../hooks/useDownloadSong';
 import useThemeStore from '../../store/themeStore';
 import tinycolor from 'tinycolor2';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
-import SleppTimerModal from './SleepTimerModal';
-import {useModalStore} from '../../store/modalStore';
 import {usePlayerStore} from '../../store/playerStore';
+import SleepTimerBottomSheet from './SleepTimerBottomSheet';
 interface Props {
   context?: 'player' | null;
 }
@@ -67,12 +59,13 @@ const TrackItemBottomSheet = (props: Props) => {
 
   const navigation = useNavigation<any>();
   const {downloadFile} = useDownloadSong();
-  const {setTimerModalVisible} = useModalStore();
   const {sleepTimer, setSleepTimer} = usePlayerStore();
+
+  const sleepTimerRef = useRef<BottomSheetModal>(null);
 
   const timerPress = () => {
     if (!sleepTimer) {
-      setTimerModalVisible(true);
+      sleepTimerRef.current?.present();
     } else {
       Alert.alert('Cảnh báo', 'Xoá bộ hẹn giờ ngủ?', [
         {
@@ -99,13 +92,13 @@ const TrackItemBottomSheet = (props: Props) => {
       index={0}
       backdropComponent={renderBackdrop}
       backgroundStyle={{
-        backgroundColor: tinycolor(COLOR.BACKGROUND).brighten(5).toString(),
+        backgroundColor: tinycolor(COLOR.BACKGROUND).lighten(5).toString(),
       }}
       snapPoints={snapPoints}>
       <BottomSheetView
         style={{
           ...styles.contentContainer,
-          backgroundColor: tinycolor(COLOR.BACKGROUND).brighten(5).toString(),
+          backgroundColor: tinycolor(COLOR.BACKGROUND).lighten(5).toString(),
         }}>
         <View className="flex flex-row items-center">
           <Image
@@ -115,7 +108,7 @@ const TrackItemBottomSheet = (props: Props) => {
               height: wp(15),
             }}
           />
-          <View className="ml-2 w-full flex flex-col">
+          <View className="ml-2 w-full flex flex-col flex-1">
             <Text
               className=" font-semibold w-[80%]"
               style={{color: COLOR.TEXT_PRIMARY}}>
@@ -126,7 +119,9 @@ const TrackItemBottomSheet = (props: Props) => {
             </Text>
           </View>
         </View>
-        <View className="w-full  h-[0.5px] mt-4" />
+        <View
+          className="w-full h-[1px] mt-4"
+          style={{backgroundColor: COLOR.TEXT_SECONDARY}}></View>
         <View className="mt-4 flex-col">
           {!isLiked ? (
             <TouchableOpacity
@@ -146,7 +141,7 @@ const TrackItemBottomSheet = (props: Props) => {
             </TouchableOpacity>
           ) : (
             <TouchableOpacity
-              className="w-full py-3 flex flex-row items-center  mb-3 gap-2"
+              className="w-full py-3 flex flex-row items-center mb-3 gap-2"
               onPress={() => {
                 handleAddToLikedList(data);
                 dismiss();
@@ -231,6 +226,7 @@ const TrackItemBottomSheet = (props: Props) => {
           </TouchableOpacity>
         </View>
       </BottomSheetView>
+      <SleepTimerBottomSheet ref={sleepTimerRef} />
     </BottomSheetModal>
   );
 };

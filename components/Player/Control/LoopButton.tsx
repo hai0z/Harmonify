@@ -28,7 +28,7 @@ const LoopButton = () => {
 
   return (
     <TouchableOpacity
-      className="w-[60px] h-[60px] items-start justify-center "
+      className="items-start justify-center flex-1"
       onPress={handleLoop}>
       <MaterialIcons
         name="loop"

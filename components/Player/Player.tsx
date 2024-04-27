@@ -24,7 +24,7 @@ const Player = () => {
         <TouchableOpacity
           onPress={() => navigation.navigate('Queue')}
           activeOpacity={1}
-          className="w-[60px] h-[60px] items-end justify-center ">
+          className="flex-1 items-end justify-center ">
           <MaterialIcons
             name="queue-music"
             size={24}

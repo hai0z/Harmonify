@@ -12,8 +12,7 @@ const PrevButton = () => {
     <TouchableOpacity
       onPress={PrevTrack}
       style={{
-        width: 60,
-        height: 60,
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
       }}>

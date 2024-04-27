@@ -46,6 +46,7 @@ const Queue = () => {
   const {dominantColor: gradientColor} = useImageColor();
   const {showBottomSheet} = useContext(PlayerContext);
 
+  const flashListRef = React.useRef<FlashList<any>>(null);
   const handlePlay = async (item: any) => {
     const index = playList.items.findIndex(
       items => items.encodeId == item?.encodeId,
@@ -53,13 +54,18 @@ const Queue = () => {
     await TrackPlayer.skip(index);
   };
   const $bg = useSharedValue(`transparent`);
+
   useEffect(() => {
-    setCopyPlaylist(
-      playList.items
-        .filter(item => item.encodeId !== currentSong?.id)
-        .splice(trackIndex, playList.items.length - trackIndex),
+    const updatedItems = [...playList.items];
+    const index = playList.items.findIndex(
+      (s: any) => s.encodeId == currentSong?.id,
     );
-  }, [currentSong?.id]);
+    if (index > -1) {
+      const head = updatedItems.slice(0, index);
+      const tail = updatedItems.slice(index + 1);
+      setCopyPlaylist([...tail, ...head]);
+    }
+  }, [currentSong?.id, trackIndex]);
 
   useEffect(() => {
     $bg.value = withTiming(`${gradientColor}70`, {duration: 750});
@@ -78,7 +84,7 @@ const Queue = () => {
         className="absolute top-0 left-0 right-0 h-full"
       />
 
-      <View className="flex flex-row items-center justify-between px-6">
+      <View className="flex flex-row items-center justify-between px-4">
         <Animated.View
           entering={FadeIn.duration(300).delay(300)}
           exiting={FadeOut}>
@@ -106,6 +112,7 @@ const Queue = () => {
       </View>
       <View className="pt-4 flex-1">
         <FlashList
+          ref={flashListRef}
           ListFooterComponent={<View className="h-10" />}
           ListEmptyComponent={
             <View className="flex justify-center items-center pt-10">
@@ -116,7 +123,7 @@ const Queue = () => {
           }
           showsVerticalScrollIndicator={false}
           ListHeaderComponent={
-            <View className="px-6">
+            <View className="px-4">
               <View>
                 <Text style={{color: COLOR.TEXT_PRIMARY}} className="font-bold">
                   Đang phát
@@ -165,7 +172,7 @@ const Queue = () => {
           keyExtractor={item => item.encodeId}
           renderItem={({item, index}) => {
             return (
-              <View className="px-2">
+              <View>
                 <TrackItem
                   showBottomSheet={showBottomSheet}
                   item={item}
@@ -177,13 +184,12 @@ const Queue = () => {
           }}
         />
       </View>
-      <View className=" py-4 flex items-center justify-center w-full">
+      <View className="py-4 flex items-center justify-center w-full">
         <View className="absolute top-0 w-full">
           <View
             style={{
               height: 2.5,
               maxWidth: '100%',
-              position: 'relative',
               marginHorizontal: 8,
               borderRadius: 2.5,
               backgroundColor: COLOR.isDark ? '#ffffff90' : '#00000020',
@@ -201,11 +207,11 @@ const Queue = () => {
             />
           </View>
         </View>
-        <Animated.View className="flex flex-row justify-center items-center px-6">
+        <View className="flex flex-row justify-between items-center  w-[240px]">
           <PrevButton />
           <PlayButton />
           <NextButton />
-        </Animated.View>
+        </View>
       </View>
       <TrackItemBottomSheet />
     </View>

@@ -65,10 +65,7 @@ const HomeWrapper = () => {
     <View
       className="flex-1 h-full w-full relative "
       style={{backgroundColor: COLOR.BACKGROUND}}>
-      <StatusBar
-        backgroundColor={`transparent`}
-        style={COLOR.isDark ? 'light' : 'dark'}
-      />
+      <StatusBar backgroundColor={`transparent`} style="auto" />
       <HomeTab />
       <TrackItemBottomSheet />
     </View>
@@ -248,7 +245,7 @@ const HomeTab = () => {
 
 const PlayerStack = () => {
   return (
-    <Stack.Navigator screenOptions={{headerShown: false}}>
+    <Stack.Navigator screenOptions={{headerShown: false, gestureEnabled: true}}>
       <Stack.Screen name="Player" component={PlayerScreens} />
       <Stack.Screen
         name="Queue"

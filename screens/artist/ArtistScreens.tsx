@@ -143,7 +143,7 @@ const ArtistScreens = ({route}: any) => {
               style={{
                 color: COLOR.TEXT_PRIMARY,
                 fontFamily: 'GothamBold',
-                fontSize: wp(6.5),
+                fontSize: wp(10),
               }}>
               {dataDetailArtist?.name}
             </Text>

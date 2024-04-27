@@ -13,8 +13,7 @@ const NextButton = () => {
     <TouchableOpacity
       onPress={handleNext}
       style={{
-        width: 60,
-        height: 60,
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
       }}>

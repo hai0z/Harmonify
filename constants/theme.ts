@@ -42,7 +42,7 @@ export const headerGradientLight = {
 const headerGradientLemon = {
   MORNING: tinycolor('#529b03').lighten(25).toString(),
   AFTERNOON: tinycolor('#e9e92f').lighten().toString(),
-  EVENING: '#f6f9c8',
+  EVENING: '#D5F0C1',
 }
 const headerGradientPastel = {
   MORNING: '#d1c1d7',

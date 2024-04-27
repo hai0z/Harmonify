@@ -5,6 +5,9 @@ import {
   Dimensions,
   TouchableOpacity,
   StyleSheet,
+  SafeAreaView,
+  SafeAreaViewBase,
+  Easing,
 } from 'react-native';
 
 import React, {useContext, useEffect, useRef} from 'react';
@@ -25,6 +28,8 @@ import Animated, {
   FadeIn,
   FadeInUp,
   FadeOut,
+  runOnJS,
+  runOnUI,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
@@ -35,6 +40,8 @@ import {
 } from 'react-native-responsive-screen';
 import useImageColor from '../hooks/useImageColor';
 import TrackItemBottomSheet from '../components/bottom-sheet/TrackItemBottomSheet';
+import {SafeAreaFrameContext} from 'react-native-safe-area-context';
+import {StatusBar} from 'expo-status-bar';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const TextAnimated = Animated.createAnimatedComponent(TextTicker);
@@ -53,16 +60,19 @@ const PlayerScreens = () => {
 
   const bgAnimated = useSharedValue(`transparent`);
 
-  const sleppTimerRef = useRef<any>(null);
-  useEffect(() => {
+  const changeBgAnimated = () => {
+    'worklet';
     bgAnimated.value = withTiming(`${gradientColor}95`, {
       duration: 750,
     });
+  };
+  useEffect(() => {
+    runOnUI(changeBgAnimated)();
   }, [gradientColor]);
 
   return (
     <ScrollView
-      style={{backgroundColor: COLOR.BACKGROUND}}
+      style={{backgroundColor: COLOR.BACKGROUND, flex: 1}}
       showsVerticalScrollIndicator={false}
       contentContainerStyle={{
         paddingBottom: 100,
@@ -154,7 +164,7 @@ const PlayerScreens = () => {
           </View>
         )}
         <View
-          className="flex flex-row justify-between px-6 items-center "
+          className="flex flex-row justify-between mx-6 items-center z-50"
           style={{
             marginTop: hp(10),
           }}>
@@ -186,7 +196,7 @@ const PlayerScreens = () => {
           {!isPlayFromLocal && <HeartButton heartIconSize={28} />}
         </View>
       </View>
-      <View className="px-6 w-full">
+      <View className="px-6 w-full ">
         <View style={{marginTop: hp(8)}}>
           <Player />
         </View>

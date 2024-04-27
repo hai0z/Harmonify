@@ -18,10 +18,8 @@ import {
 } from 'react-native-responsive-screen';
 import RecentList from './components/RecentList';
 import {getRecentListening} from '../../service/firebase';
-import {collection, onSnapshot, query} from 'firebase/firestore';
-import {auth, db} from '../../firebase/config';
-import {usePlayerStore} from '../../store/playerStore';
-import {useUserStore} from '../../store/userStore';
+
+import {SafeAreaView} from 'react-native';
 interface typePlaylistCover {
   items: [];
   title: string;
@@ -34,11 +32,10 @@ interface typePlaylistCover {
 function HomeScreens() {
   const [dataHome, setdataHome] = useState<any>([]);
   const [dataNewRelease, setDataNewRelease] = useState<any>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const {COLOR, HEADER_GRADIENT} = useThemeStore(state => state);
   const [dataRecent, setDataRecent] = useState<any>([]);
-  const {setLikedSongs} = usePlayerStore();
-  const {setListFollowArtists, setLikedPlaylists} = useUserStore();
+
   useEffect(() => {
     setLoading(true);
     nodejs.channel.addListener('home', data => {
@@ -53,44 +50,6 @@ function HomeScreens() {
       setLoading(false);
     };
     Promise.all([getRecentList(), nodejs.channel.post('home')]);
-  }, []);
-
-  useEffect(() => {
-    const q = query(collection(db, `users/${auth.currentUser?.uid}/likedSong`));
-    const unsub = onSnapshot(q, querySnapshot => {
-      const songs = [] as any;
-      querySnapshot.forEach(doc => {
-        songs.push(doc.data());
-      });
-      setLikedSongs(songs);
-    });
-
-    const q1 = query(
-      collection(db, `users/${auth.currentUser?.uid}/followedArtist`),
-    );
-    const unsub1 = onSnapshot(q1, querySnapshot => {
-      const followedArtists = [] as any;
-      querySnapshot.forEach(doc => {
-        followedArtists.push(doc.data());
-      });
-      setListFollowArtists(followedArtists);
-    });
-    const q2 = query(
-      collection(db, `users/${auth.currentUser?.uid}/likedPlaylists`),
-    );
-    const unsub2 = onSnapshot(q2, querySnapshot => {
-      const likedPlaylists = [] as any;
-      querySnapshot.forEach(doc => {
-        likedPlaylists.push(doc.data());
-      });
-      setLikedPlaylists(likedPlaylists);
-    });
-
-    return () => {
-      unsub();
-      unsub1();
-      unsub2();
-    };
   }, []);
 
   if (loading) {
@@ -118,55 +77,57 @@ function HomeScreens() {
       showsVerticalScrollIndicator={false}
       className=" h-full w-full pb-[200px]"
       style={{backgroundColor: COLOR.BACKGROUND}}>
-      <Header />
-      <View
-        className="top-0"
-        style={[StyleSheet.absoluteFill, {height: hp(45)}]}>
-        <LinearGradient
-          colors={[timeColor(), `${timeColor()}50`, COLOR.BACKGROUND]}
-          className="h-full"
-        />
-      </View>
-      <View>
-        <RecentList data={dataRecent} />
-      </View>
-      <View className="mt-4">
-        {dataNewRelease && <NewRelease data={dataNewRelease} />}
-      </View>
+      <SafeAreaView>
+        <Header />
+        <View
+          className="top-0"
+          style={[StyleSheet.absoluteFill, {height: hp(45)}]}>
+          <LinearGradient
+            colors={[timeColor(), `${timeColor()}50`, COLOR.BACKGROUND]}
+            className="h-full"
+          />
+        </View>
+        <View>
+          <RecentList data={dataRecent} />
+        </View>
+        <View className="mt-4">
+          {dataNewRelease && <NewRelease data={dataNewRelease} />}
+        </View>
 
-      <View className="-mt-6">
-        {dataHome?.map((e: any, index: number) => {
-          return (
-            <View key={index}>
-              <View>
-                <Text
-                  className="text-xl flex justify-between items-end mt-8 mb-3 uppercase mx-4 "
-                  style={{color: COLOR.TEXT_PRIMARY}}>
-                  {e.title === '' ? e.sectionId.slice(1) : e.title}
-                </Text>
+        <View className="-mt-4">
+          {dataHome?.map((e: any, index: number) => {
+            return (
+              <View key={index}>
+                <View>
+                  <Text
+                    className="text-xl flex justify-between items-end mt-8 mb-3 uppercase mx-4 "
+                    style={{color: COLOR.TEXT_PRIMARY}}>
+                    {e.title === '' ? e.sectionId.slice(1) : e.title}
+                  </Text>
+                </View>
+                <ScrollView
+                  horizontal
+                  contentContainerStyle={{
+                    gap: 10,
+                    paddingHorizontal: 16,
+                    minWidth: widthPercentageToDP(100),
+                  }}>
+                  {e.items.map((element: typePlaylistCover, index: number) => (
+                    <PlayListCover
+                      key={index}
+                      title={element.title}
+                      encodeId={`${element.encodeId}`}
+                      thumbnail={element.thumbnail}
+                      sortDescription={element.sortDescription}
+                    />
+                  ))}
+                </ScrollView>
               </View>
-              <ScrollView
-                horizontal
-                contentContainerStyle={{
-                  gap: 10,
-                  paddingHorizontal: 16,
-                  minWidth: widthPercentageToDP(100),
-                }}>
-                {e.items.map((element: typePlaylistCover, index: number) => (
-                  <PlayListCover
-                    key={index}
-                    title={element.title}
-                    encodeId={`${element.encodeId}`}
-                    thumbnail={element.thumbnail}
-                    sortDescription={element.sortDescription}
-                  />
-                ))}
-              </ScrollView>
-            </View>
-          );
-        })}
-      </View>
-      <View className="h-48"></View>
+            );
+          })}
+        </View>
+        <View className="h-48"></View>
+      </SafeAreaView>
     </ScrollView>
   );
 }
