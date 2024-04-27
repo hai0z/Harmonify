@@ -19,6 +19,8 @@ import TrackItem from '../../components/TrackItem';
 import {PlayerContext} from '../../context/PlayerProvider';
 import useThemeStore from '../../store/themeStore';
 import {usePlayerStore} from '../../store/playerStore';
+import {runOnJS} from 'react-native-reanimated';
+import {widthPercentageToDP} from 'react-native-responsive-screen';
 interface artistType {
   id: string;
   name: string;
@@ -138,6 +140,7 @@ const ArtistSong = ({route}: any) => {
       </Animated.View>
       <View className="flex-1">
         <FlashList
+          bounces={false}
           showsVerticalScrollIndicator={false}
           ListFooterComponent={() => {
             return <View className="h-80"></View>;
@@ -182,8 +185,12 @@ const ArtistSong = ({route}: any) => {
                 />
               </View>
               <Text
-                className=" font-bold text-3xl text-left mt-4 px-4"
-                style={{color: COLOR.TEXT_PRIMARY}}>
+                className=" mt-4 px-4"
+                style={{
+                  color: COLOR.TEXT_PRIMARY,
+                  fontFamily: 'GothamBold',
+                  fontSize: widthPercentageToDP(10),
+                }}>
                 {dataDetailArtist?.name}
               </Text>
             </View>

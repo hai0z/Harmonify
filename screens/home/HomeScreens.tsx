@@ -74,6 +74,7 @@ function HomeScreens() {
 
   return (
     <ScrollView
+      bounces={false}
       showsVerticalScrollIndicator={false}
       className=" h-full w-full pb-[200px]"
       style={{backgroundColor: COLOR.BACKGROUND}}>

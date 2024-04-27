@@ -24,6 +24,7 @@ import {usePlayerStore} from '../store/playerStore';
 import {addToLikedPlaylist} from '../service/firebase';
 import useToastStore, {ToastTime} from '../store/toastStore';
 import {useUserStore} from '../store/userStore';
+import {runOnJS} from 'react-native-reanimated';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -198,7 +199,7 @@ const PlaylistDetail = ({route}: {route: any}) => {
                   ]}
                 />
               </View>
-              <View className="z-50 mt-4 px-6 mb-4">
+              <View className="z-50 mt-4 px-4 mb-4">
                 <Animated.Text
                   style={{
                     opacity: titleOpacity,

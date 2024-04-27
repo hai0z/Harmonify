@@ -17,6 +17,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import TrackItem from '../../components/TrackItem';
 import {PlayerContext} from '../../context/PlayerProvider';
 import useThemeStore from '../../store/themeStore';
+import {runOnJS, runOnUI} from 'react-native-reanimated';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const PlaylistDetail = () => {
@@ -58,21 +59,17 @@ const PlaylistDetail = () => {
     [scrollY],
   );
 
-  const handlePlaySong = useCallback(
-    (song: any) => {
-      handlePlay(song, {
-        id: `${likedSong.length}-likedSong`,
-        items: likedSong,
-      });
-      setPlayFrom({
-        id: 'liked',
-        name: 'Bài hát đã thích',
-      });
-      startMiniPlayerTransition();
-    },
-
-    [],
-  );
+  const handlePlaySong = useCallback((song: any) => {
+    handlePlay(song, {
+      id: `${likedSong.length}-likedSong`,
+      items: likedSong,
+    });
+    setPlayFrom({
+      id: 'liked',
+      name: 'Bài hát đã thích',
+    });
+    startMiniPlayerTransition();
+  }, []);
 
   return (
     <View
@@ -132,7 +129,7 @@ const PlaylistDetail = () => {
                   <Entypo name="heart" size={120} color={COLOR.TEXT_PRIMARY} />
                 </LinearGradient>
               </View>
-              <View className="z-50 mt-4 px-6 mb-4">
+              <View className="z-50 mt-4 px-6 mb-8">
                 <Animated.Text
                   style={{opacity: titleOpacity, color: COLOR.TEXT_PRIMARY}}
                   className=" text-center text-3xl font-bold">

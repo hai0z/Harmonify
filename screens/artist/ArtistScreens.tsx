@@ -84,6 +84,7 @@ const ArtistScreens = ({route}: any) => {
     outputRange: [0, 1],
     extrapolate: 'clamp',
   });
+
   const navigation = useNavigation<any>();
 
   if (loading) {
@@ -110,11 +111,12 @@ const ArtistScreens = ({route}: any) => {
         </Animated.Text>
       </Animated.View>
       <Animated.ScrollView
+        bounces={false}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{paddingBottom: 200}}
         onScroll={Animated.event(
           [{nativeEvent: {contentOffset: {y: scrollY}}}],
-          {useNativeDriver: true},
+          {useNativeDriver: false},
         )}>
         <View className="relative" style={{height: SCREEN_WIDTH}}>
           <LinearGradient
@@ -125,7 +127,7 @@ const ArtistScreens = ({route}: any) => {
               width: SCREEN_WIDTH,
             }}
           />
-          <Image
+          <Animated.Image
             source={{uri: dataDetailArtist?.thumbnailM}}
             style={[
               StyleSheet.absoluteFillObject,
@@ -192,7 +194,7 @@ const ArtistScreens = ({route}: any) => {
                   <TouchableOpacity
                     activeOpacity={0.8}
                     key={item.encodeId}
-                    className="flex-row items-center px-4 mb-2"
+                    className="flex-row items-center px-4 mb-3"
                     onPress={() => {
                       handlePlay(item, {
                         id: name,

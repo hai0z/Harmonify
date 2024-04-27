@@ -57,13 +57,9 @@ const Queue = () => {
 
   useEffect(() => {
     const updatedItems = [...playList.items];
-    const index = playList.items.findIndex(
-      (s: any) => s.encodeId == currentSong?.id,
-    );
-    if (index > -1) {
-      const head = updatedItems.slice(0, index);
-      const tail = updatedItems.slice(index + 1);
-      setCopyPlaylist([...tail, ...head]);
+    if (trackIndex > -1) {
+      const queue = updatedItems.slice(trackIndex + 1);
+      setCopyPlaylist([...queue]);
     }
   }, [currentSong?.id, trackIndex]);
 
@@ -123,42 +119,24 @@ const Queue = () => {
           }
           showsVerticalScrollIndicator={false}
           ListHeaderComponent={
-            <View className="px-4">
+            <View>
               <View>
-                <Text style={{color: COLOR.TEXT_PRIMARY}} className="font-bold">
+                <Text
+                  style={{color: COLOR.TEXT_PRIMARY}}
+                  className="font-bold px-4 mb-4">
                   Đang phát
                 </Text>
                 <Animated.View
                   entering={SlideInLeft.duration(300)}
                   key={currentSong?.id}>
-                  <View className="flex flex-row mt-4">
-                    <Animated.Image
-                      src={currentSong?.artwork}
-                      style={{width: wp(15), height: wp(15)}}
-                    />
-                    <View className="flex justify-center ml-2 flex-1 ">
-                      <Text
-                        className="font-semibold"
-                        numberOfLines={1}
-                        style={{
-                          color: COLOR.TEXT_PRIMARY,
-                          fontSize: wp(4),
-                        }}>
-                        {currentSong?.title}
-                      </Text>
-                      <Text
-                        numberOfLines={1}
-                        style={{
-                          color: COLOR.TEXT_SECONDARY,
-                          fontSize: wp(3.5),
-                        }}>
-                        {currentSong?.artist}
-                      </Text>
-                    </View>
-                  </View>
+                  <TrackItem
+                    showBottomSheet={showBottomSheet}
+                    item={playList.items[trackIndex]}
+                    onClick={handlePlay}
+                  />
                 </Animated.View>
               </View>
-              <View className="mt-6">
+              <View className="mt-6 px-4">
                 <Text
                   style={{color: COLOR.TEXT_PRIMARY}}
                   className="font-bold mb-4">

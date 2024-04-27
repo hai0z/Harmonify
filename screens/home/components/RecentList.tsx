@@ -7,6 +7,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import {handlePlay} from '../../../service/trackPlayerService';
 import {usePlayerStore} from '../../../store/playerStore';
 import {PlayerContext} from '../../../context/PlayerProvider';
+import {runOnJS} from 'react-native-reanimated';
 const RecentList = ({data}: any) => {
   const {COLOR} = useThemeStore();
   const {setPlayFrom} = usePlayerStore();

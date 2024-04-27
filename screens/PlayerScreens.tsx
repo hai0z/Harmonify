@@ -28,7 +28,6 @@ import Animated, {
   FadeIn,
   FadeInUp,
   FadeOut,
-  runOnJS,
   runOnUI,
   useSharedValue,
   withTiming,
@@ -40,8 +39,6 @@ import {
 } from 'react-native-responsive-screen';
 import useImageColor from '../hooks/useImageColor';
 import TrackItemBottomSheet from '../components/bottom-sheet/TrackItemBottomSheet';
-import {SafeAreaFrameContext} from 'react-native-safe-area-context';
-import {StatusBar} from 'expo-status-bar';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const TextAnimated = Animated.createAnimatedComponent(TextTicker);
@@ -72,6 +69,7 @@ const PlayerScreens = () => {
 
   return (
     <ScrollView
+      bounces={false}
       style={{backgroundColor: COLOR.BACKGROUND, flex: 1}}
       showsVerticalScrollIndicator={false}
       contentContainerStyle={{
