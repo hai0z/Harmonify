@@ -1,5 +1,5 @@
 import {View, Text, Image, ActivityIndicator} from 'react-native';
-import React, {useContext, useEffect, useMemo, useState} from 'react';
+import React, {useContext, useEffect, useId, useMemo, useState} from 'react';
 import useThemeStore from '../store/themeStore';
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -24,6 +24,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {
   collection,
+  getDocs,
   limit,
   onSnapshot,
   orderBy,
@@ -50,6 +51,7 @@ const HistoryScreens = () => {
 
   const {showBottomSheet} = useContext(PlayerContext);
 
+  const id = useId();
   const navigation = useNavigation<any>();
 
   const [historyData, setHistoryData] = useState<Track[]>([]);
@@ -57,36 +59,35 @@ const HistoryScreens = () => {
   const [loading, setLoading] = useState(true);
   const {startMiniPlayerTransition} = useContext(PlayerContext);
   useEffect(() => {
-    const q = query(
-      collection(db, `users/${auth.currentUser?.uid}/history`),
-      orderBy('timestamp', 'desc'),
-      limit(50),
-    );
-    const unsub = onSnapshot(q, querySnapshot => {
+    const getHistory = async () => {
+      const q = query(
+        collection(db, `users/${auth.currentUser?.uid}/history`),
+        orderBy('timestamp', 'desc'),
+        limit(50),
+      );
+      const docs = await getDocs(q);
       const songs = [] as any;
-      querySnapshot.forEach(doc => {
+      docs.forEach(doc => {
         songs.push(doc.data());
       });
       setHistoryData(songs);
       setLoading(false);
-    });
-    return () => {
-      unsub();
     };
+    getHistory();
   }, []);
 
   const {dominantColor: gradientColor} = useImageColor();
 
   const handlePlaySong = (item: any) => {
     handlePlay(item, {
-      id: Math.random().toString(36).substring(7),
+      id,
       items: historyData,
     });
     setPlayFrom({
       id: 'history',
       name: 'Bài hát gần đây',
     });
-    startMiniPlayerTransition();
+    // startMiniPlayerTransition();
   };
 
   const $bg = useSharedValue(`transparent`);

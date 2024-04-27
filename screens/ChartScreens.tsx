@@ -81,7 +81,7 @@ const ChartScreens = () => {
         id: 'chart',
         name: 'Bảng xếp hạng V-POP',
       });
-      startMiniPlayerTransition();
+      // startMiniPlayerTransition();
     },
     [data],
   );

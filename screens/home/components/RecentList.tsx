@@ -7,11 +7,13 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import {handlePlay} from '../../../service/trackPlayerService';
 import {usePlayerStore} from '../../../store/playerStore';
 import {PlayerContext} from '../../../context/PlayerProvider';
-import {runOnJS} from 'react-native-reanimated';
 const RecentList = ({data}: any) => {
   const {COLOR} = useThemeStore();
+
   const {setPlayFrom} = usePlayerStore();
+
   const {startMiniPlayerTransition} = useContext(PlayerContext);
+
   const handlePlaySong = (song: any) => {
     handlePlay(song, {
       id: song.encodeId,
@@ -21,7 +23,7 @@ const RecentList = ({data}: any) => {
       id: 'history',
       name: 'Bài hát gần đây',
     });
-    startMiniPlayerTransition();
+    // startMiniPlayerTransition();
   };
   if (data.length < 6) return null;
   return (
@@ -36,7 +38,7 @@ const RecentList = ({data}: any) => {
         style={{
           width: wp(100),
         }}>
-        {data?.map((e: any, index: number) => {
+        {data?.slice(0, 6)?.map((e: any, index: number) => {
           return (
             <TouchableOpacity
               onPress={() => handlePlaySong(e)}

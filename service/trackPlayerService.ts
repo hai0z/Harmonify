@@ -75,6 +75,7 @@ const handlePlay = async (song: any, playlist: IPlaylist = {
 }) => {
   usePlayerStore.getState().setIsPlayFromLocal(false);
   const currentPlaylistId = usePlayerStore.getState().playList?.id;
+  usePlayerStore.getState().setCurrentSong(objectToTrack(song));
   if (currentPlaylistId !== playlist.id) {
     usePlayerStore.getState().setisLoadingTrack(true);
     usePlayerStore.getState().setPlayList(playlist);
@@ -87,7 +88,6 @@ const handlePlay = async (song: any, playlist: IPlaylist = {
   await TrackPlayer.skip(index).finally(() => {
     usePlayerStore.getState().setisLoadingTrack(false);
   })
-  usePlayerStore.getState().setCurrentSong(objectToTrack(song));
   await TrackPlayer.play();
 
 }

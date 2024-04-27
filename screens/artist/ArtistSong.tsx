@@ -111,7 +111,7 @@ const ArtistSong = ({route}: any) => {
         name: dataDetailArtist?.name as string,
       });
 
-      startMiniPlayerTransition();
+      // startMiniPlayerTransition();
     },
     [data],
   );

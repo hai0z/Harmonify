@@ -47,7 +47,7 @@ const NewRelease = ({data}: Props) => {
       name: 'Bài hát mới phát hành',
     });
 
-    startMiniPlayerTransition();
+    // startMiniPlayerTransition();
   }, []);
 
   const {showBottomSheet} = useContext(PlayerContext);

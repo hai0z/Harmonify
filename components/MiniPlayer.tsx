@@ -15,9 +15,15 @@ import {MINI_PLAYER_HEIGHT, TABBAR_HEIGHT} from '../constants';
 import useThemeStore from '../store/themeStore';
 import tinycolor from 'tinycolor2';
 import Animated, {
+  Easing,
+  FadeInDown,
+  FadeInUp,
   FadeOut,
   LightSpeedInLeft,
+  SlideInLeft,
+  SlideInRight,
   interpolate,
+  runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withDelay,
@@ -56,13 +62,15 @@ const MiniPlayer = () => {
     }
   }, []);
 
+  const bgAnimatedFn = () => {
+    'worklet';
+    bgAnimated.value = withTiming(`${gradientColor}`, {
+      duration: 550,
+      easing: Easing.out(Easing.ease),
+    });
+  };
   useEffect(() => {
-    bgAnimated.value = withDelay(
-      250,
-      withTiming(`${gradientColor}`, {
-        duration: 750,
-      }),
-    );
+    runOnJS(bgAnimatedFn)();
   }, [color.dominant, gradientColor, keyboardVisible, COLOR]);
 
   // useEffect(() => {
@@ -132,8 +140,8 @@ const MiniPlayer = () => {
               overflow: 'hidden',
             }}
             key={currentSong?.id}
-            entering={LightSpeedInLeft.duration(300).springify().delay(750)}
-            exiting={FadeOut}>
+            entering={FadeInUp.duration(300).delay(300)}
+            exiting={FadeOut.duration(300)}>
             <TextTicker
               duration={6000}
               loop

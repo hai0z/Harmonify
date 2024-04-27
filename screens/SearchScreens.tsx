@@ -115,7 +115,7 @@ const SearchScreens = () => {
                 id: 'search',
                 name: e.title,
               });
-              startMiniPlayerTransition();
+              // startMiniPlayerTransition();
             }}>
             <Image
               source={{uri: getThumbnail(e.thumbnail) || ''}}

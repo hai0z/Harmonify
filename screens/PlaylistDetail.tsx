@@ -112,7 +112,7 @@ const PlaylistDetail = ({route}: {route: any}) => {
       id: playlistData?.isAlbum ? 'album' : 'playlist',
       name: playlistData?.title,
     });
-    startMiniPlayerTransition();
+    // startMiniPlayerTransition();
   };
 
   const caculateTotalTime = () => {

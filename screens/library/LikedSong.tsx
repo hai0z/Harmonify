@@ -17,7 +17,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import TrackItem from '../../components/TrackItem';
 import {PlayerContext} from '../../context/PlayerProvider';
 import useThemeStore from '../../store/themeStore';
-import {runOnJS, runOnUI} from 'react-native-reanimated';
+import {runOnJS} from 'react-native-reanimated';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const PlaylistDetail = () => {
@@ -68,7 +68,7 @@ const PlaylistDetail = () => {
       id: 'liked',
       name: 'Bài hát đã thích',
     });
-    startMiniPlayerTransition();
+    // startMiniPlayerTransition();
   }, []);
 
   return (
