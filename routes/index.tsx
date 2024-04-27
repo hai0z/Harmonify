@@ -30,7 +30,7 @@ import TrackItemBottomSheet from '../components/bottom-sheet/TrackItemBottomShee
 import LocalSong from '../screens/library/LocalSong';
 import useThemeStore from '../store/themeStore';
 import SettingScreen from '../screens/SettingScreen';
-import Queue from '../screens/Queue';
+import Queue from '../screens/queue/Queue';
 import Entypo from 'react-native-vector-icons/Entypo';
 import HistoryScreens from '../screens/HistoryScreens';
 import {withTiming} from 'react-native-reanimated';

@@ -1,9 +1,9 @@
 import {View, Text} from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
-import useThemeStore from '../store/themeStore';
+import useThemeStore from '../../store/themeStore';
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {playFromMapping, usePlayerStore} from '../store/playerStore';
+import {playFromMapping, usePlayerStore} from '../../store/playerStore';
 import {useNavigation} from '@react-navigation/native';
 
 import {TouchableOpacity} from 'react-native-gesture-handler';
@@ -20,15 +20,16 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import PlayButton from '../components/Player/Control/PlayButton';
-import PrevButton from '../components/Player/Control/PrevButton';
-import NextButton from '../components/Player/Control/NextButton';
-import TrackPlayer, {useProgress} from 'react-native-track-player';
+import PlayButton from '../../components/Player/Control/PlayButton';
+import PrevButton from '../../components/Player/Control/PrevButton';
+import NextButton from '../../components/Player/Control/NextButton';
+import TrackPlayer from 'react-native-track-player';
 import LinearGradient from 'react-native-linear-gradient';
-import useImageColor from '../hooks/useImageColor';
-import {PlayerContext} from '../context/PlayerProvider';
-import TrackItem from '../components/TrackItem';
-import TrackItemBottomSheet from '../components/bottom-sheet/TrackItemBottomSheet';
+import useImageColor from '../../hooks/useImageColor';
+import {PlayerContext} from '../../context/PlayerProvider';
+import TrackItem from '../../components/TrackItem';
+import TrackItemBottomSheet from '../../components/bottom-sheet/TrackItemBottomSheet';
+import ProgressBar from './ProgressBar';
 const Queue = () => {
   const {COLOR} = useThemeStore(state => state);
 
@@ -39,14 +40,12 @@ const Queue = () => {
   const trackIndex = playList.items.findIndex(
     item => item.encodeId == currentSong?.id,
   );
-  const [copyPlaylist, setCopyPlaylist] = useState([...playList.items]);
-
-  const progress = useProgress(1000 / 120);
+  const [copyPlaylist, setCopyPlaylist] = useState<any[]>([]);
 
   const {dominantColor: gradientColor} = useImageColor();
   const {showBottomSheet} = useContext(PlayerContext);
 
-  const flashListRef = React.useRef<FlashList<any>>(null);
+  console.log('123');
   const handlePlay = async (item: any) => {
     const index = playList.items.findIndex(
       items => items.encodeId == item?.encodeId,
@@ -61,7 +60,7 @@ const Queue = () => {
       const queue = updatedItems.slice(trackIndex + 1);
       setCopyPlaylist([...queue]);
     }
-  }, [currentSong?.id, trackIndex]);
+  }, [currentSong?.id]);
 
   useEffect(() => {
     $bg.value = withTiming(`${gradientColor}70`, {duration: 750});
@@ -107,84 +106,63 @@ const Queue = () => {
         <TouchableOpacity className="w-5 h-5"></TouchableOpacity>
       </View>
       <View className="pt-4 flex-1">
-        <FlashList
-          ref={flashListRef}
-          ListFooterComponent={<View className="h-10" />}
-          ListEmptyComponent={
-            <View className="flex justify-center items-center pt-10">
-              <Text style={{color: COLOR.TEXT_PRIMARY}} className="text-center">
-                Hàng chờ trống...
-              </Text>
-            </View>
-          }
-          showsVerticalScrollIndicator={false}
-          ListHeaderComponent={
-            <View>
-              <View>
+        {
+          <FlashList
+            ListFooterComponent={<View className="h-10" />}
+            ListEmptyComponent={
+              <View className="flex justify-center items-center pt-10">
                 <Text
                   style={{color: COLOR.TEXT_PRIMARY}}
-                  className="font-bold px-4 mb-4">
-                  Đang phát
-                </Text>
-                <Animated.View
-                  entering={SlideInLeft.duration(300)}
-                  key={currentSong?.id}>
-                  <TrackItem
-                    showBottomSheet={showBottomSheet}
-                    item={playList.items[trackIndex]}
-                    onClick={handlePlay}
-                  />
-                </Animated.View>
-              </View>
-              <View className="mt-6 px-4">
-                <Text
-                  style={{color: COLOR.TEXT_PRIMARY}}
-                  className="font-bold mb-4">
-                  Hàng đợi
+                  className="text-center">
+                  Hàng chờ trống...
                 </Text>
               </View>
-            </View>
-          }
-          data={[...copyPlaylist]}
-          estimatedItemSize={70}
-          keyExtractor={item => item.encodeId}
-          renderItem={({item, index}) => {
-            return (
+            }
+            showsVerticalScrollIndicator={false}
+            ListHeaderComponent={
               <View>
+                <View>
+                  <Text
+                    style={{color: COLOR.TEXT_PRIMARY}}
+                    className="font-bold px-4 mb-4">
+                    Đang phát
+                  </Text>
+                  <Animated.View
+                    entering={SlideInLeft.duration(300)}
+                    key={currentSong?.id}>
+                    <TrackItem
+                      showBottomSheet={showBottomSheet}
+                      item={playList.items[trackIndex]}
+                      onClick={handlePlay}
+                    />
+                  </Animated.View>
+                </View>
+                <View className="mt-6 px-4">
+                  <Text
+                    style={{color: COLOR.TEXT_PRIMARY}}
+                    className="font-bold mb-4">
+                    Hàng đợi
+                  </Text>
+                </View>
+              </View>
+            }
+            data={copyPlaylist}
+            estimatedItemSize={70}
+            renderItem={({item, index}) => {
+              return (
                 <TrackItem
                   showBottomSheet={showBottomSheet}
                   item={item}
                   index={index}
                   onClick={handlePlay}
                 />
-              </View>
-            );
-          }}
-        />
+              );
+            }}
+          />
+        }
       </View>
       <View className="py-4 flex items-center justify-center w-full">
-        <View className="absolute top-0 w-full">
-          <View
-            style={{
-              height: 2.5,
-              maxWidth: '100%',
-              marginHorizontal: 8,
-              borderRadius: 2.5,
-              backgroundColor: COLOR.isDark ? '#ffffff90' : '#00000020',
-              zIndex: 2,
-            }}>
-            <View
-              style={{
-                width: `${(progress.position / progress.duration) * 100}%`,
-                height: 2.5,
-                backgroundColor: COLOR.TEXT_PRIMARY,
-                position: 'absolute',
-                borderTopLeftRadius: 2.5,
-                borderBottomLeftRadius: 2.5,
-              }}
-            />
-          </View>
-        </View>
+        <ProgressBar />
         <View className="flex flex-row justify-between items-center  w-[240px]">
           <PrevButton />
           <PlayButton />
