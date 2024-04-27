@@ -10,7 +10,7 @@ import {
 import {usePlayerStore} from '../../store/playerStore';
 import getThumbnail from '../../utils/getThumnail';
 import TrackPlayer, {useActiveTrack} from 'react-native-track-player';
-import Animated from 'react-native-reanimated';
+import Animated, {FadeIn} from 'react-native-reanimated';
 
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('screen');
 
@@ -25,9 +25,9 @@ const ImageSlider = () => {
 
   const flatListRef = React.useRef<FlashList<any>>(null);
 
-  const swpipeToChangeSong = (
+  const swpipeToChangeSong = async (
     e: NativeSyntheticEvent<NativeScrollEvent>,
-  ): void => {
+  ) => {
     const pageNum = Math.min(
       Math.max(
         Math.floor(e.nativeEvent.contentOffset.x / SCREEN_WIDTH + 0.5) + 1,
@@ -37,9 +37,9 @@ const ImageSlider = () => {
     );
     if (pageNum - 1 != currentSongIndex) {
       if (pageNum - 1 < currentSongIndex) {
-        TrackPlayer.skipToPrevious();
+        await TrackPlayer.skipToPrevious();
       } else {
-        TrackPlayer.skipToNext();
+        await TrackPlayer.skipToNext();
       }
     }
   };
@@ -75,7 +75,7 @@ const ImageSlider = () => {
   );
 };
 
-const SliderItem = React.memo(({item, index}: any) => {
+const SliderItem = ({item, index}: any) => {
   return (
     <View
       key={index}
@@ -85,6 +85,7 @@ const SliderItem = React.memo(({item, index}: any) => {
         alignItems: 'center',
       }}>
       <Animated.Image
+        entering={FadeIn.duration(300).springify().delay(200)}
         src={getThumbnail(item.thumbnail)}
         className="rounded-md z-20"
         style={{
@@ -94,6 +95,6 @@ const SliderItem = React.memo(({item, index}: any) => {
       />
     </View>
   );
-});
+};
 
 export default React.memo(ImageSlider);

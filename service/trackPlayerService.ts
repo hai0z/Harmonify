@@ -73,8 +73,8 @@ const handlePlay = async (song: any, playlist: IPlaylist = {
   id: "",
   items: [],
 }) => {
-  usePlayerStore.getState().setIsPlayFromLocal(false);
   const currentPlaylistId = usePlayerStore.getState().playList?.id;
+  usePlayerStore.getState().setIsPlayFromLocal(false);
   usePlayerStore.getState().setCurrentSong(objectToTrack(song));
   if (currentPlaylistId !== playlist.id) {
     usePlayerStore.getState().setisLoadingTrack(true);

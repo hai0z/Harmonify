@@ -8,6 +8,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import {DEFAULT_IMG} from '../../constants';
 import useThemeStore from '../../store/themeStore';
 import useImageColor from '../../hooks/useImageColor';
+import LinearGradient from 'react-native-linear-gradient';
 const ArtistCard = () => {
   const currentSong = usePlayerStore(state => state.currentSong);
 
@@ -39,7 +40,7 @@ const ArtistCard = () => {
   return (
     <TouchableOpacity
       activeOpacity={1}
-      className="w-full rounded-2xl h-[320px] mt-8"
+      className="w-full rounded-2xl h-[340px] mt-8"
       onPress={() =>
         navigation.navigate('Artists', {
           name: data.alias,

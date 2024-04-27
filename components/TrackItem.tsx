@@ -37,9 +37,9 @@ const TrackItem = (props: Props) => {
       ) : (
         <FastImage
           source={{
-            uri: getThumbnail(item.thumbnail),
+            uri: getThumbnail(item?.thumbnail),
           }}
-          key={item.encodeId}
+          key={item?.encodeId}
           className="rounded-none"
           style={{width: wp(15), height: wp(15)}}
         />
@@ -49,7 +49,7 @@ const TrackItem = (props: Props) => {
           className="font-semibold"
           numberOfLines={1}
           style={{
-            color: item.isActive ? COLOR.PRIMARY : COLOR.TEXT_PRIMARY,
+            color: item?.isActive ? COLOR.PRIMARY : COLOR.TEXT_PRIMARY,
             fontSize: wp(4),
           }}>
           {item?.title}

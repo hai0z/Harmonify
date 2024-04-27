@@ -108,7 +108,7 @@ const PlayerScreens = () => {
             hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}
             className="z-50"
             onPress={() => navigation.goBack()}>
-            <Entypo name="chevron-down" size={24} color={COLOR.TEXT_PRIMARY} />
+            <Entypo name="chevron-down" size={28} color={COLOR.TEXT_PRIMARY} />
           </TouchableOpacity>
           <View className="flex-1">
             <Text

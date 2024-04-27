@@ -59,7 +59,7 @@ const LyricScreen = ({route}: {route: any}) => {
       className="pt-[35px] h-full w-full pb-10">
       <View className="flex flex-row items-center justify-between px-6 py-6 ">
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Entypo name="chevron-down" size={24} color={COLOR.TEXT_PRIMARY} />
+          <Entypo name="chevron-down" size={28} color={COLOR.TEXT_PRIMARY} />
         </TouchableOpacity>
         <View className="flex-1 flex justify-center items-center">
           <Animated.Text

@@ -2,18 +2,21 @@ import {View, Text} from 'react-native';
 import React from 'react';
 import useThemeStore from '../../store/themeStore';
 import {useProgress} from 'react-native-track-player/lib/hooks';
+import {widthPercentageToDP} from 'react-native-responsive-screen';
 
 const ProgressBar = () => {
   const {COLOR} = useThemeStore();
 
   const progress = useProgress(1000 / 120); //120fps
   return (
-    <View className="absolute top-0 w-full">
+    <View
+      className="absolute top-0 left-0 right-0 bottom-0 flex items-center "
+      style={{width: widthPercentageToDP(100)}}>
       <View
         style={{
           height: 2.5,
-          maxWidth: '100%',
           marginHorizontal: 8,
+          width: widthPercentageToDP(100),
           borderRadius: 2.5,
           backgroundColor: COLOR.isDark ? '#ffffff90' : '#00000020',
           zIndex: 2,

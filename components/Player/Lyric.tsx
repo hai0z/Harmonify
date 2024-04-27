@@ -53,7 +53,8 @@ const Lyric = () => {
               style={{color: COLOR.TEXT_PRIMARY}}>
               Lời bài hát
             </Text>
-            <View
+            <TouchableOpacity
+              onPress={() => nativgation.navigate('Lyric', {lyrics})}
               className="w-7 h-7 flex justify-center items-center rounded-full z-[3]"
               style={{
                 backgroundColor: COLOR.isDark ? '#00000020' : '#ffffff80',
@@ -63,7 +64,7 @@ const Lyric = () => {
                 size={16}
                 color={COLOR.TEXT_PRIMARY}
               />
-            </View>
+            </TouchableOpacity>
             {/* <LinearGradient
               colors={[bg!, bg!, 'transparent']}
               style={{
@@ -77,6 +78,7 @@ const Lyric = () => {
               ref={lyricsRef}
               contentContainerStyle={{
                 paddingHorizontal: 16,
+                paddingBottom: 48,
               }}
               data={lyrics}
               initialScrollIndex={currentLine === -1 ? 0 : currentLine - OFFSET}
