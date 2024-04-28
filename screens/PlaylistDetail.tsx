@@ -25,6 +25,7 @@ import {addToLikedPlaylist} from '../service/firebase';
 import useToastStore, {ToastTime} from '../store/toastStore';
 import {useUserStore} from '../store/userStore';
 import {runOnJS} from 'react-native-reanimated';
+import {widthPercentageToDP} from 'react-native-responsive-screen';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -204,8 +205,10 @@ const PlaylistDetail = ({route}: {route: any}) => {
                   style={{
                     opacity: titleOpacity,
                     color: COLOR.TEXT_PRIMARY,
+                    fontFamily: 'GothamBold',
+                    fontSize: widthPercentageToDP(8),
                   }}
-                  className=" text-center text-3xl font-bold">
+                  className=" text-center">
                   {playlistData?.title}
                 </Animated.Text>
                 <View className="flex flex-col gap-4 mt-8">

@@ -8,7 +8,7 @@ const useImageColor = () => {
   const { COLOR } = useThemeStore()
 
   const dominantColor = COLOR.isDark
-    ? useDarkColor(color.dominant!, 30)
+    ? useDarkColor(color.dominant!, 35)
     : tinycolor(color.dominant!).isDark()
       ? tinycolor(color.dominant!).lighten(40).toString()
       : tinycolor(color.dominant!).darken(5).toString();

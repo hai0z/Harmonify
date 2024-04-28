@@ -16,8 +16,6 @@ import Animated, {
   Easing,
   FadeInDown,
   FadeOut,
-  LayoutAnimationConfig,
-  runOnJS,
   runOnUI,
   useSharedValue,
   withTiming,

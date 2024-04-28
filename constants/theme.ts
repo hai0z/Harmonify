@@ -1,6 +1,6 @@
 import tinycolor from "tinycolor2"
 
-export type Theme = "light" | "dark" | "lemon" | "pastel" | 'valentine' | 'silky' | 'synthWave' | 'coffee' | 'amoled' | 'night';
+export type Theme = "light" | "dark" | "lemon" | "pastel" | 'winter' | 'silky' | 'synthWave' | 'coffee' | 'amoled' | 'night';
 
 //dark header
 export const headerGradientDark = {
@@ -49,10 +49,10 @@ const headerGradientPastel = {
   AFTERNOON: '#f6cbd1',
   EVENING: '#b4e9d6',
 }
-const headerGradientValentine = {
-  MORNING: tinycolor('#e96d7b').lighten().toString(),
-  AFTERNOON: tinycolor('#a992f7').lighten(40).toString(),
-  EVENING: tinycolor('#88dcdd').lighten(10).toString(),
+const headerGradientWinter = {
+  MORNING: tinycolor('#057aff').lighten(40).toString(),
+  AFTERNOON: tinycolor('#463aa1').lighten(40).toString(),
+  EVENING: tinycolor('#c149ad').lighten(30).toString(),
 }
 
 //light theme
@@ -73,13 +73,13 @@ export const lightTheme = {
   TEXT_SECONDARY: '#606060',
   BACKGROUND: '#faf7f5',
 }
-export const valentineTheme = {
+export const winterTheme = {
   isDark: false,
-  PRIMARY: '#e96d7b',
-  SECONDARY: '#a992f7',
+  PRIMARY: '#057aff',
+  SECONDARY: '#463aa1',
   TEXT_PRIMARY: '#000000',
   TEXT_SECONDARY: '#606060',
-  BACKGROUND: '#f0d6e8',
+  BACKGROUND: '#ffffff',
 
 }
 export const pastelTheme = {
@@ -149,7 +149,7 @@ export const themeMap = {
   'dark': darkTheme,
   'lemon': lemonTheme,
   'pastel': pastelTheme,
-  'valentine': valentineTheme,
+  'winter': winterTheme,
   'silky': silkyTheme,
   'synthWave': synthWaveTheme,
   'coffee': coffeeTheme,
@@ -162,7 +162,7 @@ export const gradientHeaderMap = {
   'dark': headerGradientDark,
   'lemon': headerGradientLemon,
   'pastel': headerGradientPastel,
-  'valentine': headerGradientValentine,
+  'winter': headerGradientWinter,
   'silky': headerGradientSilky,
   'synthWave': headerGradientSynthWave,
   'coffee': headerGradientCoffee,

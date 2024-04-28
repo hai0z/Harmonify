@@ -30,48 +30,44 @@ const SettingScreen = () => {
       </View>
       <View className="flex mt-4">
         <Text style={{color: COLOR?.TEXT_PRIMARY}}>Chủ đề sáng</Text>
-        {['light', 'lemon', 'pastel', 'valentine', 'silky'].map(
-          (item, index) => (
-            <TouchableOpacity
-              key={index}
-              className="flex flex-row gap-2 my-1"
-              onPress={() => {
-                Appearance.setColorScheme('light');
-                setTheme(item as keyof typeof themeMap);
-                handleChangeColor(
-                  themeMap[item as keyof typeof themeMap]?.BACKGROUND,
-                );
+        {['light', 'lemon', 'pastel', 'winter', 'silky'].map((item, index) => (
+          <TouchableOpacity
+            key={index}
+            className="flex flex-row gap-2 my-1"
+            onPress={() => {
+              Appearance.setColorScheme('light');
+              setTheme(item as keyof typeof themeMap);
+              handleChangeColor(
+                themeMap[item as keyof typeof themeMap]?.BACKGROUND,
+              );
+            }}>
+            <View
+              className="items-center justify-center"
+              style={{
+                width: 20,
+                height: 20,
+                borderRadius: 10,
+                backgroundColor:
+                  (theme as string) === item
+                    ? COLOR?.TEXT_PRIMARY
+                    : 'transparent',
+                padding: 2,
               }}>
               <View
-                className="items-center justify-center"
+                key={index}
+                className="flex flex-row items-center  h-4 w-4 rounded-full justify-center"
                 style={{
-                  width: 20,
-                  height: 20,
-                  borderRadius: 10,
                   backgroundColor:
-                    (theme as string) === item
-                      ? COLOR?.TEXT_PRIMARY
-                      : 'transparent',
-                  padding: 2,
-                }}>
-                <View
-                  key={index}
-                  className="flex flex-row items-center  h-4 w-4 rounded-full justify-center"
-                  style={{
-                    backgroundColor:
-                      themeMap[item as keyof typeof themeMap]?.PRIMARY,
-                  }}></View>
-              </View>
-              <View>
-                <Text
-                  style={{color: COLOR?.TEXT_PRIMARY}}
-                  className="capitalize">
-                  {item}
-                </Text>
-              </View>
-            </TouchableOpacity>
-          ),
-        )}
+                    themeMap[item as keyof typeof themeMap]?.PRIMARY,
+                }}></View>
+            </View>
+            <View>
+              <Text style={{color: COLOR?.TEXT_PRIMARY}} className="capitalize">
+                {item}
+              </Text>
+            </View>
+          </TouchableOpacity>
+        ))}
       </View>
       <View className="flex mt-4">
         <Text style={{color: COLOR.TEXT_PRIMARY}}>Chủ đề tối</Text>

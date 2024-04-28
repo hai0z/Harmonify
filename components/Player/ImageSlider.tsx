@@ -1,10 +1,9 @@
-import React, {useEffect, useMemo} from 'react';
+import React, {memo, useEffect, useRef} from 'react';
 import {FlashList} from '@shopify/flash-list';
 import {
   NativeScrollEvent,
   NativeSyntheticEvent,
   Dimensions,
-  Image,
   View,
 } from 'react-native';
 import {usePlayerStore} from '../../store/playerStore';
@@ -44,11 +43,17 @@ const ImageSlider = () => {
     }
   };
 
+  const indexRef = useRef<number>(currentSongIndex);
+
   useEffect(() => {
     flatListRef.current?.scrollToIndex({
       index: currentSongIndex == -1 ? 0 : currentSongIndex,
-      animated: true,
+      animated:
+        indexRef.current == 0 || indexRef.current === playList.items.length - 1
+          ? false
+          : true,
     });
+    indexRef.current = currentSongIndex;
   }, [currentSong?.id]);
 
   return (
@@ -97,4 +102,4 @@ const SliderItem = ({item, index}: any) => {
   );
 };
 
-export default React.memo(ImageSlider);
+export default memo(ImageSlider);
