@@ -24,6 +24,7 @@ import Animated, {
   SlideInRight,
   interpolate,
   runOnJS,
+  runOnUI,
   useAnimatedStyle,
   useSharedValue,
   withDelay,
@@ -70,7 +71,7 @@ const MiniPlayer = () => {
     });
   };
   useEffect(() => {
-    runOnJS(bgAnimatedFn)();
+    runOnUI(bgAnimatedFn)();
   }, [color.dominant, gradientColor, keyboardVisible, COLOR]);
 
   // useEffect(() => {

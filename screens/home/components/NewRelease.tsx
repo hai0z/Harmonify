@@ -1,5 +1,5 @@
 import {View, Text, Dimensions, TouchableOpacity} from 'react-native';
-import React, {useCallback, useContext, useEffect} from 'react';
+import React, {memo, useCallback, useContext, useEffect} from 'react';
 import TrackItem from '../../../components/TrackItem';
 import {handlePlay} from '../../../service/trackPlayerService';
 import {PlayerContext} from '../../../context/PlayerProvider';
@@ -84,4 +84,4 @@ const NewRelease = ({data}: Props) => {
   );
 };
 
-export default NewRelease;
+export default memo(NewRelease);

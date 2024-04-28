@@ -5,9 +5,6 @@ import {
   Dimensions,
   TouchableOpacity,
   StyleSheet,
-  SafeAreaView,
-  SafeAreaViewBase,
-  Easing,
 } from 'react-native';
 
 import React, {useContext, useEffect, useRef} from 'react';
@@ -25,6 +22,7 @@ import {useActiveTrack} from 'react-native-track-player';
 import useThemeStore from '../store/themeStore';
 import {PlayerContext} from '../context/PlayerProvider';
 import Animated, {
+  Easing,
   FadeIn,
   FadeInUp,
   FadeOut,
@@ -61,11 +59,12 @@ const PlayerScreens = () => {
     'worklet';
     bgAnimated.value = withTiming(`${gradientColor}95`, {
       duration: 750,
+      easing: Easing.out(Easing.ease),
     });
   };
   useEffect(() => {
     runOnUI(changeBgAnimated)();
-  }, [gradientColor]);
+  }, [gradientColor, COLOR]);
 
   return (
     <ScrollView

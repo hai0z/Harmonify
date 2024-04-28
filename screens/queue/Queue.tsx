@@ -1,4 +1,4 @@
-import {View, Text} from 'react-native';
+import {View, Text, LayoutAnimation} from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
 import useThemeStore from '../../store/themeStore';
 
@@ -13,8 +13,12 @@ import {
 } from 'react-native-responsive-screen';
 import {FlashList} from '@shopify/flash-list';
 import Animated, {
+  Easing,
   FadeInDown,
   FadeOut,
+  LayoutAnimationConfig,
+  runOnJS,
+  runOnUI,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
@@ -44,6 +48,7 @@ const Queue = () => {
   const [copyPlaylist, setCopyPlaylist] = useState<any[]>([...playList.items]);
 
   const {dominantColor: gradientColor} = useImageColor();
+
   const {showBottomSheet} = useContext(PlayerContext);
 
   const handlePlay = async (item: any) => {
@@ -55,15 +60,22 @@ const Queue = () => {
   const $bg = useSharedValue(`transparent`);
 
   useEffect(() => {
-    const updatedItems = [...playList.items];
-    if (trackIndex > -1) {
-      const queue = updatedItems.slice(trackIndex + 1);
-      setCopyPlaylist([...queue]);
-    }
+    setCopyPlaylist(
+      playList.items
+        .filter(item => item.encodeId != currentSong?.id)
+        .splice(trackIndex, playList.items.length - trackIndex),
+    );
   }, [currentSong?.id]);
 
+  const changeBgAnimated = () => {
+    'worklet';
+    $bg.value = withTiming(`${gradientColor}70`, {
+      duration: 750,
+      easing: Easing.out(Easing.ease),
+    });
+  };
   useEffect(() => {
-    $bg.value = withTiming(`${gradientColor}80`, {duration: 750});
+    runOnUI(changeBgAnimated)();
   }, [gradientColor]);
 
   return (
@@ -151,16 +163,13 @@ const Queue = () => {
           showsVerticalScrollIndicator={false}
           data={copyPlaylist}
           estimatedItemSize={70}
-          renderItem={({item, index}) => {
+          renderItem={({item}) => {
             return (
-              <Animated.View key={index} exiting={FadeOut}>
-                <TrackItem
-                  showBottomSheet={showBottomSheet}
-                  item={item}
-                  index={index}
-                  onClick={handlePlay}
-                />
-              </Animated.View>
+              <TrackItem
+                showBottomSheet={showBottomSheet}
+                item={item}
+                onClick={handlePlay}
+              />
             );
           }}
         />

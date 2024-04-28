@@ -123,7 +123,7 @@ const ArtistScreens = ({route}: any) => {
             colors={['transparent', COLOR.BACKGROUND]}
             className="absolute left-0 right-0 bottom-0 z-10"
             style={{
-              height: SCREEN_WIDTH * 0.8,
+              height: 200,
               width: SCREEN_WIDTH,
             }}
           />

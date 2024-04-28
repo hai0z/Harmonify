@@ -5,6 +5,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import useThemeStore from '../store/themeStore';
 import FastImage from 'react-native-fast-image';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
+import {usePlayerStore} from '../store/playerStore';
 interface Props {
   item: any;
   index?: number;
@@ -17,6 +18,7 @@ const TrackItem = (props: Props) => {
   const {item, index, onClick, isAlbum, showBottomSheet} = props;
 
   const COLOR = useThemeStore(state => state.COLOR);
+  const playList = usePlayerStore(state => state.playList);
 
   console.log('track renderItem');
   return (
@@ -29,7 +31,7 @@ const TrackItem = (props: Props) => {
       {isAlbum ? (
         <View
           className="rounded-md flex justify-center items-center"
-          style={{width: wp(15), height: wp(25)}}>
+          style={{width: wp(15), height: wp(15)}}>
           <Text style={{color: COLOR.TEXT_PRIMARY}} className="font-semibold">
             {index! + 1}
           </Text>
@@ -49,7 +51,7 @@ const TrackItem = (props: Props) => {
           className="font-semibold"
           numberOfLines={1}
           style={{
-            color: item?.isActive ? COLOR.PRIMARY : COLOR.TEXT_PRIMARY,
+            color: COLOR.TEXT_PRIMARY,
             fontSize: wp(4),
           }}>
           {item?.title}

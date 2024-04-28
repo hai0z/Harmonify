@@ -167,7 +167,7 @@ const ArtistSong = ({route}: any) => {
 
                 <Image
                   src={dataDetailArtist?.thumbnailM}
-                  blurRadius={100}
+                  blurRadius={1000}
                   style={[
                     StyleSheet.absoluteFillObject,
                     {width: SCREEN_WIDTH, height: SCREEN_WIDTH * 0.8},

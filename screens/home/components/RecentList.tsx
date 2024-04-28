@@ -1,5 +1,5 @@
 import {View, Text, Image} from 'react-native';
-import React, {useContext} from 'react';
+import React, {memo, useContext, useId} from 'react';
 import useThemeStore from '../../../store/themeStore';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import tinycolor from 'tinycolor2';
@@ -12,6 +12,7 @@ const RecentList = ({data}: any) => {
 
   const {setPlayFrom} = usePlayerStore();
 
+  const id = useId();
   const {startMiniPlayerTransition} = useContext(PlayerContext);
 
   const handlePlaySong = (song: any) => {
@@ -76,4 +77,4 @@ const RecentList = ({data}: any) => {
   );
 };
 
-export default RecentList;
+export default memo(RecentList);

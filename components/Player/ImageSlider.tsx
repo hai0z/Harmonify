@@ -18,9 +18,9 @@ const ImageSlider = () => {
   const {playList} = usePlayerStore();
 
   const currentSong = useActiveTrack();
-  const currentSongIndex = useMemo(
-    () => playList.items.findIndex((s: any) => s.encodeId == currentSong?.id),
-    [currentSong?.id],
+
+  const currentSongIndex = playList.items.findIndex(
+    (s: any) => s.encodeId == currentSong?.id,
   );
 
   const flatListRef = React.useRef<FlashList<any>>(null);
@@ -85,7 +85,7 @@ const SliderItem = ({item, index}: any) => {
         alignItems: 'center',
       }}>
       <Animated.Image
-        entering={FadeIn.duration(300).springify().delay(200)}
+        entering={FadeIn.duration(400).springify().delay(250)}
         src={getThumbnail(item.thumbnail)}
         className="rounded-md z-20"
         style={{
