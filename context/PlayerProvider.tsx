@@ -9,7 +9,7 @@ import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import {BottomSheetModalMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
 import useBottomSheetStore from '../store/bottomSheetStore';
 import {TABBAR_HEIGHT} from '../constants';
-import {SharedValue, useSharedValue, withTiming} from 'react-native-reanimated';
+import {useSharedValue, withTiming} from 'react-native-reanimated';
 import {saveToHistory} from '../service/firebase';
 import {Appearance} from 'react-native';
 import useThemeStore from '../store/themeStore';
@@ -17,8 +17,6 @@ import useThemeStore from '../store/themeStore';
 interface ContextType {
   bottomSheetModalRef: React.RefObject<BottomSheetModalMethods>;
   showBottomSheet: (item: any) => void;
-  miniPlayerPosition: SharedValue<number>;
-  startMiniPlayerTransition: () => void;
 }
 
 export const PlayerContext = React.createContext({} as ContextType);
@@ -53,13 +51,6 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
-  const miniPlayerPosition = useSharedValue(TABBAR_HEIGHT);
-
-  const startMiniPlayerTransition = () => {
-    miniPlayerPosition.value = withTiming(40, {duration: 500}, () => {
-      miniPlayerPosition.value = withTiming(TABBAR_HEIGHT, {duration: 500});
-    });
-  };
   const {setData} = useBottomSheetStore(state => state);
 
   const showBottomSheet = useCallback((item: any) => {
@@ -114,8 +105,6 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
       value={{
         bottomSheetModalRef,
         showBottomSheet,
-        miniPlayerPosition,
-        startMiniPlayerTransition,
       }}>
       {children}
     </PlayerContext.Provider>

@@ -57,7 +57,6 @@ const HistoryScreens = () => {
   const [historyData, setHistoryData] = useState<Track[]>([]);
 
   const [loading, setLoading] = useState(true);
-  const {startMiniPlayerTransition} = useContext(PlayerContext);
   useEffect(() => {
     const getHistory = async () => {
       const q = query(
@@ -87,7 +86,6 @@ const HistoryScreens = () => {
       id: 'history',
       name: 'Bài hát gần đây',
     });
-    // startMiniPlayerTransition();
   };
 
   const $bg = useSharedValue(`transparent`);

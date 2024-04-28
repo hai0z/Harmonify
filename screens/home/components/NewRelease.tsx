@@ -35,8 +35,6 @@ const NewRelease = ({data}: Props) => {
   const setPlayFrom = usePlayerStore(state => state.setPlayFrom);
   const COLOR = useThemeStore(state => state.COLOR);
 
-  const {startMiniPlayerTransition} = useContext(PlayerContext);
-
   const handlePlaySong = useCallback((song: any) => {
     handlePlay(song, {
       id: 'new-release',
@@ -46,8 +44,6 @@ const NewRelease = ({data}: Props) => {
       id: 'playlist',
       name: 'Bài hát mới phát hành',
     });
-
-    // startMiniPlayerTransition();
   }, []);
 
   const {showBottomSheet} = useContext(PlayerContext);

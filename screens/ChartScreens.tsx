@@ -43,7 +43,6 @@ const ChartScreens = () => {
 
   const setPlayFrom = usePlayerStore(state => state.setPlayFrom);
 
-  const {startMiniPlayerTransition} = useContext(PlayerContext);
   const headerColor = useMemo(
     () =>
       scrollY.interpolate({
@@ -81,7 +80,6 @@ const ChartScreens = () => {
         id: 'chart',
         name: 'Bảng xếp hạng V-POP',
       });
-      // startMiniPlayerTransition();
     },
     [data],
   );

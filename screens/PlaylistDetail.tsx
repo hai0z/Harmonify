@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import React, {useCallback, useContext, useEffect, useMemo} from 'react';
+import React, {useContext, useEffect, useMemo} from 'react';
 import {LinearGradient} from 'react-native-linear-gradient';
 import getThumbnail from '../utils/getThumnail';
 import {FlashList} from '@shopify/flash-list';
@@ -24,9 +24,12 @@ import {usePlayerStore} from '../store/playerStore';
 import {addToLikedPlaylist} from '../service/firebase';
 import useToastStore, {ToastTime} from '../store/toastStore';
 import {useUserStore} from '../store/userStore';
-import {runOnJS} from 'react-native-reanimated';
 import {widthPercentageToDP} from 'react-native-responsive-screen';
-
+import {getColors} from 'react-native-image-colors';
+import {useSharedValue, withTiming} from 'react-native-reanimated';
+import RAnimated from 'react-native-reanimated';
+import tinycolor from 'tinycolor2';
+import useDarkColor from '../hooks/useDarkColor';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const PlaylistDetail = ({route}: {route: any}) => {
@@ -47,7 +50,9 @@ const PlaylistDetail = ({route}: {route: any}) => {
 
   const {setPlayFrom} = usePlayerStore();
   const {likedPlaylists} = useUserStore();
-  const {startMiniPlayerTransition} = useContext(PlayerContext);
+
+  const [color, setColor] = React.useState<any>(null);
+  const bgAnimated = useSharedValue('transparent');
 
   useEffect(() => {
     setLoading(true);
@@ -60,11 +65,31 @@ const PlaylistDetail = ({route}: {route: any}) => {
           ),
         },
       });
-
+      getColors(data.thumbnail).then((res: any) => {
+        console.log(res);
+        setColor(res);
+      });
       setLoading(false);
     });
     nodejs.channel.post('getDetailPlaylist', data.playListId);
   }, [data.playListId]);
+
+  useEffect(() => {
+    if (color) {
+      bgAnimated.value = withTiming(
+        `${
+          COLOR.isDark
+            ? useDarkColor(color.dominant, 35)
+            : tinycolor(color.dominant).isDark()
+            ? tinycolor(color.dominant).lighten(30)
+            : tinycolor(color.dominant).darken()
+        }95`,
+        {
+          duration: 750,
+        },
+      );
+    }
+  }, [color]);
 
   const headerColor = useMemo(
     () =>
@@ -113,7 +138,6 @@ const PlaylistDetail = ({route}: {route: any}) => {
       id: playlistData?.isAlbum ? 'album' : 'playlist',
       name: playlistData?.title,
     });
-    // startMiniPlayerTransition();
   };
 
   const caculateTotalTime = () => {
@@ -175,17 +199,13 @@ const PlaylistDetail = ({route}: {route: any}) => {
                   colors={['transparent', COLOR.BACKGROUND]}
                   className="absolute bottom-0 h-40 left-0 right-0 z-50"
                 />
-                <Image
-                  blurRadius={1000}
-                  src={getThumbnail(playlistData?.thumbnailM)}
-                  style={[
-                    StyleSheet.absoluteFill,
-                    {
-                      width: SCREEN_WIDTH,
-                      height: SCREEN_WIDTH * 0.8,
-                    },
-                  ]}
-                />
+                <RAnimated.View
+                  className={'absolute'}
+                  style={{
+                    width: SCREEN_WIDTH,
+                    height: SCREEN_WIDTH * 0.8,
+                    backgroundColor: bgAnimated,
+                  }}></RAnimated.View>
                 <Animated.Image
                   src={getThumbnail(playlistData?.thumbnailM)}
                   className="rounded-lg"

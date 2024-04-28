@@ -206,7 +206,6 @@ const ArtistScreens = ({route}: any) => {
                         id: 'artist',
                         name: dataDetailArtist.name,
                       });
-                      // startMiniPlayerTransition();
                     }}>
                     <Image
                       source={{uri: getThumbnail(item.thumbnail)}}

@@ -43,17 +43,11 @@ const ImageSlider = () => {
     }
   };
 
-  const indexRef = useRef<number>(currentSongIndex);
-
   useEffect(() => {
     flatListRef.current?.scrollToIndex({
       index: currentSongIndex == -1 ? 0 : currentSongIndex,
-      animated:
-        indexRef.current == 0 || indexRef.current === playList.items.length - 1
-          ? false
-          : true,
+      animated: true,
     });
-    indexRef.current = currentSongIndex;
   }, [currentSong?.id]);
 
   return (
@@ -80,7 +74,7 @@ const ImageSlider = () => {
   );
 };
 
-const SliderItem = ({item, index}: any) => {
+const SliderItem = memo(({item, index}: any) => {
   return (
     <View
       key={index}
@@ -100,6 +94,6 @@ const SliderItem = ({item, index}: any) => {
       />
     </View>
   );
-};
+});
 
 export default memo(ImageSlider);

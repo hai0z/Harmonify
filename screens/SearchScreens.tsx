@@ -39,8 +39,6 @@ const SearchScreens = () => {
 
   const navigation = useNavigation<any>();
 
-  const {startMiniPlayerTransition} = useContext(PlayerContext);
-
   return (
     <View
       className=" h-full w-full pt-[35px]"
@@ -115,7 +113,6 @@ const SearchScreens = () => {
                 id: 'search',
                 name: e.title,
               });
-              // startMiniPlayerTransition();
             }}>
             <Image
               source={{uri: getThumbnail(e.thumbnail) || ''}}

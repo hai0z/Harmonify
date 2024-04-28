@@ -48,8 +48,6 @@ const MiniPlayer = () => {
 
   const playerState = usePlaybackState();
 
-  const {miniPlayerPosition} = useContext(PlayerContext);
-
   const progress = useProgress(1000 / 120); //120fps
 
   const {dominantColor: gradientColor} = useImageColor();
@@ -81,10 +79,6 @@ const MiniPlayer = () => {
   //   })();
   // }, []);
 
-  const animatedStyles = useAnimatedStyle(() => ({
-    opacity: interpolate(miniPlayerPosition.value, [TABBAR_HEIGHT, 40], [1, 0]),
-  }));
-
   if (!currentSong || keyboardVisible) {
     return null;
   }
@@ -93,11 +87,9 @@ const MiniPlayer = () => {
     <Animated.View
       className=" flex flex-col justify-center absolute"
       style={[
-        animatedStyles,
         {
           width: SCREEN_WIDTH * 0.96,
           height: MINI_PLAYER_HEIGHT,
-          bottom: miniPlayerPosition,
           transform: [{translateX: SCREEN_WIDTH * 0.02}],
           backgroundColor: bgAnimated,
           borderRadius: 6,

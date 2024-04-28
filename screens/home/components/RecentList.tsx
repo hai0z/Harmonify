@@ -13,7 +13,6 @@ const RecentList = ({data}: any) => {
   const {setPlayFrom} = usePlayerStore();
 
   const id = useId();
-  const {startMiniPlayerTransition} = useContext(PlayerContext);
 
   const handlePlaySong = (song: any) => {
     handlePlay(song, {
@@ -24,7 +23,6 @@ const RecentList = ({data}: any) => {
       id: 'history',
       name: 'Bài hát gần đây',
     });
-    // startMiniPlayerTransition();
   };
   if (data.length < 6) return null;
   return (
