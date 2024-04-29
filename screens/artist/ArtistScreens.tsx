@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 
-import {handlePlay} from '../../service/trackPlayerService';
+import {handlePlay, objectToTrack} from '../../service/trackPlayerService';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import nodejs from 'nodejs-mobile-react-native';
@@ -60,6 +60,7 @@ const ArtistScreens = ({route}: any) => {
   const {listFollowArtists} = useUserStore();
 
   const setPlayFrom = usePlayerStore(state => state.setPlayFrom);
+  const setCurrentSong = usePlayerStore(state => state.setCurrentSong);
 
   const scrollY = React.useRef(new Animated.Value(0)).current;
 
@@ -158,7 +159,15 @@ const ArtistScreens = ({route}: any) => {
                   : 'transparent',
               }}
               className="w-32 p-2 rounded-full items-center  border mx-4"
-              onPress={() => followArtist(dataDetailArtist)}>
+              onPress={() =>
+                followArtist({
+                  thumbnailM: dataDetailArtist?.thumbnailM,
+                  name: dataDetailArtist?.name,
+                  id: dataDetailArtist?.id,
+                  alias: dataDetailArtist?.alias,
+                  totalFollow: dataDetailArtist?.totalFollow,
+                })
+              }>
               <Text style={{color: COLOR.TEXT_PRIMARY}} className=" text-sm">
                 {listFollowArtists.some(
                   (item: any) => item.id === dataDetailArtist?.id,
@@ -195,6 +204,7 @@ const ArtistScreens = ({route}: any) => {
                     key={item.encodeId}
                     className="flex-row items-center px-4 mb-3"
                     onPress={() => {
+                      setCurrentSong(objectToTrack(item));
                       handlePlay(item, {
                         id: name,
                         items: dataDetailArtist?.sections

@@ -17,6 +17,7 @@ import {useNavigation} from '@react-navigation/native';
 import useThemeStore from '../store/themeStore';
 import {usePlayerStore} from '../store/playerStore';
 import {PlayerContext} from '../context/PlayerProvider';
+import TrackItem from '../components/TrackItem';
 
 const SearchScreens = () => {
   const [text, setText] = useState<string>('');
@@ -26,6 +27,7 @@ const SearchScreens = () => {
   const [filterData, setFilterData] = useState<any>([]);
   const {COLOR} = useThemeStore(state => state);
   const setPlayFrom = usePlayerStore(state => state.setPlayFrom);
+  const {showBottomSheet} = useContext(PlayerContext);
   useEffect(() => {
     nodejs.channel.post('search', debouncedValue);
   }, [debouncedValue]);
@@ -43,10 +45,9 @@ const SearchScreens = () => {
     <View
       className=" h-full w-full pt-[35px]"
       style={{
-        paddingHorizontal: 16,
         backgroundColor: COLOR.BACKGROUND,
       }}>
-      <View className="flex flex-row items-center gap-2 w-full">
+      <View className="flex flex-row items-center gap-2 w-full px-4">
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back" size={24} color={COLOR.TEXT_PRIMARY} />
         </TouchableOpacity>
@@ -60,7 +61,7 @@ const SearchScreens = () => {
         />
       </View>
 
-      <View className="flex flex-row items-center mt-2">
+      <View className="flex flex-row items-center mt-2 px-4">
         {['Tất cả', 'Bài bát', 'PlayList', 'Nghệ sĩ'].map((e, index) => (
           <View className="flex flex-row items-center mr-2" key={index}>
             <TouchableOpacity
@@ -99,12 +100,11 @@ const SearchScreens = () => {
       <ScrollView
         className="pt-9"
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{gap: 16, paddingBottom: 200}}>
+        contentContainerStyle={{paddingBottom: 200}}>
         {filterData?.songs?.map((e: any, index: number) => (
-          <TouchableOpacity
+          <TrackItem
             key={index}
-            className="flex flex-row items-center mb-3 gap-2"
-            onPress={async () => {
+            onClick={() => {
               handlePlay(e, {
                 id: e.encodeId,
                 items: [e],
@@ -113,26 +113,15 @@ const SearchScreens = () => {
                 id: 'search',
                 name: e.title,
               });
-            }}>
-            <Image
-              source={{uri: getThumbnail(e.thumbnail) || ''}}
-              className="w-14 h-14 rounded-md"
-            />
-            <View>
-              <Text numberOfLines={1} style={{color: COLOR.TEXT_PRIMARY}}>
-                {e.title}
-              </Text>
-              <Text numberOfLines={1} style={{color: COLOR.TEXT_SECONDARY}}>
-                {e.artistsNames} •{' '}
-                {new Date(e.duration * 1000).toISOString().substring(14, 19)}
-              </Text>
-            </View>
-          </TouchableOpacity>
+            }}
+            item={e}
+            showBottomSheet={showBottomSheet}
+          />
         ))}
         {filterData?.playlists?.map((e: any, index: number) => (
           <TouchableOpacity
             key={index}
-            className="flex flex-row items-center mb-3 gap-2"
+            className="flex flex-row items-center mb-3 gap-2 px-4"
             onPress={() => {
               navigation.navigate('PlayListDetail', {
                 data: {
@@ -158,7 +147,7 @@ const SearchScreens = () => {
         {filterData?.artists?.map((e: any, index: number) => (
           <TouchableOpacity
             key={index}
-            className="flex flex-row items-center mb-3 gap-2"
+            className="flex flex-row items-center mb-3 gap-2 px-4"
             onPress={() => {
               navigation.navigate('Artists', {name: e.alias});
             }}>

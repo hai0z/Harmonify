@@ -5,6 +5,8 @@ import Feather from 'react-native-vector-icons/Feather';
 import useThemeStore from '../store/themeStore';
 import FastImage from 'react-native-fast-image';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
+import {usePlayerStore} from '../store/playerStore';
+import {objectToTrack} from '../service/trackPlayerService';
 interface Props {
   item: any;
   index?: number;
@@ -16,13 +18,18 @@ interface Props {
 const TrackItem = (props: Props) => {
   const {item, index, onClick, isAlbum, showBottomSheet} = props;
   const COLOR = useThemeStore(state => state.COLOR);
+  const setCurrentSong = usePlayerStore(state => state.setCurrentSong);
+  console.log('track render');
   return (
     <TouchableOpacity
       style={{opacity: item?.streamingStatus === 1 ? 1 : 0.5}}
       activeOpacity={0.8}
       disabled={item?.streamingStatus === 2}
       className="flex flex-row  items-center mx-4 mb-3"
-      onPress={() => onClick(item)}>
+      onPress={() => {
+        setCurrentSong(objectToTrack(item));
+        onClick(item);
+      }}>
       {isAlbum ? (
         <View
           className="rounded-md flex justify-center items-center"

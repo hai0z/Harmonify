@@ -4,19 +4,17 @@ import useThemeStore from '../../../store/themeStore';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import tinycolor from 'tinycolor2';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {handlePlay} from '../../../service/trackPlayerService';
+import {handlePlay, objectToTrack} from '../../../service/trackPlayerService';
 import {usePlayerStore} from '../../../store/playerStore';
-import {PlayerContext} from '../../../context/PlayerProvider';
 const RecentList = ({data}: any) => {
   const {COLOR} = useThemeStore();
 
-  const {setPlayFrom} = usePlayerStore();
-
-  const id = useId();
+  const {setPlayFrom, setCurrentSong} = usePlayerStore();
 
   const handlePlaySong = (song: any) => {
+    setCurrentSong(objectToTrack(song));
     handlePlay(song, {
-      id: song.encodeId,
+      id: 'RecentList',
       items: data,
     });
     setPlayFrom({
@@ -48,7 +46,7 @@ const RecentList = ({data}: any) => {
                 backgroundColor: COLOR.isDark
                   ? tinycolor(COLOR.BACKGROUND).brighten().toString()
                   : '#ffffff',
-                elevation: 0.5,
+                elevation: 1,
               }}
               className="flex flex-row items-center my-1 rounded-t-md rounded-b-md">
               <Image
@@ -75,4 +73,4 @@ const RecentList = ({data}: any) => {
   );
 };
 
-export default memo(RecentList);
+export default RecentList;

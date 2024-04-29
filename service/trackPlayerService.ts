@@ -9,7 +9,7 @@ import { Alert } from 'react-native';
 export const objectToTrack = (data: any) => {
   return {
     id: data.encodeId,
-    url: NULL_URL,
+    url: (data.url && data.url !== "" && data.url !== null && data.url !== undefined) ? data.url : NULL_URL,
     title: data.title,
     artist: data.artistsNames,
     artwork: getThumbnail(data.thumbnail || data.thumbnailM),
@@ -75,7 +75,6 @@ const handlePlay = async (song: any, playlist: IPlaylist = {
 }) => {
   const currentPlaylistId = usePlayerStore.getState().playList?.id;
   usePlayerStore.getState().setIsPlayFromLocal(false);
-  usePlayerStore.getState().setCurrentSong(objectToTrack(song));
   if (currentPlaylistId !== playlist.id) {
     usePlayerStore.getState().setisLoadingTrack(true);
     usePlayerStore.getState().setPlayList(playlist);

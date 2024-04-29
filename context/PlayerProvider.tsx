@@ -8,8 +8,6 @@ import getThumbnail from '../utils/getThumnail';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import {BottomSheetModalMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
 import useBottomSheetStore from '../store/bottomSheetStore';
-import {TABBAR_HEIGHT} from '../constants';
-import {useSharedValue, withTiming} from 'react-native-reanimated';
 import {saveToHistory} from '../service/firebase';
 import {Appearance} from 'react-native';
 import useThemeStore from '../store/themeStore';

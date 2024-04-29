@@ -11,16 +11,9 @@ import {
 } from 'react-native';
 import Entypo from 'react-native-vector-icons/Entypo';
 
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {FlashList} from '@shopify/flash-list';
-import {handlePlay} from '../service/trackPlayerService';
+import {handlePlay, objectToTrack} from '../service/trackPlayerService';
 import {LinearGradient} from 'react-native-linear-gradient';
 import getThumbnail from '../utils/getThumnail';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -28,7 +21,6 @@ import {useNavigation} from '@react-navigation/native';
 import nodejs from 'nodejs-mobile-react-native';
 import useThemeStore from '../store/themeStore';
 import {usePlayerStore} from '../store/playerStore';
-import {PlayerContext} from '../context/PlayerProvider';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -42,6 +34,7 @@ const ChartScreens = () => {
   const scrollY = React.useRef(new Animated.Value(0)).current;
 
   const setPlayFrom = usePlayerStore(state => state.setPlayFrom);
+  const setCurrentSong = usePlayerStore(state => state.setCurrentSong);
 
   const headerColor = useMemo(
     () =>
@@ -72,6 +65,7 @@ const ChartScreens = () => {
 
   const handlePlaySong = useCallback(
     (song: any) => {
+      setCurrentSong(objectToTrack(song));
       handlePlay(song, {
         id: 'chart',
         items: data,
@@ -288,7 +282,7 @@ const ChartItem = React.memo(({item, index, onPlay}: any) => {
   return (
     <TouchableOpacity
       activeOpacity={0.8}
-      className="flex flex-row  items-center mx-4 my-2"
+      className="flex flex-row  items-center mx-4 mb-3"
       onPress={() => onPlay(item)}>
       <Text
         className=" font-bold mr-4 text-2xl"

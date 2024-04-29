@@ -30,16 +30,7 @@ const LibrarySrceens = () => {
       });
       setLikedSongs(songs);
     });
-    const q1 = query(
-      collection(db, `users/${auth.currentUser?.uid}/followedArtist`),
-    );
-    const unsub1 = onSnapshot(q1, querySnapshot => {
-      const followedArtists = [] as any;
-      querySnapshot.forEach(doc => {
-        followedArtists.push(doc.data());
-      });
-      setListFollowArtists(followedArtists);
-    });
+
     const q2 = query(
       collection(db, `users/${auth.currentUser?.uid}/likedPlaylists`),
     );
@@ -52,7 +43,7 @@ const LibrarySrceens = () => {
     });
     return () => {
       unsub();
-      unsub1();
+      // unsub1();
       unsub2();
     };
   }, []);

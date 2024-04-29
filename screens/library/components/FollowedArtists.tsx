@@ -1,5 +1,5 @@
 import {View, Text, Image, TouchableOpacity} from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 
 import {useNavigation} from '@react-navigation/native';
 import useThemeStore from '../../../store/themeStore';
@@ -8,11 +8,28 @@ import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import {ScrollView} from 'react-native-gesture-handler';
 import useLibraryStore from '../../../store/useLibraryStore';
 import Animated, {FadeIn} from 'react-native-reanimated';
+import {collection, onSnapshot, query} from 'firebase/firestore';
+import {auth, db} from '../../../firebase/config';
 const FollowedArtist = () => {
   const navigation = useNavigation<any>();
   const {COLOR} = useThemeStore();
   const {viewType} = useLibraryStore();
-  const {listFollowArtists} = useUserStore();
+  const {listFollowArtists, setListFollowArtists} = useUserStore();
+  useEffect(() => {
+    const q1 = query(
+      collection(db, `users/${auth.currentUser?.uid}/followedArtist`),
+    );
+    const unsub1 = onSnapshot(q1, querySnapshot => {
+      const followedArtists = [] as any;
+      querySnapshot.forEach(doc => {
+        followedArtists.push(doc.data());
+      });
+      setListFollowArtists(followedArtists);
+    });
+    return () => {
+      unsub1();
+    };
+  }, []);
   return (
     <ScrollView
       className="pb-[200px]"
