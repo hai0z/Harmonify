@@ -13,7 +13,6 @@ import {addEventListener} from '@react-native-community/netinfo';
 import useToastStore from './store/toastStore';
 import React from 'react';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
-import SleppTimerModal from './components/bottom-sheet/SleepTimerBottomSheet';
 export default function App() {
   useEffect(() => {
     const setupPlayer = async () => {

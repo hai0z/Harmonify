@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {handlePlay} from '../../service/trackPlayerService';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -19,7 +19,6 @@ import PlayListCover from '../../components/PlayListCover';
 import useThemeStore from '../../store/themeStore';
 import {usePlayerStore} from '../../store/playerStore';
 import LinearGradient from 'react-native-linear-gradient';
-import {PlayerContext} from '../../context/PlayerProvider';
 import getThumbnail from '../../utils/getThumnail';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import {followArtist} from '../../service/firebase';
@@ -43,10 +42,10 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 function isKeyExistsInArrayObjects(arr: any, key: any, value: any) {
   for (let obj of arr) {
     if (obj.hasOwnProperty(key) && obj[key] === value) {
-      return true; // Key tồn tại trong ít nhất một object
+      return true;
     }
   }
-  return false; // Key không tồn tại trong bất kỳ object nào
+  return false;
 }
 
 const ArtistScreens = ({route}: any) => {
