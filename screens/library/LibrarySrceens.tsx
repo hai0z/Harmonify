@@ -20,6 +20,7 @@ const LibrarySrceens = () => {
   const {viewType, setViewType} = useLibraryStore();
   const {setLikedSongs} = usePlayerStore();
   const {setListFollowArtists, setLikedPlaylists} = useUserStore();
+
   useEffect(() => {
     const q = query(collection(db, `users/${auth.currentUser?.uid}/likedSong`));
     const unsub = onSnapshot(q, querySnapshot => {

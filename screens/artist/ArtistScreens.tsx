@@ -62,17 +62,17 @@ const ArtistScreens = ({route}: any) => {
 
   const setPlayFrom = usePlayerStore(state => state.setPlayFrom);
 
+  const scrollY = React.useRef(new Animated.Value(0)).current;
+
   useEffect(() => {
     setLoading(true);
     nodejs.channel.addListener('getArtist', (data: any) => {
       setDataDetailArtist(data);
       setLoading(false);
     });
-
+    scrollY.setValue(0);
     nodejs.channel.post('getArtist', name);
   }, [name]);
-
-  const scrollY = React.useRef(new Animated.Value(0)).current;
 
   const headerColor = scrollY.interpolate({
     inputRange: [SCREEN_WIDTH * 0.6, SCREEN_WIDTH * 0.6],
@@ -145,7 +145,7 @@ const ArtistScreens = ({route}: any) => {
               style={{
                 color: COLOR.TEXT_PRIMARY,
                 fontFamily: 'GothamBold',
-                fontSize: wp(10),
+                fontSize: wp(12),
               }}>
               {dataDetailArtist?.name}
             </Text>

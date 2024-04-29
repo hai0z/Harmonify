@@ -94,6 +94,7 @@ const MiniPlayer = () => {
           backgroundColor: bgAnimated,
           borderRadius: 6,
           overflow: 'hidden',
+          bottom: TABBAR_HEIGHT,
         },
       ]}>
       <TouchableOpacity
