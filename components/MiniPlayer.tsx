@@ -84,7 +84,7 @@ const MiniPlayer = () => {
 
   return (
     <Animated.View
-      entering={FadeInDown.duration(300).springify().damping(400)}
+      entering={FadeInDown.duration(300).springify()}
       exiting={FadeOutDown.duration(300).springify()}>
       <Animated.View
         className=" flex flex-col justify-center absolute"
@@ -117,8 +117,8 @@ const MiniPlayer = () => {
               alignItems: 'center',
             }}>
             <Animated.Image
-              exiting={FadeOutDown.duration(200)}
-              entering={FadeInUp.duration(300).delay(300).damping(600)}
+              exiting={FadeOutDown.duration(300).springify()}
+              entering={FadeInUp.duration(300).springify().damping(200)}
               source={{
                 uri: currentSong?.artwork,
               }}
@@ -138,8 +138,8 @@ const MiniPlayer = () => {
                 zIndex: 1,
                 overflow: 'hidden',
               }}
-              entering={FadeInUp.duration(300).delay(300)}
-              exiting={FadeOutDown.duration(300)}>
+              entering={FadeInUp.duration(300).springify().damping(200)}
+              exiting={FadeOutDown.duration(300).springify()}>
               <TextTicker
                 duration={6000}
                 loop
