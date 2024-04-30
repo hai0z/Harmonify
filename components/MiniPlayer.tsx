@@ -1,5 +1,5 @@
-import {View, Text, Image, TouchableOpacity, Dimensions} from 'react-native';
-import React, {useCallback, useContext, useEffect, useMemo} from 'react';
+import {View, Text, TouchableOpacity, Dimensions} from 'react-native';
+import React, {useCallback, useEffect} from 'react';
 import useKeyBoardStatus from '../hooks/useKeyBoardStatus';
 import TrackPlayer, {
   State,
@@ -7,7 +7,6 @@ import TrackPlayer, {
   useProgress,
 } from 'react-native-track-player';
 import Entypo from 'react-native-vector-icons/Entypo';
-import useDarkColor from '../hooks/useDarkColor';
 import {useNavigation} from '@react-navigation/native';
 import {usePlayerStore} from '../store/playerStore';
 import TextTicker from 'react-native-text-ticker';
@@ -15,9 +14,7 @@ import {MINI_PLAYER_HEIGHT, TABBAR_HEIGHT} from '../constants';
 import useThemeStore from '../store/themeStore';
 import Animated, {
   Easing,
-  FadeInDown,
   FadeInUp,
-  FadeOut,
   FadeOutDown,
   runOnUI,
   useSharedValue,
@@ -43,7 +40,8 @@ const MiniPlayer = () => {
   const progress = useProgress(1000 / 120); //120fps
 
   const {dominantColor: gradientColor} = useImageColor();
-  const bgAnimated = useSharedValue(`#494949`);
+
+  const bgAnimated = useSharedValue(`transparent`);
 
   const togglePlay = useCallback(async (state: State | undefined) => {
     if (state !== State.Playing) {
@@ -78,14 +76,12 @@ const MiniPlayer = () => {
   //   })();
   // }, []);
 
-  if (!currentSong || keyboardVisible || isLoadingTrack) {
+  if (!currentSong || keyboardVisible) {
     return null;
   }
 
   return (
-    <Animated.View
-      entering={FadeInDown.duration(300).springify()}
-      exiting={FadeOutDown.duration(300).springify()}>
+    <Animated.View>
       <Animated.View
         className=" flex flex-col justify-center absolute"
         style={[
@@ -118,7 +114,7 @@ const MiniPlayer = () => {
             }}>
             <Animated.Image
               exiting={FadeOutDown.duration(300).springify()}
-              entering={FadeInUp.duration(300).springify().damping(200)}
+              entering={FadeInUp.duration(300).springify()}
               source={{
                 uri: currentSong?.artwork,
               }}
@@ -138,7 +134,7 @@ const MiniPlayer = () => {
                 zIndex: 1,
                 overflow: 'hidden',
               }}
-              entering={FadeInUp.duration(300).springify().damping(200)}
+              entering={FadeInUp.duration(300).springify()}
               exiting={FadeOutDown.duration(300).springify()}>
               <TextTicker
                 duration={6000}

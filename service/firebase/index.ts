@@ -46,8 +46,10 @@ export const followArtist = async (artist: any) => {
     const docRef = doc(db, `users/${user}/followedArtist`, artist.id);
     if (listFollow.some((s: any) => s.id == artist.id)) {
       await deleteDoc(doc(db, `users/${user}/followedArtist`, artist.id));
+      return false;
     } else {
       await setDoc(docRef, artist);
+      return true;
     }
   } catch (err: any) {
     console.log(err.message);
@@ -70,7 +72,7 @@ export const saveToHistory = async (song: any) => {
 export const getRecentListening = async () => {
   try {
     const user = auth.currentUser?.uid;
-    const q = query(collection(db, `users/${user}/history`), orderBy("timestamp", "desc"), limit(50));
+    const q = query(collection(db, `users/${user}/history`), orderBy("timestamp", "desc"), limit(100));
     const querySnapshot = await getDocs(q);
     const recentListening: any = []
     querySnapshot.forEach((doc) => {

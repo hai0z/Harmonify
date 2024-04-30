@@ -62,7 +62,7 @@ const HistoryScreens = () => {
       const q = query(
         collection(db, `users/${auth.currentUser?.uid}/history`),
         orderBy('timestamp', 'desc'),
-        limit(50),
+        limit(100),
       );
       const docs = await getDocs(q);
       const songs = [] as any;

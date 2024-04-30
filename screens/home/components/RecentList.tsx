@@ -1,5 +1,5 @@
 import {View, Text, Image} from 'react-native';
-import React, {memo, useContext, useId} from 'react';
+import React, {useId} from 'react';
 import useThemeStore from '../../../store/themeStore';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import tinycolor from 'tinycolor2';
@@ -11,10 +11,11 @@ const RecentList = ({data}: any) => {
 
   const {setPlayFrom, setCurrentSong} = usePlayerStore();
 
+  const id = useId();
   const handlePlaySong = (song: any) => {
     setCurrentSong(objectToTrack(song));
     handlePlay(song, {
-      id: 'RecentList',
+      id: id,
       items: data,
     });
     setPlayFrom({

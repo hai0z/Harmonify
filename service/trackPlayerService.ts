@@ -36,6 +36,10 @@ TrackPlayer.addEventListener(Event.PlaybackProgressUpdated, async e => {
   // usePlayerStore.getState().setLastPosition(e.position);
 })
 
+TrackPlayer.addEventListener(Event.PlaybackError, async event => {
+  console.log(event.message)
+})
+
 TrackPlayer.addEventListener(Event.PlaybackActiveTrackChanged, async event => {
   if (!usePlayerStore.getState().isPlayFromLocal) {
     if (!event.track) return;
@@ -76,10 +80,13 @@ const handlePlay = async (song: any, playlist: IPlaylist = {
   const currentPlaylistId = usePlayerStore.getState().playList?.id;
   usePlayerStore.getState().setIsPlayFromLocal(false);
   if (currentPlaylistId !== playlist.id) {
+    await TrackPlayer.reset();
     usePlayerStore.getState().setisLoadingTrack(true);
     usePlayerStore.getState().setPlayList(playlist);
-    await TrackPlayer.reset();
     await TrackPlayer.add(playlist.items.map((item: any) => objectToTrack(item)));
+    if (song.encodeId === playlist.items[0].encodeId) {
+      nodejs.channel.post('getSong', objectToTrack(song));
+    }
   }
   const index = playlist.items.findIndex(
     (item: any) => item?.encodeId === song?.encodeId,
@@ -87,10 +94,16 @@ const handlePlay = async (song: any, playlist: IPlaylist = {
   await TrackPlayer.skip(index).finally(() => {
     usePlayerStore.getState().setisLoadingTrack(false);
   })
-  await TrackPlayer.play();
 
+  await TrackPlayer.play();
 }
 const handlePlaySongInLocal = async (song: any,) => {
+  usePlayerStore.getState().setCurrentSong({
+    ...objectToTrack(song),
+    artwork: song.thumbnail || DEFAULT_IMG,
+    url: song.url
+  });
+
   usePlayerStore.getState().setIsPlayFromLocal(true);
   usePlayerStore.getState().setPlayList({
     id: "", items: []
@@ -102,11 +115,7 @@ const handlePlaySongInLocal = async (song: any,) => {
     artwork: song.thumbnail || DEFAULT_IMG,
     url: song.url
   });
-  usePlayerStore.getState().setCurrentSong({
-    ...objectToTrack(song),
-    artwork: song.thumbnail || DEFAULT_IMG,
-    url: song.url
-  });
+
   await TrackPlayer.play();
 }
 

@@ -10,9 +10,9 @@ interface Props {
   heartIconSize: number;
 }
 const HeartButton = ({heartIconSize}: Props) => {
-  const {handleAddToLikedList, isLiked} = useToggleLikeSong();
   const heartScale = useSharedValue(1);
-  const {tempSong} = usePlayerStore(state => state);
+  const {tempSong, currentSong} = usePlayerStore(state => state);
+  const {handleAddToLikedList, isLiked} = useToggleLikeSong(currentSong?.id);
   const {COLOR} = useThemeStore(state => state);
 
   useEffect(() => {
@@ -22,7 +22,7 @@ const HeartButton = ({heartIconSize}: Props) => {
   }, [isLiked]);
 
   return (
-    <Animated.View style={{transform: [{scale: heartScale}], zIndex: 2}}>
+    <Animated.View style={{transform: [{scale: heartScale}]}}>
       <TouchableOpacity
         onPress={() => {
           handleAddToLikedList(tempSong);
