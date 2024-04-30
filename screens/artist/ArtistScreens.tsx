@@ -23,6 +23,7 @@ import getThumbnail from '../../utils/getThumnail';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import {followArtist} from '../../service/firebase';
 import {useUserStore} from '../../store/userStore';
+import Loading from '../../components/Loading';
 
 interface artistType {
   id: string;
@@ -92,7 +93,7 @@ const ArtistScreens = ({route}: any) => {
       <View
         style={{backgroundColor: COLOR.BACKGROUND}}
         className="flex-1 items-center justify-center">
-        <ActivityIndicator size="large" color={COLOR.PRIMARY} />
+        <Loading />
       </View>
     );
   }

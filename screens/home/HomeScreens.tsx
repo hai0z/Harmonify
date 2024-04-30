@@ -20,6 +20,7 @@ import RecentList from './components/RecentList';
 import {getRecentListening} from '../../service/firebase';
 
 import {SafeAreaView} from 'react-native';
+import Loading from '../../components/Loading';
 interface typePlaylistCover {
   items: [];
   title: string;
@@ -57,7 +58,7 @@ function HomeScreens() {
       <View
         className="flex-1 items-center justify-center "
         style={{backgroundColor: COLOR.BACKGROUND}}>
-        <ActivityIndicator size="large" color={COLOR.PRIMARY} />
+        <Loading />
       </View>
     );
   }

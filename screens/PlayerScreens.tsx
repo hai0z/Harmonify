@@ -7,7 +7,7 @@ import {
   StyleSheet,
 } from 'react-native';
 
-import React, {useContext, useEffect, useRef} from 'react';
+import React, {useContext, useEffect} from 'react';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {LinearGradient} from 'react-native-linear-gradient';
 import {playFromMapping, usePlayerStore} from '../store/playerStore';
@@ -59,7 +59,7 @@ const PlayerScreens = () => {
     'worklet';
     bgAnimated.value = withTiming(`${gradientColor}95`, {
       duration: 750,
-      easing: Easing.out(Easing.ease),
+      easing: Easing.inOut(Easing.quad),
     });
   };
   useEffect(() => {

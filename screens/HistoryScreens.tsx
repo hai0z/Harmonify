@@ -41,6 +41,7 @@ import useImageColor from '../hooks/useImageColor';
 import getThumbnail from '../utils/getThumnail';
 import TrackItem from '../components/TrackItem';
 import useBottomSheetStore from '../store/bottomSheetStore';
+import Loading from '../components/Loading';
 dayjs.locale('vi');
 dayjs.extend(RelativeTime);
 
@@ -138,7 +139,7 @@ const HistoryScreens = () => {
       {loading ? (
         <View className="flex-1 pt-4">
           <View className="flex-1 flex justify-center items-center">
-            <ActivityIndicator size="large" color={COLOR.PRIMARY} />
+            <Loading />
           </View>
         </View>
       ) : (

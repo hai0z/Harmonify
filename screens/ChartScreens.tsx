@@ -22,6 +22,7 @@ import nodejs from 'nodejs-mobile-react-native';
 import useThemeStore from '../store/themeStore';
 import {usePlayerStore} from '../store/playerStore';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
+import Loading from '../components/Loading';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const ChartScreens = () => {
@@ -84,7 +85,7 @@ const ChartScreens = () => {
       <View
         className="flex-1 items-center justify-center"
         style={{backgroundColor: COLOR.BACKGROUND}}>
-        <ActivityIndicator size="large" color={COLOR.PRIMARY} />
+        <Loading />
       </View>
     );
   }

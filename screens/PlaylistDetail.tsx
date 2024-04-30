@@ -30,6 +30,7 @@ import {useSharedValue, withTiming} from 'react-native-reanimated';
 import RAnimated from 'react-native-reanimated';
 import tinycolor from 'tinycolor2';
 import useDarkColor from '../hooks/useDarkColor';
+import Loading from '../components/Loading';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const PlaylistDetail = ({route}: {route: any}) => {
@@ -156,7 +157,7 @@ const PlaylistDetail = ({route}: {route: any}) => {
       <View
         className="flex-1 justify-center items-center "
         style={{backgroundColor: COLOR.BACKGROUND}}>
-        <ActivityIndicator size={'large'} color={COLOR.PRIMARY} />
+        <Loading />
       </View>
     );
 

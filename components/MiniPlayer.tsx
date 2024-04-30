@@ -55,7 +55,7 @@ const MiniPlayer = () => {
     'worklet';
     bgAnimated.value = withTiming(`${gradientColor}`, {
       duration: 550,
-      easing: Easing.out(Easing.ease),
+      easing: Easing.inOut(Easing.quad),
     });
   };
   useEffect(() => {

@@ -19,6 +19,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import useThemeStore from '../../store/themeStore';
 import {DEFAULT_IMG} from '../../constants';
 import {usePlayerStore} from '../../store/playerStore';
+import Loading from '../../components/Loading';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const LocalSong = () => {
@@ -71,7 +72,7 @@ const LocalSong = () => {
       <View
         className="flex-1 justify-center items-center"
         style={{backgroundColor: COLOR.BACKGROUND}}>
-        <ActivityIndicator size={'large'} color={COLOR.PRIMARY} />
+        <Loading />
         <Text className=" mt-2" style={{color: COLOR.TEXT_PRIMARY}}>
           Đang quét nhạc trên thiết bị...
         </Text>

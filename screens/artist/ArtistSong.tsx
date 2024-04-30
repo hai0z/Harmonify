@@ -21,6 +21,7 @@ import useThemeStore from '../../store/themeStore';
 import {usePlayerStore} from '../../store/playerStore';
 import {runOnJS} from 'react-native-reanimated';
 import {widthPercentageToDP} from 'react-native-responsive-screen';
+import Loading from '../../components/Loading';
 interface artistType {
   id: string;
   name: string;
@@ -117,7 +118,7 @@ const ArtistSong = ({route}: any) => {
       <View
         className="flex-1 items-center justify-center "
         style={{backgroundColor: COLOR.BACKGROUND}}>
-        <ActivityIndicator size="large" color={COLOR.PRIMARY} />
+        <Loading />
       </View>
     );
   }
