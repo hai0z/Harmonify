@@ -19,7 +19,7 @@ const HeartButton = ({heartIconSize}: Props) => {
     heartScale.value = withTiming(1.2, {duration: 250}, () => {
       heartScale.value = withTiming(1, {duration: 250});
     });
-  }, [isLiked]);
+  }, [isLiked, currentSong?.id]);
 
   return (
     <Animated.View style={{transform: [{scale: heartScale}]}}>

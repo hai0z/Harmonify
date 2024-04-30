@@ -1,4 +1,4 @@
-import {View, Text, LayoutAnimation} from 'react-native';
+import {View, Text} from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
 import useThemeStore from '../../store/themeStore';
 
@@ -29,7 +29,7 @@ import useImageColor from '../../hooks/useImageColor';
 import {PlayerContext} from '../../context/PlayerProvider';
 import TrackItem from '../../components/TrackItem';
 import TrackItemBottomSheet from '../../components/bottom-sheet/TrackItemBottomSheet';
-import ProgressBar from './ProgressBar';
+import ProgressBar from './components/ProgressBar';
 const Queue = () => {
   const {COLOR} = useThemeStore(state => state);
 

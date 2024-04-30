@@ -18,9 +18,11 @@ import {
 } from 'react-native-responsive-screen';
 import RecentList from './components/RecentList';
 import {getRecentListening} from '../../service/firebase';
-
+import {collection, onSnapshot, query} from 'firebase/firestore';
+import {auth, db} from '../../firebase/config';
 import {SafeAreaView} from 'react-native';
 import Loading from '../../components/Loading';
+import {usePlayerStore} from '../../store/playerStore';
 interface typePlaylistCover {
   items: [];
   title: string;
@@ -36,7 +38,7 @@ function HomeScreens() {
   const [loading, setLoading] = useState<boolean>(false);
   const {COLOR, HEADER_GRADIENT} = useThemeStore(state => state);
   const [dataRecent, setDataRecent] = useState<any>([]);
-
+  const {setLikedSongs} = usePlayerStore();
   useEffect(() => {
     setLoading(true);
     nodejs.channel.addListener('home', data => {
@@ -51,6 +53,17 @@ function HomeScreens() {
       setLoading(false);
     };
     Promise.all([getRecentList(), nodejs.channel.post('home')]);
+    const q = query(collection(db, `users/${auth.currentUser?.uid}/likedSong`));
+    const unsub = onSnapshot(q, querySnapshot => {
+      const songs = [] as any;
+      querySnapshot.forEach(doc => {
+        songs.push(doc.data());
+      });
+      setLikedSongs(songs);
+    });
+    return () => {
+      unsub();
+    };
   }, []);
 
   if (loading) {

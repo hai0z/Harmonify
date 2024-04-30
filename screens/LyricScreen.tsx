@@ -1,13 +1,10 @@
 import {View, Text, TouchableOpacity} from 'react-native';
-import React, {useState, useEffect, useLayoutEffect} from 'react';
+import React, {useEffect} from 'react';
 import {FlashList} from '@shopify/flash-list';
 import useSyncLyric from '../hooks/useSyncLyric';
 import {useNavigation} from '@react-navigation/native';
 import Entypo from 'react-native-vector-icons/Entypo';
-import TrackPlayer, {
-  useActiveTrack,
-  useProgress,
-} from 'react-native-track-player';
+import TrackPlayer, {useActiveTrack} from 'react-native-track-player';
 import TrackSlider from '../components/Player/Control/TrackSlider';
 import PlayButton from '../components/Player/Control/PlayButton';
 import {LinearGradient} from 'react-native-linear-gradient';
@@ -34,7 +31,7 @@ const LyricScreen = ({route}: {route: any}) => {
     autoScrollAfterUserScroll: 2000,
   });
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (localAutoScroll) {
       lyricsRef.current?.scrollToIndex({
         index:
@@ -94,7 +91,7 @@ const LyricScreen = ({route}: {route: any}) => {
           }}
           data={lyrics}
           estimatedItemSize={38}
-          initialScrollIndex={currentLine! - OFFSET}
+          initialScrollIndex={currentLine - OFFSET}
           showsVerticalScrollIndicator={false}
           extraData={currentLine}
           renderItem={({item, index}: any) => (

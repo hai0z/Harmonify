@@ -1,6 +1,6 @@
 import {View, Text} from 'react-native';
 import React from 'react';
-import useThemeStore from '../../store/themeStore';
+import useThemeStore from '../../../store/themeStore';
 import {useProgress} from 'react-native-track-player/lib/hooks';
 import {widthPercentageToDP} from 'react-native-responsive-screen';
 

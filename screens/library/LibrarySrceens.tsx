@@ -12,29 +12,19 @@ import {widthPercentageToDP} from 'react-native-responsive-screen';
 import useLibraryStore from '../../store/useLibraryStore';
 import {collection, onSnapshot, query} from 'firebase/firestore';
 import {auth, db} from '../../firebase/config';
-import {usePlayerStore} from '../../store/playerStore';
 import {useUserStore} from '../../store/userStore';
 const LibrarySrceens = () => {
   const [selectedTab, setSelectedTab] = React.useState(0);
   const {COLOR} = useThemeStore();
   const {viewType, setViewType} = useLibraryStore();
-  const {setLikedSongs} = usePlayerStore();
-  const {setListFollowArtists, setLikedPlaylists} = useUserStore();
+  const {setLikedPlaylists} = useUserStore();
 
   useEffect(() => {
-    const q = query(collection(db, `users/${auth.currentUser?.uid}/likedSong`));
-    const unsub = onSnapshot(q, querySnapshot => {
-      const songs = [] as any;
-      querySnapshot.forEach(doc => {
-        songs.push(doc.data());
-      });
-      setLikedSongs(songs);
-    });
-
-    const q2 = query(
+    const q = query(
       collection(db, `users/${auth.currentUser?.uid}/likedPlaylists`),
     );
-    const unsub2 = onSnapshot(q2, querySnapshot => {
+
+    const unsub = onSnapshot(q, querySnapshot => {
       const likedPlaylists = [] as any;
       querySnapshot.forEach(doc => {
         likedPlaylists.push(doc.data());
@@ -43,8 +33,6 @@ const LibrarySrceens = () => {
     });
     return () => {
       unsub();
-      // unsub1();
-      unsub2();
     };
   }, []);
   return (

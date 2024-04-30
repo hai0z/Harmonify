@@ -17,8 +17,6 @@ const useKeyBoardStatus = () => {
         setKeyboardVisible(false);
       }
     );
-
-    // Dọn dẹp
     return () => {
       keyboardDidShowListener.remove();
       keyboardDidHideListener.remove();

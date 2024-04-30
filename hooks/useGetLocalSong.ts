@@ -1,4 +1,4 @@
-import { View, Text, Platform } from 'react-native'
+import { Platform } from 'react-native'
 import React, { useEffect } from 'react'
 import { SortSongFields, SortSongOrder, getAll } from 'react-native-get-music-files';
 import { PERMISSIONS, RESULTS, check, request, requestMultiple } from 'react-native-permissions';
@@ -16,7 +16,6 @@ const hasPermissions = async () => {
         PERMISSIONS.ANDROID.READ_MEDIA_AUDIO,
       ]);
     }
-
     return hasPermission;
   }
 
@@ -40,7 +39,6 @@ const useGetLocalSong = () => {
       const permissions = await hasPermissions();
       if (permissions) {
         const songsOrError = await getAll({
-
           offset: 0,
           coverQuality: 100,
           minSongDuration: 1000,

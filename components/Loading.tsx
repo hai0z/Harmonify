@@ -7,7 +7,7 @@ const Loading = () => {
     <LoaderKit
       style={{width: 50, height: 50}}
       name={'BallClipRotateMultiple'}
-      color={COLOR.PRIMARY}
+      color={COLOR.SECONDARY}
     />
   );
 };
