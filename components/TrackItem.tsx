@@ -7,6 +7,7 @@ import FastImage from 'react-native-fast-image';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import {usePlayerStore} from '../store/playerStore';
 import {objectToTrack} from '../service/trackPlayerService';
+import useInternetState from '../hooks/useInternetState';
 interface Props {
   item: any;
   index?: number;
@@ -16,6 +17,7 @@ interface Props {
 }
 
 const TrackItem = (props: Props) => {
+  const isConnected = useInternetState();
   const {item, index, onClick, isAlbum, showBottomSheet} = props;
   const COLOR = useThemeStore(state => state.COLOR);
   const setCurrentSong = usePlayerStore(state => state.setCurrentSong);
@@ -23,8 +25,9 @@ const TrackItem = (props: Props) => {
   console.log('track render');
   return (
     <TouchableOpacity
+      style={{opacity: isConnected ? 1 : isPlayFromLocal ? 1 : 0.5}}
       activeOpacity={0.8}
-      disabled={item?.streamingStatus === 2}
+      disabled={isPlayFromLocal === false && isConnected === false}
       className="flex flex-row  items-center mx-4 mb-3"
       onPress={() => {
         setCurrentSong(objectToTrack(item));

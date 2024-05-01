@@ -13,27 +13,29 @@ import useLibraryStore from '../../store/useLibraryStore';
 import {collection, onSnapshot, query} from 'firebase/firestore';
 import {auth, db} from '../../firebase/config';
 import {useUserStore} from '../../store/userStore';
+import useInternetState from '../../hooks/useInternetState';
 const LibrarySrceens = () => {
   const [selectedTab, setSelectedTab] = React.useState(0);
   const {COLOR} = useThemeStore();
   const {viewType, setViewType} = useLibraryStore();
   const {setLikedPlaylists} = useUserStore();
-
+  const isConnected = useInternetState();
   useEffect(() => {
-    const q = query(
-      collection(db, `users/${auth.currentUser?.uid}/likedPlaylists`),
-    );
-
-    const unsub = onSnapshot(q, querySnapshot => {
-      const likedPlaylists = [] as any;
-      querySnapshot.forEach(doc => {
-        likedPlaylists.push(doc.data());
+    if (isConnected) {
+      const q = query(
+        collection(db, `users/${auth.currentUser?.uid}/likedPlaylists`),
+      );
+      const unsub = onSnapshot(q, querySnapshot => {
+        const likedPlaylists = [] as any;
+        querySnapshot.forEach(doc => {
+          likedPlaylists.push(doc.data());
+        });
+        setLikedPlaylists(likedPlaylists);
       });
-      setLikedPlaylists(likedPlaylists);
-    });
-    return () => {
-      unsub();
-    };
+      return () => {
+        unsub();
+      };
+    }
   }, []);
   return (
     <View style={{...styles.container, backgroundColor: COLOR.BACKGROUND}}>
