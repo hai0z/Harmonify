@@ -20,6 +20,7 @@ import useThemeStore from '../../store/themeStore';
 import {DEFAULT_IMG} from '../../constants';
 import {usePlayerStore} from '../../store/playerStore';
 import Loading from '../../components/Loading';
+import {widthPercentageToDP} from 'react-native-responsive-screen';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const LocalSong = () => {
@@ -30,6 +31,7 @@ const LocalSong = () => {
   const navigation = useNavigation<any>();
   const COLOR = useThemeStore(state => state.COLOR);
   const {setPlayFrom} = usePlayerStore(state => state);
+  const playListId = useMemo(() => Math.random().toString(36).substring(7), []);
   const headerColor = useMemo(
     () =>
       scrollY.interpolate({
@@ -60,13 +62,16 @@ const LocalSong = () => {
     [scrollY],
   );
 
-  const handlePlaySong = useCallback((song: any) => {
-    handlePlaySongInLocal(song);
+  const handlePlaySong = (song: any) => {
+    handlePlaySongInLocal(song, {
+      id: playListId,
+      items: localSong,
+    });
     setPlayFrom({
       id: 'local',
       name: 'Bài hát trên thiết bị',
     });
-  }, []);
+  };
   if (isLoading) {
     return (
       <View
@@ -167,11 +172,15 @@ const Item = React.memo(({item, onPress}: any) => {
   const {COLOR} = useThemeStore(state => state);
   return (
     <TouchableOpacity
+      activeOpacity={0.8}
       onPress={() => onPress(item)}
-      className="flex-row items-center pt-2 mx-4 my-2">
+      className="flex-row items-center mx-4 mb-3">
       <Image
         source={{uri: item.thumbnail || DEFAULT_IMG}}
-        className="w-14 h-14 justify-center items-center rounded-md"
+        style={{
+          width: widthPercentageToDP(15),
+          height: widthPercentageToDP(15),
+        }}
       />
       <View style={{marginLeft: 10}}>
         <Text
@@ -179,9 +188,7 @@ const Item = React.memo(({item, onPress}: any) => {
           style={{color: COLOR.TEXT_PRIMARY}}>
           {item.title}
         </Text>
-        <Text className="  mb-[5px]" style={{color: COLOR.TEXT_SECONDARY}}>
-          {item.artistsNames}
-        </Text>
+        <Text style={{color: COLOR.TEXT_SECONDARY}}>{item.artistsNames}</Text>
       </View>
     </TouchableOpacity>
   );

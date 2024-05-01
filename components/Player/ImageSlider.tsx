@@ -1,4 +1,4 @@
-import React, {memo, useEffect, useRef} from 'react';
+import React, {memo, useEffect} from 'react';
 import {FlashList} from '@shopify/flash-list';
 import {
   NativeScrollEvent,
@@ -51,7 +51,7 @@ const ImageSlider = () => {
   }, [currentSong?.id]);
 
   return (
-    <Animated.View
+    <View
       style={{
         marginTop: SCREEN_HEIGHT * 0.1,
         zIndex: 100,
@@ -66,18 +66,17 @@ const ImageSlider = () => {
         onMomentumScrollEnd={swpipeToChangeSong}
         estimatedItemSize={SCREEN_WIDTH}
         data={playList.items}
-        renderItem={({item, index}: any) => (
-          <SliderItem item={item} index={index} />
-        )}
+        renderItem={({item}: any) => <SliderItem item={item} />}
       />
-    </Animated.View>
+    </View>
   );
 };
 
-const SliderItem = memo(({item, index}: any) => {
+const SliderItem = memo(({item}: any) => {
+  const {isPlayFromLocal} = usePlayerStore();
   return (
     <View
-      key={index}
+      key={item.encodeId}
       style={{
         width: SCREEN_WIDTH,
         justifyContent: 'center',
@@ -85,7 +84,11 @@ const SliderItem = memo(({item, index}: any) => {
       }}>
       <Animated.Image
         entering={FadeIn.duration(400).springify().delay(250)}
-        src={getThumbnail(item.thumbnail)}
+        source={{
+          uri: isPlayFromLocal
+            ? item?.thumbnail
+            : getThumbnail(item?.thumbnail, 720),
+        }}
         className="rounded-md z-20"
         style={{
           height: SCREEN_WIDTH * 0.85,

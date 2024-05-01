@@ -19,10 +19,10 @@ const TrackItem = (props: Props) => {
   const {item, index, onClick, isAlbum, showBottomSheet} = props;
   const COLOR = useThemeStore(state => state.COLOR);
   const setCurrentSong = usePlayerStore(state => state.setCurrentSong);
+  const isPlayFromLocal = usePlayerStore(state => state.isPlayFromLocal);
   console.log('track render');
   return (
     <TouchableOpacity
-      style={{opacity: item?.streamingStatus === 1 ? 1 : 0.5}}
       activeOpacity={0.8}
       disabled={item?.streamingStatus === 2}
       className="flex flex-row  items-center mx-4 mb-3"
@@ -41,7 +41,9 @@ const TrackItem = (props: Props) => {
       ) : (
         <FastImage
           source={{
-            uri: getThumbnail(item?.thumbnail),
+            uri: isPlayFromLocal
+              ? item?.thumbnail
+              : getThumbnail(item?.thumbnail, 720),
           }}
           key={item?.encodeId}
           className="rounded-none"
@@ -65,16 +67,18 @@ const TrackItem = (props: Props) => {
           {item?.artistsNames}
         </Text>
       </View>
-      <TouchableOpacity
-        disabled={item?.streamingStatus === 2}
-        onPress={() => showBottomSheet(item)}
-        hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}>
-        <Feather
-          name="more-vertical"
-          size={20}
-          color={`${COLOR.TEXT_PRIMARY}90`}
-        />
-      </TouchableOpacity>
+      {!isPlayFromLocal && (
+        <TouchableOpacity
+          disabled={item?.streamingStatus === 2}
+          onPress={() => showBottomSheet(item)}
+          hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}>
+          <Feather
+            name="more-vertical"
+            size={20}
+            color={`${COLOR.TEXT_PRIMARY}90`}
+          />
+        </TouchableOpacity>
+      )}
     </TouchableOpacity>
   );
 };

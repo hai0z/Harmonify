@@ -75,7 +75,6 @@ const MiniPlayer = () => {
   //     await TrackPlayer.seekTo(lastPosition);
   //   })();
   // }, []);
-
   if (!currentSong || keyboardVisible) {
     return null;
   }
@@ -156,7 +155,7 @@ const MiniPlayer = () => {
                   fontSize: 12,
                 }}
                 numberOfLines={1}>
-                {currentSong?.artist || currentSong?.artistName}
+                {currentSong?.artist}
               </Text>
             </Animated.View>
 

@@ -11,6 +11,7 @@ import useBottomSheetStore from '../store/bottomSheetStore';
 import {saveToHistory} from '../service/firebase';
 import {Appearance} from 'react-native';
 import useThemeStore from '../store/themeStore';
+import {DEFAULT_IMG} from '../constants';
 
 interface ContextType {
   bottomSheetModalRef: React.RefObject<BottomSheetModalMethods>;
@@ -67,20 +68,28 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
       playList.id !== '' &&
       currentSong !== null
     ) {
-      const index = playList.items.findIndex(
+      let index = playList.items.findIndex(
         (item: any) => item?.encodeId === currentSong?.id,
       );
-
-      await TrackPlayer.add(
-        playList.items.map((item: any) => objectToTrack(item)),
-      );
-
+      if (index < 0) {
+        index = 0;
+      }
+      if (!isPlayFromLocal) {
+        await TrackPlayer.add(
+          playList.items.map((item: any) => objectToTrack(item)),
+        );
+      } else {
+        await TrackPlayer.add(
+          playList.items.map((item: any) => ({
+            ...objectToTrack(item),
+            url: item.url,
+            artwork: item.thumbnail || DEFAULT_IMG,
+          })),
+        );
+      }
       await TrackPlayer.skip(index).finally(() => {
         setisLoadingTrack(false);
       });
-    } else {
-      await TrackPlayer.add(currentSong!);
-      setisLoadingTrack(false);
     }
   };
 

@@ -8,7 +8,13 @@ import {
   Animated,
   TouchableOpacity,
 } from 'react-native';
-import React, {useCallback, useContext, useEffect, useState} from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import {FlashList} from '@shopify/flash-list';
 import {LinearGradient} from 'react-native-linear-gradient';
 import {handlePlay} from '../../service/trackPlayerService';
@@ -45,6 +51,11 @@ const ArtistSong = ({route}: any) => {
 
   const setPlayFrom = usePlayerStore(state => state.setPlayFrom);
 
+  const playlistId = useMemo(
+    () => Math.random().toString(36).substring(7),
+    [data?.length],
+  );
+  console.log(playlistId);
   useEffect(() => {
     setLoading(true);
     setData([]);
@@ -103,7 +114,7 @@ const ArtistSong = ({route}: any) => {
   const handlePlaySong = useCallback(
     (song: any) => {
       handlePlay(song, {
-        id: 'artist' + id,
+        id: playlistId,
         items: data.filter((i: any) => i.streamingStatus === 1),
       });
       setPlayFrom({

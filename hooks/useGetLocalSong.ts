@@ -3,6 +3,7 @@ import React, { useEffect } from 'react'
 import { SortSongFields, SortSongOrder, getAll } from 'react-native-get-music-files';
 import { PERMISSIONS, RESULTS, check, request, requestMultiple } from 'react-native-permissions';
 import useToastStore, { ToastTime } from '../store/toastStore';
+import { DEFAULT_IMG } from '../constants';
 
 const hasPermissions = async () => {
   if (Platform.OS === 'android') {
@@ -55,7 +56,7 @@ const useGetLocalSong = () => {
               title: song.title || "không rõ",
               artistsNames: song.artist || "không rõ",
               duration: song.duration / 1000,
-              thumbnail: song.cover,
+              thumbnail: (song.cover === null || song.cover === undefined || song.cover === '') ? DEFAULT_IMG : song.cover,
               url: `file://${song.url}`,
               encodeId: index,
             })),

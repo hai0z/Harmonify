@@ -19,6 +19,7 @@ export default function App() {
       try {
         await TrackPlayer.setupPlayer({
           autoHandleInterruptions: true,
+          maxCacheSize: 1024 * 10,
         });
 
         await TrackPlayer.setRepeatMode(RepeatMode.Queue);

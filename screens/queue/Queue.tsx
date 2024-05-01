@@ -69,7 +69,7 @@ const Queue = () => {
     'worklet';
     $bg.value = withTiming(`${gradientColor}70`, {
       duration: 750,
-      easing: Easing.out(Easing.ease),
+      easing: Easing.inOut(Easing.quad),
     });
   };
   useEffect(() => {

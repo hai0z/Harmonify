@@ -53,6 +53,8 @@ TrackPlayer.addEventListener(Event.PlaybackActiveTrackChanged, async event => {
       !usePlayerStore.getState().isLoadingTrack &&
         nodejs.channel.post('getSong', event.track!);
     }
+  } else {
+    !usePlayerStore.getState().isLoadingTrack && usePlayerStore.getState().setCurrentSong(event.track!);
   }
 
 });
@@ -97,26 +99,30 @@ const handlePlay = async (song: any, playlist: IPlaylist = {
 
   await TrackPlayer.play();
 }
-const handlePlaySongInLocal = async (song: any,) => {
-  usePlayerStore.getState().setCurrentSong({
-    ...objectToTrack(song),
-    artwork: song.thumbnail || DEFAULT_IMG,
-    url: song.url
-  });
-
+const handlePlaySongInLocal = async (song: any, playlist: IPlaylist = {
+  id: "",
+  items: [],
+}) => {
   usePlayerStore.getState().setIsPlayFromLocal(true);
-  usePlayerStore.getState().setPlayList({
-    id: "", items: []
-  });
   usePlayerStore.getState().setColor(defaultColorObj);
-  await TrackPlayer.reset();
-  await TrackPlayer.add({
-    ...objectToTrack(song),
-    artwork: song.thumbnail || DEFAULT_IMG,
-    url: song.url
-  });
+  usePlayerStore.getState().setCurrentSong({ ...objectToTrack(song), url: song.url, artwork: song.thumbnail || DEFAULT_IMG, });
+  const currentPlaylistId = usePlayerStore.getState().playList?.id;
+  if (currentPlaylistId !== playlist.id) {
+    usePlayerStore.getState().setisLoadingTrack(true);
+    await TrackPlayer.reset();
+    usePlayerStore.getState().setPlayList(playlist);
+    await TrackPlayer.add(playlist.items.map((item: any) => ({ ...objectToTrack(item), url: item.url, artwork: item.thumbnail || DEFAULT_IMG, })));
+  }
+  const index = playlist.items.findIndex(
+    (item: any) => item?.encodeId === song?.encodeId,
+  )
+  console.log(index);
+  await TrackPlayer.skip(index).finally(() => {
+    usePlayerStore.getState().setisLoadingTrack(false);
+  })
 
   await TrackPlayer.play();
+
 }
 
 
