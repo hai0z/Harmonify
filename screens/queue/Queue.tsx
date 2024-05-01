@@ -30,7 +30,10 @@ import {PlayerContext} from '../../context/PlayerProvider';
 import TrackItem from '../../components/TrackItem';
 import TrackItemBottomSheet from '../../components/bottom-sheet/TrackItemBottomSheet';
 import ProgressBar from './components/ProgressBar';
+import useInternetState from '../../hooks/useInternetState';
+import LocalTrackItem from '../../components/LocalTrackItem';
 const Queue = () => {
+  const isConnected = useInternetState();
   const {COLOR} = useThemeStore(state => state);
 
   const {playFrom, playList} = usePlayerStore(state => state);
@@ -130,11 +133,18 @@ const Queue = () => {
           <Animated.View
             entering={FadeInDown.duration(300).springify().damping(200)}
             key={currentSong?.id}>
-            <TrackItem
-              showBottomSheet={showBottomSheet}
-              item={playList.items[trackIndex]}
-              onClick={handlePlay}
-            />
+            {isConnected ? (
+              <TrackItem
+                showBottomSheet={showBottomSheet}
+                item={playList.items[trackIndex]}
+                onClick={handlePlay}
+              />
+            ) : (
+              <LocalTrackItem
+                item={playList.items[trackIndex]}
+                onClick={handlePlay}
+              />
+            )}
           </Animated.View>
         </View>
         <View className="px-4 mt-[2px]">
@@ -162,12 +172,14 @@ const Queue = () => {
           data={copyPlaylist}
           estimatedItemSize={70}
           renderItem={({item}) => {
-            return (
+            return isConnected ? (
               <TrackItem
                 showBottomSheet={showBottomSheet}
                 item={item}
                 onClick={handlePlay}
               />
+            ) : (
+              <LocalTrackItem item={item} onClick={handlePlay} />
             );
           }}
         />
