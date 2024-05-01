@@ -37,6 +37,7 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
   } = usePlayerStore();
 
   const {COLOR} = useThemeStore();
+
   const getSongColors = async () => {
     if (currentSong?.artwork !== null) {
       getColors(getThumbnail(currentSong?.artwork!, 720), {
@@ -69,9 +70,11 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
       const index = playList.items.findIndex(
         (item: any) => item?.encodeId === currentSong?.id,
       );
+
       await TrackPlayer.add(
         playList.items.map((item: any) => objectToTrack(item)),
       );
+
       await TrackPlayer.skip(index).finally(() => {
         setisLoadingTrack(false);
       });

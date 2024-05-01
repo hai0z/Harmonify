@@ -4,8 +4,11 @@ import { usePlayerStore } from "../store/playerStore";
 
 export default function useSyncLyric() {
   const [currentLine, setCurrentLine] = useState<number>(0);
+
   const lyrics = usePlayerStore(state => state.lyrics);
+
   const progress = useProgress(100);
+
   useEffect(() => {
     if (lyrics) {
       let low = 0;

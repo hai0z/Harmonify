@@ -25,7 +25,6 @@ const SleepTimerBottomSheet = forwardRef(
     const snapPoints = useMemo(() => ['50%'], []);
 
     const {dismiss} = useBottomSheetModal();
-    // renders
     const renderBackdrop = useCallback(
       (props: any) => (
         <BottomSheetBackdrop
@@ -72,7 +71,7 @@ const SleepTimerBottomSheet = forwardRef(
               <TouchableOpacity
                 key={time}
                 onPress={() => {
-                  setSleepTimer(time % 60 > 0 ? time * 60 : time * 60);
+                  setSleepTimer(time * 60);
                   ToastAndroid.show(
                     'Hẹn giờ ngủ sau: ' + time + ' phút',
                     ToastAndroid.SHORT,

@@ -23,6 +23,7 @@ import {auth, db} from '../../firebase/config';
 import {SafeAreaView} from 'react-native';
 import Loading from '../../components/Loading';
 import {usePlayerStore} from '../../store/playerStore';
+import axios from 'axios';
 interface typePlaylistCover {
   items: [];
   title: string;

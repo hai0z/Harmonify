@@ -176,7 +176,6 @@ const HomeTab = () => {
       screenOptions={({route}) => ({
         tabBarHideOnKeyboard: true,
         headerShown: false,
-
         tabBarIcon: ({color}) => {
           switch (route.name) {
             case 'HomeTab':

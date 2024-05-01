@@ -20,7 +20,6 @@ const Player = () => {
         <PrevButton />
         <PlayButton />
         <NextButton />
-
         <TouchableOpacity
           onPress={() => navigation.navigate('Queue')}
           activeOpacity={1}
