@@ -10,7 +10,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import PlayerScreens from '../screens/PlayerScreens';
 import LyricScreen from '../screens/LyricScreen';
-import {View} from 'react-native';
+import {Text, View} from 'react-native';
 import PlaylistDetail from '../screens/PlaylistDetail';
 import {BottomTabBar} from '@react-navigation/bottom-tabs';
 import ArtistScreens from '../screens/artist/ArtistScreens';
@@ -33,7 +33,17 @@ import SettingScreen from '../screens/SettingScreen';
 import Queue from '../screens/queue/Queue';
 import Entypo from 'react-native-vector-icons/Entypo';
 import HistoryScreens from '../screens/HistoryScreens';
-import {withTiming} from 'react-native-reanimated';
+import Animated, {
+  FadeIn,
+  FadeInDown,
+  FadeInUp,
+  FadeOut,
+  FadeOutDown,
+  withTiming,
+} from 'react-native-reanimated';
+import useInternetState from '../hooks/useInternetState';
+import {widthPercentageToDP} from 'react-native-responsive-screen';
+import tinycolor from 'tinycolor2';
 export type HomeStackParamsList = {
   Home: undefined;
   Search: undefined;
@@ -156,12 +166,33 @@ const HomeStack = () => {
 
 const HomeTab = () => {
   const {COLOR} = useThemeStore();
-
+  const isConnected = useInternetState();
   return (
     <Tab.Navigator
       tabBar={props => (
         <View className="relative">
           <MiniPlayer />
+          {!isConnected && (
+            <Animated.View
+              entering={FadeInDown.duration(200).springify().delay(250)}
+              exiting={FadeOutDown.duration(200).springify().delay(250)}>
+              <View
+                className="h-[15px] absolute"
+                style={{
+                  bottom: TABBAR_HEIGHT,
+                  width: widthPercentageToDP(96),
+                  transform: [{translateX: widthPercentageToDP(2)}],
+                  borderRadius: 2,
+                  backgroundColor: COLOR.BACKGROUND,
+                }}>
+                <Text
+                  className="text-xs text-center"
+                  style={{color: COLOR.TEXT_PRIMARY}}>
+                  MU Music đang ở chế độ offline
+                </Text>
+              </View>
+            </Animated.View>
+          )}
           <BottomTabBar {...props} />
           <LinearGradient
             locations={[0, 0.6]}

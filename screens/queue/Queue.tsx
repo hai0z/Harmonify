@@ -33,10 +33,9 @@ import ProgressBar from './components/ProgressBar';
 import useInternetState from '../../hooks/useInternetState';
 import LocalTrackItem from '../../components/LocalTrackItem';
 const Queue = () => {
-  const isConnected = useInternetState();
   const {COLOR} = useThemeStore(state => state);
 
-  const {playFrom, playList} = usePlayerStore(state => state);
+  const {playFrom, playList, isPlayFromLocal} = usePlayerStore(state => state);
 
   const navigation = useNavigation<any>();
 
@@ -133,7 +132,7 @@ const Queue = () => {
           <Animated.View
             entering={FadeInDown.duration(300).springify().damping(200)}
             key={currentSong?.id}>
-            {isConnected ? (
+            {!isPlayFromLocal ? (
               <TrackItem
                 showBottomSheet={showBottomSheet}
                 item={playList.items[trackIndex]}
@@ -172,7 +171,7 @@ const Queue = () => {
           data={copyPlaylist}
           estimatedItemSize={70}
           renderItem={({item}) => {
-            return isConnected ? (
+            return !isPlayFromLocal ? (
               <TrackItem
                 showBottomSheet={showBottomSheet}
                 item={item}

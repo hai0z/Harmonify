@@ -9,8 +9,6 @@ import PlayerProvider from './context/PlayerProvider';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import AuthProvider from './context/AuthProvider';
 import Toast from './components/toast/Toast';
-import {addEventListener} from '@react-native-community/netinfo';
-import useToastStore from './store/toastStore';
 import React from 'react';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 export default function App() {
@@ -55,13 +53,6 @@ export default function App() {
       } catch (e) {}
     };
     setupPlayer();
-    const unsubscribe = addEventListener(state => {
-      if (!state.isConnected)
-        useToastStore.getState().show('Không có kết nối internet');
-    });
-    return () => {
-      unsubscribe();
-    };
   }, []);
 
   return (

@@ -22,6 +22,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import HeartButton from './HeartButton';
 import useImageColor from '../hooks/useImageColor';
+import useInternetState from '../hooks/useInternetState';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const MiniPlayer = () => {
@@ -42,6 +43,8 @@ const MiniPlayer = () => {
   const {dominantColor: gradientColor} = useImageColor();
 
   const bgAnimated = useSharedValue(`transparent`);
+
+  const isConnected = useInternetState();
 
   const togglePlay = useCallback(async (state: State | undefined) => {
     if (state !== State.Playing) {
@@ -91,7 +94,7 @@ const MiniPlayer = () => {
             backgroundColor: bgAnimated,
             borderRadius: 6,
             overflow: 'hidden',
-            bottom: TABBAR_HEIGHT,
+            bottom: isConnected ? TABBAR_HEIGHT : TABBAR_HEIGHT + 15,
           },
         ]}>
         <TouchableOpacity

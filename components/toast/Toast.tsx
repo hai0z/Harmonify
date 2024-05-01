@@ -4,14 +4,14 @@ import useToastStore from '../../store/toastStore';
 import {MINI_PLAYER_HEIGHT, TABBAR_HEIGHT} from '../../constants';
 import Animated, {FadeInDown, FadeOutDown} from 'react-native-reanimated';
 import useThemeStore from '../../store/themeStore';
-import useDebounce from '../../hooks/use_debounce';
+import useInternetState from '../../hooks/useInternetState';
 
 const PADDING = 8;
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const Toast = () => {
   const {visible, duration, message} = useToastStore(state => state);
   const {COLOR} = useThemeStore();
-
+  const isConnected = useInternetState();
   useEffect(() => {
     const timer = setTimeout(() => {
       useToastStore.setState({visible: false});
@@ -31,7 +31,9 @@ const Toast = () => {
         style={{
           width: SCREEN_WIDTH * 0.96,
           transform: [{translateX: (SCREEN_WIDTH * 0.04) / 2}],
-          bottom: TABBAR_HEIGHT + MINI_PLAYER_HEIGHT + PADDING,
+          bottom: isConnected
+            ? TABBAR_HEIGHT + MINI_PLAYER_HEIGHT + PADDING
+            : TABBAR_HEIGHT + MINI_PLAYER_HEIGHT + PADDING + 15,
           backgroundColor: COLOR.isDark ? 'white' : '#FEECE2',
         }}>
         <Text className="text-black ml-2">{message}</Text>
