@@ -12,28 +12,27 @@ export const objectToTrack = (data: any) => {
     url: (data.url && data.url !== "" && data.url !== null && data.url !== undefined) ? data.url : NULL_URL,
     title: data.title,
     artist: data.artistsNames,
-    artwork: getThumbnail(data.thumbnail || data.thumbnailM),
+    artwork: getThumbnail(data.thumbnail),
     duration: data.duration,
   };
 }
 
-let counter = 0;
+let sleepTimerCounter = 0;
 
 TrackPlayer.addEventListener(Event.PlaybackProgressUpdated, async e => {
   const timer = usePlayerStore.getState().sleepTimer
   if (timer !== null) {
-    counter++;
-    if (counter === timer) {
+    sleepTimerCounter++;
+    if (sleepTimerCounter === timer) {
       await TrackPlayer.pause();
       usePlayerStore.getState().setSleepTimer(null)
-      counter = 0
+      sleepTimerCounter = 0
       Alert.alert('Hẹn giờ ngủ', 'Chúc bạn ngủ ngon')
     }
   } else {
-    counter = 0
+    sleepTimerCounter = 0
   }
-  console.log(counter);
-  // usePlayerStore.getState().setLastPosition(e.position);
+  usePlayerStore.getState().setLastPosition(e.position);
 })
 
 TrackPlayer.addEventListener(Event.PlaybackError, async event => {

@@ -11,6 +11,7 @@ const RecentList = ({data}: any) => {
   const {COLOR} = useThemeStore();
 
   const isConnected = useInternetState();
+
   const {setPlayFrom, setCurrentSong} = usePlayerStore();
 
   const id = useMemo(() => Math.random().toString(36).substring(7), []);

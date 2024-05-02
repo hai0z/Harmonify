@@ -60,11 +60,10 @@ const Queue = () => {
   const $bg = useSharedValue(`transparent`);
 
   useEffect(() => {
-    setCopyPlaylist(
-      playList.items
-        .filter(item => item.encodeId != currentSong?.id)
-        .splice(trackIndex, playList.items.length - trackIndex),
-    );
+    const queue = [...playList.items];
+    const head = queue.slice(0, trackIndex);
+    const tail = queue.slice(trackIndex + 1);
+    setCopyPlaylist([...tail, ...head]);
   }, [currentSong?.id]);
 
   const changeBgAnimated = () => {

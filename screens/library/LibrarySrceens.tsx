@@ -1,5 +1,5 @@
 import {View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
-import React, {useEffect} from 'react';
+import React from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import LocalSong from './components/LocalSong';
 import Playlist from './components/Playlist';
@@ -10,33 +10,11 @@ import tinycolor from 'tinycolor2';
 import {Octicons} from '@expo/vector-icons';
 import {widthPercentageToDP} from 'react-native-responsive-screen';
 import useLibraryStore from '../../store/useLibraryStore';
-import {collection, onSnapshot, query} from 'firebase/firestore';
-import {auth, db} from '../../firebase/config';
-import {useUserStore} from '../../store/userStore';
-import useInternetState from '../../hooks/useInternetState';
 const LibrarySrceens = () => {
   const [selectedTab, setSelectedTab] = React.useState(0);
   const {COLOR} = useThemeStore();
   const {viewType, setViewType} = useLibraryStore();
-  const {setLikedPlaylists} = useUserStore();
-  const isConnected = useInternetState();
-  useEffect(() => {
-    if (isConnected) {
-      const q = query(
-        collection(db, `users/${auth.currentUser?.uid}/likedPlaylists`),
-      );
-      const unsub = onSnapshot(q, querySnapshot => {
-        const likedPlaylists = [] as any;
-        querySnapshot.forEach(doc => {
-          likedPlaylists.push(doc.data());
-        });
-        setLikedPlaylists(likedPlaylists);
-      });
-      return () => {
-        unsub();
-      };
-    }
-  }, [isConnected]);
+
   return (
     <View style={{...styles.container, backgroundColor: COLOR.BACKGROUND}}>
       <View style={styles.top}>
