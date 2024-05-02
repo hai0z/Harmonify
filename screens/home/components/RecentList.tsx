@@ -6,9 +6,11 @@ import tinycolor from 'tinycolor2';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {handlePlay, objectToTrack} from '../../../service/trackPlayerService';
 import {usePlayerStore} from '../../../store/playerStore';
+import useInternetState from '../../../hooks/useInternetState';
 const RecentList = ({data}: any) => {
   const {COLOR} = useThemeStore();
 
+  const isConnected = useInternetState();
   const {setPlayFrom, setCurrentSong} = usePlayerStore();
 
   const id = useMemo(() => Math.random().toString(36).substring(7), []);
@@ -24,7 +26,7 @@ const RecentList = ({data}: any) => {
       name: 'Bài hát gần đây',
     });
   };
-  if (data.length < 6) return null;
+  if (data.length < 6 || !data) return null;
   return (
     <View>
       <Text
@@ -40,6 +42,7 @@ const RecentList = ({data}: any) => {
         {data?.slice(0, 6)?.map((e: any, index: number) => {
           return (
             <TouchableOpacity
+              disabled={!isConnected}
               onPress={() => handlePlaySong(e)}
               activeOpacity={0.8}
               key={index}
@@ -49,6 +52,7 @@ const RecentList = ({data}: any) => {
                   ? tinycolor(COLOR.BACKGROUND).brighten().toString()
                   : '#ffffff',
                 elevation: 1,
+                opacity: isConnected ? 1 : 0.5,
               }}
               className="flex flex-row items-center my-1 rounded-t-md rounded-b-md">
               <Image

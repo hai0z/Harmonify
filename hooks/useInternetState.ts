@@ -2,7 +2,7 @@ import { addEventListener } from "@react-native-community/netinfo";
 import { useEffect, useState } from "react";
 
 export default function useInternetState() {
-  const [isConnected, setIsConnected] = useState(true);
+  const [isConnected, setIsConnected] = useState<boolean | null>(true);
   useEffect(() => {
     const unsubscribe = addEventListener(state => {
       if (!state.isConnected) {

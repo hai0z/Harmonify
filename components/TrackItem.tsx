@@ -21,7 +21,6 @@ const TrackItem = (props: Props) => {
   const {item, index, onClick, isAlbum, showBottomSheet} = props;
   const COLOR = useThemeStore(state => state.COLOR);
   const setCurrentSong = usePlayerStore(state => state.setCurrentSong);
-  const isPlayFromLocal = usePlayerStore(state => state.isPlayFromLocal);
   console.log('track render');
   return (
     <TouchableOpacity
@@ -44,9 +43,7 @@ const TrackItem = (props: Props) => {
       ) : (
         <FastImage
           source={{
-            uri: isPlayFromLocal
-              ? item?.thumbnail
-              : getThumbnail(item?.thumbnail, 720),
+            uri: getThumbnail(item?.thumbnail, 720),
           }}
           key={item?.encodeId}
           className="rounded-none"

@@ -1,4 +1,4 @@
-import {ActivityIndicator, TouchableOpacity} from 'react-native';
+import {TouchableOpacity} from 'react-native';
 import React, {useCallback} from 'react';
 import TrackPlayer, {State, usePlaybackState} from 'react-native-track-player';
 import Entypo from 'react-native-vector-icons/Entypo';

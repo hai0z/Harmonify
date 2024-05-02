@@ -25,7 +25,7 @@ import LikedSong from '../screens/library/LikedSong';
 import MyPlaylist from '../screens/library/MyPlaylist';
 import {useEffect} from 'react';
 import SplashScreen from 'react-native-splash-screen';
-import {TABBAR_HEIGHT} from '../constants';
+import {MINI_PLAYER_HEIGHT, TABBAR_HEIGHT} from '../constants';
 import TrackItemBottomSheet from '../components/bottom-sheet/TrackItemBottomSheet';
 import LocalSong from '../screens/library/LocalSong';
 import useThemeStore from '../store/themeStore';
@@ -34,16 +34,12 @@ import Queue from '../screens/queue/Queue';
 import Entypo from 'react-native-vector-icons/Entypo';
 import HistoryScreens from '../screens/HistoryScreens';
 import Animated, {
-  FadeIn,
   FadeInDown,
-  FadeInUp,
-  FadeOut,
   FadeOutDown,
   withTiming,
 } from 'react-native-reanimated';
 import useInternetState from '../hooks/useInternetState';
 import {widthPercentageToDP} from 'react-native-responsive-screen';
-import tinycolor from 'tinycolor2';
 export type HomeStackParamsList = {
   Home: undefined;
   Search: undefined;
@@ -179,7 +175,7 @@ const HomeTab = () => {
               <View
                 className="h-[15px] absolute"
                 style={{
-                  bottom: TABBAR_HEIGHT,
+                  bottom: TABBAR_HEIGHT + MINI_PLAYER_HEIGHT,
                   width: widthPercentageToDP(96),
                   transform: [{translateX: widthPercentageToDP(2)}],
                   borderRadius: 2,

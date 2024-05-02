@@ -36,7 +36,7 @@ const LibrarySrceens = () => {
         unsub();
       };
     }
-  }, []);
+  }, [isConnected]);
   return (
     <View style={{...styles.container, backgroundColor: COLOR.BACKGROUND}}>
       <View style={styles.top}>

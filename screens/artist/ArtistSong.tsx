@@ -25,7 +25,6 @@ import TrackItem from '../../components/TrackItem';
 import {PlayerContext} from '../../context/PlayerProvider';
 import useThemeStore from '../../store/themeStore';
 import {usePlayerStore} from '../../store/playerStore';
-import {runOnJS} from 'react-native-reanimated';
 import {widthPercentageToDP} from 'react-native-responsive-screen';
 import Loading from '../../components/Loading';
 interface artistType {

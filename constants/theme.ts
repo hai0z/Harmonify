@@ -144,29 +144,28 @@ export const nightTheme = {
 }
 
 
-export const themeMap = {
-  'light': lightTheme,
-  'dark': darkTheme,
-  'lemon': lemonTheme,
-  'pastel': pastelTheme,
-  'winter': winterTheme,
-  'silky': silkyTheme,
-  'synthWave': synthWaveTheme,
-  'coffee': coffeeTheme,
-  'amoled': amoledTheme,
-  'night': nightTheme
+export const themeMap: Readonly<Record<Theme, typeof lightTheme>> = {
+  light: lightTheme,
+  dark: darkTheme,
+  lemon: lemonTheme,
+  pastel: pastelTheme,
+  winter: winterTheme,
+  silky: silkyTheme,
+  synthWave: synthWaveTheme,
+  coffee: coffeeTheme,
+  amoled: amoledTheme,
+  night: nightTheme
 }
 
-export const gradientHeaderMap = {
-  'light': headerGradientLight,
-  'dark': headerGradientDark,
-  'lemon': headerGradientLemon,
-  'pastel': headerGradientPastel,
-  'winter': headerGradientWinter,
-  'silky': headerGradientSilky,
-  'synthWave': headerGradientSynthWave,
-  'coffee': headerGradientCoffee,
-  'amoled': headerGradientAmoled,
-  'night': headerGradientNight
-
+export const gradientHeaderMap: Readonly<Record<Theme, typeof headerGradientLight>> = {
+  light: headerGradientLight,
+  dark: headerGradientDark,
+  lemon: headerGradientLemon,
+  pastel: headerGradientPastel,
+  winter: headerGradientWinter,
+  silky: headerGradientSilky,
+  synthWave: headerGradientSynthWave,
+  coffee: headerGradientCoffee,
+  amoled: headerGradientAmoled,
+  night: headerGradientNight
 }

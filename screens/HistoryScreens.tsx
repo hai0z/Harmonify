@@ -7,30 +7,20 @@ import {usePlayerStore} from '../store/playerStore';
 import {useNavigation} from '@react-navigation/native';
 
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from 'react-native-responsive-screen';
+import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {FlashList} from '@shopify/flash-list';
 import Animated, {
+  Easing,
   FadeIn,
   FadeInDown,
   FadeOut,
+  runOnUI,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
 import {Track} from 'react-native-track-player';
 import LinearGradient from 'react-native-linear-gradient';
-import Entypo from 'react-native-vector-icons/Entypo';
-import {
-  collection,
-  getDocs,
-  limit,
-  onSnapshot,
-  orderBy,
-  query,
-  where,
-} from 'firebase/firestore';
+import {collection, getDocs, limit, orderBy, query} from 'firebase/firestore';
 import {auth, db} from '../firebase/config';
 import dayjs from 'dayjs';
 import RelativeTime from 'dayjs/plugin/relativeTime';
@@ -38,9 +28,7 @@ import 'dayjs/locale/vi';
 import {handlePlay} from '../service/trackPlayerService';
 import {PlayerContext} from '../context/PlayerProvider';
 import useImageColor from '../hooks/useImageColor';
-import getThumbnail from '../utils/getThumnail';
 import TrackItem from '../components/TrackItem';
-import useBottomSheetStore from '../store/bottomSheetStore';
 import Loading from '../components/Loading';
 dayjs.locale('vi');
 dayjs.extend(RelativeTime);
@@ -91,10 +79,16 @@ const HistoryScreens = () => {
 
   const $bg = useSharedValue(`transparent`);
 
+  const changeBgAnimated = () => {
+    'worklet';
+    $bg.value = withTiming(`${gradientColor}70`, {
+      duration: 1550,
+      easing: Easing.inOut(Easing.quad),
+    });
+  };
   useEffect(() => {
-    console.log('sdfasdf');
-    $bg.value = withTiming(`${gradientColor}70`, {duration: 1550});
-  }, [gradientColor, loading]);
+    runOnUI(changeBgAnimated)();
+  }, [gradientColor]);
 
   return (
     <View
