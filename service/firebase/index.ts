@@ -1,4 +1,4 @@
-import { collection, deleteDoc, doc, getDocs, limit, orderBy, query, setDoc } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDocs, limit, orderBy, query, setDoc, updateDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase/config";
 import { usePlayerStore } from "../../store/playerStore";
 import { useUserStore } from "../../store/userStore";
@@ -79,6 +79,32 @@ export const getRecentListening = async () => {
       recentListening.push(doc.data());
     });
     return recentListening.sort(() => Math.random() - 0.5)
+  } catch (err: any) {
+    console.log(err.message);
+  }
+}
+
+export const createPlaylist = async (playlist: {
+  encodeId: string;
+  title: string;
+  thumbnail: string;
+  songs: any[];
+}) => {
+  try {
+    const user = auth.currentUser?.uid;
+    const docRef = doc(db, `users/${user}/myPlaylists`, playlist.encodeId);
+    await setDoc(docRef, playlist);
+  } catch (err: any) {
+    console.log(err.message);
+  }
+}
+export const addSongToPlaylist = async (playlistId: string, song: any) => {
+  try {
+    const user = auth.currentUser?.uid;
+    const docRef = doc(db, `users/${user}/myPlaylists`, playlistId);
+    await updateDoc(docRef, {
+      songs: [...useUserStore.getState().myPlaylists.find((pl: any) => pl.encodeId == playlistId).songs, song],
+    });
   } catch (err: any) {
     console.log(err.message);
   }

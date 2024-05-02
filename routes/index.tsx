@@ -40,6 +40,8 @@ import Animated, {
 } from 'react-native-reanimated';
 import useInternetState from '../hooks/useInternetState';
 import {widthPercentageToDP} from 'react-native-responsive-screen';
+import CreatePlaylist from '../screens/createPlaylist/CreatePlaylist';
+import AddToPlaylist from '../screens/createPlaylist/AddToPlaylist';
 export type HomeStackParamsList = {
   Home: undefined;
   Search: undefined;
@@ -60,6 +62,9 @@ export type HomeStackParamsList = {
   Queue: undefined;
   PlayerStack: undefined;
   History: undefined;
+  CreatePlaylist: undefined;
+  AddToPlaylist: undefined;
+  PlaylistStack: undefined;
 };
 const Stack = createNativeStackNavigator<HomeStackParamsList>();
 const LibStack = createNativeStackNavigator();
@@ -88,6 +93,7 @@ const LibraryStack = () => {
         component={LocalSong}
         options={{animation: 'ios'}}
       />
+
       <LibStack.Screen
         name="LikedSong"
         component={LikedSong}
@@ -281,6 +287,19 @@ const PlayerStack = () => {
     </Stack.Navigator>
   );
 };
+
+const CreatePlaylistStack = () => {
+  return (
+    <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen name="CreatePlaylist" component={CreatePlaylist} />
+      <Stack.Screen
+        name="AddToPlaylist"
+        component={AddToPlaylist}
+        options={{animation: 'slide_from_bottom'}}
+      />
+    </Stack.Navigator>
+  );
+};
 function App() {
   const {isLogin} = useAuth();
   useEffect(() => {
@@ -305,6 +324,11 @@ function App() {
               options={{
                 animation: 'slide_from_bottom',
               }}
+            />
+            <Stack.Screen
+              name="PlaylistStack"
+              component={CreatePlaylistStack}
+              options={{animation: 'fade'}}
             />
           </>
         ) : (

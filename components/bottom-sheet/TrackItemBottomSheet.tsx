@@ -30,6 +30,7 @@ import tinycolor from 'tinycolor2';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import {usePlayerStore} from '../../store/playerStore';
 import SleepTimerBottomSheet from './SleepTimerBottomSheet';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 interface Props {
   context?: 'player' | null;
 }
@@ -156,6 +157,25 @@ const TrackItemBottomSheet = (props: Props) => {
               </Text>
             </TouchableOpacity>
           )}
+          <TouchableOpacity
+            className="w-full py-3 flex flex-row items-center  mb-3 gap-2"
+            onPress={() => {
+              dismiss();
+              navigation.navigate('PlaylistStack', {
+                screen: 'AddToPlaylist',
+                params: {song: data},
+              });
+            }}>
+            <MaterialIcons
+              name="add"
+              size={24}
+              color={`${COLOR.TEXT_PRIMARY}90`}
+            />
+
+            <Text className="text-base" style={{color: COLOR.TEXT_PRIMARY}}>
+              Thêm vào danh sách phát
+            </Text>
+          </TouchableOpacity>
           <TouchableOpacity
             className="w-full py-3 flex flex-row items-center  mb-3 gap-2"
             onPress={() => {

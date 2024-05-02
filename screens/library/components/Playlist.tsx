@@ -17,13 +17,14 @@ import {widthPercentageToDP} from 'react-native-responsive-screen';
 import useLibraryStore from '../../../store/useLibraryStore';
 import getThumbnail from '../../../utils/getThumnail';
 import Animated, {FadeIn} from 'react-native-reanimated';
+import RenderPlaylistThumbnail from './RenderPlaylistThumnail';
 
 const Playlist = () => {
   const likedSongs = usePlayerStore(state => state.likedSongs);
   const {COLOR} = useThemeStore(state => state);
   const navigation = useNavigation<any>();
   const {viewType} = useLibraryStore();
-  const {likedPlaylists} = useUserStore();
+  const {likedPlaylists, myPlaylists} = useUserStore();
   return (
     <ScrollView
       style={{flex: 1, marginHorizontal: 16, marginTop: 8}}
@@ -60,6 +61,46 @@ const Playlist = () => {
               </Text>
             </View>
           </TouchableOpacity>
+          {myPlaylists.map(pl => {
+            return (
+              <TouchableOpacity
+                key={pl.encodeId}
+                onPress={() =>
+                  navigation.push('MyPlaylist', {
+                    playlistId: pl.encodeId,
+                  })
+                }
+                activeOpacity={0.8}
+                className="flex-row items-center mt-4">
+                {pl.songs.length > 0 ? (
+                  <RenderPlaylistThumbnail
+                    songs={pl.songs}
+                    playlistLength={pl.songs.length}
+                    height={widthPercentageToDP(18)}
+                    width={widthPercentageToDP(18)}
+                  />
+                ) : (
+                  <Image
+                    source={{uri: getThumbnail(pl?.thumbnail)}}
+                    style={{
+                      width: widthPercentageToDP(18),
+                      height: widthPercentageToDP(18),
+                    }}
+                  />
+                )}
+                <View style={{marginLeft: 10}}>
+                  <Text
+                    className="font-bold mb-[5px]"
+                    style={{color: COLOR.TEXT_PRIMARY}}>
+                    {pl?.title}
+                  </Text>
+                  <Text style={{color: COLOR.TEXT_SECONDARY}}>
+                    {`Danh sách phát • ${pl.songs.length} bài hát`}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            );
+          })}
           {likedPlaylists.map(pl => {
             return (
               <TouchableOpacity
@@ -131,6 +172,48 @@ const Playlist = () => {
               </Text>
             </View>
           </TouchableOpacity>
+          {myPlaylists.map(pl => {
+            return (
+              <TouchableOpacity
+                style={{width: widthPercentageToDP(33) - 16}}
+                key={pl.encodeId}
+                onPress={() =>
+                  navigation.push('myPlaylist', {
+                    playlistId: pl.encodeId,
+                  })
+                }
+                activeOpacity={0.8}
+                className="flex-col flex mb-4 items-center">
+                {pl.songs.length > 0 ? (
+                  <RenderPlaylistThumbnail
+                    songs={pl.songs}
+                    playlistLength={pl.songs.length}
+                    height={widthPercentageToDP(33) - 16}
+                    width={widthPercentageToDP(33) - 16}
+                  />
+                ) : (
+                  <Image
+                    source={{uri: getThumbnail(pl?.thumbnail)}}
+                    style={{
+                      width: widthPercentageToDP(33) - 16,
+                      height: widthPercentageToDP(33) - 16,
+                    }}
+                  />
+                )}
+                <View>
+                  <Text
+                    numberOfLines={2}
+                    className="font-semibold"
+                    style={{color: COLOR.TEXT_PRIMARY}}>
+                    {pl?.title}
+                  </Text>
+                  <Text style={{color: COLOR.TEXT_SECONDARY}} numberOfLines={1}>
+                    Danh sách phát • {pl.songs.length} bài hát
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            );
+          })}
           {likedPlaylists.map(pl => {
             return (
               <TouchableOpacity
@@ -171,23 +254,8 @@ const Playlist = () => {
             <TouchableOpacity
               style={{width: widthPercentageToDP(33) - 16}}
               activeOpacity={0.8}
-              className="flex-col items-center flex my-1">
-              <View
-                style={{
-                  width: widthPercentageToDP(33) - 16,
-                  height: widthPercentageToDP(33) - 16,
-                }}
-              />
-              <View>
-                <Text
-                  className="font-bold"
-                  style={{color: COLOR.TEXT_PRIMARY}}
-                  numberOfLines={1}></Text>
-                <Text
-                  style={{color: COLOR.TEXT_SECONDARY}}
-                  numberOfLines={1}></Text>
-              </View>
-            </TouchableOpacity>
+              className="flex-col items-center flex my-1"
+            />
           )}
         </Animated.View>
       )}

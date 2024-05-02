@@ -10,10 +10,13 @@ import tinycolor from 'tinycolor2';
 import {Octicons} from '@expo/vector-icons';
 import {widthPercentageToDP} from 'react-native-responsive-screen';
 import useLibraryStore from '../../store/useLibraryStore';
+import {useNavigation} from '@react-navigation/native';
+
 const LibrarySrceens = () => {
   const [selectedTab, setSelectedTab] = React.useState(0);
   const {COLOR} = useThemeStore();
   const {viewType, setViewType} = useLibraryStore();
+  const navigation = useNavigation<any>();
 
   return (
     <View style={{...styles.container, backgroundColor: COLOR.BACKGROUND}}>
@@ -28,7 +31,7 @@ const LibrarySrceens = () => {
             Thư viện
           </Text>
         </View>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('PlaylistStack')}>
           <AntDesign
             name="plus"
             size={24}

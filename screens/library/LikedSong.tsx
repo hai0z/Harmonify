@@ -1,6 +1,5 @@
 import {
   View,
-  Image,
   TouchableOpacity,
   StyleSheet,
   Dimensions,
@@ -17,10 +16,9 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import TrackItem from '../../components/TrackItem';
 import {PlayerContext} from '../../context/PlayerProvider';
 import useThemeStore from '../../store/themeStore';
-import {runOnJS} from 'react-native-reanimated';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
-const PlaylistDetail = () => {
+const LikedSong = () => {
   const scrollY = React.useRef(new Animated.Value(0)).current;
 
   const COLOR = useThemeStore(state => state.COLOR);
@@ -160,4 +158,4 @@ const PlaylistDetail = () => {
   );
 };
 
-export default PlaylistDetail;
+export default LikedSong;

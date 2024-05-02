@@ -14,7 +14,7 @@ export default function useGetHomeData() {
   const [loading, setLoading] = useState<boolean>(false);
   const [dataRecent, setDataRecent] = useState<any>([]);
   const { setLikedSongs } = usePlayerStore();
-  const { setLikedPlaylists } = useUserStore();
+  const { setLikedPlaylists, setMyPlaylists } = useUserStore();
   const isConnected = useInternetState();
 
 
@@ -65,9 +65,20 @@ export default function useGetHomeData() {
         });
         setLikedPlaylists(likedPlaylists);
       });
+      const q2 = query(
+        collection(db, `users/${auth.currentUser?.uid}/myPlaylists`),
+      );
+      const unsub2 = onSnapshot(q2, querySnapshot => {
+        const myPlaylists = [] as any;
+        querySnapshot.forEach(doc => {
+          myPlaylists.push(doc.data());
+        });
+        setMyPlaylists(myPlaylists);
+      });
       return () => {
         unsub();
         unsub1();
+        unsub2();
       };
     } else {
       setdataHome(JSON.parse(mmkv.getString('home') || '[]'));
