@@ -14,6 +14,9 @@ import {useNavigation} from '@react-navigation/native';
 import {widthPercentageToDP} from 'react-native-responsive-screen';
 import {useUserStore} from '../../store/userStore';
 import {addSongToPlaylist} from '../../service/firebase';
+import RenderPlaylistThumbnail from '../library/components/RenderPlaylistThumnail';
+import getThumbnail from '../../utils/getThumnail';
+import CheckBox from './components/CheckBox';
 
 const AddToPlaylist = ({route}: {route: any}) => {
   const {song} = route.params;
@@ -21,15 +24,44 @@ const AddToPlaylist = ({route}: {route: any}) => {
   const navigation = useNavigation<any>();
   const {myPlaylists} = useUserStore();
 
-  const handleAddToPlaylist = async (playListId: string) => {
+  const playlistIncluded = myPlaylists.filter((pl: any) =>
+    pl.songs.find((s: any) => s.encodeId == song.encodeId),
+  );
+
+  const playListNotIncluded = myPlaylists.filter(
+    (pl: any) => !pl.songs.find((s: any) => s.encodeId == song.encodeId),
+  );
+
+  const [selectedPlaylistId, setSelectedPlaylistId] = React.useState<string[]>(
+    [],
+  );
+
+  const handleAddToPlaylist = async () => {
     try {
-      await addSongToPlaylist(playListId, song);
+      if (selectedPlaylistId.length == 0) {
+        navigation.goBack();
+        return;
+      }
+      const promise = [];
+      for (const id of selectedPlaylistId) {
+        promise.push(addSongToPlaylist(id, song));
+      }
+      await Promise.all(promise).then(() => {
+        setSelectedPlaylistId([]);
+      });
       ToastAndroid.show('Đã thêm vào danh sách phát', ToastAndroid.SHORT);
+      navigation.goBack();
     } catch (error) {
       Alert.alert('Thất bại', 'Có lỗi xảy ra');
     }
   };
-
+  const handleSelectPlaylist = (id: string) => {
+    if (selectedPlaylistId.includes(id)) {
+      setSelectedPlaylistId(selectedPlaylistId.filter(item => item !== id));
+    } else {
+      setSelectedPlaylistId([...selectedPlaylistId, id]);
+    }
+  };
   return (
     <View
       className="flex-1 pt-[55px] px-4"
@@ -48,46 +80,124 @@ const AddToPlaylist = ({route}: {route: any}) => {
         </Text>
         <View className="w-4"></View>
       </View>
-      <View className="justify-center items-center mt-6 flex">
+      <View className="justify-center items-center mt-6 flex mb-6">
         <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={() => navigation.navigate('CreatePlaylist')}
           className="py-3 rounded-full px-6"
           style={{backgroundColor: COLOR.PRIMARY}}>
           <Text style={{color: COLOR.TEXT_PRIMARY}}> Danh sách phát mới</Text>
         </TouchableOpacity>
       </View>
-      <View className="mt-8">
-        <Text
-          style={{color: COLOR.TEXT_PRIMARY, fontSize: widthPercentageToDP(4)}}
-          className="font-bold">
-          Danh sách phát của bạn
-        </Text>
-        <ScrollView>
-          {myPlaylists.map((pl, index) => (
-            <TouchableOpacity
-              key={pl.encodeId}
-              onPress={() => handleAddToPlaylist(pl.encodeId)}
-              activeOpacity={0.8}
-              className="flex-row items-center mt-4">
-              <Image
-                source={{uri: pl?.thumbnail}}
+
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {playlistIncluded.length > 0 && (
+          <View className="mb-4">
+            <Text
+              style={{
+                color: COLOR.TEXT_PRIMARY,
+                fontSize: widthPercentageToDP(4),
+              }}
+              className="font-bold">
+              Đã lưu vào
+            </Text>
+            {playlistIncluded.map((pl, index) => (
+              <TouchableOpacity
+                key={pl.encodeId}
+                activeOpacity={1}
+                className="flex-row items-center mt-4">
+                {pl.songs.length > 0 ? (
+                  <RenderPlaylistThumbnail
+                    songs={pl.songs}
+                    playlistLength={pl.songs.length}
+                    height={widthPercentageToDP(18)}
+                    width={widthPercentageToDP(18)}
+                  />
+                ) : (
+                  <Image
+                    source={{uri: getThumbnail(pl?.thumbnail)}}
+                    style={{
+                      width: widthPercentageToDP(18),
+                      height: widthPercentageToDP(18),
+                    }}
+                  />
+                )}
+                <View style={{marginLeft: 10}}>
+                  <Text
+                    className="font-bold mb-[5px]"
+                    style={{color: COLOR.TEXT_PRIMARY}}>
+                    {pl?.title}
+                  </Text>
+                  <Text style={{color: COLOR.TEXT_SECONDARY}}>
+                    {`Danh sách phát • ${pl.songs.length} bài hát`}
+                  </Text>
+                </View>
+                <View className="ml-auto">
+                  <CheckBox isChecked={true} />
+                </View>
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
+
+        {playListNotIncluded.length > 0 &&
+          playListNotIncluded.map((pl, index) => (
+            <View key={pl.encodeId}>
+              <Text
                 style={{
-                  width: widthPercentageToDP(18),
-                  height: widthPercentageToDP(18),
+                  color: COLOR.TEXT_PRIMARY,
+                  fontSize: widthPercentageToDP(4),
                 }}
-              />
-              <View style={{marginLeft: 10}}>
-                <Text
-                  className="font-bold mb-[5px]"
-                  style={{color: COLOR.TEXT_PRIMARY}}>
-                  {pl?.title}
-                </Text>
-                <Text style={{color: COLOR.TEXT_SECONDARY}}>
-                  {`Danh sách phát • ${pl.songs.length} bài hát`}
-                </Text>
-              </View>
-            </TouchableOpacity>
+                className="font-bold">
+                Danh sách phát của bạn
+              </Text>
+              <TouchableOpacity
+                onPress={() => handleSelectPlaylist(pl.encodeId)}
+                activeOpacity={0.8}
+                className="flex-row items-center mt-4">
+                {pl.songs.length > 0 ? (
+                  <RenderPlaylistThumbnail
+                    songs={pl.songs}
+                    playlistLength={pl.songs.length}
+                    height={widthPercentageToDP(18)}
+                    width={widthPercentageToDP(18)}
+                  />
+                ) : (
+                  <Image
+                    source={{uri: getThumbnail(pl?.thumbnail)}}
+                    style={{
+                      width: widthPercentageToDP(18),
+                      height: widthPercentageToDP(18),
+                    }}
+                  />
+                )}
+                <View style={{marginLeft: 10}}>
+                  <Text
+                    className="font-bold mb-[5px]"
+                    style={{color: COLOR.TEXT_PRIMARY}}>
+                    {pl?.title}
+                  </Text>
+                  <Text style={{color: COLOR.TEXT_SECONDARY}}>
+                    {`Danh sách phát • ${pl.songs.length} bài hát`}
+                  </Text>
+                </View>
+                <View className="ml-auto">
+                  <CheckBox
+                    isChecked={selectedPlaylistId.includes(pl.encodeId)}
+                  />
+                </View>
+              </TouchableOpacity>
+            </View>
           ))}
-        </ScrollView>
+        <View className="h-96" />
+      </ScrollView>
+      <View className="items-center justify-end py-4">
+        <TouchableOpacity
+          onPress={handleAddToPlaylist}
+          className="py-3 rounded-full px-6"
+          style={{backgroundColor: COLOR.PRIMARY}}>
+          <Text style={{color: COLOR.TEXT_PRIMARY}}> Xong</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );

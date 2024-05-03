@@ -109,3 +109,14 @@ export const addSongToPlaylist = async (playlistId: string, song: any) => {
     console.log(err.message);
   }
 }
+export const removeSongFromPlaylist = async (playlistId: string, song: any) => {
+  try {
+    const user = auth.currentUser?.uid;
+    const docRef = doc(db, `users/${user}/myPlaylists`, playlistId);
+    await updateDoc(docRef, {
+      songs: useUserStore.getState().myPlaylists.find((pl: any) => pl.encodeId == playlistId).songs.filter((s: any) => s.encodeId != song.encodeId),
+    });
+  } catch (err: any) {
+    console.log(err.message);
+  }
+}

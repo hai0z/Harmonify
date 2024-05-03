@@ -31,6 +31,7 @@ import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import {usePlayerStore} from '../../store/playerStore';
 import SleepTimerBottomSheet from './SleepTimerBottomSheet';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {removeSongFromPlaylist} from '../../service/firebase';
 interface Props {
   context?: 'player' | null;
 }
@@ -176,6 +177,26 @@ const TrackItemBottomSheet = (props: Props) => {
               Thêm vào danh sách phát
             </Text>
           </TouchableOpacity>
+          {data.playlistId && (
+            <TouchableOpacity
+              className="w-full py-3 flex flex-row items-center  mb-3 gap-2"
+              onPress={async () => {
+                await removeSongFromPlaylist(data.playlistId, data).then(() => {
+                  ToastAndroid.show('Đã xoá', ToastAndroid.SHORT);
+                  dismiss();
+                });
+              }}>
+              <Feather
+                name="minus-circle"
+                size={24}
+                color={`${COLOR.TEXT_PRIMARY}90`}
+              />
+
+              <Text className="text-base" style={{color: COLOR.TEXT_PRIMARY}}>
+                Xoá khỏi danh sách phát hiện tại
+              </Text>
+            </TouchableOpacity>
+          )}
           <TouchableOpacity
             className="w-full py-3 flex flex-row items-center  mb-3 gap-2"
             onPress={() => {

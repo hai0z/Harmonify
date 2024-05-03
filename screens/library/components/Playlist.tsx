@@ -1,11 +1,4 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Image,
-  ScrollView,
-} from 'react-native';
+import {View, Text, TouchableOpacity, Image, ScrollView} from 'react-native';
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {usePlayerStore} from '../../../store/playerStore';
@@ -178,7 +171,7 @@ const Playlist = () => {
                 style={{width: widthPercentageToDP(33) - 16}}
                 key={pl.encodeId}
                 onPress={() =>
-                  navigation.push('myPlaylist', {
+                  navigation.push('MyPlaylist', {
                     playlistId: pl.encodeId,
                   })
                 }

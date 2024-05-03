@@ -5,6 +5,7 @@ import {
   Dimensions,
   Animated,
   Image,
+  Text,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import React, {useCallback, useContext, useMemo} from 'react';
@@ -48,6 +49,7 @@ const MyPlaylist = ({route}: {route: any}) => {
   );
 
   const {showBottomSheet} = useContext(PlayerContext);
+
   const headerTitleOpacity = useMemo(
     () =>
       scrollY.interpolate({
@@ -125,12 +127,23 @@ const MyPlaylist = ({route}: {route: any}) => {
                     },
                   ]}
                 />
-                <RenderPlaylistThumbnail
-                  playlistLength={data?.songs?.length}
-                  songs={data?.songs}
-                  width={SCREEN_WIDTH * 0.6}
-                  height={SCREEN_WIDTH * 0.6}
-                />
+                {data?.songs.length > 0 ? (
+                  <RenderPlaylistThumbnail
+                    playlistLength={data?.songs?.length}
+                    songs={data?.songs}
+                    width={SCREEN_WIDTH * 0.6}
+                    height={SCREEN_WIDTH * 0.6}
+                  />
+                ) : (
+                  <Image
+                    source={{uri: getThumbnail(data?.thumbnailM)}}
+                    style={{
+                      width: SCREEN_WIDTH * 0.6,
+                      height: SCREEN_WIDTH * 0.6,
+                      zIndex: 50,
+                    }}
+                  />
+                )}
               </View>
               <View className="z-50 mt-4 px-6 mb-8">
                 <Animated.Text
@@ -145,6 +158,11 @@ const MyPlaylist = ({route}: {route: any}) => {
         contentContainerStyle={{
           paddingBottom: 200,
         }}
+        ListEmptyComponent={
+          <View className="flex-1 justify-center items-center">
+            <Text>Playlist trống...</Text>
+          </View>
+        }
         ListFooterComponent={() => <View style={{height: SCREEN_WIDTH}} />}
         nestedScrollEnabled
         data={data?.songs}
@@ -156,7 +174,9 @@ const MyPlaylist = ({route}: {route: any}) => {
               item={item}
               onClick={handlePlaySong}
               isAlbum={false}
-              showBottomSheet={showBottomSheet}
+              showBottomSheet={() =>
+                showBottomSheet({...item, playlistId: data?.encodeId})
+              }
             />
           );
         }}
