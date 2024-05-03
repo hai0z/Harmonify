@@ -11,6 +11,8 @@ import useLibraryStore from '../../../store/useLibraryStore';
 import getThumbnail from '../../../utils/getThumnail';
 import Animated, {FadeIn} from 'react-native-reanimated';
 import RenderPlaylistThumbnail from './RenderPlaylistThumnail';
+import {BottomSheetModal} from '@gorhom/bottom-sheet';
+import PlaylistManagerBottomSheet from '../../../components/bottom-sheet/PlaylistManagerBottomSheet';
 
 const Playlist = () => {
   const likedSongs = usePlayerStore(state => state.likedSongs);
@@ -18,6 +20,19 @@ const Playlist = () => {
   const navigation = useNavigation<any>();
   const {viewType} = useLibraryStore();
   const {likedPlaylists, myPlaylists} = useUserStore();
+
+  const playlistManagerRef = React.useRef<BottomSheetModal>(null);
+
+  const [selectedPlaylistId, setSelectedPlaylistId] = React.useState<
+    any | null
+  >(null);
+
+  const onLongPressPlaylist = (playList: any) => {
+    setSelectedPlaylistId(playList);
+    if (playlistManagerRef.current) {
+      playlistManagerRef.current?.present();
+    }
+  };
   return (
     <ScrollView
       style={{flex: 1, marginHorizontal: 16, marginTop: 8}}
@@ -57,6 +72,8 @@ const Playlist = () => {
           {myPlaylists.map(pl => {
             return (
               <TouchableOpacity
+                delayLongPress={200}
+                onLongPress={() => onLongPressPlaylist(pl)}
                 key={pl.encodeId}
                 onPress={() =>
                   navigation.push('MyPlaylist', {
@@ -168,6 +185,8 @@ const Playlist = () => {
           {myPlaylists.map(pl => {
             return (
               <TouchableOpacity
+                delayLongPress={200}
+                onLongPress={() => onLongPressPlaylist(pl)}
                 style={{width: widthPercentageToDP(33) - 16}}
                 key={pl.encodeId}
                 onPress={() =>
@@ -252,6 +271,10 @@ const Playlist = () => {
           )}
         </Animated.View>
       )}
+      <PlaylistManagerBottomSheet
+        playlist={selectedPlaylistId}
+        ref={playlistManagerRef}
+      />
     </ScrollView>
   );
 };

@@ -1,32 +1,33 @@
-import {View, Text, TouchableOpacity, Alert} from 'react-native';
+import {View, Text, TouchableOpacity, Alert, ToastAndroid} from 'react-native';
 import React from 'react';
 import useThemeStore from '../../store/themeStore';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import {TextInput} from 'react-native-gesture-handler';
 import {useNavigation} from '@react-navigation/native';
-import {DEFAULT_IMG} from '../../constants';
-import {createPlaylist} from '../../service/firebase';
-const CreatePlaylist = () => {
+import {updatePlaylist} from '../../service/firebase';
+
+const EditPlaylist = ({route}: any) => {
+  const {playlist} = route.params;
+
   const {COLOR} = useThemeStore();
 
   const navigation = useNavigation<any>();
 
-  const [playlistName, setPlaylistName] = React.useState('');
+  const [playlistName, setPlaylistName] = React.useState(playlist.title);
 
   const handleCreatePlaylist = async () => {
     if (playlistName.trim().length === 0) {
       Alert.alert('Thất bại', 'Vui lòng đặt tên cho playlist');
     } else {
-      const playlist = {
-        encodeId: Math.random().toString(36).substring(3),
+      const playlistUpdate = {
+        ...playlist,
         title: playlistName,
-        thumbnail: DEFAULT_IMG,
-        songs: [],
       };
+      console.log(playlistUpdate);
       try {
-        await createPlaylist(playlist).then(() => {
-          navigation.goBack();
-        });
+        await updatePlaylist(playlistUpdate);
+        navigation.goBack();
+        ToastAndroid.show('Cập nhật playlist thành công', ToastAndroid.SHORT);
       } catch (error) {
         Alert.alert('Thất bại', 'Có lỗi xảy ra vui lòng thử lại sau');
       }
@@ -45,7 +46,7 @@ const CreatePlaylist = () => {
             fontSize: wp(6),
             color: COLOR.TEXT_PRIMARY,
           }}>
-          Đặt tên cho playlist của bạn
+          Sửa tên cho playlist của bạn
         </Text>
         <TextInput
           value={playlistName}
@@ -93,7 +94,7 @@ const CreatePlaylist = () => {
                 fontSize: wp(4.5),
                 color: COLOR.TEXT_PRIMARY,
               }}>
-              Tạo
+              Cập nhật
             </Text>
           </TouchableOpacity>
         </View>
@@ -102,4 +103,4 @@ const CreatePlaylist = () => {
   );
 };
 
-export default CreatePlaylist;
+export default EditPlaylist;

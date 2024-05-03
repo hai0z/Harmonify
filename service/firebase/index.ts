@@ -120,3 +120,24 @@ export const removeSongFromPlaylist = async (playlistId: string, song: any) => {
     console.log(err.message);
   }
 }
+
+export const deletePlaylist = async (playlistId: string) => {
+  try {
+    const user = auth.currentUser?.uid;
+    const docRef = doc(db, `users/${user}/myPlaylists`, playlistId);
+    await deleteDoc(docRef);
+  } catch (err: any) {
+    console.log(err.message);
+  }
+}
+export const updatePlaylist = async (playlist: any) => {
+  try {
+    const user = auth.currentUser?.uid;
+    const docRef = doc(db, `users/${user}/myPlaylists`, playlist.encodeId);
+    await updateDoc(docRef, {
+      ...playlist,
+    });
+  } catch (err: any) {
+    console.log(err.message);
+  }
+}

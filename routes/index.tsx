@@ -42,6 +42,7 @@ import useInternetState from '../hooks/useInternetState';
 import {widthPercentageToDP} from 'react-native-responsive-screen';
 import CreatePlaylist from '../screens/createPlaylist/CreatePlaylist';
 import AddToPlaylist from '../screens/createPlaylist/AddToPlaylist';
+import EditPlaylist from '../screens/createPlaylist/EditPlaylist';
 export type HomeStackParamsList = {
   Home: undefined;
   Search: undefined;
@@ -65,6 +66,7 @@ export type HomeStackParamsList = {
   CreatePlaylist: undefined;
   AddToPlaylist: undefined;
   PlaylistStack: undefined;
+  EditPlaylist: undefined;
 };
 const Stack = createNativeStackNavigator<HomeStackParamsList>();
 const LibStack = createNativeStackNavigator();
@@ -297,6 +299,7 @@ const CreatePlaylistStack = () => {
         component={AddToPlaylist}
         options={{animation: 'slide_from_bottom'}}
       />
+      <Stack.Screen name="EditPlaylist" component={EditPlaylist} />
     </Stack.Navigator>
   );
 };
