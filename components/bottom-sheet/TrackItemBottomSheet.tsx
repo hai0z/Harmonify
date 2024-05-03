@@ -167,8 +167,8 @@ const TrackItemBottomSheet = (props: Props) => {
                 params: {song: data},
               });
             }}>
-            <MaterialIcons
-              name="add"
+            <Feather
+              name="plus-circle"
               size={24}
               color={`${COLOR.TEXT_PRIMARY}90`}
             />
@@ -204,7 +204,7 @@ const TrackItemBottomSheet = (props: Props) => {
               dismiss();
             }}>
             <FontAwesome5
-              name="user"
+              name="user-circle"
               size={24}
               color={`${COLOR.TEXT_PRIMARY}90`}
             />
@@ -257,7 +257,7 @@ const TrackItemBottomSheet = (props: Props) => {
               downloadFile(data);
             }}>
             <Feather
-              name="download"
+              name="arrow-down-circle"
               size={24}
               color={`${COLOR.TEXT_PRIMARY}90`}
             />

@@ -62,7 +62,6 @@ const MiniPlayer = () => {
 
   // useEffect(() => {
   //   (async () => {
-  //     console.log(lastPosition);
   //     await TrackPlayer.seekTo(lastPosition);
   //   })();
   // }, []);
@@ -184,7 +183,7 @@ const MiniPlayer = () => {
             marginHorizontal: 8,
             bottom: 1.5,
             borderRadius: 2.5,
-            backgroundColor: COLOR.isDark ? '#ffffff50' : '#00000025',
+            backgroundColor: COLOR.isDark ? '#ffffff50' : '#00000020',
             zIndex: 2,
           }}>
           <View

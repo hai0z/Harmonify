@@ -54,7 +54,6 @@ const ArtistSong = ({route}: any) => {
     () => Math.random().toString(36).substring(7),
     [data?.length],
   );
-  console.log(playlistId);
   useEffect(() => {
     setLoading(true);
     setData([]);

@@ -309,11 +309,19 @@ const CreatePlaylistStack = () => {
 };
 function App() {
   const {isLogin} = useAuth();
+  const {COLOR} = useThemeStore();
+  const defaultTheme = {
+    dark: COLOR.isDark,
+    colors: {
+      ...DefaultTheme.colors,
+      background: COLOR.BACKGROUND,
+    },
+  };
   useEffect(() => {
     SplashScreen.hide();
   }, []);
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={defaultTheme}>
       <Stack.Navigator screenOptions={{headerShown: false}}>
         {isLogin ? (
           <>

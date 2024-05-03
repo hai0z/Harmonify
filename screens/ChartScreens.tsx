@@ -277,7 +277,6 @@ const ChartHeader = React.memo(({data, handlePlaySong}: any) => {
   );
 });
 const ChartItem = React.memo(({item, index, onPlay}: any) => {
-  console.log('chart item');
   const COLOR = useThemeStore(state => state.COLOR);
 
   return (

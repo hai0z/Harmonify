@@ -3,26 +3,6 @@
 
 var rn_bridge = require('rn-bridge');
 const {ZingMp3} = require('zingmp3-api-full');
-const express = require('express');
-
-const app = express();
-
-app.get('/getArtist/:name', async (req, res) => {
-  const name = req.params.name;
-  if (!name) return;
-  const data = await ZingMp3.getArtist(name);
-  return res.json(data.data);
-});
-app.get('/getDetailPlaylist/:id', async (req, res) => {
-  const id = req.params.id;
-  if (!id) return;
-  const data = await ZingMp3.getDetailPlaylist(id);
-  return res.json(data.data);
-});
-
-app.listen(3000, () => {
-  console.log('Example app listening on port 3000!');
-});
 
 rn_bridge.channel.on('home', async () => {
   const data = await ZingMp3.getHome();

@@ -67,7 +67,6 @@ const PlaylistDetail = ({route}: {route: any}) => {
         },
       });
       getColors(data.thumbnail).then((res: any) => {
-        console.log(res);
         setColor(res);
       });
       setLoading(false);

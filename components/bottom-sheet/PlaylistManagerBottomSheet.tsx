@@ -21,6 +21,8 @@ import RenderPlaylistThumbnail from '../../screens/library/components/RenderPlay
 import getThumbnail from '../../utils/getThumnail';
 import {deletePlaylist} from '../../service/firebase';
 import {useNavigation} from '@react-navigation/native';
+import Feather from 'react-native-vector-icons/Feather';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 interface Props {
   playlist: any | null;
 }
@@ -30,7 +32,7 @@ const PlaylistManagerBottomSheet = forwardRef(
 
     const {playlist} = props;
 
-    const snapPoints = useMemo(() => ['35%'], []);
+    const snapPoints = useMemo(() => ['30%'], []);
 
     const {dismiss} = useBottomSheetModal();
 
@@ -125,7 +127,12 @@ const PlaylistManagerBottomSheet = forwardRef(
                 });
                 dismiss();
               }}
-              className="w-full flex-row items-center justify-between py-3">
+              className="w-full flex-row items-center py-3 gap-2">
+              <MaterialCommunityIcons
+                name="pencil-circle-outline"
+                size={24}
+                color={`${COLOR.TEXT_PRIMARY}90`}
+              />
               <Text style={{color: COLOR.TEXT_PRIMARY}} className="font-bold">
                 Sửa
               </Text>
@@ -133,7 +140,12 @@ const PlaylistManagerBottomSheet = forwardRef(
 
             <TouchableOpacity
               onPress={handleDeletePlaylist}
-              className="w-full flex-row items-center justify-between  py-3">
+              className="w-full flex-row items-center gap-2  py-3">
+              <Feather
+                name="x-circle"
+                size={24}
+                color={`${COLOR.TEXT_PRIMARY}90`}
+              />
               <Text style={{color: COLOR.TEXT_PRIMARY}} className="font-bold">
                 Xoá
               </Text>

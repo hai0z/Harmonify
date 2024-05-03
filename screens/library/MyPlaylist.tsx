@@ -8,7 +8,7 @@ import {
   Text,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import React, {useCallback, useContext, useMemo} from 'react';
+import React, {useCallback, useContext, useEffect, useMemo} from 'react';
 import {LinearGradient} from 'react-native-linear-gradient';
 import {FlashList} from '@shopify/flash-list';
 import {handlePlay} from '../../service/trackPlayerService';
@@ -20,6 +20,10 @@ import useThemeStore from '../../store/themeStore';
 import {useUserStore} from '../../store/userStore';
 import getThumbnail from '../../utils/getThumnail';
 import RenderPlaylistThumbnail from './components/RenderPlaylistThumnail';
+import RAnimated, {useSharedValue, withTiming} from 'react-native-reanimated';
+import {getColors} from 'react-native-image-colors';
+import useDarkColor from '../../hooks/useDarkColor';
+import tinycolor from 'tinycolor2';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -47,8 +51,38 @@ const MyPlaylist = ({route}: {route: any}) => {
   const {myPlaylists} = useUserStore();
 
   const data = myPlaylists.find((pl: any) => pl.encodeId == playlistId);
-  console.log({data});
 
+  const [color, setColor] = React.useState<any>(null);
+
+  const bgAnimated = useSharedValue('transparent');
+
+  useEffect(() => {
+    (async () => {
+      getColors(
+        data.songs.at(Math.floor(Math.random() * data.songs.length - 1))
+          .thumbnail,
+      ).then((res: any) => {
+        setColor(res);
+      });
+    })();
+  }, []);
+
+  useEffect(() => {
+    if (color) {
+      bgAnimated.value = withTiming(
+        `${
+          COLOR.isDark
+            ? useDarkColor(color.dominant, 35)
+            : tinycolor(color.dominant).isDark()
+            ? tinycolor(color.dominant).lighten(30)
+            : tinycolor(color.dominant).darken()
+        }95`,
+        {
+          duration: 750,
+        },
+      );
+    }
+  }, [color, data?.songs.length]);
   const headerColor = useMemo(
     () =>
       scrollY.interpolate({
@@ -56,7 +90,7 @@ const MyPlaylist = ({route}: {route: any}) => {
         outputRange: ['transparent', COLOR.BACKGROUND],
         extrapolate: 'clamp',
       }),
-    [scrollY, COLOR],
+    [scrollY, COLOR, color],
   );
 
   const {showBottomSheet} = useContext(PlayerContext);
@@ -128,13 +162,13 @@ const MyPlaylist = ({route}: {route: any}) => {
                   colors={['transparent', COLOR.BACKGROUND]}
                   className="absolute bottom-0 h-40 left-0 right-0 z-50"
                 />
-                <LinearGradient
-                  colors={[COLOR.PRIMARY, 'transparent']}
+                <RAnimated.View
                   style={[
                     StyleSheet.absoluteFill,
                     {
                       width: SCREEN_WIDTH,
                       height: SCREEN_WIDTH * 0.8,
+                      backgroundColor: bgAnimated,
                     },
                   ]}
                 />

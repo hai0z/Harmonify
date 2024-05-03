@@ -115,7 +115,6 @@ const handlePlaySongInLocal = async (song: any, playlist: IPlaylist = {
   const index = playlist.items.findIndex(
     (item: any) => item?.encodeId === song?.encodeId,
   )
-  console.log(index);
   await TrackPlayer.skip(index).finally(() => {
     usePlayerStore.getState().setisLoadingTrack(false);
   })

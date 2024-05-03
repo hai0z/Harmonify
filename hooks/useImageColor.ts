@@ -11,7 +11,7 @@ const useImageColor = () => {
     ? useDarkColor(color.dominant!, 35)
     : tinycolor(color.dominant!).isDark()
       ? tinycolor(color.dominant!).lighten(40).toString()
-      : tinycolor(color.dominant!).darken(5).toString();
+      : tinycolor(color.dominant!).darken(10).toString();
 
   const vibrantColor = COLOR.isDark
     ? color.vibrant === '#0098DB'
@@ -23,7 +23,7 @@ const useImageColor = () => {
       ? tinycolor(color.average).isDark()
         ? tinycolor(color.average).lighten(35).toString()
         : tinycolor(color.average).darken(5).toString()
-      : tinycolor(color.vibrant).lighten(10).toString();
+      : tinycolor(color.vibrant).lighten(15).toString();
 
   return {
     dominantColor,

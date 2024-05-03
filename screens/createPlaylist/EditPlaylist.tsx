@@ -23,7 +23,6 @@ const EditPlaylist = ({route}: any) => {
         ...playlist,
         title: playlistName,
       };
-      console.log(playlistUpdate);
       try {
         await updatePlaylist(playlistUpdate);
         navigation.goBack();

@@ -36,7 +36,6 @@ const Login = () => {
       const {
         user: {uid, photoURL, displayName, email: userEmail},
       } = userCredential;
-      console.log(getAdditionalUserInfo(userCredential));
       if (getAdditionalUserInfo(userCredential)?.isNewUser) {
         const userRef = doc(db, 'users', uid);
         await setDoc(userRef, {
@@ -47,7 +46,6 @@ const Login = () => {
         });
       }
     } catch (error) {
-      console.log(error);
       Alert.alert('Thất bại', 'Sai Email hoặc Mật khẩu');
     }
   };

@@ -50,7 +50,6 @@ const Login = () => {
         });
       }
     } catch (error) {
-      console.log(error);
       Alert.alert('Thất bại', 'có lỗi xảy ra vui lòng thử lại sau');
     }
   };

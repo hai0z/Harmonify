@@ -10,7 +10,7 @@ import useThemeStore from '../../../store/themeStore';
 
 const TrackSlider = () => {
   const COLOR = useThemeStore(state => state.COLOR);
-  const progess = useProgress(500);
+  const progess = useProgress(1000);
 
   const track = useActiveTrack();
 
