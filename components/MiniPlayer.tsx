@@ -29,9 +29,7 @@ const MiniPlayer = () => {
 
   const keyboardVisible = useKeyBoardStatus();
 
-  const {color, currentSong, isPlayFromLocal, isLoadingTrack} = usePlayerStore(
-    state => state,
-  );
+  const {color, currentSong, isPlayFromLocal} = usePlayerStore(state => state);
 
   const {COLOR} = useThemeStore(state => state);
 
@@ -41,7 +39,7 @@ const MiniPlayer = () => {
 
   const {dominantColor: gradientColor} = useImageColor();
 
-  const bgAnimated = useSharedValue(`transparent`);
+  const bgAnimated = useSharedValue('#494949');
 
   const togglePlay = useCallback(async (state: State | undefined) => {
     if (state !== State.Playing) {
@@ -60,14 +58,7 @@ const MiniPlayer = () => {
   };
   useEffect(() => {
     runOnUI(bgAnimatedFn)();
-  }, [
-    color.dominant,
-    gradientColor,
-    keyboardVisible,
-    COLOR,
-    isLoadingTrack,
-    currentSong?.id,
-  ]);
+  }, [color.dominant, gradientColor, keyboardVisible, COLOR, currentSong?.id]);
 
   // useEffect(() => {
   //   (async () => {

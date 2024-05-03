@@ -1,4 +1,4 @@
-import {NavigationContainer} from '@react-navigation/native';
+import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomeScreens from '../screens/home/HomeScreens';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -89,7 +89,11 @@ const LibraryStack = () => {
   return (
     <LibStack.Navigator screenOptions={{headerShown: false}}>
       <LibStack.Screen name="Library" component={LibrarySrceens} />
-      <LibStack.Screen name="MyPlaylist" component={MyPlaylist} />
+      <LibStack.Screen
+        name="MyPlaylist"
+        component={MyPlaylist}
+        options={{animation: 'ios'}}
+      />
       <LibStack.Screen
         name="LocalSong"
         component={LocalSong}

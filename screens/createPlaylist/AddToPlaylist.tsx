@@ -101,7 +101,7 @@ const AddToPlaylist = ({route}: {route: any}) => {
               className="font-bold">
               Đã lưu vào
             </Text>
-            {playlistIncluded.map((pl, index) => (
+            {playlistIncluded.map(pl => (
               <TouchableOpacity
                 key={pl.encodeId}
                 activeOpacity={1}
@@ -140,18 +140,19 @@ const AddToPlaylist = ({route}: {route: any}) => {
           </View>
         )}
 
-        {playListNotIncluded.length > 0 &&
-          playListNotIncluded.map((pl, index) => (
-            <View key={pl.encodeId}>
-              <Text
-                style={{
-                  color: COLOR.TEXT_PRIMARY,
-                  fontSize: widthPercentageToDP(4),
-                }}
-                className="font-bold">
-                Danh sách phát của bạn
-              </Text>
+        {playListNotIncluded.length > 0 && (
+          <View>
+            <Text
+              style={{
+                color: COLOR.TEXT_PRIMARY,
+                fontSize: widthPercentageToDP(4),
+              }}
+              className="font-bold">
+              Danh sách phát của bạn
+            </Text>
+            {playListNotIncluded.map(pl => (
               <TouchableOpacity
+                key={pl.encodeId}
                 onPress={() => handleSelectPlaylist(pl.encodeId)}
                 activeOpacity={0.8}
                 className="flex-row items-center mt-4">
@@ -187,8 +188,9 @@ const AddToPlaylist = ({route}: {route: any}) => {
                   />
                 </View>
               </TouchableOpacity>
-            </View>
-          ))}
+            ))}
+          </View>
+        )}
         <View className="h-96" />
       </ScrollView>
       <View className="items-center justify-end py-4">
