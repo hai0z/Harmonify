@@ -177,7 +177,7 @@ const TrackItemBottomSheet = (props: Props) => {
               Thêm vào danh sách phát
             </Text>
           </TouchableOpacity>
-          {data.playlistId && (
+          {data?.playlistId && (
             <TouchableOpacity
               className="w-full py-3 flex flex-row items-center  mb-3 gap-2"
               onPress={async () => {

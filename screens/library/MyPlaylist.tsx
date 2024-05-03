@@ -23,6 +23,17 @@ import RenderPlaylistThumbnail from './components/RenderPlaylistThumnail';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
+const caculateTotalTime = (playlistData: any) => {
+  let total = 0;
+  playlistData?.songs.forEach((item: any) => {
+    total += item.duration;
+  });
+  const hours = Math.floor(total / 3600);
+  const remainingSeconds = total % 3600;
+  const minutes = Math.floor(remainingSeconds / 60);
+
+  return {hours, minutes};
+};
 const MyPlaylist = ({route}: {route: any}) => {
   const scrollY = React.useRef(new Animated.Value(0)).current;
   const {playlistId} = route.params;
@@ -151,6 +162,17 @@ const MyPlaylist = ({route}: {route: any}) => {
                   className=" text-center text-3xl font-bold">
                   {data?.title}
                 </Animated.Text>
+              </View>
+              <View className="flex flex-row items-center py-4 px-4">
+                <Text style={{color: COLOR.TEXT_PRIMARY}}>
+                  {data?.songs.length} bài hát{' • '}
+                </Text>
+                <Text style={{color: COLOR.TEXT_PRIMARY}}>
+                  {caculateTotalTime(data).hours > 0 && (
+                    <Text>{caculateTotalTime(data).hours} giờ </Text>
+                  )}
+                  {caculateTotalTime(data).minutes} phút
+                </Text>
               </View>
             </View>
           );

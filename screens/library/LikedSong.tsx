@@ -4,6 +4,7 @@ import {
   StyleSheet,
   Dimensions,
   Animated,
+  Text,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import React, {useCallback, useContext, useMemo} from 'react';
@@ -18,6 +19,17 @@ import {PlayerContext} from '../../context/PlayerProvider';
 import useThemeStore from '../../store/themeStore';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
+const caculateTotalTime = (playlistData: any) => {
+  let total = 0;
+  playlistData?.forEach((item: any) => {
+    total += item.duration;
+  });
+  const hours = Math.floor(total / 3600);
+  const remainingSeconds = total % 3600;
+  const minutes = Math.floor(remainingSeconds / 60);
+
+  return {hours, minutes};
+};
 const LikedSong = () => {
   const scrollY = React.useRef(new Animated.Value(0)).current;
 
@@ -131,6 +143,17 @@ const LikedSong = () => {
                   className=" text-center text-3xl font-bold">
                   {'Bài hát đã thích'}
                 </Animated.Text>
+              </View>
+              <View className="flex flex-row items-center py-4 px-4">
+                <Text style={{color: COLOR.TEXT_PRIMARY}}>
+                  {likedSong.length} bài hát{' • '}
+                </Text>
+                <Text style={{color: COLOR.TEXT_PRIMARY}}>
+                  {caculateTotalTime(likedSong).hours > 0 && (
+                    <Text>{caculateTotalTime(likedSong).hours} giờ </Text>
+                  )}
+                  {caculateTotalTime(likedSong).minutes} phút
+                </Text>
               </View>
             </View>
           );
