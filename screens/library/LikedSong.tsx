@@ -175,7 +175,7 @@ const LikedSong = () => {
         )}
         ListHeaderComponent={
           !isSearching ? (
-            <RAnimated.View exiting={SlideOutUp.duration(300)}>
+            <View>
               <View
                 className="flex justify-end items-center pb-4"
                 style={{height: SCREEN_WIDTH * 0.8}}>
@@ -223,7 +223,7 @@ const LikedSong = () => {
                   {caculateTotalTime(likedSong).minutes} phút
                 </Text>
               </View>
-            </RAnimated.View>
+            </View>
           ) : (
             <View className="h-28" />
           )

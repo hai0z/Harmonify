@@ -6,6 +6,7 @@ import {
   Animated,
   Image,
   Text,
+  TextInput,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import React, {useCallback, useContext, useEffect, useMemo} from 'react';
@@ -24,6 +25,8 @@ import RAnimated, {useSharedValue, withTiming} from 'react-native-reanimated';
 import {getColors} from 'react-native-image-colors';
 import useDarkColor from '../../hooks/useDarkColor';
 import tinycolor from 'tinycolor2';
+import stringToSlug from '../../utils/removeSign';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -55,6 +58,31 @@ const MyPlaylist = ({route}: {route: any}) => {
   const [color, setColor] = React.useState<any>(null);
 
   const bgAnimated = useSharedValue('transparent');
+  const [searchText, setSearchText] = React.useState<string>('');
+
+  const [searchData, setSearchData] = React.useState<any>(data.songs);
+
+  const [isSearching, setIsSearching] = React.useState<boolean>(false);
+
+  const flashListRef = React.useRef<FlashList<any>>(null);
+
+  useEffect(() => {
+    flashListRef.current?.scrollToOffset({animated: true, offset: 0});
+  }, [isSearching, searchText]);
+
+  const handleSearch = (text: string) => {
+    setSearchText(text);
+    if (text) {
+      const filteredData = data.songs.filter((item: any) => {
+        return stringToSlug(item.title)
+          .toLowerCase()
+          .includes(stringToSlug(text).toLowerCase());
+      });
+      setSearchData(filteredData);
+    } else {
+      setSearchData(data.songs);
+    }
+  };
 
   useEffect(() => {
     (async () => {
@@ -143,17 +171,49 @@ const MyPlaylist = ({route}: {route: any}) => {
             {data?.title}
           </Animated.Text>
         </View>
-        <View className="w-10"></View>
+        <TouchableOpacity onPress={() => setIsSearching(true)}>
+          <AntDesign name="search1" size={24} color={COLOR.TEXT_PRIMARY} />
+        </TouchableOpacity>
       </Animated.View>
+      {isSearching && (
+        <View
+          style={{backgroundColor: COLOR.BACKGROUND}}
+          className="absolute top-0 left-0 right-0 z-30 h-20 pt-[35px]  items-center justify-between flex-row px-6">
+          <TouchableOpacity
+            onPress={() => {
+              setIsSearching(false);
+              setSearchText('');
+              setSearchData(data.songs);
+            }}>
+            <Ionicons name="arrow-back" size={24} color={COLOR.TEXT_PRIMARY} />
+          </TouchableOpacity>
+          <View className="justify-center items-center p-1 flex-1 ml-2">
+            <TextInput
+              value={searchText}
+              onChangeText={text => handleSearch(text)}
+              placeholder="Nhập tên bài hát..."
+              className="w-full rounded-md p-2"
+              style={{
+                color: COLOR.TEXT_PRIMARY,
+                backgroundColor: tinycolor(COLOR.BACKGROUND)
+                  .darken(5)
+                  .toString(),
+              }}
+            />
+          </View>
+          <View className="w-4" />
+        </View>
+      )}
       <FlashList
+        ref={flashListRef}
         showsVerticalScrollIndicator={false}
         scrollEventThrottle={32}
         onScroll={Animated.event(
           [{nativeEvent: {contentOffset: {y: scrollY}}}],
           {useNativeDriver: false},
         )}
-        ListHeaderComponent={React.memo(() => {
-          return (
+        ListHeaderComponent={
+          !isSearching ? (
             <View>
               <View
                 className="flex justify-end items-center pb-4"
@@ -209,19 +269,16 @@ const MyPlaylist = ({route}: {route: any}) => {
                 </Text>
               </View>
             </View>
-          );
-        })}
+          ) : (
+            <View className="h-28" />
+          )
+        }
         contentContainerStyle={{
           paddingBottom: 200,
         }}
-        ListEmptyComponent={
-          <View className="flex-1 justify-center items-center">
-            <Text>Playlist trống...</Text>
-          </View>
-        }
         ListFooterComponent={() => <View style={{height: SCREEN_WIDTH}} />}
         nestedScrollEnabled
-        data={data?.songs}
+        data={searchData}
         estimatedItemSize={72}
         keyExtractor={(item: any, index) => `${item.encodeId}_${index}`}
         renderItem={({item}: any) => {

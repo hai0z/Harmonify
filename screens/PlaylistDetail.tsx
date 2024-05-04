@@ -1,12 +1,11 @@
 import {
   View,
   TouchableOpacity,
-  StyleSheet,
   Dimensions,
-  ActivityIndicator,
   Text,
   Image,
   Animated,
+  TextInput,
 } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -31,6 +30,7 @@ import RAnimated from 'react-native-reanimated';
 import tinycolor from 'tinycolor2';
 import useDarkColor from '../hooks/useDarkColor';
 import Loading from '../components/Loading';
+import stringToSlug from '../utils/removeSign';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const PlaylistDetail = ({route}: {route: any}) => {
@@ -55,6 +55,32 @@ const PlaylistDetail = ({route}: {route: any}) => {
   const [color, setColor] = React.useState<any>(null);
   const bgAnimated = useSharedValue('transparent');
 
+  const [searchText, setSearchText] = React.useState<string>('');
+
+  const [searchData, setSearchData] = React.useState<any>([]);
+
+  const [isSearching, setIsSearching] = React.useState<boolean>(false);
+
+  const flashListRef = React.useRef<FlashList<any>>(null);
+
+  useEffect(() => {
+    flashListRef.current?.scrollToOffset({animated: true, offset: 0});
+  }, [isSearching, searchText]);
+
+  const handleSearch = (text: string) => {
+    setSearchText(text);
+    if (text) {
+      const filteredData = playlistData.song.items.filter((item: any) => {
+        return stringToSlug(item.title)
+          .toLowerCase()
+          .includes(stringToSlug(text).toLowerCase());
+      });
+      setSearchData(filteredData);
+    } else {
+      setSearchData(playlistData);
+    }
+  };
+
   useEffect(() => {
     setLoading(true);
     nodejs.channel.addListener('getDetailPlaylist', (data: any) => {
@@ -66,6 +92,9 @@ const PlaylistDetail = ({route}: {route: any}) => {
           ),
         },
       });
+      setSearchData(
+        data.song.items.filter((item: any) => item.streamingStatus === 1),
+      );
       getColors(data.thumbnail).then((res: any) => {
         setColor(res);
       });
@@ -91,44 +120,27 @@ const PlaylistDetail = ({route}: {route: any}) => {
     }
   }, [color]);
 
-  const headerColor = useMemo(
-    () =>
-      scrollY.interpolate({
-        inputRange: [SCREEN_WIDTH * 0.8, SCREEN_WIDTH * 0.8],
-        outputRange: ['transparent', COLOR.BACKGROUND],
-        extrapolate: 'clamp',
-      }),
-    [scrollY],
-  );
+  const headerColor = scrollY.interpolate({
+    inputRange: [SCREEN_WIDTH * 0.8, SCREEN_WIDTH * 0.8],
+    outputRange: ['transparent', COLOR.BACKGROUND],
+    extrapolate: 'clamp',
+  });
+  const headerTitleOpacity = scrollY.interpolate({
+    inputRange: [0, SCREEN_WIDTH * 0.6, SCREEN_WIDTH * 0.8],
+    outputRange: [0, 0, 1],
+    extrapolate: 'clamp',
+  });
 
-  const headerTitleOpacity = useMemo(
-    () =>
-      scrollY.interpolate({
-        inputRange: [0, SCREEN_WIDTH * 0.6, SCREEN_WIDTH * 0.8],
-        outputRange: [0, 0, 1],
-        extrapolate: 'clamp',
-      }),
-    [scrollY],
-  );
-
-  const titleOpacity = useMemo(
-    () =>
-      scrollY.interpolate({
-        inputRange: [0, SCREEN_WIDTH * 0.4, SCREEN_WIDTH * 0.6],
-        outputRange: [1, 0.5, 0],
-        extrapolate: 'clamp',
-      }),
-    [scrollY],
-  );
-  const imgScale = useMemo(
-    () =>
-      scrollY.interpolate({
-        inputRange: [0, SCREEN_WIDTH * 0.4, SCREEN_WIDTH * 0.6],
-        outputRange: [1, 0.6, 0.4],
-        extrapolate: 'clamp',
-      }),
-    [scrollY],
-  );
+  const titleOpacity = scrollY.interpolate({
+    inputRange: [0, SCREEN_WIDTH * 0.4, SCREEN_WIDTH * 0.6],
+    outputRange: [1, 0.5, 0],
+    extrapolate: 'clamp',
+  });
+  const imgScale = scrollY.interpolate({
+    inputRange: [0, SCREEN_WIDTH * 0.4, SCREEN_WIDTH * 0.6],
+    outputRange: [1, 0.6, 0.4],
+    extrapolate: 'clamp',
+  });
   const handlePlaySong = (song: any) => {
     handlePlay(song, {
       id: data.playListId,
@@ -148,9 +160,9 @@ const PlaylistDetail = ({route}: {route: any}) => {
     const hours = Math.floor(total / 3600);
     const remainingSeconds = total % 3600;
     const minutes = Math.floor(remainingSeconds / 60);
-
     return {hours, minutes};
   };
+
   if (loading)
     return (
       <View
@@ -180,8 +192,39 @@ const PlaylistDetail = ({route}: {route: any}) => {
             {playlistData?.title}
           </Animated.Text>
         </View>
-        <View className="w-10" />
+        <TouchableOpacity onPress={() => setIsSearching(true)}>
+          <AntDesign name="search1" size={24} color={COLOR.TEXT_PRIMARY} />
+        </TouchableOpacity>
       </Animated.View>
+      {isSearching && (
+        <View
+          style={{backgroundColor: COLOR.BACKGROUND}}
+          className="absolute top-0 left-0 right-0 z-30 h-20 pt-[35px]  items-center justify-between flex-row px-6">
+          <TouchableOpacity
+            onPress={() => {
+              setIsSearching(false);
+              setSearchText('');
+              setSearchData(playlistData?.song.items);
+            }}>
+            <Ionicons name="arrow-back" size={24} color={COLOR.TEXT_PRIMARY} />
+          </TouchableOpacity>
+          <View className="justify-center items-center p-1 flex-1 ml-2">
+            <TextInput
+              value={searchText}
+              onChangeText={text => handleSearch(text)}
+              placeholder="Nhập tên bài hát..."
+              className="w-full rounded-md p-2"
+              style={{
+                color: COLOR.TEXT_PRIMARY,
+                backgroundColor: tinycolor(COLOR.BACKGROUND)
+                  .darken(5)
+                  .toString(),
+              }}
+            />
+          </View>
+          <View className="w-4" />
+        </View>
+      )}
       <FlashList
         showsVerticalScrollIndicator={false}
         scrollEventThrottle={32}
@@ -189,8 +232,8 @@ const PlaylistDetail = ({route}: {route: any}) => {
           [{nativeEvent: {contentOffset: {y: scrollY}}}],
           {useNativeDriver: false},
         )}
-        ListHeaderComponent={React.memo(() => {
-          return (
+        ListHeaderComponent={
+          !isSearching ? (
             <View>
               <View
                 className="flex justify-end items-center pb-4"
@@ -301,13 +344,16 @@ const PlaylistDetail = ({route}: {route: any}) => {
                 </View>
               </View>
             </View>
-          );
-        })}
+          ) : (
+            <View className="h-28" />
+          )
+        }
         contentContainerStyle={{
           paddingBottom: 200,
         }}
         nestedScrollEnabled
-        data={playlistData?.song?.items}
+        ref={flashListRef}
+        data={searchData}
         estimatedItemSize={72}
         keyExtractor={(item: any, index) => `${item.encodeId}_${index}`}
         renderItem={({item, index}: any) => {
