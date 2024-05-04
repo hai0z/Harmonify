@@ -191,6 +191,7 @@ const ArtistSong = ({route}: any) => {
               setIsSearching(false);
               setSearchText('');
               setSearchData(data);
+              scrollY.setValue(0);
             }}>
             <Ionicons name="arrow-back" size={24} color={COLOR.TEXT_PRIMARY} />
           </TouchableOpacity>

@@ -110,7 +110,7 @@ const MyPlaylist = ({route}: {route: any}) => {
         },
       );
     }
-  }, [color, data?.songs.length]);
+  }, [color, data?.songs.length, isSearching]);
   const headerColor = useMemo(
     () =>
       scrollY.interpolate({
@@ -184,6 +184,7 @@ const MyPlaylist = ({route}: {route: any}) => {
               setIsSearching(false);
               setSearchText('');
               setSearchData(data.songs);
+              scrollY.setValue(0);
             }}>
             <Ionicons name="arrow-back" size={24} color={COLOR.TEXT_PRIMARY} />
           </TouchableOpacity>

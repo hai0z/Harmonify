@@ -77,7 +77,7 @@ const PlaylistDetail = ({route}: {route: any}) => {
       });
       setSearchData(filteredData);
     } else {
-      setSearchData(playlistData);
+      setSearchData(playlistData?.song.items);
     }
   };
 
@@ -118,7 +118,7 @@ const PlaylistDetail = ({route}: {route: any}) => {
         },
       );
     }
-  }, [color]);
+  }, [color, isSearching]);
 
   const headerColor = scrollY.interpolate({
     inputRange: [SCREEN_WIDTH * 0.8, SCREEN_WIDTH * 0.8],
@@ -205,6 +205,7 @@ const PlaylistDetail = ({route}: {route: any}) => {
               setIsSearching(false);
               setSearchText('');
               setSearchData(playlistData?.song.items);
+              scrollY.setValue(0);
             }}>
             <Ionicons name="arrow-back" size={24} color={COLOR.TEXT_PRIMARY} />
           </TouchableOpacity>

@@ -145,6 +145,7 @@ const LikedSong = () => {
               setIsSearching(false);
               setSearchText('');
               setSearchData(likedSong);
+              scrollY.setValue(0);
             }}>
             <Ionicons name="arrow-back" size={24} color={COLOR.TEXT_PRIMARY} />
           </TouchableOpacity>

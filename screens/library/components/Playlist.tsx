@@ -9,7 +9,7 @@ import {useUserStore} from '../../../store/userStore';
 import {widthPercentageToDP} from 'react-native-responsive-screen';
 import useLibraryStore from '../../../store/useLibraryStore';
 import getThumbnail from '../../../utils/getThumnail';
-import Animated, {SlideInDown, SlideInRight} from 'react-native-reanimated';
+import Animated, {FadeIn} from 'react-native-reanimated';
 import RenderPlaylistThumbnail from './RenderPlaylistThumnail';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import PlaylistManagerBottomSheet from '../../../components/bottom-sheet/PlaylistManagerBottomSheet';
@@ -40,8 +40,7 @@ const Playlist = () => {
       showsVerticalScrollIndicator={false}
       nestedScrollEnabled>
       {viewType === 'list' ? (
-        <Animated.View
-          entering={SlideInDown.duration(500).springify().damping(500)}>
+        <Animated.View entering={FadeIn.duration(500).springify()}>
           <TouchableOpacity
             onPress={() => {
               navigation.navigate('LikedSong', {
@@ -157,7 +156,7 @@ const Playlist = () => {
         </Animated.View>
       ) : (
         <Animated.View
-          entering={SlideInRight.duration(500).springify().damping(500)}
+          entering={FadeIn.duration(500).springify()}
           className="flex flex-row justify-between flex-wrap">
           <TouchableOpacity
             style={{width: widthPercentageToDP(33) - 16}}
