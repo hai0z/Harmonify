@@ -39,7 +39,9 @@ const FollowedArtist = () => {
       {viewType === 'list' ? (
         listFollowArtists.map((item: any) => {
           return (
-            <Animated.View key={item?.id} entering={FadeIn.duration(1000)}>
+            <Animated.View
+              key={item?.id}
+              entering={FadeIn.duration(500).springify()}>
               <TouchableOpacity
                 onPress={() =>
                   navigation.navigate('Artists', {

@@ -2,7 +2,6 @@ import {
   View,
   Text,
   Image,
-  ActivityIndicator,
   Dimensions,
   StyleSheet,
   Animated,

@@ -13,10 +13,8 @@ import TextTicker from 'react-native-text-ticker';
 import {MINI_PLAYER_HEIGHT, TABBAR_HEIGHT} from '../constants';
 import useThemeStore from '../store/themeStore';
 import Animated, {
-  Easing,
   FadeInUp,
   FadeOutDown,
-  runOnUI,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
@@ -29,7 +27,7 @@ const MiniPlayer = () => {
 
   const keyboardVisible = useKeyBoardStatus();
 
-  const {color, currentSong, isPlayFromLocal} = usePlayerStore(state => state);
+  const {currentSong, isPlayFromLocal} = usePlayerStore(state => state);
 
   const {COLOR} = useThemeStore(state => state);
 
@@ -49,14 +47,11 @@ const MiniPlayer = () => {
     }
   }, []);
 
-  const bgAnimatedFn = () => {
-    'worklet';
-  };
   useEffect(() => {
     bgAnimated.value = withTiming(`${gradientColor}`, {
       duration: 550,
     });
-  }, [gradientColor, keyboardVisible, currentSong?.id, keyboardVisible]);
+  }, [gradientColor, keyboardVisible, currentSong?.id]);
 
   // useEffect(() => {
   //   (async () => {

@@ -86,7 +86,14 @@ const AddToPlaylist = ({route}: {route: any}) => {
           onPress={() => navigation.navigate('CreatePlaylist')}
           className="py-3 rounded-full px-6"
           style={{backgroundColor: COLOR.PRIMARY}}>
-          <Text style={{color: COLOR.TEXT_PRIMARY}}> Danh sách phát mới</Text>
+          <Text
+            style={{
+              color: COLOR.TEXT_PRIMARY,
+              fontSize: widthPercentageToDP(4),
+              fontWeight: 'bold',
+            }}>
+            Danh sách phát mới
+          </Text>
         </TouchableOpacity>
       </View>
 
@@ -195,6 +202,7 @@ const AddToPlaylist = ({route}: {route: any}) => {
       </ScrollView>
       <View className="items-center justify-end py-4">
         <TouchableOpacity
+          activeOpacity={0.8}
           onPress={handleAddToPlaylist}
           className="py-4 rounded-full px-8"
           style={{backgroundColor: COLOR.PRIMARY}}>

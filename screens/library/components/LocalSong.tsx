@@ -26,7 +26,9 @@ const LocalSong = () => {
   return (
     <View className="mt-2 mx-4">
       {viewType === 'list' ? (
-        <Animated.View entering={FadeIn.duration(1000)} key={viewType}>
+        <Animated.View
+          entering={FadeIn.duration(500).springify()}
+          key={viewType}>
           <TouchableOpacity
             onPress={() => {
               navigation.navigate('LocalSong');
@@ -55,7 +57,9 @@ const LocalSong = () => {
           </TouchableOpacity>
         </Animated.View>
       ) : (
-        <Animated.View entering={FadeIn.duration(1000)} key={viewType}>
+        <Animated.View
+          entering={FadeIn.duration(500).springify()}
+          key={viewType}>
           <TouchableOpacity
             style={{width: widthPercentageToDP(33) - 16}}
             onPress={() => {

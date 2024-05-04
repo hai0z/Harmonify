@@ -43,21 +43,25 @@ const caculateTotalTime = (playlistData: any) => {
 };
 const MyPlaylist = ({route}: {route: any}) => {
   const scrollY = React.useRef(new Animated.Value(0)).current;
+
   const {playlistId} = route.params;
 
   const COLOR = useThemeStore(state => state.COLOR);
 
   const navigation = useNavigation<any>();
 
-  const {setPlayFrom} = usePlayerStore(state => state);
+  const setPlayFrom = usePlayerStore(state => state.setPlayFrom);
 
-  const {myPlaylists} = useUserStore();
+  const myPlaylists = useUserStore(state => state.myPlaylists);
 
-  const data = myPlaylists.find((pl: any) => pl.encodeId == playlistId);
+  const data = useMemo(() => {
+    return myPlaylists.find((item: any) => item.encodeId == playlistId);
+  }, [myPlaylists]);
 
   const [color, setColor] = React.useState<any>(null);
 
   const bgAnimated = useSharedValue('transparent');
+
   const [searchText, setSearchText] = React.useState<string>('');
 
   const [searchData, setSearchData] = React.useState<any>(data.songs);
@@ -66,6 +70,9 @@ const MyPlaylist = ({route}: {route: any}) => {
 
   const flashListRef = React.useRef<FlashList<any>>(null);
 
+  const playerContext = useContext(PlayerContext);
+
+  console.log('1');
   useEffect(() => {
     flashListRef.current?.scrollToOffset({animated: true, offset: 0});
   }, [isSearching, searchText]);
@@ -94,7 +101,6 @@ const MyPlaylist = ({route}: {route: any}) => {
       });
     })();
   }, []);
-
   useEffect(() => {
     if (color) {
       bgAnimated.value = withTiming(
@@ -110,7 +116,8 @@ const MyPlaylist = ({route}: {route: any}) => {
         },
       );
     }
-  }, [color, data?.songs.length, isSearching]);
+  }, [color, isSearching, playerContext]);
+
   const headerColor = useMemo(
     () =>
       scrollY.interpolate({
@@ -120,8 +127,6 @@ const MyPlaylist = ({route}: {route: any}) => {
       }),
     [scrollY, COLOR, color],
   );
-
-  const {showBottomSheet} = useContext(PlayerContext);
 
   const headerTitleOpacity = useMemo(
     () =>
@@ -289,7 +294,10 @@ const MyPlaylist = ({route}: {route: any}) => {
               onClick={handlePlaySong}
               isAlbum={false}
               showBottomSheet={() =>
-                showBottomSheet({...item, playlistId: data?.encodeId})
+                playerContext.showBottomSheet({
+                  ...item,
+                  playlistId: data?.encodeId,
+                })
               }
             />
           );

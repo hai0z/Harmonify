@@ -44,7 +44,7 @@ const PlaylistDetail = ({route}: {route: any}) => {
 
   const navigation = useNavigation<any>();
 
-  const {showBottomSheet} = useContext(PlayerContext);
+  const playerContext = useContext(PlayerContext);
 
   const {show} = useToastStore();
   const COLOR = useThemeStore(state => state.COLOR);
@@ -118,7 +118,7 @@ const PlaylistDetail = ({route}: {route: any}) => {
         },
       );
     }
-  }, [color, isSearching]);
+  }, [color, isSearching, playerContext]);
 
   const headerColor = scrollY.interpolate({
     inputRange: [SCREEN_WIDTH * 0.8, SCREEN_WIDTH * 0.8],
@@ -360,7 +360,7 @@ const PlaylistDetail = ({route}: {route: any}) => {
         renderItem={({item, index}: any) => {
           return (
             <TrackItem
-              showBottomSheet={showBottomSheet}
+              showBottomSheet={playerContext.showBottomSheet}
               item={item}
               index={index}
               isAlbum={playlistData.isAlbum}

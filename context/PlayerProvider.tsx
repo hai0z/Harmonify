@@ -37,7 +37,7 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
     setSleepTimer,
   } = usePlayerStore();
 
-  const {COLOR} = useThemeStore();
+  const COLOR = useThemeStore(state => state.COLOR);
 
   const getSongColors = async () => {
     if (currentSong?.artwork !== null) {
@@ -51,7 +51,7 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
-  const {setData} = useBottomSheetStore(state => state);
+  const setData = useBottomSheetStore(state => state.setData);
 
   const showBottomSheet = useCallback((item: any) => {
     bottomSheetModalRef.current?.present();
