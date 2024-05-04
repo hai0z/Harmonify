@@ -41,6 +41,7 @@ const TrackItemBottomSheet = (props: Props) => {
   const {data} = useBottomSheetStore(state => state);
   const {bottomSheetModalRef} = useContext(PlayerContext);
   const {COLOR} = useThemeStore(state => state);
+
   // variables
 
   const snapPoints = useMemo(() => ['55%', '75%'], []);
@@ -197,22 +198,24 @@ const TrackItemBottomSheet = (props: Props) => {
               </Text>
             </TouchableOpacity>
           )}
-          <TouchableOpacity
-            className="w-full py-3 flex flex-row items-center  mb-3 gap-2"
-            onPress={() => {
-              navigation.navigate('Artists', {name: data?.artists[0].alias});
-              dismiss();
-            }}>
-            <FontAwesome5
-              name="user-circle"
-              size={24}
-              color={`${COLOR.TEXT_PRIMARY}90`}
-            />
-            <Text className="text-base" style={{color: COLOR.TEXT_PRIMARY}}>
-              Xem nghệ sĩ
-            </Text>
-          </TouchableOpacity>
-          {data?.album && (
+          {data?.artists[0]?.alias && (
+            <TouchableOpacity
+              className="w-full py-3 flex flex-row items-center  mb-3 gap-2"
+              onPress={() => {
+                navigation.navigate('Artists', {name: data?.artists[0].alias});
+                dismiss();
+              }}>
+              <FontAwesome5
+                name="user-circle"
+                size={24}
+                color={`${COLOR.TEXT_PRIMARY}90`}
+              />
+              <Text className="text-base" style={{color: COLOR.TEXT_PRIMARY}}>
+                Xem nghệ sĩ
+              </Text>
+            </TouchableOpacity>
+          )}
+          {data?.album?.endcodeId && (
             <TouchableOpacity
               className="w-full py-3 flex flex-row items-center  mb-3 gap-2"
               onPress={() => {

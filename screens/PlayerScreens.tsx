@@ -124,7 +124,9 @@ const PlayerScreens = () => {
           <TouchableOpacity
             hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}
             className="z-50"
-            onPress={() => showBottomSheet(tempSong)}>
+            onPress={() => {
+              !isPlayFromLocal && showBottomSheet(tempSong);
+            }}>
             <Entypo
               name="dots-three-vertical"
               size={20}

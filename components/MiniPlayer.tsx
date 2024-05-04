@@ -51,14 +51,12 @@ const MiniPlayer = () => {
 
   const bgAnimatedFn = () => {
     'worklet';
-    bgAnimated.value = withTiming(`${gradientColor}`, {
-      duration: 550,
-      easing: Easing.inOut(Easing.quad),
-    });
   };
   useEffect(() => {
-    runOnUI(bgAnimatedFn)();
-  }, [color.dominant, gradientColor, keyboardVisible, COLOR, currentSong?.id]);
+    bgAnimated.value = withTiming(`${gradientColor}`, {
+      duration: 550,
+    });
+  }, [gradientColor, keyboardVisible, currentSong?.id, keyboardVisible]);
 
   // useEffect(() => {
   //   (async () => {
@@ -70,7 +68,7 @@ const MiniPlayer = () => {
   }
 
   return (
-    <Animated.View>
+    <Animated.View exiting={FadeOutDown}>
       <Animated.View
         className=" flex flex-col justify-center absolute"
         style={[

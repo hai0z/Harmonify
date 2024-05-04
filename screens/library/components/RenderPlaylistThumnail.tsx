@@ -6,7 +6,7 @@ import tinycolor from 'tinycolor2';
 
 interface Props {
   playlistLength: number;
-  songs: any;
+  songs: any[];
   width: number;
   height: number;
 }
@@ -102,16 +102,7 @@ const RenderPlaylistThumbnail = ({
         ]}>
         <Image
           source={{
-            uri: getThumbnail(songs[playlistLength - 4]?.thumbnail, 360),
-          }}
-          style={{
-            width: width / 2,
-            height: height / 2,
-          }}
-        />
-        <Image
-          source={{
-            uri: getThumbnail(songs[playlistLength - 3]?.thumbnail, 360),
+            uri: getThumbnail(songs[playlistLength - 1]?.thumbnail, 360),
           }}
           style={{
             width: width / 2,
@@ -129,7 +120,16 @@ const RenderPlaylistThumbnail = ({
         />
         <Image
           source={{
-            uri: getThumbnail(songs[playlistLength - 1]?.thumbnail, 360),
+            uri: getThumbnail(songs[playlistLength - 3]?.thumbnail, 360),
+          }}
+          style={{
+            width: width / 2,
+            height: height / 2,
+          }}
+        />
+        <Image
+          source={{
+            uri: getThumbnail(songs[playlistLength - 4]?.thumbnail, 360),
           }}
           style={{
             width: width / 2,

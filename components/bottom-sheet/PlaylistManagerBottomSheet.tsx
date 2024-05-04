@@ -88,12 +88,20 @@ const PlaylistManagerBottomSheet = forwardRef(
           <View className="flex justify-center">
             <View className="flex-row items-center">
               {playlist?.type !== 'likedPlaylists' ? (
-                playlist?.song?.length > 0 && (
+                playlist?.songs?.length > 0 ? (
                   <RenderPlaylistThumbnail
                     songs={playlist?.songs}
                     playlistLength={playlist?.songs.length}
                     height={widthPercentageToDP(18)}
                     width={widthPercentageToDP(18)}
+                  />
+                ) : (
+                  <Image
+                    source={{uri: getThumbnail(playlist?.thumbnail)}}
+                    style={{
+                      width: widthPercentageToDP(18),
+                      height: widthPercentageToDP(18),
+                    }}
                   />
                 )
               ) : (
