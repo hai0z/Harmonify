@@ -19,7 +19,7 @@ import {widthPercentageToDP} from 'react-native-responsive-screen';
 import tinycolor from 'tinycolor2';
 import RenderPlaylistThumbnail from '../../screens/library/components/RenderPlaylistThumnail';
 import getThumbnail from '../../utils/getThumnail';
-import {deletePlaylist} from '../../service/firebase';
+import {addToLikedPlaylist, deletePlaylist} from '../../service/firebase';
 import {useNavigation} from '@react-navigation/native';
 import Feather from 'react-native-vector-icons/Feather';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -87,13 +87,15 @@ const PlaylistManagerBottomSheet = forwardRef(
           }}>
           <View className="flex justify-center">
             <View className="flex-row items-center">
-              {playlist?.songs.length > 0 ? (
-                <RenderPlaylistThumbnail
-                  songs={playlist?.songs}
-                  playlistLength={playlist?.songs.length}
-                  height={widthPercentageToDP(18)}
-                  width={widthPercentageToDP(18)}
-                />
+              {playlist?.type !== 'likedPlaylists' ? (
+                playlist?.song?.length > 0 && (
+                  <RenderPlaylistThumbnail
+                    songs={playlist?.songs}
+                    playlistLength={playlist?.songs.length}
+                    height={widthPercentageToDP(18)}
+                    width={widthPercentageToDP(18)}
+                  />
+                )
               ) : (
                 <Image
                   source={{uri: getThumbnail(playlist?.thumbnail)}}
@@ -110,7 +112,9 @@ const PlaylistManagerBottomSheet = forwardRef(
                   {playlist?.title}
                 </Text>
                 <Text style={{color: COLOR.TEXT_SECONDARY}}>
-                  {`Danh sách phát • ${playlist?.songs.length} bài hát`}
+                  {playlist?.type === 'likedPlaylists'
+                    ? `Danh sách phát • ${playlist?.totalSong} bài hát`
+                    : `Danh sách phát • ${playlist?.songs.length} bài hát`}
                 </Text>
               </View>
             </View>
@@ -118,39 +122,61 @@ const PlaylistManagerBottomSheet = forwardRef(
           <View
             className="w-full h-[1px] mt-4"
             style={{backgroundColor: COLOR.TEXT_SECONDARY}}></View>
-          <View className="mt-4 flex flex-col flex-1">
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('PlaylistStack', {
-                  screen: 'EditPlaylist',
-                  params: {playlist},
-                });
-                dismiss();
-              }}
-              className="w-full flex-row items-center py-3 gap-2">
-              <MaterialCommunityIcons
-                name="pencil-circle-outline"
-                size={24}
-                color={`${COLOR.TEXT_PRIMARY}90`}
-              />
-              <Text style={{color: COLOR.TEXT_PRIMARY}} className="font-bold">
-                Sửa
-              </Text>
-            </TouchableOpacity>
+          {playlist?.type === 'likedPlaylists' && (
+            <View className="mt-4 flex flex-col flex-1">
+              <TouchableOpacity
+                onPress={async () => {
+                  await addToLikedPlaylist(playlist);
+                  ToastAndroid.show('Đã Xoá Playlist', ToastAndroid.SHORT);
+                  dismiss();
+                }}
+                className="w-full flex-row items-center gap-2  py-3">
+                <Feather
+                  name="x-circle"
+                  size={24}
+                  color={`${COLOR.TEXT_PRIMARY}90`}
+                />
+                <Text style={{color: COLOR.TEXT_PRIMARY}} className="font-bold">
+                  Xoá khỏi yêu thích
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
+          {playlist?.type === 'myPlaylists' && (
+            <View className="mt-4 flex flex-col flex-1">
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('PlaylistStack', {
+                    screen: 'EditPlaylist',
+                    params: {playlist},
+                  });
+                  dismiss();
+                }}
+                className="w-full flex-row items-center py-3 gap-2">
+                <MaterialCommunityIcons
+                  name="pencil-circle-outline"
+                  size={24}
+                  color={`${COLOR.TEXT_PRIMARY}90`}
+                />
+                <Text style={{color: COLOR.TEXT_PRIMARY}} className="font-bold">
+                  Sửa
+                </Text>
+              </TouchableOpacity>
 
-            <TouchableOpacity
-              onPress={handleDeletePlaylist}
-              className="w-full flex-row items-center gap-2  py-3">
-              <Feather
-                name="x-circle"
-                size={24}
-                color={`${COLOR.TEXT_PRIMARY}90`}
-              />
-              <Text style={{color: COLOR.TEXT_PRIMARY}} className="font-bold">
-                Xoá
-              </Text>
-            </TouchableOpacity>
-          </View>
+              <TouchableOpacity
+                onPress={handleDeletePlaylist}
+                className="w-full flex-row items-center gap-2  py-3">
+                <Feather
+                  name="x-circle"
+                  size={24}
+                  color={`${COLOR.TEXT_PRIMARY}90`}
+                />
+                <Text style={{color: COLOR.TEXT_PRIMARY}} className="font-bold">
+                  Xoá
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </BottomSheetView>
       </BottomSheetModal>
     );

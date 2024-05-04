@@ -92,38 +92,38 @@ const LibraryStack = () => {
       <LibStack.Screen
         name="MyPlaylist"
         component={MyPlaylist}
-        options={{animation: 'ios'}}
+        options={{animation: 'default'}}
       />
       <LibStack.Screen
         name="LocalSong"
         component={LocalSong}
-        options={{animation: 'ios'}}
+        options={{animation: 'default'}}
       />
 
       <LibStack.Screen
         name="LikedSong"
         component={LikedSong}
-        options={{animation: 'ios'}}
+        options={{animation: 'default'}}
       />
       <LibStack.Screen
         name="PlayListDetail"
         component={PlaylistDetail}
         options={{
-          animation: 'ios',
+          animation: 'default',
         }}
       />
       <LibStack.Screen
         name="Artists"
         component={ArtistScreens}
         options={{
-          animation: 'ios',
+          animation: 'default',
         }}
       />
       <LibStack.Screen
         name="ArtistsSong"
         component={ArtistSong}
         options={{
-          animation: 'ios',
+          animation: 'default',
         }}
       />
     </LibStack.Navigator>
@@ -139,33 +139,33 @@ const HomeStack = () => {
         name="History"
         component={HistoryScreens}
         options={{
-          animation: 'ios',
+          animation: 'default',
         }}
       />
       <Stack.Screen
         name="Setting"
         component={SettingScreen}
-        options={{animation: 'ios'}}
+        options={{animation: 'default'}}
       />
       <Stack.Screen
         name="PlayListDetail"
         component={PlaylistDetail}
         options={{
-          animation: 'ios',
+          animation: 'default',
         }}
       />
       <Stack.Screen
         name="Artists"
         component={ArtistScreens}
         options={{
-          animation: 'ios',
+          animation: 'default',
         }}
       />
       <Stack.Screen
         name="ArtistsSong"
         component={ArtistSong}
         options={{
-          animation: 'ios',
+          animation: 'default',
         }}
       />
     </Stack.Navigator>
@@ -343,7 +343,7 @@ function App() {
             <Stack.Screen
               name="PlaylistStack"
               component={CreatePlaylistStack}
-              options={{animation: 'fade'}}
+              options={{animation: 'default'}}
             />
           </>
         ) : (

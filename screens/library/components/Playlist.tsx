@@ -73,7 +73,9 @@ const Playlist = () => {
             return (
               <TouchableOpacity
                 delayLongPress={200}
-                onLongPress={() => onLongPressPlaylist(pl)}
+                onLongPress={() =>
+                  onLongPressPlaylist({...pl, type: 'myPlaylists'})
+                }
                 key={pl.encodeId}
                 onPress={() =>
                   navigation.push('MyPlaylist', {
@@ -115,6 +117,10 @@ const Playlist = () => {
             return (
               <TouchableOpacity
                 key={pl.encodeId}
+                delayLongPress={200}
+                onLongPress={() =>
+                  onLongPressPlaylist({...pl, type: 'likedPlaylists'})
+                }
                 onPress={() =>
                   navigation.push('PlayListDetail', {
                     data: {
@@ -186,7 +192,9 @@ const Playlist = () => {
             return (
               <TouchableOpacity
                 delayLongPress={200}
-                onLongPress={() => onLongPressPlaylist(pl)}
+                onLongPress={() =>
+                  onLongPressPlaylist({...pl, type: 'myPlaylists'})
+                }
                 style={{width: widthPercentageToDP(33) - 16}}
                 key={pl.encodeId}
                 onPress={() =>
@@ -229,6 +237,10 @@ const Playlist = () => {
           {likedPlaylists.map(pl => {
             return (
               <TouchableOpacity
+                delayLongPress={200}
+                onLongPress={() =>
+                  onLongPressPlaylist({...pl, type: 'likedPlaylists'})
+                }
                 style={{width: widthPercentageToDP(33) - 16}}
                 key={pl.encodeId}
                 onPress={() =>

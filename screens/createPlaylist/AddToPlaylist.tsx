@@ -196,9 +196,17 @@ const AddToPlaylist = ({route}: {route: any}) => {
       <View className="items-center justify-end py-4">
         <TouchableOpacity
           onPress={handleAddToPlaylist}
-          className="py-3 rounded-full px-6"
+          className="py-4 rounded-full px-8"
           style={{backgroundColor: COLOR.PRIMARY}}>
-          <Text style={{color: COLOR.TEXT_PRIMARY}}> Xong</Text>
+          <Text
+            style={{
+              color: COLOR.TEXT_PRIMARY,
+              fontSize: widthPercentageToDP(4.5),
+              fontWeight: 'bold',
+            }}>
+            {' '}
+            Xong
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
