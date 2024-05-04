@@ -47,9 +47,11 @@ const PlaylistDetail = ({route}: {route: any}) => {
   const playerContext = useContext(PlayerContext);
 
   const {show} = useToastStore();
+
   const COLOR = useThemeStore(state => state.COLOR);
 
   const {setPlayFrom} = usePlayerStore();
+
   const {likedPlaylists} = useUserStore();
 
   const [color, setColor] = React.useState<any>(null);
@@ -63,8 +65,11 @@ const PlaylistDetail = ({route}: {route: any}) => {
 
   const flashListRef = React.useRef<FlashList<any>>(null);
 
+  const textInputRef = React.useRef<TextInput>(null);
+
   useEffect(() => {
     flashListRef.current?.scrollToOffset({animated: true, offset: 0});
+    textInputRef.current?.focus();
   }, [isSearching, searchText]);
 
   const handleSearch = (text: string) => {
@@ -211,6 +216,7 @@ const PlaylistDetail = ({route}: {route: any}) => {
           </TouchableOpacity>
           <View className="justify-center items-center p-1 flex-1 ml-2">
             <TextInput
+              ref={textInputRef}
               value={searchText}
               onChangeText={text => handleSearch(text)}
               placeholder="Nhập tên bài hát..."

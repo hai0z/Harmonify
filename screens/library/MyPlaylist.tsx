@@ -71,10 +71,11 @@ const MyPlaylist = ({route}: {route: any}) => {
   const flashListRef = React.useRef<FlashList<any>>(null);
 
   const playerContext = useContext(PlayerContext);
+  const textInputRef = React.useRef<TextInput>(null);
 
-  console.log('1');
   useEffect(() => {
     flashListRef.current?.scrollToOffset({animated: true, offset: 0});
+    textInputRef.current?.focus();
   }, [isSearching, searchText]);
 
   const handleSearch = (text: string) => {
@@ -195,6 +196,7 @@ const MyPlaylist = ({route}: {route: any}) => {
           </TouchableOpacity>
           <View className="justify-center items-center p-1 flex-1 ml-2">
             <TextInput
+              ref={textInputRef}
               value={searchText}
               onChangeText={text => handleSearch(text)}
               placeholder="Nhập tên bài hát..."

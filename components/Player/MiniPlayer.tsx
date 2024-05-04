@@ -1,25 +1,22 @@
 import {View, Text, TouchableOpacity, Dimensions} from 'react-native';
 import React, {useCallback, useEffect} from 'react';
-import useKeyBoardStatus from '../hooks/useKeyBoardStatus';
-import TrackPlayer, {
-  State,
-  usePlaybackState,
-  useProgress,
-} from 'react-native-track-player';
+import useKeyBoardStatus from '../../hooks/useKeyBoardStatus';
+import TrackPlayer, {State, usePlaybackState} from 'react-native-track-player';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {useNavigation} from '@react-navigation/native';
-import {usePlayerStore} from '../store/playerStore';
+import {usePlayerStore} from '../../store/playerStore';
 import TextTicker from 'react-native-text-ticker';
-import {MINI_PLAYER_HEIGHT, TABBAR_HEIGHT} from '../constants';
-import useThemeStore from '../store/themeStore';
+import {MINI_PLAYER_HEIGHT, TABBAR_HEIGHT} from '../../constants';
+import useThemeStore from '../../store/themeStore';
 import Animated, {
   FadeInUp,
   FadeOutDown,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import HeartButton from './HeartButton';
-import useImageColor from '../hooks/useImageColor';
+import HeartButton from '../HeartButton';
+import useImageColor from '../../hooks/useImageColor';
+import MiniPlayerProgress from './Control/MiniPlayerProgress';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const MiniPlayer = () => {
@@ -27,13 +24,13 @@ const MiniPlayer = () => {
 
   const keyboardVisible = useKeyBoardStatus();
 
-  const {currentSong, isPlayFromLocal} = usePlayerStore(state => state);
+  const currentSong = usePlayerStore(state => state.currentSong);
 
-  const {COLOR} = useThemeStore(state => state);
+  const isPlayFromLocal = usePlayerStore(state => state.isPlayFromLocal);
+
+  const COLOR = useThemeStore(state => state.COLOR);
 
   const playerState = usePlaybackState();
-
-  const progress = useProgress(1000 / 120); //120fps
 
   const {dominantColor: gradientColor} = useImageColor();
 
@@ -51,21 +48,15 @@ const MiniPlayer = () => {
     bgAnimated.value = withTiming(`${gradientColor}`, {
       duration: 550,
     });
-  }, [gradientColor, keyboardVisible, currentSong?.id]);
+  });
 
-  // useEffect(() => {
-  //   (async () => {
-  //     await TrackPlayer.seekTo(lastPosition);
-  //   })();
-  // }, []);
   if (!currentSong || keyboardVisible) {
     return null;
   }
-
   return (
-    <Animated.View exiting={FadeOutDown}>
+    <Animated.View exiting={FadeOutDown.springify()}>
       <Animated.View
-        className=" flex flex-col justify-center absolute"
+        className="flex flex-col justify-center absolute"
         style={[
           {
             width: SCREEN_WIDTH * 0.96,
@@ -168,28 +159,7 @@ const MiniPlayer = () => {
             </View>
           </Animated.View>
         </TouchableOpacity>
-        <View
-          style={{
-            height: 2.5,
-            maxWidth: '100%',
-            position: 'relative',
-            marginHorizontal: 8,
-            bottom: 1.5,
-            borderRadius: 2.5,
-            backgroundColor: COLOR.isDark ? '#ffffff50' : '#00000020',
-            zIndex: 2,
-          }}>
-          <View
-            style={{
-              width: `${(progress.position / progress.duration) * 100}%`,
-              height: 2.5,
-              backgroundColor: COLOR.TEXT_PRIMARY,
-              position: 'absolute',
-              borderTopLeftRadius: 2.5,
-              borderBottomLeftRadius: 2.5,
-            }}
-          />
-        </View>
+        <MiniPlayerProgress />
       </Animated.View>
     </Animated.View>
   );

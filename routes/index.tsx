@@ -3,7 +3,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomeScreens from '../screens/home/HomeScreens';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {StatusBar} from 'expo-status-bar';
-import MiniPlayer from '../components/MiniPlayer';
+import MiniPlayer from '../components/Player/MiniPlayer';
 import SearchScreens from '../screens/SearchScreens';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';

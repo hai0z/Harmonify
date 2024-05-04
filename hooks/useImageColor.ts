@@ -4,14 +4,14 @@ import useDarkColor from './useDarkColor'
 import tinycolor from 'tinycolor2'
 
 const useImageColor = () => {
-  const { color } = usePlayerStore()
-  const { COLOR } = useThemeStore()
+  const color = usePlayerStore(state => state.color)
+  const COLOR = useThemeStore(state => state.COLOR)
 
   const dominantColor = COLOR.isDark
     ? useDarkColor(color.dominant!, 35)
     : tinycolor(color.dominant!).isDark()
       ? tinycolor(color.dominant!).lighten(40).toString()
-      : tinycolor(color.dominant!).darken(10).toString();
+      : tinycolor(color.dominant!).darken(5).toString();
 
   const vibrantColor = COLOR.isDark
     ? color.vibrant === '#0098DB'

@@ -203,7 +203,7 @@ const Playlist = () => {
                   })
                 }
                 activeOpacity={0.8}
-                className="flex-col flex mb-4 items-center">
+                className="flex-col flex mb-4">
                 {pl.songs.length > 0 ? (
                   <RenderPlaylistThumbnail
                     songs={pl.songs}
@@ -252,7 +252,7 @@ const Playlist = () => {
                   })
                 }
                 activeOpacity={0.8}
-                className="flex-col flex mb-4 items-center">
+                className="flex-col flex mb-4">
                 <Image
                   source={{uri: getThumbnail(pl?.thumbnail)}}
                   style={{
