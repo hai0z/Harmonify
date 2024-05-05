@@ -1,14 +1,12 @@
-import LoaderKit from 'react-native-loader-kit';
-import useThemeStore from '../store/themeStore';
+import LottieView from 'lottie-react-native';
 
 const Loading = () => {
-  const {COLOR} = useThemeStore();
   return (
-    <LoaderKit
+    <LottieView
       style={{width: 50, height: 50}}
-      name={'BallClipRotateMultiple'}
-      color={COLOR.SECONDARY}
-    />
+      autoPlay
+      loop
+      source={require('../assets/animation/loading.json')}></LottieView>
   );
 };
 export default Loading;

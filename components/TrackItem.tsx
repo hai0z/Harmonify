@@ -8,17 +8,20 @@ import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import {usePlayerStore} from '../store/playerStore';
 import {objectToTrack} from '../service/trackPlayerService';
 import useInternetState from '../hooks/useInternetState';
+import Animated, {FadeIn, FadeOut} from 'react-native-reanimated';
+import LottieView from 'lottie-react-native';
 interface Props {
   item: any;
   index?: number;
   isAlbum?: boolean;
   onClick: (item: any) => void;
   showBottomSheet: (item: any) => void;
+  isActive?: boolean;
 }
 
 const TrackItem = (props: Props) => {
   const isConnected = useInternetState();
-  const {item, index, onClick, isAlbum, showBottomSheet} = props;
+  const {item, index, onClick, isAlbum, showBottomSheet, isActive} = props;
   const COLOR = useThemeStore(state => state.COLOR);
   const setCurrentSong = usePlayerStore(state => state.setCurrentSong);
   console.log('track render');
@@ -41,21 +44,45 @@ const TrackItem = (props: Props) => {
           </Text>
         </View>
       ) : (
-        <FastImage
-          source={{
-            uri: getThumbnail(item?.thumbnail, 720),
-          }}
-          key={item?.encodeId}
-          className="rounded-none"
-          style={{width: wp(15), height: wp(15)}}
-        />
+        <View>
+          <FastImage
+            source={{
+              uri: getThumbnail(item?.thumbnail, 720),
+            }}
+            key={item?.encodeId}
+            className="rounded-none"
+            style={{width: wp(15), height: wp(15)}}
+          />
+          {isActive && (
+            <Animated.View
+              exiting={FadeOut.duration(300).springify()}
+              entering={FadeIn.duration(300).springify()}
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                bottom: 0,
+                right: 0,
+                backgroundColor: '#00000050',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <LottieView
+                style={{width: wp(7.5), height: wp(7.5)}}
+                autoPlay
+                colorFilters={[{keypath: 'fill', color: COLOR.PRIMARY}]}
+                source={require('../assets/animation/musicwave.json')}
+              />
+            </Animated.View>
+          )}
+        </View>
       )}
       <View className="flex justify-center ml-2 flex-1 ">
         <Text
           className="font-semibold"
           numberOfLines={1}
           style={{
-            color: COLOR.TEXT_PRIMARY,
+            color: isActive ? 'hotpink' : COLOR.TEXT_PRIMARY,
             fontSize: wp(4),
           }}>
           {item?.title}

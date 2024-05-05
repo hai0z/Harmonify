@@ -54,9 +54,9 @@ const MyPlaylist = ({route}: {route: any}) => {
 
   const myPlaylists = useUserStore(state => state.myPlaylists);
 
-  const data = useMemo(() => {
-    return myPlaylists.find((item: any) => item.encodeId == playlistId);
-  }, [myPlaylists]);
+  const currentSong = usePlayerStore(state => state.currentSong);
+
+  const data = myPlaylists.find((item: any) => item.encodeId == playlistId);
 
   const [color, setColor] = React.useState<any>(null);
 
@@ -77,6 +77,10 @@ const MyPlaylist = ({route}: {route: any}) => {
     flashListRef.current?.scrollToOffset({animated: true, offset: 0});
     textInputRef.current?.focus();
   }, [isSearching, searchText]);
+
+  useEffect(() => {
+    setSearchData(data.songs);
+  }, [data]);
 
   const handleSearch = (text: string) => {
     setSearchText(text);
@@ -102,6 +106,7 @@ const MyPlaylist = ({route}: {route: any}) => {
       });
     })();
   }, []);
+
   useEffect(() => {
     if (color) {
       bgAnimated.value = withTiming(
@@ -119,35 +124,22 @@ const MyPlaylist = ({route}: {route: any}) => {
     }
   }, [color, isSearching, playerContext]);
 
-  const headerColor = useMemo(
-    () =>
-      scrollY.interpolate({
-        inputRange: [SCREEN_WIDTH * 0.8, SCREEN_WIDTH * 0.8],
-        outputRange: ['transparent', COLOR.BACKGROUND],
-        extrapolate: 'clamp',
-      }),
-    [scrollY, COLOR, color],
-  );
+  const headerColor = scrollY.interpolate({
+    inputRange: [SCREEN_WIDTH * 0.8, SCREEN_WIDTH * 0.8],
+    outputRange: ['transparent', COLOR.BACKGROUND],
+    extrapolate: 'clamp',
+  });
+  const headerTitleOpacity = scrollY.interpolate({
+    inputRange: [0, SCREEN_WIDTH * 0.6, SCREEN_WIDTH * 0.8],
+    outputRange: [0, 0, 1],
+    extrapolate: 'clamp',
+  });
 
-  const headerTitleOpacity = useMemo(
-    () =>
-      scrollY.interpolate({
-        inputRange: [0, SCREEN_WIDTH * 0.6, SCREEN_WIDTH * 0.8],
-        outputRange: [0, 0, 1],
-        extrapolate: 'clamp',
-      }),
-    [scrollY],
-  );
-
-  const titleOpacity = useMemo(
-    () =>
-      scrollY.interpolate({
-        inputRange: [0, SCREEN_WIDTH * 0.4, SCREEN_WIDTH * 0.6],
-        outputRange: [1, 0.5, 0],
-        extrapolate: 'clamp',
-      }),
-    [scrollY],
-  );
+  const titleOpacity = scrollY.interpolate({
+    inputRange: [0, SCREEN_WIDTH * 0.4, SCREEN_WIDTH * 0.6],
+    outputRange: [1, 0.5, 0],
+    extrapolate: 'clamp',
+  });
 
   const handlePlaySong = useCallback((song: any) => {
     handlePlay(song, {
@@ -288,6 +280,7 @@ const MyPlaylist = ({route}: {route: any}) => {
         nestedScrollEnabled
         data={searchData}
         estimatedItemSize={72}
+        extraData={currentSong?.id}
         keyExtractor={(item: any, index) => `${item.encodeId}_${index}`}
         renderItem={({item}: any) => {
           return (
@@ -295,6 +288,7 @@ const MyPlaylist = ({route}: {route: any}) => {
               item={item}
               onClick={handlePlaySong}
               isAlbum={false}
+              isActive={currentSong?.id === item.encodeId}
               showBottomSheet={() =>
                 playerContext.showBottomSheet({
                   ...item,

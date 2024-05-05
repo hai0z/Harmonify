@@ -14,13 +14,15 @@ import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import Animated, {FadeInDown} from 'react-native-reanimated';
 import useImageColor from '../hooks/useImageColor';
 import use_local_auto_scroll from '../hooks/use_local_auto_scroll';
+import {usePlayerStore} from '../store/playerStore';
 
 const OFFSET = 3;
 
 const DEFAULT_LINE = -1;
 
-const LyricScreen = ({route}: {route: any}) => {
-  const {lyrics} = route.params;
+const LyricScreen = () => {
+  const lyrics = usePlayerStore(state => state.lyrics);
+
   const currentLine = useSyncLyric();
 
   const currentSong = useActiveTrack();

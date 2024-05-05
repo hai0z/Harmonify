@@ -1,5 +1,5 @@
-import {View, Text, Dimensions, TouchableOpacity} from 'react-native';
-import React, {memo, useCallback, useContext, useEffect} from 'react';
+import {View, Text, Dimensions} from 'react-native';
+import React, {memo, useCallback, useContext} from 'react';
 import TrackItem from '../../../components/TrackItem';
 import {handlePlay} from '../../../service/trackPlayerService';
 import {PlayerContext} from '../../../context/PlayerProvider';
@@ -47,6 +47,9 @@ const NewRelease = ({data}: Props) => {
   }, []);
 
   const {showBottomSheet} = useContext(PlayerContext);
+
+  const currentSong = usePlayerStore(state => state.currentSong);
+
   return (
     <View className="mt-4">
       <Text
@@ -67,11 +70,13 @@ const NewRelease = ({data}: Props) => {
                 data={item}
                 renderItem={({item}) => (
                   <TrackItem
+                    isActive={currentSong?.id === item?.encodeId}
                     item={item}
                     onClick={handlePlaySong}
                     showBottomSheet={showBottomSheet}
                   />
-                )}></FlatList>
+                )}
+              />
             </View>
           )}
         />

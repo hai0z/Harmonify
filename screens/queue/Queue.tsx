@@ -30,7 +30,6 @@ import {PlayerContext} from '../../context/PlayerProvider';
 import TrackItem from '../../components/TrackItem';
 import TrackItemBottomSheet from '../../components/bottom-sheet/TrackItemBottomSheet';
 import ProgressBar from './components/ProgressBar';
-import useInternetState from '../../hooks/useInternetState';
 import LocalTrackItem from '../../components/LocalTrackItem';
 const Queue = () => {
   const {COLOR} = useThemeStore(state => state);
@@ -133,6 +132,9 @@ const Queue = () => {
             key={currentSong?.id}>
             {!isPlayFromLocal ? (
               <TrackItem
+                isActive={
+                  currentSong?.id == playList.items[trackIndex].encodeId
+                }
                 showBottomSheet={showBottomSheet}
                 item={playList.items[trackIndex]}
                 onClick={handlePlay}

@@ -68,6 +68,7 @@ const ArtistSong = ({route}: any) => {
 
   const flashListRef = React.useRef<FlashList<any>>(null);
   const textInputRef = React.useRef<TextInput>(null);
+  const currentSong = usePlayerStore(state => state.currentSong);
 
   useEffect(() => {
     flashListRef.current?.scrollToOffset({animated: true, offset: 0});
@@ -277,13 +278,16 @@ const ArtistSong = ({route}: any) => {
               <View className="h-28" />
             )
           }
+          extraData={currentSong?.id}
           estimatedItemSize={70}
           data={searchData.filter((i: any) => i.streamingStatus === 1)}
           renderItem={({item}: any) => (
             <TrackItem
+              isActive={currentSong?.id === item.encodeId}
               item={item}
               showBottomSheet={showBottomSheet}
-              onClick={handlePlaySong}></TrackItem>
+              onClick={handlePlaySong}
+            />
           )}
         />
       </View>

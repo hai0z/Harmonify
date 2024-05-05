@@ -6,14 +6,16 @@ import {LinearGradient} from 'react-native-linear-gradient';
 import {useNavigation} from '@react-navigation/native';
 import useSyncLyric from '../../hooks/useSyncLyric';
 import useThemeStore from '../../store/themeStore';
-import Animated, {withTiming} from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 import useImageColor from '../../hooks/useImageColor';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+
 const OFFSET = 1;
 
 const Lyric = () => {
   const lyrics = usePlayerStore(state => state.lyrics);
+
   const isPlayFromLocal = usePlayerStore(state => state.isPlayFromLocal);
 
   const currentLine = useSyncLyric();
@@ -25,12 +27,13 @@ const Lyric = () => {
   useEffect(() => {
     lyricsRef.current &&
       lyricsRef.current.scrollToIndex({
-        index: currentLine! === -1 ? 0 : currentLine - OFFSET,
+        index: currentLine === -1 ? 0 : currentLine - OFFSET,
         animated: true,
       });
   }, [currentLine]);
 
   const {COLOR} = useThemeStore(state => state);
+
   const {vibrantColor: bg} = useImageColor();
 
   if (isPlayFromLocal) {
@@ -40,7 +43,7 @@ const Lyric = () => {
     lyrics?.length > 0 && (
       <Animated.View>
         <TouchableOpacity
-          onPress={() => nativgation.navigate('Lyric', {lyrics})}
+          onPress={() => nativgation.navigate('Lyric')}
           activeOpacity={1}
           className="rounded-2xl mt-10"
           style={{
@@ -65,13 +68,6 @@ const Lyric = () => {
                 color={COLOR.TEXT_PRIMARY}
               />
             </TouchableOpacity>
-            {/* <LinearGradient
-              colors={[bg!, bg!, 'transparent']}
-              style={{
-                bottom: currentLine < 2 ? -10 : -40,
-              }}
-              className="absolute left-0 right-0 h-16 z-[1] rounded-t-xl"
-            /> */}
           </View>
           <View className="flex-1 pt-2">
             <FlashList

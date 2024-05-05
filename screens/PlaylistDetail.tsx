@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import React, {useContext, useEffect, useMemo} from 'react';
+import React, {useCallback, useContext, useEffect} from 'react';
 import {LinearGradient} from 'react-native-linear-gradient';
 import getThumbnail from '../utils/getThumnail';
 import {FlashList} from '@shopify/flash-list';
@@ -67,6 +67,7 @@ const PlaylistDetail = ({route}: {route: any}) => {
 
   const textInputRef = React.useRef<TextInput>(null);
 
+  const currentSong = usePlayerStore(state => state.currentSong);
   useEffect(() => {
     flashListRef.current?.scrollToOffset({animated: true, offset: 0});
     textInputRef.current?.focus();
@@ -146,16 +147,19 @@ const PlaylistDetail = ({route}: {route: any}) => {
     outputRange: [1, 0.6, 0.4],
     extrapolate: 'clamp',
   });
-  const handlePlaySong = (song: any) => {
-    handlePlay(song, {
-      id: data.playListId,
-      items: playlistData?.song.items,
-    });
-    setPlayFrom({
-      id: playlistData?.isAlbum ? 'album' : 'playlist',
-      name: playlistData?.title,
-    });
-  };
+  const handlePlaySong = useCallback(
+    (song: any) => {
+      handlePlay(song, {
+        id: data.playListId,
+        items: playlistData?.song?.items,
+      });
+      setPlayFrom({
+        id: playlistData?.isAlbum ? 'album' : 'playlist',
+        name: playlistData?.title,
+      });
+    },
+    [playlistData?.song?.items],
+  );
 
   const caculateTotalTime = () => {
     let total = 0;
@@ -361,6 +365,7 @@ const PlaylistDetail = ({route}: {route: any}) => {
         nestedScrollEnabled
         ref={flashListRef}
         data={searchData}
+        extraData={currentSong?.id}
         estimatedItemSize={72}
         keyExtractor={(item: any, index) => `${item.encodeId}_${index}`}
         renderItem={({item, index}: any) => {
@@ -368,6 +373,7 @@ const PlaylistDetail = ({route}: {route: any}) => {
             <TrackItem
               showBottomSheet={playerContext.showBottomSheet}
               item={item}
+              isActive={currentSong?.id === item.encodeId}
               index={index}
               isAlbum={playlistData.isAlbum}
               onClick={handlePlaySong}

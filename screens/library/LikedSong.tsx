@@ -57,6 +57,13 @@ const LikedSong = () => {
   const flashListRef = React.useRef<FlashList<any>>(null);
 
   const textInputRef = React.useRef<TextInput>(null);
+
+  const currentSong = usePlayerStore(state => state.currentSong);
+
+  useEffect(() => {
+    setSearchData(likedSong);
+  }, [likedSong]);
+
   useEffect(() => {
     flashListRef.current?.scrollToOffset({animated: true, offset: 0});
     textInputRef.current?.focus();
@@ -239,6 +246,7 @@ const LikedSong = () => {
         ListFooterComponent={() => <View style={{height: SCREEN_WIDTH}} />}
         nestedScrollEnabled
         data={searchData}
+        extraData={currentSong?.id}
         estimatedItemSize={72}
         keyExtractor={(item: any, index) => `${item.encodeId}_${index}`}
         renderItem={({item}: any) => {
@@ -247,6 +255,7 @@ const LikedSong = () => {
               item={item}
               onClick={handlePlaySong}
               isAlbum={false}
+              isActive={currentSong?.id === item.encodeId}
               showBottomSheet={showBottomSheet}
             />
           );

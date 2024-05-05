@@ -1,5 +1,12 @@
 import {View, Text, Image, ActivityIndicator} from 'react-native';
-import React, {useContext, useEffect, useId, useMemo, useState} from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useId,
+  useMemo,
+  useState,
+} from 'react';
 import useThemeStore from '../store/themeStore';
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -34,18 +41,22 @@ dayjs.locale('vi');
 dayjs.extend(RelativeTime);
 
 const HistoryScreens = () => {
-  const {COLOR} = useThemeStore(state => state);
+  const COLOR = useThemeStore(state => state.COLOR);
 
-  const {setPlayFrom} = usePlayerStore(state => state);
+  const setPlayFrom = usePlayerStore(state => state.setPlayFrom);
 
-  const {showBottomSheet} = useContext(PlayerContext);
+  const playerContext = useContext(PlayerContext);
+
+  const currentSong = usePlayerStore(state => state.currentSong);
 
   const id = useId();
+
   const navigation = useNavigation<any>();
 
   const [historyData, setHistoryData] = useState<Track[]>([]);
 
   const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const getHistory = async () => {
       const q = query(
@@ -66,16 +77,19 @@ const HistoryScreens = () => {
 
   const {dominantColor: gradientColor} = useImageColor();
 
-  const handlePlaySong = (item: any) => {
-    handlePlay(item, {
-      id,
-      items: historyData,
-    });
-    setPlayFrom({
-      id: 'history',
-      name: 'Bài hát gần đây',
-    });
-  };
+  const handlePlaySong = useCallback(
+    (item: any) => {
+      handlePlay(item, {
+        id,
+        items: historyData,
+      });
+      setPlayFrom({
+        id: 'history',
+        name: 'Bài hát gần đây',
+      });
+    },
+    [historyData],
+  );
 
   const $bg = useSharedValue(`transparent`);
 
@@ -88,7 +102,7 @@ const HistoryScreens = () => {
   };
   useEffect(() => {
     runOnUI(changeBgAnimated)();
-  }, [gradientColor]);
+  }, [gradientColor, historyData]);
 
   return (
     <View
@@ -131,7 +145,7 @@ const HistoryScreens = () => {
         <View className="w-5 h-5" />
       </View>
       {loading ? (
-        <View className="flex-1 pt-4">
+        <View className="flex-1">
           <View className="flex-1 flex justify-center items-center">
             <Loading />
           </View>
@@ -152,14 +166,15 @@ const HistoryScreens = () => {
             }
             showsVerticalScrollIndicator={false}
             data={historyData}
-            extraData={historyData}
+            extraData={currentSong?.id}
             estimatedItemSize={70}
             nestedScrollEnabled
             keyExtractor={item => item.encodeId}
             renderItem={({item, index}) => {
               return (
                 <TrackItem
-                  showBottomSheet={showBottomSheet}
+                  isActive={currentSong?.id === item.encodeId}
+                  showBottomSheet={playerContext.showBottomSheet}
                   item={item}
                   index={index}
                   onClick={handlePlaySong}

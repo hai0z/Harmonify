@@ -1,5 +1,4 @@
 function stringToSlug(str: string) {
-  // remove accents
   const from =
     "àáãảạăằắẳẵặâầấẩẫậèéẻẽẹêềếểễệđùúủũụưừứửữựòóỏõọôồốổỗộơờớởỡợìíỉĩịäëïîöüûñçýỳỹỵỷ",
     to =
