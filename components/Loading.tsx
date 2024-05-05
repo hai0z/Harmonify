@@ -1,12 +1,15 @@
-import LottieView from 'lottie-react-native';
+import useThemeStore from '../store/themeStore';
+import LoaderKit from 'react-native-loader-kit';
 
 const Loading = () => {
+  const COLOR = useThemeStore(state => state.COLOR);
+  const theme = useThemeStore(state => state.theme);
   return (
-    <LottieView
+    <LoaderKit
       style={{width: 50, height: 50}}
-      autoPlay
-      loop
-      source={require('../assets/animation/loading.json')}></LottieView>
+      name={'LineScalePulseOut'}
+      color={theme !== 'amoled' ? COLOR.SECONDARY : '#3cb371'}
+    />
   );
 };
 export default Loading;

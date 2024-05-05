@@ -9,9 +9,11 @@ import {usePlayerStore} from '../../../store/playerStore';
 import useInternetState from '../../../hooks/useInternetState';
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated';
 import LottieView from 'lottie-react-native';
+import changeSVGColor from '@killerwink/lottie-react-native-color';
 
 const RecentList = ({data}: any) => {
   const COLOR = useThemeStore(state => state.COLOR);
+  const theme = useThemeStore(state => state.theme);
 
   const isConnected = useInternetState();
 
@@ -92,7 +94,10 @@ const RecentList = ({data}: any) => {
                     <LottieView
                       style={{width: wp(10), height: wp(10)}}
                       autoPlay
-                      source={require('../../../assets/animation/musicwave.json')}
+                      source={changeSVGColor(
+                        require('../../../assets/animation/musicwave.json'),
+                        theme !== 'amoled' ? COLOR.PRIMARY : '#3cb371',
+                      )}
                     />
                   </Animated.View>
                 )}
@@ -101,7 +106,11 @@ const RecentList = ({data}: any) => {
                 className="px-1"
                 numberOfLines={2}
                 style={{
-                  color: isActive ? 'hotpink' : COLOR.TEXT_PRIMARY,
+                  color: isActive
+                    ? theme !== 'amoled'
+                      ? COLOR.PRIMARY
+                      : '#3cb371'
+                    : COLOR.TEXT_PRIMARY,
                   fontWeight: '600',
                   flex: 1,
                   fontSize: wp(3.5),

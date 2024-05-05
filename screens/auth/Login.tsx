@@ -45,8 +45,10 @@ const Login = () => {
           email: userEmail,
         });
       }
+      console.log(userCredential);
     } catch (error) {
       Alert.alert('Thất bại', 'Sai Email hoặc Mật khẩu');
+      console.log(error);
     }
   };
   const navigation = useNavigation<any>();

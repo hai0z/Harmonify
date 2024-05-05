@@ -10,6 +10,7 @@ import {objectToTrack} from '../service/trackPlayerService';
 import useInternetState from '../hooks/useInternetState';
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated';
 import LottieView from 'lottie-react-native';
+import changeSVGColor from '@killerwink/lottie-react-native-color';
 interface Props {
   item: any;
   index?: number;
@@ -23,6 +24,7 @@ const TrackItem = (props: Props) => {
   const isConnected = useInternetState();
   const {item, index, onClick, isAlbum, showBottomSheet, isActive} = props;
   const COLOR = useThemeStore(state => state.COLOR);
+  const theme = useThemeStore(state => state.theme);
   const setCurrentSong = usePlayerStore(state => state.setCurrentSong);
   console.log('track render');
   return (
@@ -42,10 +44,12 @@ const TrackItem = (props: Props) => {
             style={{width: wp(15), height: wp(15)}}>
             {isActive ? (
               <LottieView
-                style={{width: wp(10), height: wp(10)}}
                 autoPlay
-                colorFilters={[{keypath: 'fill', color: COLOR.PRIMARY}]}
-                source={require('../assets/animation/musicwave.json')}
+                style={{width: wp(10), height: wp(10)}}
+                source={changeSVGColor(
+                  require('../assets/animation/musicwave.json'),
+                  theme !== 'amoled' ? COLOR.PRIMARY : '#3cb371',
+                )}
               />
             ) : (
               <Text
@@ -83,8 +87,10 @@ const TrackItem = (props: Props) => {
               <LottieView
                 style={{width: wp(10), height: wp(10)}}
                 autoPlay
-                colorFilters={[{keypath: 'fill', color: COLOR.PRIMARY}]}
-                source={require('../assets/animation/musicwave.json')}
+                source={changeSVGColor(
+                  require('../assets/animation/musicwave.json'),
+                  theme !== 'amoled' ? COLOR.PRIMARY : '#3cb371',
+                )}
               />
             </Animated.View>
           )}
@@ -95,7 +101,11 @@ const TrackItem = (props: Props) => {
           className="font-semibold"
           numberOfLines={1}
           style={{
-            color: isActive ? 'hotpink' : COLOR.TEXT_PRIMARY,
+            color: isActive
+              ? theme !== 'amoled'
+                ? COLOR.PRIMARY
+                : '#3cb371'
+              : COLOR.TEXT_PRIMARY,
             fontSize: wp(4),
           }}>
           {item?.title}

@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@gorhom/bottom-sheet": "^4",
+    "@killerwink/lottie-react-native-color": "^1.0.2",
     "@react-native-assets/slider": "^7.1.1",
     "@react-native-community/netinfo": "^11.3.1",
     "@react-navigation/bottom-tabs": "^6.5.16",
@@ -36,6 +37,7 @@
     "react-native-get-music-files": "^2.2.4",
     "react-native-image-colors": "^2.4.0",
     "react-native-linear-gradient": "^2.8.3",
+    "react-native-loader-kit": "^2.0.8",
     "react-native-mmkv": "^2.12.2",
     "react-native-permissions": "^4.1.5",
     "react-native-reanimated": "^3.8.1",
