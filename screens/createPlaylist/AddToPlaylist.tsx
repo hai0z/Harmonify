@@ -67,7 +67,9 @@ const AddToPlaylist = ({route}: {route: any}) => {
       className="flex-1 pt-[55px] px-4"
       style={{backgroundColor: COLOR.BACKGROUND}}>
       <View className="flex flex-row justify-between">
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}>
           <Ionicons name="arrow-back" size={24} color={COLOR.TEXT_PRIMARY} />
         </TouchableOpacity>
         <Text
@@ -198,7 +200,6 @@ const AddToPlaylist = ({route}: {route: any}) => {
             ))}
           </View>
         )}
-        <View className="h-96" />
       </ScrollView>
       <View className="items-center justify-end py-4">
         <TouchableOpacity

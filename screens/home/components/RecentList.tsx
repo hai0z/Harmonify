@@ -76,6 +76,7 @@ const RecentList = ({data}: any) => {
                 />
                 {isActive && (
                   <Animated.View
+                    className="rounded-tl-md rounded-bl-md"
                     exiting={FadeOut.duration(300).springify()}
                     entering={FadeIn.duration(300).springify()}
                     style={{
@@ -84,12 +85,12 @@ const RecentList = ({data}: any) => {
                       left: 0,
                       bottom: 0,
                       right: 0,
-                      backgroundColor: '#00000080',
+                      backgroundColor: '#00000050',
                       justifyContent: 'center',
                       alignItems: 'center',
                     }}>
                     <LottieView
-                      style={{width: 30, height: 30}}
+                      style={{width: wp(10), height: wp(10)}}
                       autoPlay
                       source={require('../../../assets/animation/musicwave.json')}
                     />

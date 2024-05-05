@@ -36,12 +36,25 @@ const TrackItem = (props: Props) => {
         onClick(item);
       }}>
       {isAlbum ? (
-        <View
-          className="rounded-md flex justify-center items-center"
-          style={{width: wp(15), height: wp(15)}}>
-          <Text style={{color: COLOR.TEXT_PRIMARY}} className="font-semibold">
-            {index! + 1}
-          </Text>
+        <View>
+          <View
+            className="rounded-md flex justify-center items-center"
+            style={{width: wp(15), height: wp(15)}}>
+            {isActive ? (
+              <LottieView
+                style={{width: wp(10), height: wp(10)}}
+                autoPlay
+                colorFilters={[{keypath: 'fill', color: COLOR.PRIMARY}]}
+                source={require('../assets/animation/musicwave.json')}
+              />
+            ) : (
+              <Text
+                style={{color: COLOR.TEXT_PRIMARY}}
+                className="font-semibold">
+                {index! + 1}
+              </Text>
+            )}
+          </View>
         </View>
       ) : (
         <View>
@@ -55,8 +68,8 @@ const TrackItem = (props: Props) => {
           />
           {isActive && (
             <Animated.View
-              exiting={FadeOut.duration(300).springify()}
-              entering={FadeIn.duration(300).springify()}
+              exiting={FadeOut.duration(300)}
+              entering={FadeIn.duration(300)}
               style={{
                 position: 'absolute',
                 top: 0,
@@ -68,7 +81,7 @@ const TrackItem = (props: Props) => {
                 alignItems: 'center',
               }}>
               <LottieView
-                style={{width: wp(7.5), height: wp(7.5)}}
+                style={{width: wp(10), height: wp(10)}}
                 autoPlay
                 colorFilters={[{keypath: 'fill', color: COLOR.PRIMARY}]}
                 source={require('../assets/animation/musicwave.json')}

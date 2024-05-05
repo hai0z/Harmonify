@@ -133,7 +133,7 @@ const Queue = () => {
             {!isPlayFromLocal ? (
               <TrackItem
                 isActive={
-                  currentSong?.id == playList.items[trackIndex].encodeId
+                  currentSong?.id == playList?.items[trackIndex]?.encodeId
                 }
                 showBottomSheet={showBottomSheet}
                 item={playList.items[trackIndex]}

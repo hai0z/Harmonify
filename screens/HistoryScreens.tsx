@@ -1,18 +1,15 @@
-import {View, Text, Image, ActivityIndicator} from 'react-native';
+import {View, Text} from 'react-native';
 import React, {
   useCallback,
   useContext,
   useEffect,
   useId,
-  useMemo,
   useState,
 } from 'react';
 import useThemeStore from '../store/themeStore';
-
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {usePlayerStore} from '../store/playerStore';
 import {useNavigation} from '@react-navigation/native';
-
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {FlashList} from '@shopify/flash-list';
@@ -29,16 +26,12 @@ import {Track} from 'react-native-track-player';
 import LinearGradient from 'react-native-linear-gradient';
 import {collection, getDocs, limit, orderBy, query} from 'firebase/firestore';
 import {auth, db} from '../firebase/config';
-import dayjs from 'dayjs';
-import RelativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/vi';
 import {handlePlay} from '../service/trackPlayerService';
 import {PlayerContext} from '../context/PlayerProvider';
 import useImageColor from '../hooks/useImageColor';
 import TrackItem from '../components/TrackItem';
 import Loading from '../components/Loading';
-dayjs.locale('vi');
-dayjs.extend(RelativeTime);
 
 const HistoryScreens = () => {
   const COLOR = useThemeStore(state => state.COLOR);
