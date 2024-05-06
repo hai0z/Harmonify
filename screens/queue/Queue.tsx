@@ -1,5 +1,5 @@
 import {View, Text} from 'react-native';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 import useThemeStore from '../../store/themeStore';
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -27,14 +27,18 @@ import TrackPlayer, {useActiveTrack} from 'react-native-track-player';
 import LinearGradient from 'react-native-linear-gradient';
 import useImageColor from '../../hooks/useImageColor';
 import {PlayerContext} from '../../context/PlayerProvider';
-import TrackItem from '../../components/TrackItem';
+import TrackItem from '../../components/track-item/TrackItem';
 import TrackItemBottomSheet from '../../components/bottom-sheet/TrackItemBottomSheet';
 import ProgressBar from './components/ProgressBar';
 import LocalTrackItem from '../../components/LocalTrackItem';
 const Queue = () => {
-  const {COLOR} = useThemeStore(state => state);
+  const COLOR = useThemeStore(state => state.COLOR);
 
-  const {playFrom, playList, isPlayFromLocal} = usePlayerStore(state => state);
+  const playFrom = usePlayerStore(state => state.playFrom);
+
+  const playList = usePlayerStore(state => state.playList);
+
+  const isPlayFromLocal = usePlayerStore(state => state.isPlayFromLocal);
 
   const navigation = useNavigation<any>();
 
@@ -50,12 +54,16 @@ const Queue = () => {
 
   const {showBottomSheet} = useContext(PlayerContext);
 
-  const handlePlay = async (item: any) => {
-    const index = playList.items.findIndex(
-      items => items.encodeId == item?.encodeId,
-    );
-    await TrackPlayer.skip(index);
-  };
+  const handlePlay = useCallback(
+    async (item: any) => {
+      const index = playList.items.findIndex(
+        items => items.encodeId == item?.encodeId,
+      );
+      await TrackPlayer.skip(index);
+    },
+    [playList.items],
+  );
+
   const $bg = useSharedValue(`transparent`);
 
   const flashListRef = React.useRef<FlashList<any>>(null);
@@ -134,6 +142,8 @@ const Queue = () => {
             key={currentSong?.id}>
             {!isPlayFromLocal ? (
               <TrackItem
+                isAlbum={playList.isAlbum}
+                index={0}
                 isActive={
                   currentSong?.id == playList?.items[trackIndex]?.encodeId
                 }
@@ -181,7 +191,7 @@ const Queue = () => {
                 item={item}
                 isAlbum={playList.isAlbum}
                 onClick={handlePlay}
-                index={index}
+                index={index + 1}
               />
             ) : (
               <LocalTrackItem item={item} onClick={handlePlay} />

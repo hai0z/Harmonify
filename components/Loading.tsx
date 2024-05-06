@@ -1,3 +1,4 @@
+import {GREEN} from '../constants';
 import useThemeStore from '../store/themeStore';
 import LoaderKit from 'react-native-loader-kit';
 
@@ -8,7 +9,7 @@ const Loading = () => {
     <LoaderKit
       style={{width: 50, height: 50}}
       name={'LineScalePulseOut'}
-      color={theme !== 'amoled' ? COLOR.SECONDARY : '#3cb371'}
+      color={theme !== 'amoled' ? COLOR.SECONDARY : GREEN}
     />
   );
 };

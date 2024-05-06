@@ -1,6 +1,6 @@
 import {View, Text, Dimensions} from 'react-native';
 import React, {memo, useCallback, useContext} from 'react';
-import TrackItem from '../../../components/TrackItem';
+import TrackItem from '../../../components/track-item/TrackItem';
 import {handlePlay} from '../../../service/trackPlayerService';
 import {PlayerContext} from '../../../context/PlayerProvider';
 import useThemeStore from '../../../store/themeStore';

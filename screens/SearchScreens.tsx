@@ -7,7 +7,7 @@ import {
   Image,
 } from 'react-native';
 
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useMemo, useState} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useDebounce} from '../hooks/useDebounce';
 import getThumbnail from '../utils/getThumnail';
@@ -17,7 +17,7 @@ import {useNavigation} from '@react-navigation/native';
 import useThemeStore from '../store/themeStore';
 import {usePlayerStore} from '../store/playerStore';
 import {PlayerContext} from '../context/PlayerProvider';
-import TrackItem from '../components/TrackItem';
+import TrackItem from '../components/track-item/TrackItem';
 import {widthPercentageToDP} from 'react-native-responsive-screen';
 import Loading from '../components/Loading';
 
@@ -34,6 +34,8 @@ const SearchScreens = () => {
 
   const [loading, setLoading] = useState<boolean>(false);
 
+  const currentSong = usePlayerStore(state => state.currentSong);
+  const id = useMemo(() => Math.random().toString(36).substring(7), [data]);
   useEffect(() => {
     setLoading(true);
     nodejs.channel.post('search', debouncedValue);
@@ -89,11 +91,12 @@ const SearchScreens = () => {
                   Kết quả hàng đầu
                 </Text>
                 <TrackItem
+                  isActive={currentSong?.id === data?.top?.encodeId}
                   showBottomSheet={showBottomSheet}
                   item={data?.top}
                   onClick={() => {
                     handlePlay(data?.top, {
-                      id: text,
+                      id: data?.top?.encodeId,
                       items: [data?.top, ...data?.songs],
                     });
                     setPlayFrom({
@@ -114,10 +117,11 @@ const SearchScreens = () => {
             </Text>
             {data?.songs?.map((e: any, index: number) => (
               <TrackItem
+                isActive={currentSong?.id === e.encodeId}
                 key={index}
                 onClick={() => {
                   handlePlay(e, {
-                    id: text,
+                    id,
                     items: data?.songs,
                   });
                   setPlayFrom({

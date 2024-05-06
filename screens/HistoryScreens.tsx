@@ -30,7 +30,7 @@ import 'dayjs/locale/vi';
 import {handlePlay} from '../service/trackPlayerService';
 import {PlayerContext} from '../context/PlayerProvider';
 import useImageColor from '../hooks/useImageColor';
-import TrackItem from '../components/TrackItem';
+import TrackItem from '../components/track-item/TrackItem';
 import Loading from '../components/Loading';
 
 const HistoryScreens = () => {

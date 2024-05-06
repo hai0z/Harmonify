@@ -16,7 +16,7 @@ import {handlePlay} from '../../service/trackPlayerService';
 import {useNavigation} from '@react-navigation/native';
 import {usePlayerStore} from '../../store/playerStore';
 import Entypo from 'react-native-vector-icons/Entypo';
-import TrackItem from '../../components/TrackItem';
+import TrackItem from '../../components/track-item/TrackItem';
 import {PlayerContext} from '../../context/PlayerProvider';
 import useThemeStore from '../../store/themeStore';
 import AntDesign from 'react-native-vector-icons/AntDesign';

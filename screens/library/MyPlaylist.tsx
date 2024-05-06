@@ -15,7 +15,7 @@ import {FlashList} from '@shopify/flash-list';
 import {handlePlay} from '../../service/trackPlayerService';
 import {useNavigation} from '@react-navigation/native';
 import {usePlayerStore} from '../../store/playerStore';
-import TrackItem from '../../components/TrackItem';
+import TrackItem from '../../components/track-item/TrackItem';
 import {PlayerContext} from '../../context/PlayerProvider';
 import useThemeStore from '../../store/themeStore';
 import {useUserStore} from '../../store/userStore';

@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useMemo, useState} from 'react';
 
 import {handlePlay, objectToTrack} from '../../service/trackPlayerService';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -24,6 +24,9 @@ import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import {followArtist} from '../../service/firebase';
 import {useUserStore} from '../../store/userStore';
 import Loading from '../../components/Loading';
+import TrackItem from '../../components/track-item/TrackItem';
+import {PlayerContext} from '../../context/PlayerProvider';
+import {FlashList} from '@shopify/flash-list';
 
 interface artistType {
   id: string;
@@ -60,10 +63,13 @@ const ArtistScreens = ({route}: any) => {
 
   const {listFollowArtists} = useUserStore();
 
+  const {showBottomSheet} = useContext(PlayerContext);
+
   const setPlayFrom = usePlayerStore(state => state.setPlayFrom);
-  const setCurrentSong = usePlayerStore(state => state.setCurrentSong);
 
   const scrollY = React.useRef(new Animated.Value(0)).current;
+
+  const currentSong = usePlayerStore(state => state.currentSong);
 
   useEffect(() => {
     setLoading(true);
@@ -74,6 +80,15 @@ const ArtistScreens = ({route}: any) => {
     scrollY.setValue(0);
     nodejs.channel.post('getArtist', name);
   }, [name]);
+
+  const topSong = useMemo(
+    () =>
+      dataDetailArtist?.sections
+        ?.filter((type: any) => type.sectionId === 'aSongs')[0]
+        ?.items.filter((i: any) => i.streamingStatus === 1)
+        .slice(0, 5),
+    [dataDetailArtist],
+  );
 
   const headerColor = scrollY.interpolate({
     inputRange: [SCREEN_WIDTH * 0.6, SCREEN_WIDTH * 0.6],
@@ -194,56 +209,37 @@ const ArtistScreens = ({route}: any) => {
                 Bài hát nổi bật
               </Text>
             </View>
-            {dataDetailArtist?.sections
-              ?.filter((type: any) => type.sectionId === 'aSongs')[0]
-              ?.items.filter((i: any) => i.streamingStatus === 1)
-              .slice(0, 5)
-              .map((item: any) => {
-                return (
-                  <TouchableOpacity
-                    activeOpacity={0.8}
-                    key={item.encodeId}
-                    className="flex-row items-center px-4 mb-3"
-                    onPress={() => {
-                      setCurrentSong(objectToTrack(item));
-                      handlePlay(item, {
-                        id: name,
-                        items: dataDetailArtist?.sections
-                          .filter((type: any) => type.sectionId === 'aSongs')[0]
-                          .items.filter((i: any) => i.streamingStatus === 1),
-                      });
-                      setPlayFrom({
-                        id: 'artist',
-                        name: dataDetailArtist.name,
-                      });
-                    }}>
-                    <Image
-                      source={{uri: getThumbnail(item.thumbnail)}}
+            <View style={{minHeight: 3}}>
+              <FlashList
+                estimatedItemSize={70}
+                extraData={currentSong?.id}
+                data={topSong}
+                renderItem={({item}: any) => {
+                  return (
+                    <TrackItem
+                      isActive={currentSong?.id === item.encodeId}
+                      showBottomSheet={showBottomSheet}
+                      item={item}
                       key={item.encodeId}
-                      style={{
-                        width: wp(15),
-                        height: wp(15),
+                      onClick={() => {
+                        handlePlay(item, {
+                          id: name,
+                          items: dataDetailArtist?.sections
+                            .filter(
+                              (type: any) => type.sectionId === 'aSongs',
+                            )[0]
+                            .items.filter((i: any) => i.streamingStatus === 1),
+                        });
+                        setPlayFrom({
+                          id: 'artist',
+                          name: dataDetailArtist?.name!,
+                        });
                       }}
                     />
-                    <View className="flex-1">
-                      <Text
-                        numberOfLines={1}
-                        style={{color: COLOR.TEXT_PRIMARY, fontSize: wp(4)}}
-                        className="ml-2 font-semibold">
-                        {item.title}
-                      </Text>
-                      <Text
-                        className=" ml-2"
-                        style={{
-                          color: COLOR.TEXT_SECONDARY,
-                          fontSize: wp(3.5),
-                        }}>
-                        {item.artistsNames}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                );
-              })}
+                  );
+                }}
+              />
+            </View>
             <View className="w-full justify-center items-center my-2">
               <TouchableOpacity
                 style={{borderColor: COLOR.PRIMARY}}

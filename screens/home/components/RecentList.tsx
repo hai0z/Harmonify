@@ -7,9 +7,8 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import {handlePlay, objectToTrack} from '../../../service/trackPlayerService';
 import {usePlayerStore} from '../../../store/playerStore';
 import useInternetState from '../../../hooks/useInternetState';
-import Animated, {FadeIn, FadeOut} from 'react-native-reanimated';
-import LottieView from 'lottie-react-native';
-import changeSVGColor from '@killerwink/lottie-react-native-color';
+import {GREEN} from '../../../constants';
+import ActiveTrackAnimation from '../../../components/track-item/ActiveTrackAnimation';
 
 const RecentList = ({data}: any) => {
   const COLOR = useThemeStore(state => state.COLOR);
@@ -77,29 +76,13 @@ const RecentList = ({data}: any) => {
                   style={{width: wp(15), height: wp(15)}}
                 />
                 {isActive && (
-                  <Animated.View
-                    className="rounded-tl-md rounded-bl-md"
-                    exiting={FadeOut.duration(300).springify()}
-                    entering={FadeIn.duration(300).springify()}
+                  <ActiveTrackAnimation
+                    isAlbum={false}
                     style={{
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      bottom: 0,
-                      right: 0,
-                      backgroundColor: '#00000050',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
-                    <LottieView
-                      style={{width: wp(10), height: wp(10)}}
-                      autoPlay
-                      source={changeSVGColor(
-                        require('../../../assets/animation/musicwave.json'),
-                        theme !== 'amoled' ? COLOR.PRIMARY : '#3cb371',
-                      )}
-                    />
-                  </Animated.View>
+                      borderTopLeftRadius: 6,
+                      borderBottomLeftRadius: 6,
+                    }}
+                  />
                 )}
               </View>
               <Text
@@ -109,7 +92,7 @@ const RecentList = ({data}: any) => {
                   color: isActive
                     ? theme !== 'amoled'
                       ? COLOR.PRIMARY
-                      : '#3cb371'
+                      : GREEN
                     : COLOR.TEXT_PRIMARY,
                   fontWeight: '600',
                   flex: 1,

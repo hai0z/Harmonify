@@ -107,7 +107,7 @@ export const darkTheme = {
   SECONDARY: '#d926a9',
   TEXT_PRIMARY: '#FFFFFF',
   TEXT_SECONDARY: '#A9A9A9',
-  BACKGROUND: '#1d232a',
+  BACKGROUND: '#191414',
   isDark: true,
 }
 export const synthWaveTheme = {

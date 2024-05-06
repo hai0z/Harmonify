@@ -1,16 +1,18 @@
 import {View, Text, TouchableOpacity} from 'react-native';
 import React from 'react';
-import getThumbnail from '../utils/getThumnail';
+import getThumbnail from '../../utils/getThumnail';
 import Feather from 'react-native-vector-icons/Feather';
-import useThemeStore from '../store/themeStore';
+import useThemeStore from '../../store/themeStore';
 import FastImage from 'react-native-fast-image';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
-import {usePlayerStore} from '../store/playerStore';
-import {objectToTrack} from '../service/trackPlayerService';
-import useInternetState from '../hooks/useInternetState';
+import {usePlayerStore} from '../../store/playerStore';
+import {objectToTrack} from '../../service/trackPlayerService';
+import useInternetState from '../../hooks/useInternetState';
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated';
 import LottieView from 'lottie-react-native';
 import changeSVGColor from '@killerwink/lottie-react-native-color';
+import {GREEN} from '../../constants';
+import ActiveTrackAnimation from './ActiveTrackAnimation';
 interface Props {
   item: any;
   index?: number;
@@ -42,22 +44,15 @@ const TrackItem = (props: Props) => {
           <View
             className="rounded-md flex justify-center items-center"
             style={{width: wp(15), height: wp(15)}}>
-            {isActive ? (
-              <LottieView
-                autoPlay
-                style={{width: wp(10), height: wp(10)}}
-                source={changeSVGColor(
-                  require('../assets/animation/musicwave.json'),
-                  theme !== 'amoled' ? COLOR.PRIMARY : '#3cb371',
-                )}
-              />
-            ) : (
+            <View>
               <Text
                 style={{color: COLOR.TEXT_PRIMARY}}
                 className="font-semibold">
                 {index! + 1}
               </Text>
-            )}
+
+              {isActive && <ActiveTrackAnimation isAlbum={true} />}
+            </View>
           </View>
         </View>
       ) : (
@@ -70,30 +65,7 @@ const TrackItem = (props: Props) => {
             className="rounded-none"
             style={{width: wp(15), height: wp(15)}}
           />
-          {isActive && (
-            <Animated.View
-              exiting={FadeOut.duration(300)}
-              entering={FadeIn.duration(300)}
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                bottom: 0,
-                right: 0,
-                backgroundColor: '#00000050',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <LottieView
-                style={{width: wp(10), height: wp(10)}}
-                autoPlay
-                source={changeSVGColor(
-                  require('../assets/animation/musicwave.json'),
-                  theme !== 'amoled' ? COLOR.PRIMARY : '#3cb371',
-                )}
-              />
-            </Animated.View>
-          )}
+          {isActive && <ActiveTrackAnimation isAlbum={false} />}
         </View>
       )}
       <View className="flex justify-center ml-2 flex-1 ">
@@ -104,7 +76,7 @@ const TrackItem = (props: Props) => {
             color: isActive
               ? theme !== 'amoled'
                 ? COLOR.PRIMARY
-                : '#3cb371'
+                : GREEN
               : COLOR.TEXT_PRIMARY,
             fontSize: wp(4),
           }}>
