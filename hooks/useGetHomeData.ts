@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
 import { usePlayerStore } from "../store/playerStore";
-import { useUserStore } from "../store/userStore";
 import useInternetState from "./useInternetState";
-import { collection, onSnapshot, query } from 'firebase/firestore';
-import { auth, db } from '../firebase/config';
 import nodejs from "nodejs-mobile-react-native";
 import mmkv from "../utils/mmkv";
 import { getRecentListening } from "../service/firebase";
@@ -13,8 +10,7 @@ export default function useGetHomeData() {
   const [dataNewRelease, setDataNewRelease] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [dataRecent, setDataRecent] = useState<any>([]);
-  const { setLikedSongs } = usePlayerStore();
-  const { setLikedPlaylists, setMyPlaylists } = useUserStore();
+  const setLikedSongs = usePlayerStore(state => state.setLikedSongs);
   const isConnected = useInternetState();
 
 
@@ -44,42 +40,7 @@ export default function useGetHomeData() {
         setLoading(false);
       };
       Promise.all([getRecentList(), nodejs.channel.post('home')]);
-      const q = query(
-        collection(db, `users/${auth.currentUser?.uid}/likedSong`),
-      );
-      const unsub = onSnapshot(q, querySnapshot => {
-        const songs = [] as any;
-        querySnapshot.forEach(doc => {
-          songs.push(doc.data());
-        });
-        setLikedSongs(songs);
-        mmkv.set('liked-songs', JSON.stringify(songs));
-      });
-      const q1 = query(
-        collection(db, `users/${auth.currentUser?.uid}/likedPlaylists`),
-      );
-      const unsub1 = onSnapshot(q1, querySnapshot => {
-        const likedPlaylists = [] as any;
-        querySnapshot.forEach(doc => {
-          likedPlaylists.push(doc.data());
-        });
-        setLikedPlaylists(likedPlaylists);
-      });
-      const q2 = query(
-        collection(db, `users/${auth.currentUser?.uid}/myPlaylists`),
-      );
-      const unsub2 = onSnapshot(q2, querySnapshot => {
-        const myPlaylists = [] as any;
-        querySnapshot.forEach(doc => {
-          myPlaylists.push(doc.data());
-        });
-        setMyPlaylists(myPlaylists);
-      });
-      return () => {
-        unsub();
-        unsub1();
-        unsub2();
-      };
+
     } else {
       setdataHome(JSON.parse(mmkv.getString('home') || '[]'));
       setDataNewRelease(JSON.parse(mmkv.getString('new-release') || '[]'));

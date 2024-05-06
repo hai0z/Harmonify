@@ -17,6 +17,7 @@ export default function App() {
       try {
         await TrackPlayer.setupPlayer({
           autoHandleInterruptions: true,
+
           maxCacheSize: 1024 * 10,
         });
 
@@ -48,9 +49,12 @@ export default function App() {
             appKilledPlaybackBehavior:
               AppKilledPlaybackBehavior.StopPlaybackAndRemoveNotification,
             alwaysPauseOnInterruption: true,
+            stopForegroundGracePeriod: 1000,
           },
         });
-      } catch (e) {}
+      } catch (e) {
+        console.log(e);
+      }
     };
     setupPlayer();
   }, []);

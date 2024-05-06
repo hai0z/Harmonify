@@ -145,6 +145,7 @@ const MyPlaylist = ({route}: {route: any}) => {
     handlePlay(song, {
       id: `${data?.songs?.length}-${data?.encodeId}`,
       items: data?.songs,
+      isAlbum: false,
     });
     setPlayFrom({
       id: 'playlist',

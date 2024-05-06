@@ -17,17 +17,31 @@ import {addSongToPlaylist} from '../../service/firebase';
 import RenderPlaylistThumbnail from '../library/components/RenderPlaylistThumnail';
 import getThumbnail from '../../utils/getThumnail';
 import CheckBox from './components/CheckBox';
+import {usePlayerStore} from '../../store/playerStore';
+import LinearGradient from 'react-native-linear-gradient';
+import Entypo from 'react-native-vector-icons/Entypo';
+import useToggleLikeSong from '../../hooks/useToggleLikeSong';
 
 const AddToPlaylist = ({route}: {route: any}) => {
   const {song} = route.params;
   const {COLOR} = useThemeStore();
   const navigation = useNavigation<any>();
   const {myPlaylists} = useUserStore();
+  const {likedSongs} = usePlayerStore();
+
+  const [likedSongSelected, setLikedSongSelected] = React.useState(false);
+
+  const {handleAddToLikedList} = useToggleLikeSong();
 
   const playlistIncluded = myPlaylists.filter((pl: any) =>
     pl.songs.find((s: any) => s.encodeId == song.encodeId),
   );
 
+  const likedSongIncluded = likedSongs.some(
+    (s: any) => s.encodeId == song.encodeId,
+  );
+
+  console.log({likedSongIncluded});
   const playListNotIncluded = myPlaylists.filter(
     (pl: any) => !pl.songs.find((s: any) => s.encodeId == song.encodeId),
   );
@@ -38,19 +52,25 @@ const AddToPlaylist = ({route}: {route: any}) => {
 
   const handleAddToPlaylist = async () => {
     try {
-      if (selectedPlaylistId.length == 0) {
+      if (selectedPlaylistId.length == 0 && !likedSongSelected) {
         navigation.goBack();
         return;
       }
-      const promise = [];
-      for (const id of selectedPlaylistId) {
-        promise.push(addSongToPlaylist(id, song));
+      if (likedSongSelected) {
+        handleAddToLikedList(song);
+        navigation.goBack();
       }
-      await Promise.all(promise).then(() => {
-        setSelectedPlaylistId([]);
-      });
-      ToastAndroid.show('Đã thêm vào danh sách phát', ToastAndroid.SHORT);
-      navigation.goBack();
+      if (selectedPlaylistId.length > 0) {
+        const promise = [];
+        for (const id of selectedPlaylistId) {
+          promise.push(addSongToPlaylist(id, song));
+        }
+        await Promise.all(promise).then(() => {
+          setSelectedPlaylistId([]);
+        });
+        ToastAndroid.show('Đã thêm vào danh sách phát', ToastAndroid.SHORT);
+        navigation.goBack();
+      }
     } catch (error) {
       Alert.alert('Thất bại', 'Có lỗi xảy ra');
     }
@@ -100,7 +120,7 @@ const AddToPlaylist = ({route}: {route: any}) => {
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false}>
-        {playlistIncluded.length > 0 && (
+        {(playlistIncluded.length > 0 || likedSongIncluded) && (
           <View className="mb-4">
             <Text
               style={{
@@ -110,9 +130,39 @@ const AddToPlaylist = ({route}: {route: any}) => {
               className="font-bold">
               Đã lưu vào
             </Text>
+            {likedSongIncluded && (
+              <TouchableOpacity
+                disabled
+                activeOpacity={0.8}
+                className="flex-row items-center mt-4">
+                <LinearGradient
+                  style={{
+                    width: widthPercentageToDP(18),
+                    height: widthPercentageToDP(18),
+                  }}
+                  colors={[COLOR.SECONDARY, COLOR.PRIMARY]}
+                  className="justify-center items-center">
+                  <Entypo name="heart" size={36} color={COLOR.TEXT_PRIMARY} />
+                </LinearGradient>
+                <View style={{marginLeft: 10}}>
+                  <Text
+                    className="font-bold mb-[5px]"
+                    style={{color: COLOR.TEXT_PRIMARY}}>
+                    Bài hát đã thích
+                  </Text>
+                  <Text style={{color: COLOR.TEXT_SECONDARY}}>
+                    Danh sách phát • {likedSongs.length} bài hát
+                  </Text>
+                </View>
+                <View className="ml-auto">
+                  <CheckBox isChecked={true} />
+                </View>
+              </TouchableOpacity>
+            )}
             {playlistIncluded.map(pl => (
               <TouchableOpacity
                 key={pl.encodeId}
+                disabled
                 activeOpacity={1}
                 className="flex-row items-center mt-4">
                 {pl.songs.length > 0 ? (
@@ -159,6 +209,37 @@ const AddToPlaylist = ({route}: {route: any}) => {
               className="font-bold">
               Danh sách phát của bạn
             </Text>
+            {!likedSongIncluded && (
+              <TouchableOpacity
+                onPress={() => {
+                  setLikedSongSelected(!likedSongSelected);
+                }}
+                activeOpacity={0.8}
+                className="flex-row items-center mt-4">
+                <LinearGradient
+                  style={{
+                    width: widthPercentageToDP(18),
+                    height: widthPercentageToDP(18),
+                  }}
+                  colors={[COLOR.SECONDARY, COLOR.PRIMARY]}
+                  className="justify-center items-center">
+                  <Entypo name="heart" size={36} color={COLOR.TEXT_PRIMARY} />
+                </LinearGradient>
+                <View style={{marginLeft: 10}}>
+                  <Text
+                    className="font-bold mb-[5px]"
+                    style={{color: COLOR.TEXT_PRIMARY}}>
+                    Bài hát đã thích
+                  </Text>
+                  <Text style={{color: COLOR.TEXT_SECONDARY}}>
+                    Danh sách phát • {likedSongs.length} bài hát
+                  </Text>
+                </View>
+                <View className="ml-auto">
+                  <CheckBox isChecked={likedSongSelected} />
+                </View>
+              </TouchableOpacity>
+            )}
             {playListNotIncluded.map(pl => (
               <TouchableOpacity
                 key={pl.encodeId}

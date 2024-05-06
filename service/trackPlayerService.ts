@@ -66,8 +66,7 @@ nodejs.channel.addListener('getSong', async data => {
   await TrackPlayer.load({
     ...data.track,
     url: data.data['128'],
-  })
-
+  },)
 });
 
 nodejs.channel.addListener('getSongInfo', async data => {
@@ -77,6 +76,7 @@ nodejs.channel.addListener('getSongInfo', async data => {
 const handlePlay = async (song: any, playlist: IPlaylist = {
   id: "",
   items: [],
+  isAlbum: false
 }) => {
   const currentPlaylistId = usePlayerStore.getState().playList?.id;
   usePlayerStore.getState().setIsPlayFromLocal(false);
@@ -101,6 +101,7 @@ const handlePlay = async (song: any, playlist: IPlaylist = {
 const handlePlaySongInLocal = async (song: any, playlist: IPlaylist = {
   id: "",
   items: [],
+  isAlbum: false
 }) => {
   usePlayerStore.getState().setIsPlayFromLocal(true);
   usePlayerStore.getState().setColor(defaultColorObj);

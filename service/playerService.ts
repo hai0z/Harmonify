@@ -6,7 +6,7 @@ export const PlaybackService = async function () {
 
   TrackPlayer.addEventListener(Event.RemotePause, () => TrackPlayer.pause());
 
-  TrackPlayer.addEventListener(Event.RemoteNext, async () => {
+  TrackPlayer.addEventListener(Event.RemoteNext, () => {
     TrackPlayer.skipToNext();
   })
 

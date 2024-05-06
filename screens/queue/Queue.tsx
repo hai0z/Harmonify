@@ -58,6 +58,8 @@ const Queue = () => {
   };
   const $bg = useSharedValue(`transparent`);
 
+  const flashListRef = React.useRef<FlashList<any>>(null);
+
   useEffect(() => {
     const queue = [...playList.items];
     const head = queue.slice(0, trackIndex);
@@ -160,6 +162,7 @@ const Queue = () => {
       </View>
       <View className="flex-1 pt-4">
         <FlashList
+          ref={flashListRef}
           ListFooterComponent={<View className="h-10" />}
           ListEmptyComponent={
             <View className="flex justify-center items-center pt-10">
@@ -171,12 +174,14 @@ const Queue = () => {
           showsVerticalScrollIndicator={false}
           data={copyPlaylist}
           estimatedItemSize={70}
-          renderItem={({item}) => {
+          renderItem={({item, index}) => {
             return !isPlayFromLocal ? (
               <TrackItem
                 showBottomSheet={showBottomSheet}
                 item={item}
+                isAlbum={playList.isAlbum}
                 onClick={handlePlay}
+                index={index}
               />
             ) : (
               <LocalTrackItem item={item} onClick={handlePlay} />

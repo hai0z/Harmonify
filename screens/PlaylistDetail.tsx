@@ -152,6 +152,7 @@ const PlaylistDetail = ({route}: {route: any}) => {
       handlePlay(song, {
         id: data.playListId,
         items: playlistData?.song?.items,
+        isAlbum: playlistData?.isAlbum,
       });
       setPlayFrom({
         id: playlistData?.isAlbum ? 'album' : 'playlist',

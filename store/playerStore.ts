@@ -18,7 +18,8 @@ export const defaultColorObj = {
 }
 export interface IPlaylist {
   id: string,
-  items: any[]
+  items: any[],
+  isAlbum?: boolean
 }
 export interface Color {
   average: string;
@@ -61,7 +62,7 @@ interface PlayerStore {
   setLyrics: (lyrics: any) => void
   isLoadingTrack: boolean,
   setisLoadingTrack: (isLoadingTrack: boolean) => void,
-  likedSongs: any,
+  likedSongs: any[],
   setLikedSongs: (likedSongs: any) => void
   currentSong: Track | null
   setCurrentSong: (currentSong: Track | null) => void
@@ -86,6 +87,7 @@ export const usePlayerStore = create<PlayerStore>()(
     playList: {
       id: "",
       items: [],
+      isAlbum: false
     },
     color: defaultColorObj as Partial<Color>,
     setColor: (color: Partial<Color>) => set({ color }),

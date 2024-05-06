@@ -35,6 +35,7 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
     setisLoadingTrack,
     tempSong,
     setSleepTimer,
+    lastPosition,
   } = usePlayerStore();
 
   const COLOR = useThemeStore(state => state.COLOR);
@@ -87,7 +88,7 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
           })),
         );
       }
-      await TrackPlayer.skip(index).finally(() => {
+      await TrackPlayer.skip(index, lastPosition).finally(() => {
         setisLoadingTrack(false);
       });
     }
