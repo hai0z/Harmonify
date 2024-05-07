@@ -9,7 +9,13 @@ import {
   TextInput,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import React, {useCallback, useContext, useEffect, useMemo} from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+} from 'react';
 import {LinearGradient} from 'react-native-linear-gradient';
 import {FlashList} from '@shopify/flash-list';
 import {handlePlay} from '../../service/trackPlayerService';
@@ -107,7 +113,7 @@ const MyPlaylist = ({route}: {route: any}) => {
     })();
   }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (color) {
       bgAnimated.value = withTiming(
         `${

@@ -4,6 +4,7 @@ import React, {
   useContext,
   useEffect,
   useId,
+  useLayoutEffect,
   useState,
 } from 'react';
 import useThemeStore from '../store/themeStore';
@@ -93,7 +94,7 @@ const HistoryScreens = () => {
       easing: Easing.inOut(Easing.quad),
     });
   };
-  useEffect(() => {
+  useLayoutEffect(() => {
     runOnUI(changeBgAnimated)();
   }, [gradientColor, historyData]);
 

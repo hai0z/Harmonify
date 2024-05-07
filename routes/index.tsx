@@ -298,11 +298,7 @@ const CreatePlaylistStack = () => {
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen name="CreatePlaylist" component={CreatePlaylist} />
-      <Stack.Screen
-        name="AddToPlaylist"
-        component={AddToPlaylist}
-        options={{animation: 'slide_from_bottom'}}
-      />
+      <Stack.Screen name="AddToPlaylist" component={AddToPlaylist} />
       <Stack.Screen name="EditPlaylist" component={EditPlaylist} />
     </Stack.Navigator>
   );

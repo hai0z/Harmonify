@@ -1,5 +1,5 @@
 import {View, Text, TouchableOpacity} from 'react-native';
-import React, {useEffect, useMemo} from 'react';
+import React, {useEffect} from 'react';
 import {usePlayerStore} from '../../store/playerStore';
 import {FlashList} from '@shopify/flash-list';
 import {LinearGradient} from 'react-native-linear-gradient';

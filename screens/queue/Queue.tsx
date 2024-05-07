@@ -1,5 +1,11 @@
 import {View, Text} from 'react-native';
-import React, {useCallback, useContext, useEffect, useState} from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useState,
+} from 'react';
 import useThemeStore from '../../store/themeStore';
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -82,7 +88,7 @@ const Queue = () => {
       easing: Easing.inOut(Easing.quad),
     });
   };
-  useEffect(() => {
+  useLayoutEffect(() => {
     runOnUI(changeBgAnimated)();
   }, [gradientColor]);
 
@@ -127,86 +133,92 @@ const Queue = () => {
         </View>
         <TouchableOpacity className="w-6 h-6 "></TouchableOpacity>
       </View>
-      <View className="mt-4">
-        <View>
-          <Text
-            style={{
-              color: COLOR.TEXT_PRIMARY,
-              fontSize: widthPercentageToDP(5),
-            }}
-            className="font-bold px-4 mb-4">
-            Đang phát
-          </Text>
-          <Animated.View
-            entering={FadeInDown.duration(300).springify().damping(200)}
-            key={currentSong?.id}>
-            {!isPlayFromLocal ? (
-              <TrackItem
-                isAlbum={playList.isAlbum}
-                index={0}
-                isActive={
-                  currentSong?.id == playList?.items[trackIndex]?.encodeId
-                }
-                showBottomSheet={showBottomSheet}
-                item={playList.items[trackIndex]}
-                onClick={handlePlay}
-              />
-            ) : (
-              <LocalTrackItem
-                item={playList.items[trackIndex]}
-                onClick={handlePlay}
-              />
-            )}
-          </Animated.View>
-        </View>
-        <View className="px-4 mt-[2px]">
-          <Text
-            style={{
-              color: COLOR.TEXT_PRIMARY,
-              fontSize: widthPercentageToDP(5),
-            }}
-            className="font-bold">
-            Hàng đợi
-          </Text>
-        </View>
-      </View>
-      <View className="flex-1 pt-4">
-        <FlashList
-          ref={flashListRef}
-          ListFooterComponent={<View className="h-10" />}
-          ListEmptyComponent={
-            <View className="flex justify-center items-center pt-10">
-              <Text style={{color: COLOR.TEXT_PRIMARY}} className="text-center">
-                Hàng chờ trống...
+      {currentSong?.id && (
+        <>
+          <View className="mt-4">
+            <View>
+              <Text
+                style={{
+                  color: COLOR.TEXT_PRIMARY,
+                  fontSize: widthPercentageToDP(5),
+                }}
+                className="font-bold px-4 mb-4">
+                Đang phát
+              </Text>
+              <Animated.View
+                entering={FadeInDown.duration(300).springify().damping(200)}
+                key={currentSong?.id}>
+                {!isPlayFromLocal ? (
+                  <TrackItem
+                    isAlbum={playList.isAlbum}
+                    index={0}
+                    isActive={
+                      currentSong?.id == playList?.items[trackIndex]?.encodeId
+                    }
+                    showBottomSheet={showBottomSheet}
+                    item={playList.items[trackIndex]}
+                    onClick={handlePlay}
+                  />
+                ) : (
+                  <LocalTrackItem
+                    item={playList.items[trackIndex]}
+                    onClick={handlePlay}
+                  />
+                )}
+              </Animated.View>
+            </View>
+            <View className="px-4 mt-[2px]">
+              <Text
+                style={{
+                  color: COLOR.TEXT_PRIMARY,
+                  fontSize: widthPercentageToDP(5),
+                }}
+                className="font-bold">
+                Hàng đợi
               </Text>
             </View>
-          }
-          showsVerticalScrollIndicator={false}
-          data={copyPlaylist}
-          estimatedItemSize={70}
-          renderItem={({item, index}) => {
-            return !isPlayFromLocal ? (
-              <TrackItem
-                showBottomSheet={showBottomSheet}
-                item={item}
-                isAlbum={playList.isAlbum}
-                onClick={handlePlay}
-                index={index + 1}
-              />
-            ) : (
-              <LocalTrackItem item={item} onClick={handlePlay} />
-            );
-          }}
-        />
-      </View>
-      <View className="py-4 flex items-center justify-center w-full">
-        <ProgressBar />
-        <View className="flex flex-row justify-between items-center w-[240px]">
-          <PrevButton />
-          <PlayButton />
-          <NextButton />
-        </View>
-      </View>
+          </View>
+          <View className="flex-1 pt-4">
+            <FlashList
+              ref={flashListRef}
+              ListFooterComponent={<View className="h-10" />}
+              ListEmptyComponent={
+                <View className="flex justify-center items-center pt-10">
+                  <Text
+                    style={{color: COLOR.TEXT_PRIMARY}}
+                    className="text-center">
+                    Hàng chờ trống...
+                  </Text>
+                </View>
+              }
+              showsVerticalScrollIndicator={false}
+              data={copyPlaylist}
+              estimatedItemSize={70}
+              renderItem={({item, index}) => {
+                return !isPlayFromLocal ? (
+                  <TrackItem
+                    showBottomSheet={showBottomSheet}
+                    item={item}
+                    isAlbum={playList.isAlbum}
+                    onClick={handlePlay}
+                    index={index + 1}
+                  />
+                ) : (
+                  <LocalTrackItem item={item} onClick={handlePlay} />
+                );
+              }}
+            />
+          </View>
+          <View className="py-4 flex items-center justify-center w-full">
+            <ProgressBar />
+            <View className="flex flex-row justify-between items-center w-[240px]">
+              <PrevButton />
+              <PlayButton />
+              <NextButton />
+            </View>
+          </View>
+        </>
+      )}
       <TrackItemBottomSheet />
     </View>
   );

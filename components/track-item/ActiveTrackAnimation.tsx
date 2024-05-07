@@ -1,4 +1,4 @@
-import {View, Text, StyleProp, ViewStyle} from 'react-native';
+import {ViewStyle} from 'react-native';
 import React from 'react';
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated';
 import LottieView from 'lottie-react-native';
@@ -15,7 +15,6 @@ const ActiveTrackAnimation = ({isAlbum, style}: Props) => {
   const COLOR = useThemeStore(state => state.COLOR);
   const theme = useThemeStore(state => state.theme);
   const isPlaying = usePlaybackState();
-  console.log('fsdfs');
   return (
     isPlaying.state === State.Playing && (
       <Animated.View
@@ -27,7 +26,7 @@ const ActiveTrackAnimation = ({isAlbum, style}: Props) => {
           left: 0,
           bottom: 0,
           right: 0,
-          backgroundColor: !isAlbum ? '#00000080' : COLOR.BACKGROUND,
+          backgroundColor: !isAlbum ? '#00000075' : COLOR.BACKGROUND,
           justifyContent: 'center',
           alignItems: 'center',
           ...style,

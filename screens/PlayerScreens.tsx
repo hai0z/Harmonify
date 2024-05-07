@@ -7,7 +7,7 @@ import {
   StyleSheet,
 } from 'react-native';
 
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useLayoutEffect} from 'react';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {LinearGradient} from 'react-native-linear-gradient';
 import {playFromMapping, usePlayerStore} from '../store/playerStore';
@@ -62,7 +62,7 @@ const PlayerScreens = () => {
       easing: Easing.inOut(Easing.quad),
     });
   };
-  useEffect(() => {
+  useLayoutEffect(() => {
     runOnUI(changeBgAnimated)();
   }, [gradientColor, COLOR]);
 

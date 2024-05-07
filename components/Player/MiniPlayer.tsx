@@ -1,5 +1,5 @@
 import {View, Text, TouchableOpacity, Dimensions} from 'react-native';
-import React, {useCallback, useEffect} from 'react';
+import React, {useCallback, useEffect, useLayoutEffect} from 'react';
 import useKeyBoardStatus from '../../hooks/useKeyBoardStatus';
 import TrackPlayer, {State, usePlaybackState} from 'react-native-track-player';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -44,7 +44,7 @@ const MiniPlayer = () => {
     }
   }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     bgAnimated.value = withTiming(`${gradientColor}`, {
       duration: 550,
     });
