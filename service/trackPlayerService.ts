@@ -70,7 +70,6 @@ nodejs.channel.addListener('getSong', async data => {
     if (usePlayerStore.getState().savePlayerState && usePlayerStore.getState().isFistInit)
       await TrackPlayer.seekTo(usePlayerStore.getState().lastPosition).then(() => {
         usePlayerStore.getState().setCurrentSong(data.track);
-
         usePlayerStore.getState().setIsFistInit(false)
       });
   })

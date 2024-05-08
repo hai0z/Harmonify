@@ -14,6 +14,7 @@ import {usePlayerStore} from '../../store/playerStore';
 import {widthPercentageToDP} from 'react-native-responsive-screen';
 import FastImage from 'react-native-fast-image';
 import {deleteHistory} from '../../service/firebase';
+import {GREEN} from '../../constants';
 const SettingScreen = () => {
   const {theme, COLOR} = useThemeStore();
   const {
@@ -76,13 +77,17 @@ const SettingScreen = () => {
           <View className="flex flex-row items-center">
             <Text
               style={{
-                color: COLOR?.PRIMARY,
+                color: theme === 'amoled' ? GREEN : COLOR?.PRIMARY,
                 fontSize: widthPercentageToDP(3.5),
               }}
               className="mr-2 capitalize">
               {theme}
             </Text>
-            <Entypo name="chevron-down" size={18} color={COLOR?.PRIMARY} />
+            <Entypo
+              name="chevron-down"
+              size={18}
+              color={theme === 'amoled' ? GREEN : COLOR?.PRIMARY}
+            />
           </View>
         </TouchableOpacity>
       </View>
@@ -107,7 +112,7 @@ const SettingScreen = () => {
           </Text>
           <View className="flex flex-row items-center mt-2">
             <Switch
-              thumbColor={COLOR?.PRIMARY}
+              thumbColor={theme === 'amoled' ? GREEN : COLOR?.PRIMARY}
               trackColor={{false: selectedColor, true: selectedColor}}
               value={saveHistory}
               onChange={() => setSaveHistory(!saveHistory)}
@@ -141,7 +146,7 @@ const SettingScreen = () => {
             }}>
             <Text
               style={{
-                color: COLOR?.PRIMARY,
+                color: theme === 'amoled' ? GREEN : COLOR?.PRIMARY,
                 fontSize: widthPercentageToDP(3.5),
               }}>
               Xoá lịch sử nghe
@@ -182,7 +187,11 @@ const SettingScreen = () => {
                     : 'Cao'}
                 </Text>
                 {imageQuality === item ? (
-                  <Entypo name="check" size={18} color={COLOR?.PRIMARY} />
+                  <Entypo
+                    name="check"
+                    size={18}
+                    color={theme === 'amoled' ? GREEN : COLOR?.PRIMARY}
+                  />
                 ) : null}
               </TouchableOpacity>
             ))}
@@ -210,7 +219,7 @@ const SettingScreen = () => {
           </Text>
           <View className="flex flex-row items-center">
             <Switch
-              thumbColor={COLOR?.PRIMARY}
+              thumbColor={theme === 'amoled' ? GREEN : COLOR?.PRIMARY}
               trackColor={{false: selectedColor, true: selectedColor}}
               value={savePlayerState}
               onChange={() => setSavePlayerState(!savePlayerState)}
@@ -249,7 +258,7 @@ const SettingScreen = () => {
           }}>
           <Text
             style={{
-              color: COLOR?.PRIMARY,
+              color: theme === 'amoled' ? GREEN : COLOR?.PRIMARY,
               fontSize: widthPercentageToDP(3.5),
             }}>
             Đăng xuất

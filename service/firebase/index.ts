@@ -1,4 +1,4 @@
-import { collection, deleteDoc, deleteField, doc, getDocs, limit, orderBy, query, setDoc, updateDoc, writeBatch } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDocs, limit, orderBy, query, setDoc, updateDoc, writeBatch } from "firebase/firestore";
 import { auth, db } from "../../firebase/config";
 import { usePlayerStore } from "../../store/playerStore";
 import { useUserStore } from "../../store/userStore";
