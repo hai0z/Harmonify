@@ -38,6 +38,7 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
     savePlayerState,
     setCurrentSong,
     setIsFistInit,
+    saveHistory,
   } = usePlayerStore();
 
   const COLOR = useThemeStore(state => state.COLOR);
@@ -118,7 +119,7 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
   }, [currentSong?.id]);
 
   useEffect(() => {
-    saveToHistory(tempSong);
+    saveHistory && saveToHistory(tempSong);
   }, [tempSong?.encodeId]);
 
   return (

@@ -11,6 +11,11 @@ import useInternetState from '../../hooks/useInternetState';
 import {GREEN} from '../../constants';
 import ActiveTrackAnimation from './ActiveTrackAnimation';
 import {Song} from '../../utils/types/type';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import 'dayjs/locale/vi';
+dayjs.extend(relativeTime);
+dayjs.locale('vi');
 interface Props {
   item: Song;
   index?: number;
@@ -18,11 +23,13 @@ interface Props {
   onClick: (item: any) => void;
   showBottomSheet: (item: Song) => void;
   isActive: boolean;
+  timeStamp?: number;
 }
 
 const TrackItem = (props: Props) => {
   const isConnected = useInternetState();
-  const {item, index, onClick, isAlbum, showBottomSheet, isActive} = props;
+  const {item, index, onClick, isAlbum, showBottomSheet, isActive, timeStamp} =
+    props;
   const COLOR = useThemeStore(state => state.COLOR);
   const theme = useThemeStore(state => state.theme);
   const setCurrentSong = usePlayerStore(state => state.setCurrentSong);
@@ -66,7 +73,7 @@ const TrackItem = (props: Props) => {
           {isActive && <ActiveTrackAnimation isAlbum={false} />}
         </View>
       )}
-      <View className="flex justify-center ml-2 flex-1 ">
+      <View className="flex  ml-2 flex-1 justify-center">
         <Text
           className="font-semibold"
           numberOfLines={1}
@@ -81,23 +88,32 @@ const TrackItem = (props: Props) => {
           {item?.title}
         </Text>
 
-        <Text
-          numberOfLines={1}
-          style={{color: COLOR.TEXT_SECONDARY, fontSize: wp(3.5)}}>
-          {item?.artistsNames}
-        </Text>
+        <View className="flex-row items-end justify-between">
+          <Text
+            numberOfLines={1}
+            style={{color: COLOR.TEXT_SECONDARY, fontSize: wp(3.5)}}>
+            {item?.artistsNames}
+          </Text>
+          {timeStamp && (
+            <Text style={{fontSize: wp(2.5)}}>
+              {dayjs(timeStamp).fromNow()}
+            </Text>
+          )}
+        </View>
       </View>
 
-      <TouchableOpacity
-        disabled={item?.streamingStatus === 2}
-        onPress={() => showBottomSheet(item)}
-        hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}>
-        <Feather
-          name="more-vertical"
-          size={20}
-          color={`${COLOR.TEXT_PRIMARY}90`}
-        />
-      </TouchableOpacity>
+      <View>
+        <TouchableOpacity
+          disabled={item?.streamingStatus === 2}
+          onPress={() => showBottomSheet(item)}
+          hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}>
+          <Feather
+            name="more-vertical"
+            size={20}
+            color={`${COLOR.TEXT_PRIMARY}90`}
+          />
+        </TouchableOpacity>
+      </View>
     </TouchableOpacity>
   );
 };

@@ -1,4 +1,4 @@
-import {View, Text, Alert, Switch} from 'react-native';
+import {View, Text, Alert, Switch, ToastAndroid} from 'react-native';
 import React, {useEffect} from 'react';
 import useThemeStore from '../../store/themeStore';
 import Animated, {useSharedValue} from 'react-native-reanimated';
@@ -13,10 +13,17 @@ import tinycolor from 'tinycolor2';
 import {usePlayerStore} from '../../store/playerStore';
 import {widthPercentageToDP} from 'react-native-responsive-screen';
 import FastImage from 'react-native-fast-image';
+import {deleteHistory} from '../../service/firebase';
 const SettingScreen = () => {
   const {theme, COLOR} = useThemeStore();
-  const {savePlayerState, setSavePlayerState, imageQuality, setImageQuality} =
-    usePlayerStore();
+  const {
+    savePlayerState,
+    setSavePlayerState,
+    imageQuality,
+    setImageQuality,
+    saveHistory,
+    setSaveHistory,
+  } = usePlayerStore();
   const selectedColor = COLOR.isDark
     ? tinycolor(themeMap[theme]?.BACKGROUND).lighten(5).toString()
     : tinycolor(themeMap[theme]?.BACKGROUND).darken(5).toString();
@@ -78,6 +85,69 @@ const SettingScreen = () => {
             <Entypo name="chevron-down" size={18} color={COLOR?.PRIMARY} />
           </View>
         </TouchableOpacity>
+      </View>
+      <View
+        className="mt-4 px-1 py-2 rounded-md"
+        style={{backgroundColor: COLOR.BACKGROUND}}>
+        <Text
+          style={{
+            color: COLOR?.TEXT_PRIMARY,
+            fontSize: widthPercentageToDP(4.5),
+            fontWeight: '500',
+          }}>
+          Ứng dụng
+        </Text>
+        <View className="flex flex-row justify-between items-center">
+          <Text
+            style={{
+              color: COLOR?.TEXT_PRIMARY,
+              fontSize: widthPercentageToDP(3.5),
+            }}>
+            Lưu lại lịch sử nghe
+          </Text>
+          <View className="flex flex-row items-center mt-2">
+            <Switch
+              thumbColor={COLOR?.PRIMARY}
+              trackColor={{false: selectedColor, true: selectedColor}}
+              value={saveHistory}
+              onChange={() => setSaveHistory(!saveHistory)}
+            />
+          </View>
+        </View>
+        <View className="flex flex-row justify-between items-center">
+          <TouchableOpacity
+            hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}
+            onPress={() => {
+              Alert.alert(
+                'Xóa lịch sử nghe',
+                'Bạn có muốn xoá toàn bộ lịch sử nghe?',
+                [
+                  {
+                    text: 'Huỷ',
+                    onPress: () => {},
+                    style: 'cancel',
+                  },
+                  {
+                    text: 'Xóa',
+                    onPress: async () => {
+                      await deleteHistory().then(() => {
+                        ToastAndroid.show('Đã xóa', ToastAndroid.SHORT);
+                      });
+                    },
+                    style: 'destructive',
+                  },
+                ],
+              );
+            }}>
+            <Text
+              style={{
+                color: COLOR?.PRIMARY,
+                fontSize: widthPercentageToDP(3.5),
+              }}>
+              Xoá lịch sử nghe
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
       <View
         className="mt-4 px-1 py-2 rounded-md"
@@ -179,7 +249,7 @@ const SettingScreen = () => {
           }}>
           <Text
             style={{
-              color: COLOR?.SECONDARY,
+              color: COLOR?.PRIMARY,
               fontSize: widthPercentageToDP(3.5),
             }}>
             Đăng xuất

@@ -33,6 +33,7 @@ import {PlayerContext} from '../context/PlayerProvider';
 import useImageColor from '../hooks/useImageColor';
 import TrackItem from '../components/track-item/TrackItem';
 import Loading from '../components/Loading';
+import {navigation} from '../utils/types/RootStackParamList';
 
 const HistoryScreens = () => {
   const COLOR = useThemeStore(state => state.COLOR);
@@ -42,17 +43,19 @@ const HistoryScreens = () => {
   const playerContext = useContext(PlayerContext);
 
   const currentSong = usePlayerStore(state => state.currentSong);
+  const saveHistory = usePlayerStore(state => state.saveHistory);
 
   const id = useId();
 
-  const navigation = useNavigation<any>();
+  const navigation = useNavigation<navigation<'History'>>();
 
-  const [historyData, setHistoryData] = useState<Track[]>([]);
+  const [historyData, setHistoryData] = useState<any>([]);
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const getHistory = async () => {
+      setLoading(true);
       const q = query(
         collection(db, `users/${auth.currentUser?.uid}/history`),
         orderBy('timestamp', 'desc'),
@@ -66,7 +69,7 @@ const HistoryScreens = () => {
       setHistoryData(songs);
       setLoading(false);
     };
-    getHistory();
+    saveHistory && getHistory();
   }, []);
 
   const {dominantColor: gradientColor} = useImageColor();
@@ -150,21 +153,43 @@ const HistoryScreens = () => {
             ListHeaderComponent={<View className="h-8"></View>}
             ListFooterComponent={<View className="h-40" />}
             ListEmptyComponent={
-              <View className="flex justify-center items-center pt-10">
-                <Text
-                  style={{color: COLOR.TEXT_PRIMARY}}
-                  className="text-center">
-                  Bạn chưa nghe bài hát nào gần dây
-                </Text>
+              <View
+                className="flex justify-center items-center flex-1"
+                style={{
+                  height: hp(75) - 35,
+                }}>
+                {!saveHistory ? (
+                  <View className="flex flex-col gap-1">
+                    <Text
+                      style={{color: COLOR.TEXT_PRIMARY}}
+                      className="text-center">
+                      Lịch sử nghe đang tắt
+                    </Text>
+                    <TouchableOpacity
+                      onPress={() => navigation.navigate('Setting')}>
+                      <Text
+                        style={{color: COLOR.PRIMARY}}
+                        className="text-center">
+                        Bật lịch sử nghe
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                ) : (
+                  <Text
+                    style={{color: COLOR.TEXT_PRIMARY}}
+                    className="text-center">
+                    Bạn chưa nghe bài hát nào gần đây
+                  </Text>
+                )}
               </View>
             }
             showsVerticalScrollIndicator={false}
-            data={historyData}
+            data={saveHistory ? historyData : []}
             extraData={currentSong?.id}
             estimatedItemSize={70}
             nestedScrollEnabled
-            keyExtractor={item => item.encodeId}
-            renderItem={({item, index}) => {
+            keyExtractor={(item: any) => item.encodeId}
+            renderItem={({item, index}: any) => {
               return (
                 <TrackItem
                   isActive={currentSong?.id === item.encodeId}
@@ -172,6 +197,7 @@ const HistoryScreens = () => {
                   item={item}
                   index={index}
                   onClick={handlePlaySong}
+                  timeStamp={item.timestamp}
                 />
               );
             }}

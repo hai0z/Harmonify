@@ -1,4 +1,4 @@
-import { collection, deleteDoc, doc, getDocs, limit, orderBy, query, setDoc, updateDoc } from "firebase/firestore";
+import { collection, deleteDoc, deleteField, doc, getDocs, limit, orderBy, query, setDoc, updateDoc, writeBatch } from "firebase/firestore";
 import { auth, db } from "../../firebase/config";
 import { usePlayerStore } from "../../store/playerStore";
 import { useUserStore } from "../../store/userStore";
@@ -137,6 +137,21 @@ export const updatePlaylist = async (playlist: any) => {
     await updateDoc(docRef, {
       ...playlist,
     });
+  } catch (err: any) {
+    console.log(err.message);
+  }
+}
+export const deleteHistory = async () => {
+  try {
+    const user = auth.currentUser?.uid;
+    const docRef = collection(db, `users/${user}/history`);
+    getDocs(docRef).then((querySnapshot) => {
+      const batch = writeBatch(db);
+      querySnapshot.forEach((doc) => {
+        batch.delete(doc.ref);
+      });
+      batch.commit();
+    })
   } catch (err: any) {
     console.log(err.message);
   }

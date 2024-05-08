@@ -80,7 +80,9 @@ interface PlayerStore {
   isFistInit: boolean,
   setIsFistInit: (isFistInit: boolean) => void,
   imageQuality: "low" | "medium" | "high",
-  setImageQuality: (imageQuality: "low" | "medium" | "high") => void
+  setImageQuality: (imageQuality: "low" | "medium" | "high") => void,
+  saveHistory: boolean,
+  setSaveHistory: (saveHistory: boolean) => void
 }
 export const usePlayerStore = create<PlayerStore>()(
   persist((set) => ({
@@ -120,7 +122,9 @@ export const usePlayerStore = create<PlayerStore>()(
     isFistInit: true,
     setIsFistInit: (isFistInit: boolean) => set({ isFistInit }),
     imageQuality: "medium",
-    setImageQuality: (imageQuality: "low" | "medium" | "high") => set({ imageQuality })
+    setImageQuality: (imageQuality: "low" | "medium" | "high") => set({ imageQuality }),
+    saveHistory: true,
+    setSaveHistory: (saveHistory: boolean) => set({ saveHistory }),
   }), {
     name: "player-store",
     storage: createJSONStorage(() => zustandStorage),
