@@ -95,7 +95,7 @@ const SettingScreen = () => {
             fontSize: widthPercentageToDP(4.5),
             fontWeight: '500',
           }}>
-          Ứng dụng
+          Lịch sử nghe
         </Text>
         <View className="flex flex-row justify-between items-center">
           <Text

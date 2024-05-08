@@ -71,7 +71,7 @@ export const lightTheme = {
   SECONDARY: '#ef9fbc',
   TEXT_PRIMARY: '#000000',
   TEXT_SECONDARY: '#606060',
-  BACKGROUND: '#faf7f5',
+  BACKGROUND: '#FFFFFF',
 }
 export const winterTheme = {
   isDark: false,
