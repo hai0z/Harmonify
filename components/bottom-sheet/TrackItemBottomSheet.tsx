@@ -32,6 +32,7 @@ import {usePlayerStore} from '../../store/playerStore';
 import SleepTimerBottomSheet from './SleepTimerBottomSheet';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {removeSongFromPlaylist} from '../../service/firebase';
+import {navigation} from '../../utils/types/RootStackParamList';
 interface Props {
   context?: 'player' | null;
 }
@@ -60,8 +61,13 @@ const TrackItemBottomSheet = (props: Props) => {
   );
   const {isLiked, handleAddToLikedList} = useToggleLikeSong(data?.encodeId);
 
-  const navigation = useNavigation<any>();
+  const navigation =
+    useNavigation<
+      navigation<'AddToPlaylist' | 'PlayListDetail' | 'PlaylistStack'>
+    >();
+
   const {downloadFile} = useDownloadSong();
+
   const {sleepTimer, setSleepTimer} = usePlayerStore();
 
   const sleepTimerRef = useRef<BottomSheetModal>(null);

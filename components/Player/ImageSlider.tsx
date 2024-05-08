@@ -87,7 +87,7 @@ const SliderItem = memo(({item}: any) => {
         source={{
           uri: isPlayFromLocal
             ? item?.thumbnail
-            : getThumbnail(item?.thumbnail, 720),
+            : getThumbnail(item?.thumbnail),
         }}
         className="rounded-md z-20"
         style={{

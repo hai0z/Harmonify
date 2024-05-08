@@ -5,6 +5,7 @@ import {useNavigation} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import useThemeStore from '../store/themeStore';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
+import {navigation} from '../utils/types/RootStackParamList';
 interface coverProps {
   title: string;
   sortDescription?: string;
@@ -20,7 +21,7 @@ const PlayListCover = ({
   encodeId,
   isAlbum = false,
 }: coverProps) => {
-  const navigation = useNavigation<any>();
+  const navigation = useNavigation<navigation<'PlayListDetail'>>();
   const COLOR = useThemeStore(state => state.COLOR);
   return (
     <TouchableOpacity
@@ -30,7 +31,6 @@ const PlayListCover = ({
         navigation.push('PlayListDetail', {
           data: {
             playListId: encodeId,
-            thumbnail,
           },
         })
       }>

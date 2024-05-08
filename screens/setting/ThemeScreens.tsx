@@ -1,12 +1,14 @@
 import {View, Text} from 'react-native';
 import React from 'react';
-import useThemeStore from '../store/themeStore';
+import useThemeStore from '../../store/themeStore';
 import Animated, {useSharedValue, withTiming} from 'react-native-reanimated';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {themeMap} from '../constants/theme';
-import {auth} from '../firebase/config';
+import {themeMap} from '../../constants/theme';
 import {Appearance} from 'react-native';
-const SettingScreen = () => {
+import {navigation} from '../../utils/types/RootStackParamList';
+import {useNavigation} from '@react-navigation/native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+const ThemeScreens = () => {
   const {theme, setTheme, COLOR} = useThemeStore(state => state);
 
   const selectedColor = themeMap[theme]?.BACKGROUND;
@@ -16,15 +18,20 @@ const SettingScreen = () => {
   const handleChangeColor = (color: string) => {
     bg.value = withTiming(`${color}`, {duration: 750});
   };
+
+  const navigation = useNavigation<navigation<'Setting'>>();
+
   return (
     <Animated.ScrollView
       style={{flex: 1, backgroundColor: bg}}
       className="pt-[35px] px-6">
-      <Text style={{color: COLOR?.TEXT_PRIMARY}} className="text-xl font-bold">
-        Cài đặt
-      </Text>
-      <View className="mt-8 ">
-        <Text style={{color: COLOR?.TEXT_PRIMARY}} className="text-lg">
+      <View className="flex flex-row items-center gap-2">
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back" size={24} color={COLOR.TEXT_PRIMARY} />
+        </TouchableOpacity>
+        <Text
+          style={{color: COLOR?.TEXT_PRIMARY}}
+          className="text-xl font-bold">
           Chủ đề
         </Text>
       </View>
@@ -114,26 +121,8 @@ const SettingScreen = () => {
           ),
         )}
       </View>
-      <View className="mt-8 flex justify-center items-center">
-        <TouchableOpacity
-          onPress={() => {
-            auth.signOut();
-          }}
-          style={{
-            backgroundColor: COLOR?.PRIMARY,
-            borderRadius: 10,
-          }}
-          className="flex justify-center items-center w-28 h-10">
-          <Text
-            style={{
-              color: COLOR?.TEXT_PRIMARY,
-            }}>
-            Đăng xuất
-          </Text>
-        </TouchableOpacity>
-      </View>
     </Animated.ScrollView>
   );
 };
 
-export default SettingScreen;
+export default ThemeScreens;

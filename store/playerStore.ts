@@ -2,6 +2,7 @@ import { Track } from "react-native-track-player";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import zustandStorage from "./zustandStorage";
+import { Lyric, Song } from "../utils/types/index.type";
 
 const defaultColor = "#494949"
 
@@ -58,22 +59,28 @@ interface PlayerStore {
   playList: IPlaylist,
   setColor: (color: Partial<Color>) => void,
   setPlayList: (playlist: IPlaylist) => void,
-  lyrics: any[],
+  lyrics: Lyric[],
   setLyrics: (lyrics: any) => void
   isLoadingTrack: boolean,
   setisLoadingTrack: (isLoadingTrack: boolean) => void,
-  likedSongs: any[],
+  likedSongs: Song[],
   setLikedSongs: (likedSongs: any) => void
   currentSong: Track | null
   setCurrentSong: (currentSong: Track | null) => void
-  tempSong: any | null
-  setTempSong: (tempSong: any | null) => void
+  tempSong: Song | null
+  setTempSong: (tempSong: Song | null) => void
   isPlayFromLocal: boolean
   setIsPlayFromLocal: (isPlayFromLocal: boolean) => void
   lastPosition: number
   setLastPosition: (lastPosition: number) => void,
   sleepTimer: number | null
-  setSleepTimer: (time: number | null) => void
+  setSleepTimer: (time: number | null) => void,
+  savePlayerState: boolean,
+  setSavePlayerState: (savePlayerState: boolean) => void,
+  isFistInit: boolean,
+  setIsFistInit: (isFistInit: boolean) => void,
+  imageQuality: "low" | "medium" | "high",
+  setImageQuality: (imageQuality: "low" | "medium" | "high") => void
 }
 export const usePlayerStore = create<PlayerStore>()(
   persist((set) => ({
@@ -97,17 +104,23 @@ export const usePlayerStore = create<PlayerStore>()(
     isLoadingTrack: true,
     setisLoadingTrack: (isLoadingTrack: boolean) => set({ isLoadingTrack }),
     likedSongs: [],
-    setLikedSongs: (likedSongs: any) => set({ likedSongs }),
+    setLikedSongs: (likedSongs: Song[]) => set({ likedSongs }),
     currentSong: null,
     setCurrentSong: (currentSong: Track | null) => set({ currentSong }),
     tempSong: null,
-    setTempSong: (tempSong: any | null) => set({ tempSong }),
+    setTempSong: (tempSong: Song | null) => set({ tempSong }),
     isPlayFromLocal: false,
     setIsPlayFromLocal: (isPlayFromLocal: boolean) => set({ isPlayFromLocal }),
     lastPosition: 0,
     setLastPosition: (lastPosition: number) => set({ lastPosition }),
     sleepTimer: null,
     setSleepTimer: (sleepTimer: number | null) => set({ sleepTimer }),
+    savePlayerState: true,
+    setSavePlayerState: (savePlayerState: boolean) => set({ savePlayerState }),
+    isFistInit: true,
+    setIsFistInit: (isFistInit: boolean) => set({ isFistInit }),
+    imageQuality: "medium",
+    setImageQuality: (imageQuality: "low" | "medium" | "high") => set({ imageQuality })
   }), {
     name: "player-store",
     storage: createJSONStorage(() => zustandStorage),

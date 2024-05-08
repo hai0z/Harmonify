@@ -27,6 +27,7 @@ import Loading from '../../components/Loading';
 import TrackItem from '../../components/track-item/TrackItem';
 import {PlayerContext} from '../../context/PlayerProvider';
 import {FlashList} from '@shopify/flash-list';
+import {navigation} from '../../utils/types/RootStackParamList';
 
 interface artistType {
   id: string;
@@ -101,7 +102,7 @@ const ArtistScreens = ({route}: any) => {
     extrapolate: 'clamp',
   });
 
-  const navigation = useNavigation<any>();
+  const navigation = useNavigation<navigation<'Artists' | 'ArtistsSong'>>();
 
   if (loading) {
     return (

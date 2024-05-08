@@ -66,7 +66,13 @@ nodejs.channel.addListener('getSong', async data => {
   await TrackPlayer.load({
     ...data.track,
     url: data.data['128'],
-  },)
+  }).then(async () => {
+    if (usePlayerStore.getState().savePlayerState && usePlayerStore.getState().isFistInit)
+      await TrackPlayer.seekTo(usePlayerStore.getState().lastPosition).then(() => {
+        usePlayerStore.getState().setCurrentSong(data.track);
+        usePlayerStore.getState().setIsFistInit(false)
+      });
+  })
 });
 
 nodejs.channel.addListener('getSongInfo', async data => {

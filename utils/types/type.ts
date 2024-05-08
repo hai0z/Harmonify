@@ -10,10 +10,10 @@ interface Data {
 
 interface RTChart {
   promotes: Promote[];
-  items: Item[];
+  items: Song[];
 }
 
-interface Item {
+export interface Song {
   encodeId: string;
   title: string;
   alias: string;
@@ -177,4 +177,17 @@ interface Artist {
   isOA: boolean;
   isOABrand: boolean;
   playlistId: string;
+}
+export interface Lyric {
+  startTime: number;
+  endTime: number;
+  data: string;
+};
+export interface typePlaylistCover {
+  items: [];
+  title: string;
+  encodeId: string;
+  thumbnail: string;
+  sortDescription: string;
+  sectionId: string;
 }

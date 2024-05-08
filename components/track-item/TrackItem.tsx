@@ -8,18 +8,16 @@ import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import {usePlayerStore} from '../../store/playerStore';
 import {objectToTrack} from '../../service/trackPlayerService';
 import useInternetState from '../../hooks/useInternetState';
-import Animated, {FadeIn, FadeOut} from 'react-native-reanimated';
-import LottieView from 'lottie-react-native';
-import changeSVGColor from '@killerwink/lottie-react-native-color';
 import {GREEN} from '../../constants';
 import ActiveTrackAnimation from './ActiveTrackAnimation';
+import {Song} from '../../utils/types/type';
 interface Props {
-  item: any;
+  item: Song;
   index?: number;
   isAlbum?: boolean;
   onClick: (item: any) => void;
-  showBottomSheet: (item: any) => void;
-  isActive?: boolean;
+  showBottomSheet: (item: Song) => void;
+  isActive: boolean;
 }
 
 const TrackItem = (props: Props) => {
@@ -59,7 +57,7 @@ const TrackItem = (props: Props) => {
         <View>
           <FastImage
             source={{
-              uri: getThumbnail(item?.thumbnail, 720),
+              uri: getThumbnail(item?.thumbnail),
             }}
             key={item?.encodeId}
             className="rounded-none"

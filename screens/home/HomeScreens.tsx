@@ -14,14 +14,7 @@ import RecentList from './components/RecentList';
 import {SafeAreaView} from 'react-native';
 import Loading from '../../components/Loading';
 import useGetHomeData from '../../hooks/useGetHomeData';
-interface typePlaylistCover {
-  items: [];
-  title: string;
-  encodeId: string;
-  thumbnail: string;
-  sortDescription: string;
-  sectionId: string;
-}
+import {typePlaylistCover} from '../../utils/types/type';
 
 function HomeScreens() {
   const {COLOR, HEADER_GRADIENT} = useThemeStore(state => state);
@@ -70,7 +63,7 @@ function HomeScreens() {
         </View>
 
         <View className="-mt-4">
-          {dataHome?.map((e: any, index: number) => {
+          {dataHome?.map((e: typePlaylistCover, index: number) => {
             return (
               <View key={index}>
                 <View>

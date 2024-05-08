@@ -33,6 +33,7 @@ import useDarkColor from '../../hooks/useDarkColor';
 import tinycolor from 'tinycolor2';
 import stringToSlug from '../../utils/removeSign';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import {route} from '../../utils/types/RootStackParamList';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -47,7 +48,7 @@ const caculateTotalTime = (playlistData: any) => {
 
   return {hours, minutes};
 };
-const MyPlaylist = ({route}: {route: any}) => {
+const MyPlaylist = ({route}: {route: route<'MyPlaylist'>}) => {
   const scrollY = React.useRef(new Animated.Value(0)).current;
 
   const {playlistId} = route.params;

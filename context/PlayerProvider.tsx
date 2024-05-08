@@ -35,7 +35,9 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
     setisLoadingTrack,
     tempSong,
     setSleepTimer,
-    lastPosition,
+    savePlayerState,
+    setCurrentSong,
+    setIsFistInit,
   } = usePlayerStore();
 
   const COLOR = useThemeStore(state => state.COLOR);
@@ -60,37 +62,45 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
   }, []);
 
   const initPlayer = async () => {
-    await TrackPlayer.reset();
-    setisLoadingTrack(true);
-    setSleepTimer(null);
-    Appearance.setColorScheme(COLOR.isDark ? 'dark' : 'light');
-    if (
-      playList.items.length > 0 &&
-      playList.id !== '' &&
-      currentSong !== null
-    ) {
-      let index = playList.items.findIndex(
-        (item: any) => item?.encodeId === currentSong?.id,
-      );
-      if (index < 0) {
-        index = 0;
-      }
-      if (!isPlayFromLocal) {
-        await TrackPlayer.add(
-          playList.items.map((item: any) => objectToTrack(item)),
+    if (savePlayerState) {
+      setIsFistInit(true);
+      setCurrentSong(null);
+      await TrackPlayer.reset();
+      setisLoadingTrack(true);
+      setSleepTimer(null);
+      Appearance.setColorScheme(COLOR.isDark ? 'dark' : 'light');
+      if (
+        playList.items.length > 0 &&
+        playList.id !== '' &&
+        currentSong !== null
+      ) {
+        let index = playList.items.findIndex(
+          (item: any) => item?.encodeId === currentSong?.id,
         );
-      } else {
-        await TrackPlayer.add(
-          playList.items.map((item: any) => ({
-            ...objectToTrack(item),
-            url: item.url,
-            artwork: item.thumbnail || DEFAULT_IMG,
-          })),
-        );
+        if (index < 0) {
+          index = 0;
+        }
+        if (!isPlayFromLocal) {
+          await TrackPlayer.add(
+            playList.items.map((item: any) => objectToTrack(item)),
+          );
+        } else {
+          await TrackPlayer.add(
+            playList.items.map((item: any) => ({
+              ...objectToTrack(item),
+              url: item.url,
+              artwork: item.thumbnail || DEFAULT_IMG,
+            })),
+          );
+        }
+        await TrackPlayer.skip(index).finally(() => {
+          setisLoadingTrack(false);
+        });
       }
-      await TrackPlayer.skip(index, lastPosition).finally(() => {
-        setisLoadingTrack(false);
-      });
+    } else {
+      setIsFistInit(false);
+      await TrackPlayer.reset();
+      setCurrentSong(null);
     }
   };
 

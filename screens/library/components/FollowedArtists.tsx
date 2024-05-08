@@ -10,8 +10,9 @@ import useLibraryStore from '../../../store/useLibraryStore';
 import Animated, {FadeIn} from 'react-native-reanimated';
 import {collection, onSnapshot, query} from 'firebase/firestore';
 import {auth, db} from '../../../firebase/config';
+import {navigation} from '../../../utils/types/RootStackParamList';
 const FollowedArtist = () => {
-  const navigation = useNavigation<any>();
+  const navigation = useNavigation<navigation<'Artists'>>();
   const {COLOR} = useThemeStore();
   const {viewType} = useLibraryStore();
   const {listFollowArtists, setListFollowArtists} = useUserStore();

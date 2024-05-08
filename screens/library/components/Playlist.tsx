@@ -13,11 +13,13 @@ import Animated, {FadeIn} from 'react-native-reanimated';
 import RenderPlaylistThumbnail from './RenderPlaylistThumnail';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import PlaylistManagerBottomSheet from '../../../components/bottom-sheet/PlaylistManagerBottomSheet';
+import {navigation} from '../../../utils/types/RootStackParamList';
 
 const Playlist = () => {
   const likedSongs = usePlayerStore(state => state.likedSongs);
   const {COLOR} = useThemeStore(state => state);
-  const navigation = useNavigation<any>();
+  const navigation =
+    useNavigation<navigation<'LikedSong' | 'MyPlaylist' | 'PlayListDetail'>>();
   const {viewType} = useLibraryStore();
   const {likedPlaylists, myPlaylists} = useUserStore();
 
@@ -43,9 +45,7 @@ const Playlist = () => {
         <Animated.View entering={FadeIn.duration(500).springify()}>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate('LikedSong', {
-                type: 'favourite',
-              });
+              navigation.navigate('LikedSong');
             }}
             activeOpacity={0.8}
             className="flex-row items-center">
@@ -125,7 +125,6 @@ const Playlist = () => {
                   navigation.push('PlayListDetail', {
                     data: {
                       playListId: pl.encodeId,
-                      thumbnail: pl.thumbnail,
                     },
                   })
                 }
@@ -161,9 +160,7 @@ const Playlist = () => {
           <TouchableOpacity
             style={{width: widthPercentageToDP(33) - 16}}
             onPress={() => {
-              navigation.navigate('LikedSong', {
-                type: 'favourite',
-              });
+              navigation.navigate('LikedSong');
             }}
             activeOpacity={0.8}
             className="flex-col items-center flex mb-4">
@@ -247,7 +244,6 @@ const Playlist = () => {
                   navigation.push('PlayListDetail', {
                     data: {
                       playListId: pl.encodeId,
-                      thumbnail: pl.thumbnail,
                     },
                   })
                 }

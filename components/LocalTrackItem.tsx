@@ -39,7 +39,7 @@ const TrackItem = (props: Props) => {
           source={{
             uri: isPlayFromLocal
               ? item?.thumbnail
-              : getThumbnail(item?.thumbnail, 720),
+              : getThumbnail(item?.thumbnail),
           }}
           key={item?.encodeId}
           className="rounded-none"

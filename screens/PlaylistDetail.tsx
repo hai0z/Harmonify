@@ -24,7 +24,7 @@ import nodejs from 'nodejs-mobile-react-native';
 import TrackItem from '../components/track-item/TrackItem';
 import {PlayerContext} from '../context/PlayerProvider';
 import useThemeStore from '../store/themeStore';
-import {usePlayerStore} from '../store/playerStore';
+import {Color, usePlayerStore} from '../store/playerStore';
 import {addToLikedPlaylist} from '../service/firebase';
 import useToastStore, {ToastTime} from '../store/toastStore';
 import {useUserStore} from '../store/userStore';
@@ -36,9 +36,11 @@ import tinycolor from 'tinycolor2';
 import useDarkColor from '../hooks/useDarkColor';
 import Loading from '../components/Loading';
 import stringToSlug from '../utils/removeSign';
+import {navigation, route} from '../utils/types/RootStackParamList';
+import {Song} from '../utils/types/type';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
-const PlaylistDetail = ({route}: {route: any}) => {
+const PlaylistDetail = ({route}: {route: route<'PlayListDetail'>}) => {
   const [playlistData, setPlaylistData] = React.useState<any>({});
 
   const {data} = route.params;
@@ -47,7 +49,7 @@ const PlaylistDetail = ({route}: {route: any}) => {
 
   const scrollY = React.useRef(new Animated.Value(0)).current;
 
-  const navigation = useNavigation<any>();
+  const navigation = useNavigation<navigation<'Artists'>>();
 
   const playerContext = useContext(PlayerContext);
 
@@ -59,7 +61,8 @@ const PlaylistDetail = ({route}: {route: any}) => {
 
   const {likedPlaylists} = useUserStore();
 
-  const [color, setColor] = React.useState<any>(null);
+  const [color, setColor] = React.useState<Color>({} as Color);
+
   const bgAnimated = useSharedValue('transparent');
 
   const [searchText, setSearchText] = React.useState<string>('');
@@ -82,7 +85,7 @@ const PlaylistDetail = ({route}: {route: any}) => {
   const handleSearch = (text: string) => {
     setSearchText(text);
     if (text) {
-      const filteredData = playlistData.song.items.filter((item: any) => {
+      const filteredData = playlistData.song.items.filter((item: Song) => {
         return stringToSlug(item.title)
           .toLowerCase()
           .includes(stringToSlug(text).toLowerCase());
@@ -100,15 +103,15 @@ const PlaylistDetail = ({route}: {route: any}) => {
         ...data,
         song: {
           items: data.song.items.filter(
-            (item: any) => item.streamingStatus === 1,
+            (item: Song) => item.streamingStatus === 1,
           ),
         },
       });
       setSearchData(
-        data.song.items.filter((item: any) => item.streamingStatus === 1),
+        data.song.items.filter((item: Song) => item.streamingStatus === 1),
       );
-      getColors(data.thumbnail).then((res: any) => {
-        setColor(res);
+      getColors(data.thumbnail).then(res => {
+        setColor(res as Color);
       });
       setLoading(false);
     });
@@ -154,7 +157,7 @@ const PlaylistDetail = ({route}: {route: any}) => {
     extrapolate: 'clamp',
   });
   const handlePlaySong = useCallback(
-    (song: any) => {
+    (song: Song) => {
       handlePlay(song, {
         id: data.playListId,
         items: playlistData?.song?.items,
