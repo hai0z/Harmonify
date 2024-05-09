@@ -7,6 +7,7 @@ import {
   Image,
   TouchableWithoutFeedback,
   Keyboard,
+  Alert,
 } from 'react-native';
 
 import React, {useContext, useEffect, useMemo, useState} from 'react';
@@ -30,13 +31,16 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import tinycolor from 'tinycolor2';
 import {FlashList} from '@shopify/flash-list';
 import {useUserStore} from '../store/userStore';
+import {GREEN} from '../constants';
 
 const SearchScreens = () => {
   const [text, setText] = useState<string>('');
+
   const [data, setData] = useState<any>([]);
+
   const debouncedValue = useDebounce(text, 250);
 
-  const {COLOR} = useThemeStore(state => state);
+  const {COLOR, theme} = useThemeStore();
 
   const setPlayFrom = usePlayerStore(state => state.setPlayFrom);
 
@@ -52,33 +56,69 @@ const SearchScreens = () => {
 
   const [recommenData, setRecommenData] = useState<any>([]);
 
+  const [selectedTab, setSelectedTab] = useState<number>(0);
+
   const id = useMemo(() => Math.random().toString(36).substring(7), [data]);
 
   const searchHistory = useUserStore(state => state.searchHistory);
 
   const setSearchHistory = useUserStore(state => state.setSearchHistory);
 
+  const [filterData, setFilterData] = useState<any>([]);
+
   useEffect(() => {
     nodejs.channel.post('getSuggest', debouncedValue);
   }, [debouncedValue]);
 
-  console.log({searchHistory});
-
   useEffect(() => {
     nodejs.channel.addListener('getSuggest', (data: any) => {
+      console.log('suggestion');
       setSuggestion(data);
     });
     nodejs.channel.addListener('search', (data: any) => {
-      setData(data);
+      console.log('search');
       nodejs.channel.post('getRecommend', data.songs[0].encodeId);
+
+      setData(data);
+      setFilterData(data);
       setLoading(false);
     });
     nodejs.channel.addListener('getRecommend', (data: any) => {
+      console.log('recommend');
       setRecommenData(data.items);
     });
   }, []);
 
   const navigation = useNavigation<any>();
+
+  const handleFilter = (tab: number) => {
+    setSelectedTab(tab);
+    switch (tab) {
+      case 0:
+        setFilterData(data);
+        break;
+      case 1:
+        const songs = {...data};
+        delete songs.playlists;
+        delete songs.artists;
+        setFilterData(songs);
+        break;
+      case 2:
+        const playlists = {...data};
+        delete playlists.songs;
+        delete playlists.artists;
+        setFilterData(playlists);
+        break;
+      case 3:
+        const artists = {...data};
+        delete artists.songs;
+        delete artists.playlists;
+        setFilterData(artists);
+        break;
+      default:
+        break;
+    }
+  };
 
   return (
     <View
@@ -122,7 +162,32 @@ const SearchScreens = () => {
           )}
         </View>
       </View>
-
+      {isSearched && !loading && (
+        <View>
+          <ScrollView
+            horizontal
+            contentContainerStyle={{
+              paddingHorizontal: 16,
+              alignItems: 'center',
+            }}
+            className="flex flex-row gap-2 mb-4 mt-2">
+            {['Tất cả', 'Bài hát', 'Danh sách phát', 'Nghệ sĩ'].map(
+              (item, index) => (
+                <TouchableOpacity
+                  onPress={() => handleFilter(index)}
+                  className="px-2 py-2 rounded-md"
+                  key={index}
+                  style={{
+                    backgroundColor:
+                      selectedTab === index ? COLOR.PRIMARY : 'transparent',
+                  }}>
+                  <Text>{item}</Text>
+                </TouchableOpacity>
+              ),
+            )}
+          </ScrollView>
+        </View>
+      )}
       {isSearched ? (
         loading ? (
           <View className="flex-1 items-center justify-center">
@@ -131,79 +196,121 @@ const SearchScreens = () => {
         ) : (
           debouncedValue.length > 0 && (
             <ScrollView
-              className="pt-4"
+              className=""
               showsVerticalScrollIndicator={false}
               contentContainerStyle={{paddingBottom: 200}}>
-              {/* {data?.top && debouncedValue.length > 0 && (
-                <View>
-                  <Text
-                    className="px-4 font-bold mb-4"
-                    style={{
-                      color: COLOR.TEXT_PRIMARY,
-                      fontSize: widthPercentageToDP(5),
-                    }}>
-                    Kết quả hàng đầu
-                  </Text>
-                  <TrackItem
-                    isActive={currentSong?.id === data?.top?.encodeId}
-                    showBottomSheet={showBottomSheet}
-                    item={data?.top}
-                    onClick={() => {
-                      handlePlay(data?.top, {
-                        id: data?.top?.encodeId,
-                        items: [data?.top, ...data?.songs],
-                      });
-                      setPlayFrom({
-                        id: 'search',
-                        name: data?.top?.title,
-                      });
-                    }}
-                  />
-                </View>
-              )} */}
-              <Text
-                className="px-4 font-bold mb-4"
-                style={{
-                  color: COLOR.TEXT_PRIMARY,
-                  fontSize: widthPercentageToDP(5),
-                }}>
-                Bài hát
-              </Text>
-              <View style={{minHeight: 3}}>
-                <FlashList
-                  extraData={currentSong?.id}
-                  estimatedItemSize={70}
-                  data={data?.songs}
-                  renderItem={({item: e}: any) => {
-                    return (
+              {data?.top &&
+                (data?.top?.objectType === 'song' ||
+                  data?.top?.objectType === 'artist') &&
+                selectedTab === 0 && (
+                  <View>
+                    <Text
+                      className="px-4 font-bold mb-4"
+                      style={{
+                        color: COLOR.TEXT_PRIMARY,
+                        fontSize: widthPercentageToDP(5),
+                      }}>
+                      Kết quả hàng đầu
+                    </Text>
+                    {data?.top?.objectType === 'song' ? (
                       <TrackItem
-                        isActive={currentSong?.id === e.encodeId}
+                        isActive={currentSong?.id === data?.top?.encodeId}
+                        showBottomSheet={showBottomSheet}
+                        item={data?.top}
                         onClick={() => {
-                          handlePlay(e, {
-                            id,
-                            items: [e, ...recommenData],
+                          handlePlay(data?.top, {
+                            id: data?.top?.encodeId,
+                            items: [data?.top, ...recommenData],
                           });
                           setPlayFrom({
                             id: 'search',
-                            name: e.title,
+                            name: data?.top?.title,
                           });
                         }}
-                        item={e}
-                        showBottomSheet={showBottomSheet}
                       />
-                    );
-                  }}
-                />
-              </View>
-              <Text
-                className="px-4 font-bold mb-4"
-                style={{
-                  color: COLOR.TEXT_PRIMARY,
-                  fontSize: widthPercentageToDP(5),
-                }}>
-                Danh sách phát
-              </Text>
-              {data?.playlists?.map((e: any, index: number) => (
+                    ) : (
+                      <TouchableOpacity
+                        activeOpacity={0.8}
+                        className="flex flex-row items-center mb-3 gap-2 px-4"
+                        onPress={() => {
+                          navigation.navigate('Artists', {
+                            name: data?.top.alias,
+                          });
+                        }}>
+                        <Image
+                          source={{
+                            uri: getThumbnail(data?.top.thumbnail) || '',
+                          }}
+                          style={{
+                            width: widthPercentageToDP(15),
+                            height: widthPercentageToDP(15),
+                          }}
+                        />
+                        <View>
+                          <Text
+                            numberOfLines={1}
+                            style={{color: COLOR.TEXT_PRIMARY}}>
+                            {data?.top.name}
+                          </Text>
+                          <Text
+                            numberOfLines={1}
+                            style={{color: COLOR.TEXT_SECONDARY}}>
+                            Nghệ sĩ
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
+                    )}
+                  </View>
+                )}
+              {(selectedTab == 0 || selectedTab == 1) && (
+                <Text
+                  className="px-4 font-bold mb-4"
+                  style={{
+                    color: COLOR.TEXT_PRIMARY,
+                    fontSize: widthPercentageToDP(5),
+                  }}>
+                  Bài hát
+                </Text>
+              )}
+              {
+                <View style={{minHeight: 3}}>
+                  <FlashList
+                    extraData={currentSong?.id}
+                    estimatedItemSize={70}
+                    data={filterData?.songs}
+                    renderItem={({item: e}: any) => {
+                      return (
+                        <TrackItem
+                          isActive={currentSong?.id === e.encodeId}
+                          onClick={() => {
+                            handlePlay(e, {
+                              id,
+                              items: [e, ...recommenData],
+                            });
+                            setPlayFrom({
+                              id: 'search',
+                              name: e.title,
+                            });
+                          }}
+                          item={e}
+                          showBottomSheet={showBottomSheet}
+                        />
+                      );
+                    }}
+                  />
+                </View>
+              }
+              {(selectedTab == 0 || selectedTab == 2) && (
+                <Text
+                  className="px-4 font-bold mb-4"
+                  style={{
+                    color: COLOR.TEXT_PRIMARY,
+                    fontSize: widthPercentageToDP(5),
+                  }}>
+                  Danh sách phát
+                </Text>
+              )}
+              {filterData?.playlists?.map((e: any, index: number) => (
                 <TouchableOpacity
                   activeOpacity={0.8}
                   key={index}
@@ -235,15 +342,17 @@ const SearchScreens = () => {
                   </View>
                 </TouchableOpacity>
               ))}
-              <Text
-                className="px-4 font-bold mb-4"
-                style={{
-                  color: COLOR.TEXT_PRIMARY,
-                  fontSize: widthPercentageToDP(5),
-                }}>
-                Nghệ sĩ
-              </Text>
-              {data?.artists?.map((e: any, index: number) => (
+              {(selectedTab == 0 || selectedTab == 3) && (
+                <Text
+                  className="px-4 font-bold mb-4"
+                  style={{
+                    color: COLOR.TEXT_PRIMARY,
+                    fontSize: widthPercentageToDP(5),
+                  }}>
+                  Nghệ sĩ
+                </Text>
+              )}
+              {filterData?.artists?.map((e: any, index: number) => (
                 <TouchableOpacity
                   activeOpacity={0.8}
                   key={index}
@@ -316,15 +425,36 @@ const SearchScreens = () => {
                   </View>
                 </TouchableWithoutFeedback>
               ))}
-              <Text
-                style={{
-                  color: COLOR.PRIMARY,
-                  fontSize: widthPercentageToDP(4.5),
-                  fontWeight: '600',
-                }}
-                className=" mt-4">
-                Xoá sử tìm kiếm
-              </Text>
+              <TouchableOpacity
+                onPress={() => {
+                  Alert.alert(
+                    'Cảnh báo',
+                    'Bạn có muốn xoá toàn bộ lịch sử tìm kiếm?',
+                    [
+                      {
+                        text: 'Huỷ',
+                        onPress: () => console.log('Cancel Pressed'),
+                        style: 'cancel',
+                      },
+                      {
+                        text: 'Xóa',
+                        onPress: () => {
+                          setSearchHistory([]);
+                        },
+                      },
+                    ],
+                  );
+                }}>
+                <Text
+                  style={{
+                    color: theme === 'amoled' ? GREEN : COLOR.PRIMARY,
+                    fontSize: widthPercentageToDP(4.5),
+                    fontWeight: '600',
+                  }}
+                  className=" mt-4">
+                  Xoá lịch sử tìm kiếm
+                </Text>
+              </TouchableOpacity>
             </View>
           )}
           {suggestion?.items?.[0]?.keywords?.map((item: any, index: number) => (
