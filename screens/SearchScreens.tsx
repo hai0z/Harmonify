@@ -29,6 +29,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import tinycolor from 'tinycolor2';
 import {FlashList} from '@shopify/flash-list';
+import {useUserStore} from '../store/userStore';
 
 const SearchScreens = () => {
   const [text, setText] = useState<string>('');
@@ -53,9 +54,15 @@ const SearchScreens = () => {
 
   const id = useMemo(() => Math.random().toString(36).substring(7), [data]);
 
+  const searchHistory = useUserStore(state => state.searchHistory);
+
+  const setSearchHistory = useUserStore(state => state.setSearchHistory);
+
   useEffect(() => {
     nodejs.channel.post('getSuggest', debouncedValue);
   }, [debouncedValue]);
+
+  console.log({searchHistory});
 
   useEffect(() => {
     nodejs.channel.addListener('getSuggest', (data: any) => {
@@ -188,7 +195,6 @@ const SearchScreens = () => {
                   }}
                 />
               </View>
-
               <Text
                 className="px-4 font-bold mb-4"
                 style={{
@@ -224,7 +230,7 @@ const SearchScreens = () => {
                     <Text
                       numberOfLines={1}
                       style={{color: COLOR.TEXT_SECONDARY}}>
-                      {e.artistsNames}
+                      {e.artistsNames || 'Danh sách phát'}
                     </Text>
                   </View>
                 </TouchableOpacity>
@@ -269,6 +275,58 @@ const SearchScreens = () => {
         )
       ) : (
         <View className="mx-4">
+          {searchHistory.length > 0 && text === '' && (
+            <View className="py-2">
+              {searchHistory.map((item: any, index: number) => (
+                <TouchableWithoutFeedback
+                  accessible={false}
+                  onPress={() => {
+                    setLoading(true);
+                    Keyboard.dismiss();
+                    setText(item);
+                    setIsSearched(true);
+                    nodejs.channel.post('search', item);
+                  }}
+                  key={index}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      marginVertical: 4,
+                      paddingVertical: 8,
+                      alignItems: 'center',
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: heightPercentageToDP(2),
+                        color: COLOR.TEXT_PRIMARY,
+                      }}>
+                      {item}
+                    </Text>
+                    <AntDesign
+                      onPress={() => {
+                        setSearchHistory(
+                          searchHistory.filter((e: any) => e !== item),
+                        );
+                      }}
+                      name="close"
+                      size={24}
+                      color={COLOR.TEXT_PRIMARY}
+                    />
+                  </View>
+                </TouchableWithoutFeedback>
+              ))}
+              <Text
+                style={{
+                  color: COLOR.PRIMARY,
+                  fontSize: widthPercentageToDP(4.5),
+                  fontWeight: '600',
+                }}
+                className=" mt-4">
+                Xoá sử tìm kiếm
+              </Text>
+            </View>
+          )}
           {suggestion?.items?.[0]?.keywords?.map((item: any, index: number) => (
             <TouchableWithoutFeedback
               accessible={false}
@@ -276,16 +334,17 @@ const SearchScreens = () => {
                 setLoading(true);
                 Keyboard.dismiss();
                 setText(item.keyword);
-                nodejs.channel.post('search', item.keyword);
                 setIsSearched(true);
+                setSearchHistory([item.keyword, ...searchHistory]);
+                nodejs.channel.post('search', item.keyword);
               }}
               key={index}>
               <View
                 style={{
                   flexDirection: 'row',
-                  paddingHorizontal: 4,
-                  paddingVertical: 24,
                   justifyContent: 'space-between',
+                  marginVertical: 4,
+                  paddingVertical: 8,
                   alignItems: 'center',
                 }}>
                 <Text
