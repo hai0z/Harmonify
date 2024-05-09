@@ -25,6 +25,7 @@ const SettingScreen = () => {
     saveHistory,
     setSaveHistory,
   } = usePlayerStore();
+
   const selectedColor = COLOR.isDark
     ? tinycolor(themeMap[theme]?.BACKGROUND).lighten(5).toString()
     : tinycolor(themeMap[theme]?.BACKGROUND).darken(5).toString();
@@ -38,7 +39,7 @@ const SettingScreen = () => {
 
   return (
     <Animated.ScrollView
-      style={{flex: 1, backgroundColor: selectedColor}}
+      style={{flex: 1, backgroundColor: COLOR.BACKGROUND}}
       className="pt-[35px] px-4">
       <View className="flex flex-row items-center gap-2">
         <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -53,7 +54,7 @@ const SettingScreen = () => {
 
       <View
         className="mt-4 px-1 py-2 rounded-md"
-        style={{backgroundColor: COLOR.BACKGROUND}}>
+        style={{backgroundColor: selectedColor}}>
         <Text
           style={{
             color: COLOR?.TEXT_PRIMARY,
@@ -93,7 +94,7 @@ const SettingScreen = () => {
       </View>
       <View
         className="mt-4 px-1 py-2 rounded-md"
-        style={{backgroundColor: COLOR.BACKGROUND}}>
+        style={{backgroundColor: selectedColor}}>
         <Text
           style={{
             color: COLOR?.TEXT_PRIMARY,
@@ -113,7 +114,10 @@ const SettingScreen = () => {
           <View className="flex flex-row items-center mt-2">
             <Switch
               thumbColor={theme === 'amoled' ? GREEN : COLOR?.PRIMARY}
-              trackColor={{false: selectedColor, true: selectedColor}}
+              trackColor={{
+                false: '#ccc',
+                true: '#ccc',
+              }}
               value={saveHistory}
               onChange={() => setSaveHistory(!saveHistory)}
             />
@@ -156,7 +160,7 @@ const SettingScreen = () => {
       </View>
       <View
         className="mt-4 px-1 py-2 rounded-md"
-        style={{backgroundColor: COLOR.BACKGROUND}}>
+        style={{backgroundColor: selectedColor}}>
         <Text
           style={{
             color: COLOR?.TEXT_PRIMARY,
@@ -200,7 +204,7 @@ const SettingScreen = () => {
       </View>
       <View
         className="mt-4 px-1 py-2 rounded-md"
-        style={{backgroundColor: COLOR.BACKGROUND}}>
+        style={{backgroundColor: selectedColor}}>
         <Text
           style={{
             color: COLOR?.TEXT_PRIMARY,
@@ -220,7 +224,7 @@ const SettingScreen = () => {
           <View className="flex flex-row items-center">
             <Switch
               thumbColor={theme === 'amoled' ? GREEN : COLOR?.PRIMARY}
-              trackColor={{false: selectedColor, true: selectedColor}}
+              trackColor={{false: '#cccccc', true: '#cccccc'}}
               value={savePlayerState}
               onChange={() => setSavePlayerState(!savePlayerState)}
             />
@@ -230,7 +234,7 @@ const SettingScreen = () => {
 
       <View
         className="mt-4 flex px-1 py-2 rounded-md"
-        style={{backgroundColor: COLOR.BACKGROUND}}>
+        style={{backgroundColor: selectedColor}}>
         <Text
           style={{
             color: COLOR?.TEXT_PRIMARY,

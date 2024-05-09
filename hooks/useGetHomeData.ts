@@ -13,8 +13,8 @@ export default function useGetHomeData() {
   const setLikedSongs = usePlayerStore(state => state.setLikedSongs);
   const isConnected = useInternetState();
 
-
   useEffect(() => {
+    console.log('ok');
     setLoading(true);
     if (isConnected) {
       nodejs.channel.addListener('home', data => {

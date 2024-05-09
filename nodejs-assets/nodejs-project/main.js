@@ -2,7 +2,10 @@
 // The main.js file will be overwritten in updates/reinstalls.
 
 var rn_bridge = require('rn-bridge');
+
 const {ZingMp3} = require('zingmp3-api-full');
+
+const {zing} = require('zingmp3-api-next');
 
 rn_bridge.channel.on('home', async () => {
   const data = await ZingMp3.getHome();
@@ -85,4 +88,16 @@ rn_bridge.channel.on('getLyric', async songId => {
       });
     });
   rn_bridge.channel.post('getLyric', customLyr);
+});
+
+rn_bridge.channel.on('getRecommend', async id => {
+  if (!id) return;
+  const data = await ZingMp3.getRecommend(id);
+  rn_bridge.channel.post('getRecommend', data.data);
+});
+
+rn_bridge.channel.on('getSuggest', async keyword => {
+  const data = await zing.get_suggestion_keyword(keyword);
+  rn_bridge.channel.post('getSuggest', data.data);
+  rn_bridge.channel.post('getTop100', data.data);
 });

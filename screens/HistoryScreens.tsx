@@ -70,7 +70,7 @@ const HistoryScreens = () => {
       setLoading(false);
     };
     saveHistory && getHistory();
-  }, []);
+  }, [saveHistory]);
 
   const {dominantColor: gradientColor} = useImageColor();
 

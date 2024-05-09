@@ -16,7 +16,7 @@ const ThemeScreens = () => {
   const bg = useSharedValue(`${selectedColor}`);
 
   const handleChangeColor = (color: string) => {
-    bg.value = withTiming(`${color}`, {duration: 750});
+    bg.value = withTiming(`${color}`, {duration: 550});
   };
 
   const navigation = useNavigation<navigation<'Setting'>>();

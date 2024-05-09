@@ -69,7 +69,6 @@ nodejs.channel.addListener('getSong', async data => {
   }).then(async () => {
     if (usePlayerStore.getState().savePlayerState && usePlayerStore.getState().isFistInit)
       await TrackPlayer.seekTo(usePlayerStore.getState().lastPosition).then(() => {
-        usePlayerStore.getState().setCurrentSong(data.track);
         usePlayerStore.getState().setIsFistInit(false)
       });
   })
@@ -84,6 +83,7 @@ const handlePlay = async (song: any, playlist: IPlaylist = {
   items: [],
   isAlbum: false
 }) => {
+  usePlayerStore.getState().setLastPosition(0);
   const currentPlaylistId = usePlayerStore.getState().playList?.id;
   usePlayerStore.getState().setIsPlayFromLocal(false);
   if (currentPlaylistId !== playlist.id) {
@@ -109,6 +109,7 @@ const handlePlaySongInLocal = async (song: any, playlist: IPlaylist = {
   items: [],
   isAlbum: false
 }) => {
+
   usePlayerStore.getState().setIsPlayFromLocal(true);
   usePlayerStore.getState().setColor(defaultColorObj);
   usePlayerStore.getState().setCurrentSong({ ...objectToTrack(song), url: song.url, artwork: song.thumbnail || DEFAULT_IMG, });

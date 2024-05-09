@@ -22,7 +22,7 @@ interface Props {
   isAlbum?: boolean;
   onClick: (item: any) => void;
   showBottomSheet: (item: Song) => void;
-  isActive: boolean;
+  isActive?: boolean;
   timeStamp?: number;
 }
 

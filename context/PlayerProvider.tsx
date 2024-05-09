@@ -12,6 +12,7 @@ import {saveToHistory} from '../service/firebase';
 import {Appearance} from 'react-native';
 import useThemeStore from '../store/themeStore';
 import {DEFAULT_IMG} from '../constants';
+import SplashScreen from 'react-native-splash-screen';
 
 interface ContextType {
   bottomSheetModalRef: React.RefObject<BottomSheetModalMethods>;
@@ -39,6 +40,7 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
     setCurrentSong,
     setIsFistInit,
     saveHistory,
+    setLastPosition,
   } = usePlayerStore();
 
   const COLOR = useThemeStore(state => state.COLOR);
@@ -64,9 +66,8 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
 
   const initPlayer = async () => {
     if (savePlayerState) {
-      setIsFistInit(true);
-      setCurrentSong(null);
       await TrackPlayer.reset();
+      setIsFistInit(true);
       setisLoadingTrack(true);
       setSleepTimer(null);
       Appearance.setColorScheme(COLOR.isDark ? 'dark' : 'light');
@@ -99,14 +100,18 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
         });
       }
     } else {
-      setIsFistInit(false);
       await TrackPlayer.reset();
       setCurrentSong(null);
+      setIsFistInit(false);
+      setLastPosition(0);
+      setisLoadingTrack(false);
     }
   };
 
   useEffect(() => {
-    initPlayer();
+    initPlayer().then(() => {
+      SplashScreen.hide();
+    });
   }, []);
 
   useEffect(() => {

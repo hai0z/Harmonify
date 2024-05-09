@@ -27,9 +27,7 @@ function Navigatior() {
       background: COLOR.BACKGROUND,
     },
   };
-  useEffect(() => {
-    SplashScreen.hide();
-  }, []);
+
   return (
     <NavigationContainer theme={defaultTheme}>
       <Stack.Navigator screenOptions={{headerShown: false}}>

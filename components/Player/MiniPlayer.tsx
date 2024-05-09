@@ -9,6 +9,7 @@ import TextTicker from 'react-native-text-ticker';
 import {MINI_PLAYER_HEIGHT, TABBAR_HEIGHT} from '../../constants';
 import useThemeStore from '../../store/themeStore';
 import Animated, {
+  FadeInDown,
   FadeInUp,
   FadeOutDown,
   useSharedValue,
@@ -17,10 +18,13 @@ import Animated, {
 import HeartButton from '../HeartButton';
 import useImageColor from '../../hooks/useImageColor';
 import MiniPlayerProgress from './Control/MiniPlayerProgress';
+import useGetHomeData from '../../hooks/useGetHomeData';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const MiniPlayer = () => {
   const navigation = useNavigation<any>();
+
+  const {loading} = useGetHomeData();
 
   const keyboardVisible = useKeyBoardStatus();
 
@@ -50,11 +54,13 @@ const MiniPlayer = () => {
     });
   });
 
-  if (!currentSong || keyboardVisible) {
+  if (!currentSong || keyboardVisible || loading) {
     return null;
   }
   return (
-    <Animated.View exiting={FadeOutDown.springify()}>
+    <Animated.View
+      exiting={FadeOutDown.springify()}
+      entering={FadeInDown.duration(500)}>
       <Animated.View
         className="flex flex-col justify-center absolute"
         style={[
