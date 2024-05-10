@@ -81,7 +81,7 @@ const LocalSong = () => {
                 className="font-bold"
                 style={{color: COLOR.TEXT_PRIMARY}}
                 numberOfLines={2}>
-                Bài hát trên thiết bị
+                Đã tải về
               </Text>
               <Text style={{color: COLOR.TEXT_SECONDARY}}>
                 Bài hát đã tải về

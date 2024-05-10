@@ -53,8 +53,8 @@ const useGetLocalSong = () => {
         } else {
           setLocalSong(
             songsOrError.map((song: any, index) => ({
-              title: song.title || "không rõ",
-              artistsNames: song.artist || "không rõ",
+              title: song.title,
+              artistsNames: song.artist,
               duration: song.duration / 1000,
               thumbnail: (song.cover === null || song.cover === undefined || song.cover === '') ? DEFAULT_IMG : song.cover,
               url: `file://${song.url}`,

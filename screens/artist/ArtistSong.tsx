@@ -66,6 +66,9 @@ const ArtistSong = ({route}: any) => {
 
   const [isSearching, setIsSearching] = React.useState<boolean>(false);
 
+  const [isFetchMoreLoading, setIsFetchMoreLoading] =
+    React.useState<boolean>(false);
+
   const flashListRef = React.useRef<FlashList<any>>(null);
   const textInputRef = React.useRef<TextInput>(null);
   const currentSong = usePlayerStore(state => state.currentSong);
@@ -94,8 +97,10 @@ const ArtistSong = ({route}: any) => {
     setData([]);
     setDataDetailArtist({} as artistType);
     nodejs.channel.addListener('getListArtistSong', (data: any) => {
+      setIsFetchMoreLoading(false);
+
       if (data.hasMore === false && page > 1) {
-        setHasLoadMore(false);
+        setIsFetchMoreLoading(false);
         return;
       }
       if (data.items === undefined) return;
@@ -119,6 +124,7 @@ const ArtistSong = ({route}: any) => {
   const fetchMoreData = async () => {
     try {
       if (!hasLoadMore) return;
+      setIsFetchMoreLoading(true);
       setPage(page + 1);
       nodejs.channel.post(
         'getListArtistSong',
@@ -126,6 +132,7 @@ const ArtistSong = ({route}: any) => {
       );
     } catch (error) {
       setHasLoadMore(false);
+      setIsFetchMoreLoading(false);
     }
   };
 
@@ -220,11 +227,13 @@ const ArtistSong = ({route}: any) => {
           bounces={false}
           showsVerticalScrollIndicator={false}
           ListFooterComponent={() => {
-            return <View className="h-80"></View>;
+            return (
+              <View className="h-80 items-center">
+                {isFetchMoreLoading && <Loading />}
+              </View>
+            );
           }}
-          onEndReached={() => {
-            fetchMoreData();
-          }}
+          onEndReached={fetchMoreData}
           onScroll={Animated.event(
             [{nativeEvent: {contentOffset: {y: scrollY}}}],
             {useNativeDriver: false},

@@ -136,37 +136,39 @@ const Queue = () => {
       {currentSong?.id && (
         <>
           <View className="mt-4">
-            <View>
-              <Text
-                style={{
-                  color: COLOR.TEXT_PRIMARY,
-                  fontSize: widthPercentageToDP(5),
-                }}
-                className="font-bold px-4 mb-4">
-                Đang phát
-              </Text>
-              <Animated.View
-                entering={FadeInDown.duration(300).springify().damping(200)}
-                key={currentSong?.id}>
-                {!isPlayFromLocal ? (
-                  <TrackItem
-                    isAlbum={playList.isAlbum}
-                    index={0}
-                    isActive={
-                      currentSong?.id == playList?.items[trackIndex]?.encodeId
-                    }
-                    showBottomSheet={showBottomSheet}
-                    item={playList.items[trackIndex]}
-                    onClick={handlePlay}
-                  />
-                ) : (
-                  <LocalTrackItem
-                    item={playList.items[trackIndex]}
-                    onClick={handlePlay}
-                  />
-                )}
-              </Animated.View>
-            </View>
+            {
+              <View>
+                <Text
+                  style={{
+                    color: COLOR.TEXT_PRIMARY,
+                    fontSize: widthPercentageToDP(5),
+                  }}
+                  className="font-bold px-4 mb-4">
+                  Đang phát
+                </Text>
+                <Animated.View
+                  entering={FadeInDown.duration(300).springify().damping(200)}
+                  key={currentSong?.id}>
+                  {!isPlayFromLocal ? (
+                    <TrackItem
+                      isAlbum={playList.isAlbum}
+                      index={0}
+                      isActive={
+                        currentSong?.id == playList?.items[trackIndex]?.encodeId
+                      }
+                      showBottomSheet={showBottomSheet}
+                      item={playList.items[trackIndex]}
+                      onClick={handlePlay}
+                    />
+                  ) : (
+                    <LocalTrackItem
+                      item={playList.items[trackIndex]}
+                      onClick={handlePlay}
+                    />
+                  )}
+                </Animated.View>
+              </View>
+            }
             <View className="px-4 mt-[2px]">
               <Text
                 style={{
@@ -174,7 +176,7 @@ const Queue = () => {
                   fontSize: widthPercentageToDP(5),
                 }}
                 className="font-bold">
-                Hàng đợi
+                Hàng đợi ({playList?.items.length - 1})
               </Text>
             </View>
           </View>
@@ -219,7 +221,8 @@ const Queue = () => {
           </View>
         </>
       )}
-      <TrackItemBottomSheet />
+
+      {!isPlayFromLocal && <TrackItemBottomSheet />}
     </View>
   );
 };

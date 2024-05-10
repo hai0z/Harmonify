@@ -21,10 +21,13 @@ import {DEFAULT_IMG} from '../../constants';
 import {usePlayerStore} from '../../store/playerStore';
 import Loading from '../../components/Loading';
 import {widthPercentageToDP} from 'react-native-responsive-screen';
+import LocalTrackItem from '../../components/LocalTrackItem';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const LocalSong = () => {
   const {isLoading, localSong} = useGetLocalSong();
+
+  const currentSong = usePlayerStore(state => state.currentSong);
 
   const scrollY = React.useRef(new Animated.Value(0)).current;
 
@@ -62,16 +65,20 @@ const LocalSong = () => {
     [scrollY],
   );
 
-  const handlePlaySong = (song: any) => {
-    handlePlaySongInLocal(song, {
-      id: playListId,
-      items: localSong,
-    });
-    setPlayFrom({
-      id: 'local',
-      name: 'Bài hát trên thiết bị',
-    });
-  };
+  const handlePlaySong = useCallback(
+    (song: any) => {
+      handlePlaySongInLocal(song, {
+        id: playListId,
+        items: localSong,
+      });
+      setPlayFrom({
+        id: 'local',
+        name: 'Bài hát trên thiết bị',
+      });
+    },
+    [localSong],
+  );
+
   if (isLoading) {
     return (
       <View
@@ -113,7 +120,7 @@ const LocalSong = () => {
         )}
         ListHeaderComponent={React.memo(() => {
           return (
-            <View>
+            <View className="mb-8">
               <View
                 className="flex justify-end items-center pb-4"
                 style={{height: SCREEN_WIDTH * 0.8}}>
@@ -153,44 +160,24 @@ const LocalSong = () => {
             </View>
           );
         })}
-        contentContainerStyle={{
-          paddingBottom: 200,
-        }}
         ListFooterComponent={() => <View style={{height: SCREEN_WIDTH}} />}
         nestedScrollEnabled
         data={localSong}
+        extraData={currentSong?.id}
         estimatedItemSize={72}
         keyExtractor={(item: any, index) => `${item.encodeId}_${index}`}
         renderItem={({item}: any) => {
-          return <Item item={item} onPress={handlePlaySong} />;
+          return (
+            <LocalTrackItem
+              isActive={currentSong?.id == item.encodeId}
+              item={item}
+              onClick={handlePlaySong}
+            />
+          );
         }}
       />
     </View>
   );
 };
-const Item = React.memo(({item, onPress}: any) => {
-  const {COLOR} = useThemeStore(state => state);
-  return (
-    <TouchableOpacity
-      activeOpacity={0.8}
-      onPress={() => onPress(item)}
-      className="flex-row items-center mx-4 mb-3">
-      <Image
-        source={{uri: item.thumbnail || DEFAULT_IMG}}
-        style={{
-          width: widthPercentageToDP(15),
-          height: widthPercentageToDP(15),
-        }}
-      />
-      <View style={{marginLeft: 10}}>
-        <Text
-          className=" font-bold mb-[5px]"
-          style={{color: COLOR.TEXT_PRIMARY}}>
-          {item.title}
-        </Text>
-        <Text style={{color: COLOR.TEXT_SECONDARY}}>{item.artistsNames}</Text>
-      </View>
-    </TouchableOpacity>
-  );
-});
+
 export default LocalSong;

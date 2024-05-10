@@ -169,19 +169,25 @@ const SearchScreens = () => {
             contentContainerStyle={{
               paddingHorizontal: 16,
               alignItems: 'center',
+              width: '100%',
             }}
             className="flex flex-row gap-2 mb-4 mt-2">
             {['Tất cả', 'Bài hát', 'Danh sách phát', 'Nghệ sĩ'].map(
               (item, index) => (
                 <TouchableOpacity
+                  activeOpacity={0.8}
                   onPress={() => handleFilter(index)}
                   className="px-2 py-2 rounded-md"
                   key={index}
                   style={{
                     backgroundColor:
-                      selectedTab === index ? COLOR.PRIMARY : 'transparent',
+                      selectedTab === index
+                        ? theme === 'amoled'
+                          ? GREEN
+                          : COLOR.PRIMARY
+                        : 'transparent',
                   }}>
-                  <Text>{item}</Text>
+                  <Text style={{color: COLOR.TEXT_PRIMARY}}>{item}</Text>
                 </TouchableOpacity>
               ),
             )}

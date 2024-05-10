@@ -23,24 +23,21 @@ export const PlayerContext = React.createContext({} as ContextType);
 
 nodejs.start('main.js');
 
-nodejs.channel.addListener('getLyric', async data => {
-  usePlayerStore.getState().setLyrics(data);
-});
-
 const PlayerProvider = ({children}: {children: React.ReactNode}) => {
   const {
     playList,
     currentSong,
     isPlayFromLocal,
+    saveHistory,
+    tempSong,
+    savePlayerState,
     setColor,
     setisLoadingTrack,
-    tempSong,
     setSleepTimer,
-    savePlayerState,
     setCurrentSong,
     setIsFistInit,
-    saveHistory,
     setLastPosition,
+    setHomeLoading,
   } = usePlayerStore();
 
   const COLOR = useThemeStore(state => state.COLOR);
@@ -67,6 +64,7 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
   const initPlayer = async () => {
     if (savePlayerState) {
       await TrackPlayer.reset();
+      setHomeLoading(true);
       setIsFistInit(true);
       setisLoadingTrack(true);
       setSleepTimer(null);
@@ -101,8 +99,8 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
       }
     } else {
       await TrackPlayer.reset();
-      setCurrentSong(null);
       setIsFistInit(false);
+      setCurrentSong(null);
       setLastPosition(0);
       setisLoadingTrack(false);
     }
@@ -126,6 +124,12 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
   useEffect(() => {
     saveHistory && saveToHistory(tempSong);
   }, [tempSong?.encodeId]);
+
+  useEffect(() => {
+    nodejs.channel.addListener('getLyric', async data => {
+      usePlayerStore.getState().setLyrics(data);
+    });
+  }, []);
 
   return (
     <PlayerContext.Provider

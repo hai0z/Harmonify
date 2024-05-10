@@ -14,7 +14,6 @@ import React, {
   useContext,
   useEffect,
   useLayoutEffect,
-  useMemo,
 } from 'react';
 import {LinearGradient} from 'react-native-linear-gradient';
 import {FlashList} from '@shopify/flash-list';
@@ -78,6 +77,7 @@ const MyPlaylist = ({route}: {route: route<'MyPlaylist'>}) => {
   const flashListRef = React.useRef<FlashList<any>>(null);
 
   const playerContext = useContext(PlayerContext);
+
   const textInputRef = React.useRef<TextInput>(null);
 
   useEffect(() => {
@@ -281,9 +281,6 @@ const MyPlaylist = ({route}: {route: route<'MyPlaylist'>}) => {
             <View className="h-28" />
           )
         }
-        contentContainerStyle={{
-          paddingBottom: 200,
-        }}
         ListFooterComponent={() => <View style={{height: SCREEN_WIDTH}} />}
         nestedScrollEnabled
         data={searchData}

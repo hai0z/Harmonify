@@ -2,6 +2,7 @@ import { collection, deleteDoc, doc, getDocs, limit, orderBy, query, setDoc, upd
 import { auth, db } from "../../firebase/config";
 import { usePlayerStore } from "../../store/playerStore";
 import { useUserStore } from "../../store/userStore";
+import shuffleArray from "../../utils/shuffle";
 
 
 export const addToLikedList = async (
@@ -78,7 +79,7 @@ export const getRecentListening = async () => {
     querySnapshot.forEach((doc) => {
       recentListening.push(doc.data());
     });
-    return recentListening.sort(() => Math.random() - 0.5)
+    return shuffleArray(recentListening);
   } catch (err: any) {
     console.log(err.message);
   }

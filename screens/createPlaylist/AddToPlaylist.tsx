@@ -21,10 +21,11 @@ import {usePlayerStore} from '../../store/playerStore';
 import LinearGradient from 'react-native-linear-gradient';
 import Entypo from 'react-native-vector-icons/Entypo';
 import useToggleLikeSong from '../../hooks/useToggleLikeSong';
+import {GREEN} from '../../constants';
 
 const AddToPlaylist = ({route}: {route: any}) => {
   const {song} = route.params;
-  const {COLOR} = useThemeStore();
+  const {COLOR, theme} = useThemeStore();
   const navigation = useNavigation<any>();
   const {myPlaylists} = useUserStore();
   const {likedSongs} = usePlayerStore();
@@ -107,7 +108,7 @@ const AddToPlaylist = ({route}: {route: any}) => {
           activeOpacity={0.8}
           onPress={() => navigation.navigate('CreatePlaylist')}
           className="py-3 rounded-full px-6"
-          style={{backgroundColor: COLOR.PRIMARY}}>
+          style={{backgroundColor: theme === 'amoled' ? GREEN : COLOR.PRIMARY}}>
           <Text
             style={{
               color: COLOR.TEXT_PRIMARY,
@@ -287,7 +288,7 @@ const AddToPlaylist = ({route}: {route: any}) => {
           activeOpacity={0.8}
           onPress={handleAddToPlaylist}
           className="py-4 rounded-full px-8"
-          style={{backgroundColor: COLOR.PRIMARY}}>
+          style={{backgroundColor: theme === 'amoled' ? GREEN : COLOR.PRIMARY}}>
           <Text
             style={{
               color: COLOR.TEXT_PRIMARY,

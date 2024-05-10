@@ -9,9 +9,11 @@ import LoopButton from './Control/LoopButton';
 import useThemeStore from '../../store/themeStore';
 import Animated from 'react-native-reanimated';
 import {useNavigation} from '@react-navigation/native';
+import {usePlayerStore} from '../../store/playerStore';
 const Player = () => {
   const {COLOR} = useThemeStore(state => state);
   const navigation = useNavigation<any>();
+  const isPlayFromLocal = usePlayerStore(state => state.isPlayFromLocal);
   return (
     <View>
       <TrackSlider />
@@ -21,8 +23,12 @@ const Player = () => {
         <PlayButton />
         <NextButton />
         <TouchableOpacity
+          disabled={isPlayFromLocal}
           onPress={() => navigation.navigate('Queue')}
-          activeOpacity={1}
+          activeOpacity={0.8}
+          style={{
+            opacity: isPlayFromLocal ? 0.4 : 1,
+          }}
           className="flex-1 items-end justify-center ">
           <MaterialIcons
             name="queue-music"

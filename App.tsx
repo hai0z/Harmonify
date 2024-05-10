@@ -49,7 +49,7 @@ export default function App() {
             appKilledPlaybackBehavior:
               AppKilledPlaybackBehavior.StopPlaybackAndRemoveNotification,
             alwaysPauseOnInterruption: true,
-            stopForegroundGracePeriod: 1000,
+            stopForegroundGracePeriod: 0,
           },
         });
       } catch (e) {

@@ -6,8 +6,6 @@ import LyricScreen from '../screens/LyricScreen';
 import {useAuth} from '../context/AuthProvider';
 import Login from '../screens/auth/Login';
 import Register from '../screens/auth/Register';
-import {useEffect} from 'react';
-import SplashScreen from 'react-native-splash-screen';
 import useThemeStore from '../store/themeStore';
 
 import {RootStackParamList} from '../utils/types/RootStackParamList';

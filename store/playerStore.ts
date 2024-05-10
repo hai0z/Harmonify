@@ -56,8 +56,8 @@ interface PlayerStore {
   playFrom: IPLayFrom,
   setPlayFrom: (playFrom: IPLayFrom) => void
   color: Partial<Color>,
-  playList: IPlaylist,
   setColor: (color: Partial<Color>) => void,
+  playList: IPlaylist,
   setPlayList: (playlist: IPlaylist) => void,
   lyrics: Lyric[],
   setLyrics: (lyrics: any) => void
@@ -83,6 +83,8 @@ interface PlayerStore {
   setImageQuality: (imageQuality: "low" | "medium" | "high") => void,
   saveHistory: boolean,
   setSaveHistory: (saveHistory: boolean) => void
+  homeLoading: boolean
+  setHomeLoading: (homeLoading: boolean) => void
 }
 export const usePlayerStore = create<PlayerStore>()(
   persist((set) => ({
@@ -125,6 +127,8 @@ export const usePlayerStore = create<PlayerStore>()(
     setImageQuality: (imageQuality: "low" | "medium" | "high") => set({ imageQuality }),
     saveHistory: true,
     setSaveHistory: (saveHistory: boolean) => set({ saveHistory }),
+    homeLoading: true,
+    setHomeLoading: (homeLoading: boolean) => set({ homeLoading }),
   }), {
     name: "player-store",
     storage: createJSONStorage(() => zustandStorage),

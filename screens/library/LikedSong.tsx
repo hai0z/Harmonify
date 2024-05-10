@@ -240,9 +240,6 @@ const LikedSong = () => {
             <View className="h-28" />
           )
         }
-        contentContainerStyle={{
-          paddingBottom: 200,
-        }}
         ListFooterComponent={() => <View style={{height: SCREEN_WIDTH}} />}
         nestedScrollEnabled
         data={searchData}

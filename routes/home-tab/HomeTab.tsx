@@ -17,7 +17,7 @@ import ArtistSong from '../../screens/artist/ArtistSong';
 import LibrarySrceens from '../../screens/library/LibrarySrceens';
 import LikedSong from '../../screens/library/LikedSong';
 import MyPlaylist from '../../screens/library/MyPlaylist';
-import {MINI_PLAYER_HEIGHT, TABBAR_HEIGHT} from '../../constants';
+import {GREEN, MINI_PLAYER_HEIGHT, TABBAR_HEIGHT} from '../../constants';
 import TrackItemBottomSheet from '../../components/bottom-sheet/TrackItemBottomSheet';
 import LocalSong from '../../screens/library/LocalSong';
 import useThemeStore from '../../store/themeStore';
@@ -142,7 +142,7 @@ const HomeStack = () => {
 };
 
 const HomeTab = () => {
-  const {COLOR} = useThemeStore();
+  const {COLOR, theme} = useThemeStore();
   const isConnected = useInternetState();
   return (
     <Tab.Navigator
@@ -213,11 +213,11 @@ const HomeTab = () => {
           left: 0,
           right: 0,
           backgroundColor: withTiming(`${COLOR.BACKGROUND}95`, {
-            duration: 750,
+            duration: 550,
           }),
           elevation: 0,
         },
-        tabBarActiveTintColor: COLOR.PRIMARY,
+        tabBarActiveTintColor: theme === 'amoled' ? GREEN : COLOR.PRIMARY,
         tabBarInactiveTintColor: COLOR.TEXT_SECONDARY,
       })}>
       <Tab.Screen

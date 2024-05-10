@@ -18,19 +18,18 @@ import Animated, {
 import HeartButton from '../HeartButton';
 import useImageColor from '../../hooks/useImageColor';
 import MiniPlayerProgress from './Control/MiniPlayerProgress';
-import useGetHomeData from '../../hooks/useGetHomeData';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const MiniPlayer = () => {
   const navigation = useNavigation<any>();
-
-  const {loading} = useGetHomeData();
 
   const keyboardVisible = useKeyBoardStatus();
 
   const currentSong = usePlayerStore(state => state.currentSong);
 
   const isPlayFromLocal = usePlayerStore(state => state.isPlayFromLocal);
+
+  const loading = usePlayerStore(state => state.homeLoading);
 
   const COLOR = useThemeStore(state => state.COLOR);
 

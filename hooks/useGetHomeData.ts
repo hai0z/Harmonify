@@ -8,7 +8,9 @@ export default function useGetHomeData() {
 
   const [dataHome, setdataHome] = useState<any>([]);
   const [dataNewRelease, setDataNewRelease] = useState<any>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+
+  const [loading, setLoading] = usePlayerStore(state => [state.homeLoading, state.setHomeLoading]);
+
   const [dataRecent, setDataRecent] = useState<any>([]);
   const setLikedSongs = usePlayerStore(state => state.setLikedSongs);
   const isConnected = useInternetState();

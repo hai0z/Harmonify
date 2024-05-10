@@ -5,6 +5,7 @@ import React, {
   useEffect,
   useId,
   useLayoutEffect,
+  useMemo,
   useState,
 } from 'react';
 import useThemeStore from '../store/themeStore';
@@ -25,7 +26,15 @@ import Animated, {
 } from 'react-native-reanimated';
 import {Track} from 'react-native-track-player';
 import LinearGradient from 'react-native-linear-gradient';
-import {collection, getDocs, limit, orderBy, query} from 'firebase/firestore';
+import {
+  collection,
+  getDocs,
+  limit,
+  orderBy,
+  query,
+  startAfter,
+  startAt,
+} from 'firebase/firestore';
 import {auth, db} from '../firebase/config';
 import 'dayjs/locale/vi';
 import {handlePlay} from '../service/trackPlayerService';
@@ -34,45 +43,41 @@ import useImageColor from '../hooks/useImageColor';
 import TrackItem from '../components/track-item/TrackItem';
 import Loading from '../components/Loading';
 import {navigation} from '../utils/types/RootStackParamList';
+import {GREEN} from '../constants';
+
+const ITEM_PER_PAGE = 20;
 
 const HistoryScreens = () => {
   const COLOR = useThemeStore(state => state.COLOR);
+
+  const theme = useThemeStore(state => state.theme);
 
   const setPlayFrom = usePlayerStore(state => state.setPlayFrom);
 
   const playerContext = useContext(PlayerContext);
 
   const currentSong = usePlayerStore(state => state.currentSong);
-  const saveHistory = usePlayerStore(state => state.saveHistory);
 
-  const id = useId();
+  const saveHistory = usePlayerStore(state => state.saveHistory);
 
   const navigation = useNavigation<navigation<'History'>>();
 
   const [historyData, setHistoryData] = useState<any>([]);
 
+  const id = useMemo(
+    () => Math.random().toString(36).substring(7),
+    [historyData.length],
+  );
+
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const getHistory = async () => {
-      setLoading(true);
-      const q = query(
-        collection(db, `users/${auth.currentUser?.uid}/history`),
-        orderBy('timestamp', 'desc'),
-        limit(100),
-      );
-      const docs = await getDocs(q);
-      const songs = [] as any;
-      docs.forEach(doc => {
-        songs.push(doc.data());
-      });
-      setHistoryData(songs);
-      setLoading(false);
-    };
-    saveHistory && getHistory();
-  }, [saveHistory]);
-
   const {dominantColor: gradientColor} = useImageColor();
+
+  const [lastVisible, setLastVisible] = useState<any>(null);
+
+  const [fetchMoreLoading, setFetchMoreLoading] = useState(false);
+
+  const $bg = useSharedValue(`transparent`);
 
   const handlePlaySong = useCallback(
     (item: any) => {
@@ -88,7 +93,24 @@ const HistoryScreens = () => {
     [historyData],
   );
 
-  const $bg = useSharedValue(`transparent`);
+  const fetchMoreData = async () => {
+    if (!lastVisible) return;
+    setFetchMoreLoading(true);
+    const q = query(
+      collection(db, `users/${auth.currentUser?.uid}/history`),
+      orderBy('timestamp', 'desc'),
+      startAfter(lastVisible),
+      limit(ITEM_PER_PAGE),
+    );
+    const docs = await getDocs(q);
+    const songs = [] as any;
+    docs.forEach(doc => {
+      songs.push(doc.data());
+    });
+    setHistoryData([...historyData, ...songs]);
+    setLastVisible(docs.docs[docs.docs.length - 1]);
+    setFetchMoreLoading(false);
+  };
 
   const changeBgAnimated = () => {
     'worklet';
@@ -97,6 +119,26 @@ const HistoryScreens = () => {
       easing: Easing.inOut(Easing.quad),
     });
   };
+  useEffect(() => {
+    const getHistory = async () => {
+      setLoading(true);
+      const q = query(
+        collection(db, `users/${auth.currentUser?.uid}/history`),
+        orderBy('timestamp', 'desc'),
+        limit(ITEM_PER_PAGE),
+      );
+      const docs = await getDocs(q);
+      const songs = [] as any;
+      docs.forEach(doc => {
+        songs.push(doc.data());
+      });
+      setHistoryData(songs);
+      setLastVisible(docs.docs[docs.docs.length - 1]);
+      setLoading(false);
+    };
+    saveHistory && getHistory();
+  }, [saveHistory]);
+
   useLayoutEffect(() => {
     runOnUI(changeBgAnimated)();
   }, [gradientColor, historyData]);
@@ -150,8 +192,13 @@ const HistoryScreens = () => {
       ) : (
         <View className="flex-1 pt-2">
           <FlashList
+            onMomentumScrollEnd={fetchMoreData}
             ListHeaderComponent={<View className="h-8"></View>}
-            ListFooterComponent={<View className="h-40" />}
+            ListFooterComponent={
+              <View className="h-64 items-center">
+                {fetchMoreLoading && <Loading />}
+              </View>
+            }
             ListEmptyComponent={
               <View
                 className="flex justify-center items-center flex-1"
@@ -168,7 +215,9 @@ const HistoryScreens = () => {
                     <TouchableOpacity
                       onPress={() => navigation.navigate('Setting')}>
                       <Text
-                        style={{color: COLOR.PRIMARY}}
+                        style={{
+                          color: theme === 'amoled' ? GREEN : COLOR.PRIMARY,
+                        }}
                         className="text-center">
                         Bật lịch sử nghe
                       </Text>
