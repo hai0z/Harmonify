@@ -31,6 +31,7 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
     saveHistory,
     tempSong,
     savePlayerState,
+    offlineMode,
     setColor,
     setisLoadingTrack,
     setSleepTimer,
@@ -61,14 +62,18 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
     setData(item);
   }, []);
 
+  Appearance.setColorScheme(COLOR.isDark ? 'dark' : 'light');
+
   const initPlayer = async () => {
+    if (offlineMode) {
+      setHomeLoading(false);
+    }
     if (savePlayerState) {
       await TrackPlayer.reset();
-      setHomeLoading(true);
+      !offlineMode && setHomeLoading(true);
       setIsFistInit(true);
       setisLoadingTrack(true);
       setSleepTimer(null);
-      Appearance.setColorScheme(COLOR.isDark ? 'dark' : 'light');
       if (
         playList.items.length > 0 &&
         playList.id !== '' &&

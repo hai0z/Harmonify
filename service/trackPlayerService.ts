@@ -54,9 +54,6 @@ TrackPlayer.addEventListener(Event.PlaybackActiveTrackChanged, async event => {
     }
   } else {
     !usePlayerStore.getState().isLoadingTrack && usePlayerStore.getState().setCurrentSong(event.track!);
-    if (usePlayerStore.getState().isFistInit === false) {
-      await TrackPlayer.play()
-    }
     if (usePlayerStore.getState().savePlayerState && usePlayerStore.getState().isFistInit)
       await TrackPlayer.seekTo(usePlayerStore.getState().lastPosition).then(() => {
         usePlayerStore.getState().setIsFistInit(false)
@@ -112,6 +109,7 @@ const handlePlay = async (song: any, playlist: IPlaylist = {
   await TrackPlayer.skip(index).finally(() => {
     usePlayerStore.getState().setisLoadingTrack(false);
   })
+  await TrackPlayer.play();
 
 }
 const handlePlaySongInLocal = async (song: any, playlist: IPlaylist = {
@@ -121,7 +119,6 @@ const handlePlaySongInLocal = async (song: any, playlist: IPlaylist = {
 }) => {
   usePlayerStore.getState().setIsPlayFromLocal(true);
   usePlayerStore.getState().setColor(defaultColorObj);
-  usePlayerStore.getState().setCurrentSong({ ...objectToTrack(song), url: song.url, artwork: song.thumbnail || DEFAULT_IMG, });
   const currentPlaylistId = usePlayerStore.getState().playList?.id;
   if (currentPlaylistId !== playlist.id) {
     usePlayerStore.getState().setisLoadingTrack(true);
@@ -135,6 +132,7 @@ const handlePlaySongInLocal = async (song: any, playlist: IPlaylist = {
   await TrackPlayer.skip(index).finally(() => {
     usePlayerStore.getState().setisLoadingTrack(false);
   })
+  await TrackPlayer.play();
 
 }
 

@@ -1,12 +1,12 @@
 import {View, Text, TouchableOpacity} from 'react-native';
 import React from 'react';
-import getThumbnail from '../utils/getThumnail';
 import useThemeStore from '../store/themeStore';
 import FastImage from 'react-native-fast-image';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import {usePlayerStore} from '../store/playerStore';
-import {GREEN} from '../constants';
+import {DEFAULT_IMG, GREEN} from '../constants';
 import ActiveTrackAnimation from './track-item/ActiveTrackAnimation';
+import {objectToTrack} from '../service/trackPlayerService';
 interface Props {
   item: any;
   onClick: (item: any) => void;
@@ -23,7 +23,11 @@ const TrackItem = (props: Props) => {
       activeOpacity={0.8}
       className="flex flex-row  items-center mx-4 mb-3"
       onPress={() => {
-        setCurrentSong(item);
+        setCurrentSong({
+          ...objectToTrack(item),
+          url: item.url,
+          artwork: item.thumbnail || DEFAULT_IMG,
+        });
         onClick(item);
       }}>
       <View>

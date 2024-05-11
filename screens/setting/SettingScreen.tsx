@@ -15,6 +15,8 @@ import {widthPercentageToDP} from 'react-native-responsive-screen';
 import FastImage from 'react-native-fast-image';
 import {deleteHistory} from '../../service/firebase';
 import {GREEN} from '../../constants';
+import TrackPlayer from 'react-native-track-player';
+import {StatusBar} from 'expo-status-bar';
 const SettingScreen = () => {
   const {theme, COLOR} = useThemeStore();
   const {
@@ -24,6 +26,13 @@ const SettingScreen = () => {
     setImageQuality,
     saveHistory,
     setSaveHistory,
+    offlineMode,
+    setOfflineMode,
+    isPlayFromLocal,
+    setPlayList,
+    setCurrentSong,
+    setIsPlayFromLocal,
+    setIsFistInit,
   } = usePlayerStore();
 
   const selectedColor = COLOR.isDark
@@ -32,6 +41,19 @@ const SettingScreen = () => {
 
   const navigation = useNavigation<navigation<'Setting'>>();
 
+  const changeOfflineMode = async () => {
+    setCurrentSong(null);
+    setOfflineMode(!offlineMode);
+    setIsFistInit(false);
+    await TrackPlayer.reset();
+    await TrackPlayer.pause();
+    setPlayList({
+      id: '',
+      items: [],
+    });
+    setIsPlayFromLocal(!isPlayFromLocal);
+    navigation.replace(!offlineMode ? 'OfflineStack' : 'Home');
+  };
   useEffect(() => {
     FastImage.clearDiskCache();
     FastImage.clearMemoryCache();
@@ -41,6 +63,7 @@ const SettingScreen = () => {
     <Animated.ScrollView
       style={{flex: 1, backgroundColor: COLOR.BACKGROUND}}
       className="pt-[35px] px-4">
+      {offlineMode && <StatusBar style="auto" backgroundColor="transparent" />}
       <View className="flex flex-row items-center gap-2">
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back" size={24} color={COLOR.TEXT_PRIMARY} />
@@ -61,7 +84,7 @@ const SettingScreen = () => {
             fontSize: widthPercentageToDP(4.5),
             fontWeight: '500',
           }}>
-          Chủ đề
+          Ứng dụng
         </Text>
         <TouchableOpacity
           hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}
@@ -91,6 +114,23 @@ const SettingScreen = () => {
             />
           </View>
         </TouchableOpacity>
+        <View className="flex flex-row justify-between items-center">
+          <Text
+            style={{
+              color: COLOR?.TEXT_PRIMARY,
+              fontSize: widthPercentageToDP(3.5),
+            }}>
+            Chế độ offline
+          </Text>
+          <View className="flex flex-row items-center">
+            <Switch
+              thumbColor={theme === 'amoled' ? GREEN : COLOR?.PRIMARY}
+              trackColor={{false: '#cccccc', true: '#cccccc'}}
+              value={offlineMode}
+              onChange={changeOfflineMode}
+            />
+          </View>
+        </View>
       </View>
       <View
         className="mt-4 px-1 py-2 rounded-md"

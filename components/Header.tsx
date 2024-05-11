@@ -5,9 +5,11 @@ import {useNavigation} from '@react-navigation/native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import useThemeStore from '../store/themeStore';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {usePlayerStore} from '../store/playerStore';
 
 const Header = () => {
   const COLOR = useThemeStore(state => state.COLOR);
+  const offlineMode = usePlayerStore(state => state.offlineMode);
   const navigation = useNavigation<any>();
   const greeting = () => {
     const hour = new Date().getHours();
@@ -30,9 +32,15 @@ const Header = () => {
         </Text>
       </View>
       <View className="flex flex-row gap-4">
-        <TouchableOpacity onPress={() => navigation.navigate('History')}>
-          <MaterialIcons name="history" size={26} color={COLOR.TEXT_PRIMARY} />
-        </TouchableOpacity>
+        {!offlineMode && (
+          <TouchableOpacity onPress={() => navigation.navigate('History')}>
+            <MaterialIcons
+              name="history"
+              size={26}
+              color={COLOR.TEXT_PRIMARY}
+            />
+          </TouchableOpacity>
+        )}
         <TouchableOpacity
           className="z-[5]"
           onPress={() => navigation.navigate('Setting')}>

@@ -15,6 +15,7 @@ import {SafeAreaView} from 'react-native';
 import Loading from '../../components/Loading';
 import useGetHomeData from '../../hooks/useGetHomeData';
 import {typePlaylistCover} from '../../utils/types/type';
+import Animated, {FadeIn} from 'react-native-reanimated';
 
 function HomeScreens() {
   const {COLOR, HEADER_GRADIENT} = useThemeStore(state => state);
@@ -45,7 +46,7 @@ function HomeScreens() {
       showsVerticalScrollIndicator={false}
       className=" h-full w-full pb-[200px]"
       style={{backgroundColor: COLOR.BACKGROUND}}>
-      <SafeAreaView>
+      <Animated.View entering={FadeIn.duration(500)}>
         <Header />
         <View
           className="top-0"
@@ -95,7 +96,7 @@ function HomeScreens() {
           })}
         </View>
         <View className="h-48"></View>
-      </SafeAreaView>
+      </Animated.View>
     </ScrollView>
   );
 }

@@ -12,12 +12,15 @@ import {RootStackParamList} from '../utils/types/RootStackParamList';
 import HomeWrapper from './home-tab/HomeTab';
 import CreatePlaylistStack from './CreatePlaylistStack';
 import PlayerStack from './PlayerStack';
+import {usePlayerStore} from '../store/playerStore';
+import OfflineStack from './OfflineStack';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function Navigatior() {
   const {isLogin} = useAuth();
   const {COLOR} = useThemeStore();
+  const {offlineMode} = usePlayerStore();
   const defaultTheme = {
     dark: COLOR.isDark,
     colors: {
@@ -28,10 +31,18 @@ function Navigatior() {
 
   return (
     <NavigationContainer theme={defaultTheme}>
-      <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Navigator
+        screenOptions={{headerShown: false}}
+        initialRouteName={
+          isLogin ? (offlineMode ? 'OfflineStack' : 'Home') : 'Login'
+        }>
         {isLogin ? (
           <>
-            <Stack.Screen name="Home" component={HomeWrapper} />
+            <Stack.Screen
+              name="Home"
+              component={HomeWrapper}
+              options={{animation: 'fade'}}
+            />
             <Stack.Screen
               name="PlayerStack"
               component={PlayerStack}
@@ -49,6 +60,11 @@ function Navigatior() {
             <Stack.Screen
               name="PlaylistStack"
               component={CreatePlaylistStack}
+              options={{animation: 'fade'}}
+            />
+            <Stack.Screen
+              name="OfflineStack"
+              component={OfflineStack}
               options={{animation: 'fade'}}
             />
           </>

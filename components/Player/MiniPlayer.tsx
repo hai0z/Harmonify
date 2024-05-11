@@ -33,6 +33,8 @@ const MiniPlayer = () => {
 
   const COLOR = useThemeStore(state => state.COLOR);
 
+  const offlineMode = usePlayerStore(state => state.offlineMode);
+
   const playerState = usePlaybackState();
 
   const {dominantColor: gradientColor} = useImageColor();
@@ -70,7 +72,7 @@ const MiniPlayer = () => {
             backgroundColor: bgAnimated,
             borderRadius: 6,
             overflow: 'hidden',
-            bottom: TABBAR_HEIGHT,
+            bottom: offlineMode ? 0 : TABBAR_HEIGHT,
           },
         ]}>
         <TouchableOpacity
@@ -81,7 +83,6 @@ const MiniPlayer = () => {
             justifyContent: 'center',
             width: '100%',
             height: '100%',
-            zIndex: 2,
           }}>
           <Animated.View
             key={currentSong?.id}

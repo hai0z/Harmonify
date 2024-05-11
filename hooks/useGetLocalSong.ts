@@ -42,7 +42,6 @@ const useGetLocalSong = () => {
         const songsOrError = await getAll({
           offset: 0,
           coverQuality: 100,
-          minSongDuration: 1000,
           sortBy: SortSongFields.TITLE,
           sortOrder: SortSongOrder.DESC,
         });

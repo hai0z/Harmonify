@@ -85,6 +85,8 @@ interface PlayerStore {
   setSaveHistory: (saveHistory: boolean) => void
   homeLoading: boolean
   setHomeLoading: (homeLoading: boolean) => void
+  offlineMode: boolean
+  setOfflineMode: (offlineMode: boolean) => void
 }
 export const usePlayerStore = create<PlayerStore>()(
   persist((set) => ({
@@ -129,6 +131,8 @@ export const usePlayerStore = create<PlayerStore>()(
     setSaveHistory: (saveHistory: boolean) => set({ saveHistory }),
     homeLoading: true,
     setHomeLoading: (homeLoading: boolean) => set({ homeLoading }),
+    offlineMode: false,
+    setOfflineMode: (offlineMode: boolean) => set({ offlineMode }),
   }), {
     name: "player-store",
     storage: createJSONStorage(() => zustandStorage),

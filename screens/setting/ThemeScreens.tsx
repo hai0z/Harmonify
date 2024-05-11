@@ -8,9 +8,12 @@ import {Appearance} from 'react-native';
 import {navigation} from '../../utils/types/RootStackParamList';
 import {useNavigation} from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {usePlayerStore} from '../../store/playerStore';
+import {StatusBar} from 'expo-status-bar';
 const ThemeScreens = () => {
   const {theme, setTheme, COLOR} = useThemeStore(state => state);
 
+  const offlineMode = usePlayerStore(state => state.offlineMode);
   const selectedColor = themeMap[theme]?.BACKGROUND;
 
   const bg = useSharedValue(`${selectedColor}`);
@@ -25,6 +28,8 @@ const ThemeScreens = () => {
     <Animated.ScrollView
       style={{flex: 1, backgroundColor: bg}}
       className="pt-[35px] px-6">
+      {offlineMode && <StatusBar style="auto" backgroundColor="transparent" />}
+
       <View className="flex flex-row items-center gap-2">
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back" size={24} color={COLOR.TEXT_PRIMARY} />
@@ -78,7 +83,7 @@ const ThemeScreens = () => {
       </View>
       <View className="flex mt-4">
         <Text style={{color: COLOR.TEXT_PRIMARY}}>Chủ đề tối</Text>
-        {['dark', 'synthWave', 'coffee', 'night', 'amoled'].map(
+        {['dark', 'halloween', 'bussiness', 'night', 'amoled'].map(
           (item, index) => (
             <TouchableOpacity
               key={index}

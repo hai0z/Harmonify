@@ -49,6 +49,8 @@ export type RootStackParamList = {
   SettingStack: undefined;
   Setting: undefined;
   Theme: undefined;
+  Offline: undefined;
+  OfflineStack: undefined;
 };
 
 export type RootStackProps<T extends keyof RootStackParamList> = {

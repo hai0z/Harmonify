@@ -1,22 +1,22 @@
 import tinycolor from "tinycolor2"
 
-export type Theme = "light" | "dark" | "lemon" | "pastel" | 'winter' | 'silky' | 'synthWave' | 'coffee' | 'amoled' | 'night';
+export type Theme = "light" | "dark" | "lemon" | "pastel" | 'winter' | 'silky' | 'halloween' | 'bussiness' | 'amoled' | 'night';
 
 //dark header
 export const headerGradientDark = {
-  MORNING: tinycolor('#641ae6').darken(30).toString(),
-  AFTERNOON: tinycolor('#d926a9').darken(30).toString(),
-  EVENING: tinycolor('#1fb2a6').darken(30).toString(),
+  MORNING: tinycolor('#ff7ac6').darken(55).toString(),
+  AFTERNOON: tinycolor('#bf95f9').darken(55).toString(),
+  EVENING: tinycolor('#ffb86b').darken(55).toString(),
 }
-const headerGradientSynthWave = {
-  MORNING: tinycolor('#e779c1').darken(45).toString(),
-  AFTERNOON: tinycolor('#58c7f3').darken(40).toString(),
-  EVENING: tinycolor('#f3cc30').darken(40).toString(),
+const headerGradienthalloween = {
+  MORNING: tinycolor('#f28c18').darken(30).toString(),
+  AFTERNOON: tinycolor('#6d3a9c').darken(25).toString(),
+  EVENING: tinycolor('#51a800').darken(20).toString(),
 }
-const headerGradientCoffee = {
-  MORNING: tinycolor('#dc944c').darken(35).toString(),
-  AFTERNOON: tinycolor('#263f40').darken(0).toString(),
-  EVENING: tinycolor('#11596f').darken(10).toString(),
+const headerGradientbussiness = {
+  MORNING: tinycolor('#1c4f82').darken(15).toString(),
+  AFTERNOON: tinycolor('#7d919b').darken(35).toString(),
+  EVENING: tinycolor('#eb6b47').darken(45).toString(),
 }
 const headerGradientAmoled = {
   MORNING: tinycolor('#343232').darken(30).toString(),
@@ -103,27 +103,27 @@ export const silkyTheme = {
 //dark theme
 
 export const darkTheme = {
-  PRIMARY: '#641ae6',
-  SECONDARY: '#d926a9',
+  PRIMARY: '#ff7ac6',
+  SECONDARY: '#bf95f9',
   TEXT_PRIMARY: '#FFFFFF',
   TEXT_SECONDARY: '#A9A9A9',
   BACKGROUND: '#191414',
   isDark: true,
 }
-export const synthWaveTheme = {
-  PRIMARY: '#e779c1',
-  SECONDARY: '#58c7f3',
+export const halloweenTheme = {
+  PRIMARY: '#f28c18',
+  SECONDARY: '#6d3a9c',
   TEXT_PRIMARY: '#FFFFFF',
   TEXT_SECONDARY: '#A9A9A9',
-  BACKGROUND: '#1a103c',
+  BACKGROUND: '#212121',
   isDark: true,
 }
-export const coffeeTheme = {
-  PRIMARY: '#dc944c',
-  SECONDARY: '#263f40',
+export const bussinessTheme = {
+  PRIMARY: '#1c4f82',
+  SECONDARY: '#7d919b',
   TEXT_PRIMARY: '#FFFFFF',
   TEXT_SECONDARY: '#A9A9A9',
-  BACKGROUND: '#211720',
+  BACKGROUND: '#212121',
   isDark: true,
 }
 export const amoledTheme = {
@@ -151,8 +151,8 @@ export const themeMap: Readonly<Record<Theme, typeof lightTheme>> = {
   pastel: pastelTheme,
   winter: winterTheme,
   silky: silkyTheme,
-  synthWave: synthWaveTheme,
-  coffee: coffeeTheme,
+  halloween: halloweenTheme,
+  bussiness: bussinessTheme,
   amoled: amoledTheme,
   night: nightTheme
 }
@@ -164,8 +164,8 @@ export const gradientHeaderMap: Readonly<Record<Theme, typeof headerGradientLigh
   pastel: headerGradientPastel,
   winter: headerGradientWinter,
   silky: headerGradientSilky,
-  synthWave: headerGradientSynthWave,
-  coffee: headerGradientCoffee,
+  halloween: headerGradienthalloween,
+  bussiness: headerGradientbussiness,
   amoled: headerGradientAmoled,
   night: headerGradientNight
 }
