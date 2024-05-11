@@ -1,18 +1,16 @@
 import {ToastAndroid, TouchableOpacity} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import TrackPlayer, {RepeatMode} from 'react-native-track-player';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import useThemeStore from '../../../store/themeStore';
+import {usePlayerStore} from '../../../store/playerStore';
 
 const LoopButton = () => {
-  const [repeatMode, setRepeatMode] = useState(RepeatMode.Queue);
+  const [repeatMode, setRepeatMode] = usePlayerStore(state => [
+    state.repeatMode,
+    state.setRepeatMode,
+  ]);
   const {COLOR} = useThemeStore();
-  useEffect(() => {
-    (async () => {
-      const repeatMode = await TrackPlayer.getRepeatMode();
-      setRepeatMode(repeatMode);
-    })();
-  }, []);
 
   const handleLoop = async () => {
     if (repeatMode === RepeatMode.Track) {

@@ -11,7 +11,7 @@ const OfflineStack = () => {
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen name="Offline" component={OfflineScreen} />
-      <Stack.Screen name="Setting" component={SettingStack} />
+      <Stack.Screen name="SettingStack" component={SettingStack} />
       <Stack.Screen
         name="PlayerStack"
         component={PlayerStack}

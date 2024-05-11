@@ -112,7 +112,7 @@ const HomeStack = () => {
         }}
       />
       <Stack.Screen
-        name="Setting"
+        name="SettingStack"
         component={SettingStack}
         options={{animation: 'ios'}}
       />

@@ -72,20 +72,17 @@ const SearchScreens = () => {
 
   useEffect(() => {
     nodejs.channel.addListener('getSuggest', (data: any) => {
-      console.log('suggestion');
       setSuggestion(data);
     });
     nodejs.channel.addListener('search', (data: any) => {
-      console.log('search');
       nodejs.channel.post('getRecommend', data.songs[0].encodeId);
-
       setData(data);
       setFilterData(data);
-      setLoading(false);
     });
     nodejs.channel.addListener('getRecommend', (data: any) => {
       console.log('recommend');
       setRecommenData(data.items);
+      setLoading(false);
     });
   }, []);
 
@@ -132,6 +129,7 @@ const SearchScreens = () => {
         </TouchableOpacity>
         <View className="flex-1 h-12 flex flex-row items-center">
           <TextInput
+            keyboardType="web-search"
             value={text}
             style={{
               color: COLOR.TEXT_PRIMARY,

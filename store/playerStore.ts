@@ -1,4 +1,4 @@
-import { Track } from "react-native-track-player";
+import { RepeatMode, Track } from "react-native-track-player";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import zustandStorage from "./zustandStorage";
@@ -87,6 +87,8 @@ interface PlayerStore {
   setHomeLoading: (homeLoading: boolean) => void
   offlineMode: boolean
   setOfflineMode: (offlineMode: boolean) => void
+  repeatMode: RepeatMode
+  setRepeatMode: (repeatMode: RepeatMode) => void
 }
 export const usePlayerStore = create<PlayerStore>()(
   persist((set) => ({
@@ -133,6 +135,8 @@ export const usePlayerStore = create<PlayerStore>()(
     setHomeLoading: (homeLoading: boolean) => set({ homeLoading }),
     offlineMode: false,
     setOfflineMode: (offlineMode: boolean) => set({ offlineMode }),
+    repeatMode: RepeatMode.Queue,
+    setRepeatMode: (repeatMode) => set({ repeatMode }),
   }), {
     name: "player-store",
     storage: createJSONStorage(() => zustandStorage),

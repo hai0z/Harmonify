@@ -22,11 +22,12 @@ function HomeScreens() {
   const {dataHome, dataNewRelease, loading, dataRecent} = useGetHomeData();
   if (loading) {
     return (
-      <View
+      <Animated.View
+        entering={FadeIn.duration(500)}
         className="flex-1 items-center justify-center "
         style={{backgroundColor: COLOR.BACKGROUND}}>
         <Loading />
-      </View>
+      </Animated.View>
     );
   }
   const timeColor = () => {
@@ -46,7 +47,7 @@ function HomeScreens() {
       showsVerticalScrollIndicator={false}
       className=" h-full w-full pb-[200px]"
       style={{backgroundColor: COLOR.BACKGROUND}}>
-      <Animated.View entering={FadeIn.duration(500)}>
+      <Animated.View>
         <Header />
         <View
           className="top-0"

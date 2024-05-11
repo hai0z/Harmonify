@@ -44,6 +44,7 @@ const useGetLocalSong = () => {
           coverQuality: 100,
           sortBy: SortSongFields.TITLE,
           sortOrder: SortSongOrder.DESC,
+          limit: 1000,
         });
         if (typeof songsOrError === 'string') {
           setIsLoading(false)

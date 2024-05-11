@@ -23,6 +23,10 @@ export const PlayerContext = React.createContext({} as ContextType);
 
 nodejs.start('main.js');
 
+nodejs.channel.addListener('getLyric', async data => {
+  usePlayerStore.getState().setLyrics(data);
+});
+
 const PlayerProvider = ({children}: {children: React.ReactNode}) => {
   const {
     playList,
@@ -129,13 +133,6 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
   useEffect(() => {
     saveHistory && saveToHistory(tempSong);
   }, [tempSong?.encodeId]);
-
-  useEffect(() => {
-    nodejs.channel.addListener('getLyric', async data => {
-      usePlayerStore.getState().setLyrics(data);
-    });
-  }, []);
-
   return (
     <PlayerContext.Provider
       value={{

@@ -1,5 +1,5 @@
 import { defaultColorObj, IPlaylist, usePlayerStore } from '../store/playerStore';
-import TrackPlayer, { Event } from "react-native-track-player";
+import TrackPlayer, { Event, RepeatMode } from "react-native-track-player";
 import getThumbnail from "../utils/getThumnail";
 import nodejs from "nodejs-mobile-react-native";
 import { DEFAULT_IMG, NULL_URL } from '../constants';
@@ -63,6 +63,7 @@ TrackPlayer.addEventListener(Event.PlaybackActiveTrackChanged, async event => {
 });
 
 nodejs.channel.addListener('getSong', async data => {
+  console.log('service track');
   if (data.data === NULL_URL) {
     useToastStore.getState().show("Không thể phát bài hát này", ToastTime.SHORT);
     return

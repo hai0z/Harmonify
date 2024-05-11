@@ -6,11 +6,12 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import useThemeStore from '../store/themeStore';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {usePlayerStore} from '../store/playerStore';
+import {navigation} from '../utils/types/RootStackParamList';
 
 const Header = () => {
   const COLOR = useThemeStore(state => state.COLOR);
   const offlineMode = usePlayerStore(state => state.offlineMode);
-  const navigation = useNavigation<any>();
+  const navigation = useNavigation<navigation<'Home'>>();
   const greeting = () => {
     const hour = new Date().getHours();
     if (hour < 12) {
@@ -43,7 +44,7 @@ const Header = () => {
         )}
         <TouchableOpacity
           className="z-[5]"
-          onPress={() => navigation.navigate('Setting')}>
+          onPress={() => navigation.navigate('SettingStack')}>
           <AntDesign name="setting" size={24} color={COLOR.TEXT_PRIMARY} />
         </TouchableOpacity>
       </View>
