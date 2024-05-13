@@ -63,7 +63,7 @@ const RecentList = ({data}: any) => {
               style={{
                 width: wp(50) - 20,
                 backgroundColor: COLOR.isDark
-                  ? tinycolor(COLOR.BACKGROUND).brighten().toString()
+                  ? tinycolor(COLOR.BACKGROUND).lighten().toString()
                   : '#ffffff',
                 elevation: 1,
                 opacity: isConnected ? 1 : 0.5,

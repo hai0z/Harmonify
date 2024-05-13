@@ -2,7 +2,6 @@ import {
   View,
   Text,
   Dimensions,
-  ActivityIndicator,
   TouchableOpacity,
   Image,
   StyleSheet,
@@ -23,6 +22,7 @@ import useThemeStore from '../store/themeStore';
 import {usePlayerStore} from '../store/playerStore';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import Loading from '../components/Loading';
+import {GREEN} from '../constants';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const ChartScreens = () => {
@@ -278,6 +278,7 @@ const ChartHeader = React.memo(({data, handlePlaySong}: any) => {
 });
 const ChartItem = React.memo(({item, index, onPlay}: any) => {
   const COLOR = useThemeStore(state => state.COLOR);
+  const theme = useThemeStore(state => state.theme);
 
   return (
     <TouchableOpacity
@@ -286,7 +287,7 @@ const ChartItem = React.memo(({item, index, onPlay}: any) => {
       onPress={() => onPlay(item)}>
       <Text
         className=" font-bold mr-4 text-2xl"
-        style={{color: COLOR.SECONDARY}}>
+        style={{color: theme === 'amoled' ? GREEN : COLOR.SECONDARY}}>
         {index + 3 < 10 ? `0${index + 3}` : index + 3}
       </Text>
       <Image

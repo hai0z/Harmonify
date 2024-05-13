@@ -240,7 +240,7 @@ const LikedSong = () => {
             <View className="h-28" />
           )
         }
-        ListFooterComponent={() => <View style={{height: SCREEN_WIDTH}} />}
+        ListFooterComponent={<View style={{height: SCREEN_WIDTH}} />}
         nestedScrollEnabled
         data={searchData}
         extraData={currentSong?.id}

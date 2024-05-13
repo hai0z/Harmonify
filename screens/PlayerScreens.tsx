@@ -37,6 +37,7 @@ import {
 } from 'react-native-responsive-screen';
 import useImageColor from '../hooks/useImageColor';
 import TrackItemBottomSheet from '../components/bottom-sheet/TrackItemBottomSheet';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const TextAnimated = Animated.createAnimatedComponent(TextTicker);
@@ -134,34 +135,9 @@ const PlayerScreens = () => {
             />
           </TouchableOpacity>
         </View>
-        {playList?.items?.length > 0 ? (
-          <ImageSlider />
-        ) : (
-          <View
-            style={{
-              marginTop: hp(10),
-              zIndex: 100,
-              width: SCREEN_WIDTH,
-            }}>
-            <View
-              style={{
-                width: SCREEN_WIDTH,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Animated.Image
-                entering={FadeIn.duration(300).springify().delay(300)}
-                exiting={FadeOut.duration(300).springify()}
-                source={{uri: currentSong?.artwork}}
-                className="rounded-md z-20"
-                style={{
-                  height: SCREEN_WIDTH * 0.85,
-                  width: SCREEN_WIDTH * 0.85,
-                }}
-              />
-            </View>
-          </View>
-        )}
+
+        <ImageSlider />
+
         <View
           className="flex flex-row justify-between mx-6 items-center z-50"
           style={{
@@ -198,6 +174,22 @@ const PlayerScreens = () => {
       <View className="px-6 w-full ">
         <View style={{marginTop: hp(8)}}>
           <Player />
+        </View>
+        <View className="my-4">
+          <TouchableOpacity
+            disabled={isPlayFromLocal}
+            onPress={() => navigation.navigate('Queue')}
+            activeOpacity={0.8}
+            style={{
+              opacity: isPlayFromLocal ? 0.4 : 1,
+            }}
+            className="items-end justify-center">
+            <MaterialIcons
+              name="queue-music"
+              size={24}
+              color={COLOR.TEXT_PRIMARY}
+            />
+          </TouchableOpacity>
         </View>
         <Lyric />
         <ArtistCard />

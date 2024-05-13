@@ -59,6 +59,8 @@ interface PlayerStore {
   setColor: (color: Partial<Color>) => void,
   playList: IPlaylist,
   setPlayList: (playlist: IPlaylist) => void,
+  tempPlayList: IPlaylist,
+  setTempPlayList: (playlist: IPlaylist) => void,
   lyrics: Lyric[],
   setLyrics: (lyrics: any) => void
   isLoadingTrack: boolean,
@@ -89,6 +91,8 @@ interface PlayerStore {
   setOfflineMode: (offlineMode: boolean) => void
   repeatMode: RepeatMode
   setRepeatMode: (repeatMode: RepeatMode) => void
+  shuffleMode: boolean
+  setShuffleMode: (shuffleMode: boolean) => void
 }
 export const usePlayerStore = create<PlayerStore>()(
   persist((set) => ({
@@ -137,6 +141,15 @@ export const usePlayerStore = create<PlayerStore>()(
     setOfflineMode: (offlineMode: boolean) => set({ offlineMode }),
     repeatMode: RepeatMode.Queue,
     setRepeatMode: (repeatMode) => set({ repeatMode }),
+    shuffleMode: false,
+    setShuffleMode: (shuffleMode: boolean) => set({ shuffleMode }),
+    tempPlayList: {
+      id: "",
+      items: [],
+      isAlbum: false
+    },
+    setTempPlayList: (playlist: IPlaylist) => set({ tempPlayList: playlist }),
+
   }), {
     name: "player-store",
     storage: createJSONStorage(() => zustandStorage),

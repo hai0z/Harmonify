@@ -1,12 +1,12 @@
 import {View, Text, TouchableOpacity} from 'react-native';
 import React from 'react';
-import useThemeStore from '../store/themeStore';
+import useThemeStore from '../../store/themeStore';
 import FastImage from 'react-native-fast-image';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
-import {usePlayerStore} from '../store/playerStore';
-import {DEFAULT_IMG, GREEN} from '../constants';
-import ActiveTrackAnimation from './track-item/ActiveTrackAnimation';
-import {objectToTrack} from '../service/trackPlayerService';
+import {usePlayerStore} from '../../store/playerStore';
+import {DEFAULT_IMG, GREEN} from '../../constants';
+import ActiveTrackAnimation from './ActiveTrackAnimation';
+import {objectToTrack} from '../../service/trackPlayerService';
 interface Props {
   item: any;
   onClick: (item: any) => void;

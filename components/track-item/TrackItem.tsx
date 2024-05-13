@@ -95,7 +95,7 @@ const TrackItem = (props: Props) => {
             {item?.artistsNames}
           </Text>
           {timeStamp && (
-            <Text style={{fontSize: wp(2.5)}}>
+            <Text style={{fontSize: wp(2.5), color: COLOR.TEXT_SECONDARY}}>
               {dayjs(timeStamp).fromNow()}
             </Text>
           )}

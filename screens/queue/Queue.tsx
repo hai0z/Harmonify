@@ -7,7 +7,6 @@ import React, {
   useState,
 } from 'react';
 import useThemeStore from '../../store/themeStore';
-
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {playFromMapping, usePlayerStore} from '../../store/playerStore';
 import {useNavigation} from '@react-navigation/native';
@@ -29,14 +28,23 @@ import Animated, {
 import PlayButton from '../../components/Player/Control/PlayButton';
 import PrevButton from '../../components/Player/Control/PrevButton';
 import NextButton from '../../components/Player/Control/NextButton';
-import TrackPlayer, {useActiveTrack} from 'react-native-track-player';
+import TrackPlayer, {Track, useActiveTrack} from 'react-native-track-player';
 import LinearGradient from 'react-native-linear-gradient';
 import useImageColor from '../../hooks/useImageColor';
 import {PlayerContext} from '../../context/PlayerProvider';
 import TrackItem from '../../components/track-item/TrackItem';
 import TrackItemBottomSheet from '../../components/bottom-sheet/TrackItemBottomSheet';
 import ProgressBar from './components/ProgressBar';
-import LocalTrackItem from '../../components/LocalTrackItem';
+import LocalTrackItem from '../../components/track-item/LocalTrackItem';
+import {
+  add,
+  getActiveTrackIndex,
+  getQueue,
+  remove,
+  setQueue,
+} from 'react-native-track-player/lib/trackPlayer';
+import {Song} from '../../utils/types/type';
+
 const Queue = () => {
   const COLOR = useThemeStore(state => state.COLOR);
 
@@ -44,6 +52,7 @@ const Queue = () => {
 
   const playList = usePlayerStore(state => state.playList);
 
+  const setPlayList = usePlayerStore(state => state.setPlayList);
   const isPlayFromLocal = usePlayerStore(state => state.isPlayFromLocal);
 
   const navigation = useNavigation<any>();
@@ -61,13 +70,12 @@ const Queue = () => {
   const {showBottomSheet} = useContext(PlayerContext);
 
   const handlePlay = useCallback(
-    async (item: any) => {
-      const index = playList.items.findIndex(
-        items => items.encodeId == item?.encodeId,
-      );
+    async (item: Song) => {
+      const queue = await getQueue();
+      const index = queue.findIndex(track => track.id == item.encodeId);
       await TrackPlayer.skip(index);
     },
-    [playList.items],
+    [playList],
   );
 
   const $bg = useSharedValue(`transparent`);
@@ -79,7 +87,7 @@ const Queue = () => {
     const head = queue.slice(0, trackIndex);
     const tail = queue.slice(trackIndex + 1);
     setCopyPlaylist([...tail, ...head]);
-  }, [currentSong?.id]);
+  }, [currentSong?.id, playList.items]);
 
   const changeBgAnimated = () => {
     'worklet';
@@ -196,6 +204,7 @@ const Queue = () => {
               showsVerticalScrollIndicator={false}
               data={copyPlaylist}
               estimatedItemSize={70}
+              extraData={playList}
               renderItem={({item, index}) => {
                 return !isPlayFromLocal ? (
                   <TrackItem

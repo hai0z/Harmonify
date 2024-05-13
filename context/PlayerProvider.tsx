@@ -43,6 +43,7 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
     setIsFistInit,
     setLastPosition,
     setHomeLoading,
+    setShuffleMode,
   } = usePlayerStore();
 
   const COLOR = useThemeStore(state => state.COLOR);
@@ -74,6 +75,7 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
     }
     if (savePlayerState) {
       await TrackPlayer.reset();
+      setShuffleMode(false);
       !offlineMode && setHomeLoading(true);
       setIsFistInit(true);
       setisLoadingTrack(true);

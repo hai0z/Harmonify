@@ -21,7 +21,7 @@ import {DEFAULT_IMG} from '../../constants';
 import {usePlayerStore} from '../../store/playerStore';
 import Loading from '../../components/Loading';
 import {widthPercentageToDP} from 'react-native-responsive-screen';
-import LocalTrackItem from '../../components/LocalTrackItem';
+import LocalTrackItem from '../../components/track-item/LocalTrackItem';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const LocalSong = () => {

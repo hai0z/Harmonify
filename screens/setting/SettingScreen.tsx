@@ -1,7 +1,7 @@
 import {View, Text, Alert, Switch, ToastAndroid} from 'react-native';
 import React, {useEffect} from 'react';
 import useThemeStore from '../../store/themeStore';
-import Animated, {useSharedValue} from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {themeMap} from '../../constants/theme';
 import {auth} from '../../firebase/config';
@@ -28,7 +28,6 @@ const SettingScreen = () => {
     setSaveHistory,
     offlineMode,
     setOfflineMode,
-    isPlayFromLocal,
     setPlayList,
     setCurrentSong,
     setIsPlayFromLocal,
@@ -36,8 +35,8 @@ const SettingScreen = () => {
   } = usePlayerStore();
 
   const selectedColor = COLOR.isDark
-    ? tinycolor(themeMap[theme]?.BACKGROUND).lighten(5).toString()
-    : tinycolor(themeMap[theme]?.BACKGROUND).darken(5).toString();
+    ? tinycolor(themeMap[theme]?.BACKGROUND).lighten(10).toString()
+    : tinycolor(themeMap[theme]?.BACKGROUND).darken().toString();
 
   const navigation = useNavigation<navigation<'Setting'>>();
 
@@ -51,7 +50,7 @@ const SettingScreen = () => {
       id: '',
       items: [],
     });
-    setIsPlayFromLocal(!isPlayFromLocal);
+    setIsPlayFromLocal(!offlineMode ? true : false);
     navigation.replace(!offlineMode ? 'OfflineStack' : 'Home');
   };
   useEffect(() => {
@@ -65,7 +64,9 @@ const SettingScreen = () => {
       className="pt-[35px] px-4">
       {offlineMode && <StatusBar style="auto" backgroundColor="transparent" />}
       <View className="flex flex-row items-center gap-2">
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}>
           <Ionicons name="arrow-back" size={24} color={COLOR.TEXT_PRIMARY} />
         </TouchableOpacity>
         <Text
@@ -76,7 +77,7 @@ const SettingScreen = () => {
       </View>
 
       <View
-        className="mt-4 px-1 py-2 rounded-md"
+        className="mt-8 px-1 py-2 rounded-md"
         style={{backgroundColor: selectedColor}}>
         <Text
           style={{

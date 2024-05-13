@@ -76,9 +76,16 @@ const MyPlaylist = ({route}: {route: route<'MyPlaylist'>}) => {
 
   const flashListRef = React.useRef<FlashList<any>>(null);
 
-  const playerContext = useContext(PlayerContext);
+  const {showBottomSheet} = useContext(PlayerContext);
 
   const textInputRef = React.useRef<TextInput>(null);
+
+  const handleShowBottomSheet = useCallback((item: any) => {
+    showBottomSheet({
+      ...item,
+      playlistId: data?.encodeId,
+    });
+  }, []);
 
   useEffect(() => {
     flashListRef.current?.scrollToOffset({animated: true, offset: 0});
@@ -129,7 +136,7 @@ const MyPlaylist = ({route}: {route: route<'MyPlaylist'>}) => {
         },
       );
     }
-  }, [color, isSearching, playerContext]);
+  }, [color, isSearching, showBottomSheet]);
 
   const headerColor = scrollY.interpolate({
     inputRange: [SCREEN_WIDTH * 0.8, SCREEN_WIDTH * 0.8],
@@ -281,12 +288,11 @@ const MyPlaylist = ({route}: {route: route<'MyPlaylist'>}) => {
             <View className="h-28" />
           )
         }
-        ListFooterComponent={() => <View style={{height: SCREEN_WIDTH}} />}
+        ListFooterComponent={<View style={{height: SCREEN_WIDTH}} />}
         nestedScrollEnabled
         data={searchData}
         estimatedItemSize={72}
         extraData={currentSong?.id}
-        keyExtractor={(item: any, index) => `${item.encodeId}_${index}`}
         renderItem={({item}: any) => {
           return (
             <TrackItem
@@ -294,12 +300,7 @@ const MyPlaylist = ({route}: {route: route<'MyPlaylist'>}) => {
               onClick={handlePlaySong}
               isAlbum={false}
               isActive={currentSong?.id === item.encodeId}
-              showBottomSheet={() =>
-                playerContext.showBottomSheet({
-                  ...item,
-                  playlistId: data?.encodeId,
-                })
-              }
+              showBottomSheet={handleShowBottomSheet}
             />
           );
         }}

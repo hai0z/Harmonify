@@ -63,7 +63,6 @@ TrackPlayer.addEventListener(Event.PlaybackActiveTrackChanged, async event => {
 });
 
 nodejs.channel.addListener('getSong', async data => {
-  console.log('service track');
   if (data.data === NULL_URL) {
     useToastStore.getState().show("Không thể phát bài hát này", ToastTime.SHORT);
     return
@@ -92,6 +91,7 @@ const handlePlay = async (song: any, playlist: IPlaylist = {
   items: [],
   isAlbum: false
 }) => {
+  await TrackPlayer.pause();
   usePlayerStore.getState().setLastPosition(0);
   const currentPlaylistId = usePlayerStore.getState().playList?.id;
   usePlayerStore.getState().setIsPlayFromLocal(false);
@@ -99,13 +99,17 @@ const handlePlay = async (song: any, playlist: IPlaylist = {
     await TrackPlayer.reset();
     usePlayerStore.getState().setisLoadingTrack(true);
     usePlayerStore.getState().setPlayList(playlist);
+    usePlayerStore.getState().setTempPlayList(playlist);
+    usePlayerStore.getState().setShuffleMode(false);
     await TrackPlayer.add(playlist.items.map((item: any) => objectToTrack(item)));
     if (song.encodeId === playlist.items[0].encodeId) {
       nodejs.channel.post('getSong', objectToTrack(song));
     }
   }
-  const index = playlist.items.findIndex(
-    (item: any) => item?.encodeId === song?.encodeId,
+  const queue = await TrackPlayer.getQueue();
+
+  const index = queue.findIndex(
+    (item: any) => item?.id === song?.encodeId,
   )
   await TrackPlayer.skip(index).finally(() => {
     usePlayerStore.getState().setisLoadingTrack(false);
@@ -118,6 +122,7 @@ const handlePlaySongInLocal = async (song: any, playlist: IPlaylist = {
   items: [],
   isAlbum: false
 }) => {
+  await TrackPlayer.pause();
   usePlayerStore.getState().setIsPlayFromLocal(true);
   usePlayerStore.getState().setColor(defaultColorObj);
   const currentPlaylistId = usePlayerStore.getState().playList?.id;
@@ -125,10 +130,14 @@ const handlePlaySongInLocal = async (song: any, playlist: IPlaylist = {
     usePlayerStore.getState().setisLoadingTrack(true);
     await TrackPlayer.reset();
     usePlayerStore.getState().setPlayList(playlist);
+    usePlayerStore.getState().setTempPlayList(playlist);
+    usePlayerStore.getState().setShuffleMode(false);
     await TrackPlayer.add(playlist.items.map((item: any) => ({ ...objectToTrack(item), url: item.url, artwork: item.thumbnail || DEFAULT_IMG, })));
   }
-  const index = playlist.items.findIndex(
-    (item: any) => item?.encodeId === song?.encodeId,
+  const queue = await TrackPlayer.getQueue();
+
+  const index = queue.findIndex(
+    (item: any) => item?.id === song?.encodeId,
   )
   await TrackPlayer.skip(index).finally(() => {
     usePlayerStore.getState().setisLoadingTrack(false);

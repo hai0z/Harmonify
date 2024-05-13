@@ -98,6 +98,7 @@ const PlaylistDetail = ({route}: {route: route<'PlayListDetail'>}) => {
 
   useEffect(() => {
     setLoading(true);
+    scrollY.setValue(0);
     nodejs.channel.addListener('getDetailPlaylist', (data: any) => {
       setPlaylistData({
         ...data,

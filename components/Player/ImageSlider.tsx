@@ -1,4 +1,4 @@
-import React, {memo, useEffect} from 'react';
+import React, {memo, useEffect, useState} from 'react';
 import {FlashList} from '@shopify/flash-list';
 import {
   NativeScrollEvent,
@@ -10,12 +10,15 @@ import {usePlayerStore} from '../../store/playerStore';
 import getThumbnail from '../../utils/getThumnail';
 import TrackPlayer, {useActiveTrack} from 'react-native-track-player';
 import Animated, {FadeIn} from 'react-native-reanimated';
+import useThrottle from '../../hooks/useThrottle';
+import useDebounce from '../../hooks/use_debounce';
 
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('screen');
 
 const ImageSlider = () => {
-  const {playList} = usePlayerStore();
+  const playList = usePlayerStore(state => state.playList);
 
+  const shuffleMode = usePlayerStore(state => state.shuffleMode);
   const currentSong = useActiveTrack();
 
   const currentSongIndex = playList.items.findIndex(
@@ -43,12 +46,25 @@ const ImageSlider = () => {
     }
   };
 
+  const [hasScroll, setHasScroll] = useState(false);
+
+  const hasScrollAnimation = useDebounce(() => setHasScroll(true), 1000);
+
+  useEffect(() => {
+    setHasScroll(false);
+    hasScrollAnimation();
+  }, [shuffleMode]);
+
   useEffect(() => {
     flatListRef.current?.scrollToIndex({
       index: currentSongIndex == -1 ? 0 : currentSongIndex,
-      animated: true,
+      animated:
+        currentSongIndex === 0 || currentSongIndex === playList.items.length - 1
+          ? false
+          : hasScroll,
     });
-  }, [currentSong?.id]);
+    hasScrollAnimation();
+  }, [currentSong?.id, playList.items]);
 
   return (
     <View
@@ -60,6 +76,7 @@ const ImageSlider = () => {
       <FlashList
         ref={flatListRef}
         pagingEnabled
+        extraData={currentSongIndex}
         horizontal
         scrollEventThrottle={64}
         initialScrollIndex={currentSongIndex}
@@ -72,7 +89,7 @@ const ImageSlider = () => {
   );
 };
 
-const SliderItem = memo(({item}: any) => {
+const SliderItem = ({item}: any) => {
   const {isPlayFromLocal} = usePlayerStore();
   return (
     <View
@@ -83,7 +100,7 @@ const SliderItem = memo(({item}: any) => {
         alignItems: 'center',
       }}>
       <Animated.Image
-        entering={FadeIn.duration(400).springify().delay(250)}
+        entering={FadeIn.duration(200).springify().delay(250)}
         source={{
           uri: isPlayFromLocal
             ? item?.thumbnail
@@ -97,6 +114,6 @@ const SliderItem = memo(({item}: any) => {
       />
     </View>
   );
-});
+};
 
 export default memo(ImageSlider);

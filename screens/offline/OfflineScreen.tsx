@@ -10,7 +10,7 @@ import {StatusBar} from 'expo-status-bar';
 import Header from '../../components/Header';
 import useGetLocalSong from '../../hooks/useGetLocalSong';
 import Loading from '../../components/Loading';
-import LocalTrackItem from '../../components/LocalTrackItem';
+import LocalTrackItem from '../../components/track-item/LocalTrackItem';
 import MiniPlayer from '../../components/Player/MiniPlayer';
 import {handlePlaySongInLocal} from '../../service/trackPlayerService';
 import {usePlayerStore} from '../../store/playerStore';
