@@ -76,6 +76,10 @@
     {
       "path": "assets/fonts/GothamMedium_1.ttf",
       "sha1": "74c87f67010f63777e33c5114c76b1fc67e4ae5b"
+    },
+    {
+      "path": "assets/fonts/SVN-Gotham Black.otf",
+      "sha1": "c700e068eef55537aa5de0fc2bc35a879e5552e4"
     }
   ]
 }

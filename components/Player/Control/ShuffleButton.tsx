@@ -12,6 +12,8 @@ import {
   setQueue,
 } from 'react-native-track-player/lib/trackPlayer';
 import {objectToTrack} from '../../../service/trackPlayerService';
+import {DEFAULT_IMG} from '../../../constants';
+import shuffleArray from '../../../utils/shuffle';
 
 export async function setQueueUninterrupted(tracks: Track[]): Promise<void> {
   const currentTrackIndex = await getActiveTrackIndex();
@@ -37,14 +39,15 @@ const ShuffleButton = () => {
   const {COLOR} = useThemeStore();
   const playList = usePlayerStore(state => state.playList);
   const setPlayList = usePlayerStore(state => state.setPlayList);
-  const {shuffleMode, setShuffleMode, tempPlayList} = usePlayerStore();
+  const {shuffleMode, setShuffleMode, tempPlayList, isPlayFromLocal} =
+    usePlayerStore();
   async function shuffleQueueUninterrupted() {
     setShuffleMode(!shuffleMode);
     if (!shuffleMode) {
       ToastAndroid.show('Phát ngẫu nhiên: Bật', ToastAndroid.SHORT);
 
       const currentQueue = await getQueue();
-      const shuffledQueue = currentQueue.sort(() => Math.random() - 0.5);
+      const shuffledQueue = shuffleArray(currentQueue);
       const arr = [];
       for (let i = 0; i < shuffledQueue.length; i++) {
         const index = playList.items.findIndex(
@@ -61,7 +64,15 @@ const ShuffleButton = () => {
       ToastAndroid.show('Phát ngẫu nhiên: Tắt', ToastAndroid.SHORT);
       const currentQueue = await getQueue();
       for (let i = 0; i < currentQueue.length; i++) {
-        currentQueue[i] = objectToTrack(tempPlayList.items[i]);
+        if (isPlayFromLocal) {
+          currentQueue[i] = {
+            ...objectToTrack(tempPlayList.items[i]),
+            url: tempPlayList.items[i].url,
+            artwork: tempPlayList.items[i].thumbnail || DEFAULT_IMG,
+          };
+        } else {
+          currentQueue[i] = objectToTrack(tempPlayList.items[i]);
+        }
       }
       setPlayList({
         ...playList,

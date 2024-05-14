@@ -213,7 +213,7 @@ const HistoryScreens = () => {
                       Lịch sử nghe đang tắt
                     </Text>
                     <TouchableOpacity
-                      onPress={() => navigation.navigate('Setting')}>
+                      onPress={() => navigation.navigate('SettingStack')}>
                       <Text
                         style={{
                           color: theme === 'amoled' ? GREEN : COLOR.PRIMARY,

@@ -277,7 +277,7 @@ const ArtistSong = ({route}: any) => {
                   className=" mt-4 px-4"
                   style={{
                     color: COLOR.TEXT_PRIMARY,
-                    fontFamily: 'GothamBold',
+                    fontFamily: 'SVN-Gotham Black',
                     fontSize: widthPercentageToDP(10),
                   }}>
                   {dataDetailArtist?.name}

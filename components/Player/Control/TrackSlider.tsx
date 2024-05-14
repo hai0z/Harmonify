@@ -5,7 +5,7 @@ import TrackPlayer, {
   useProgress,
 } from 'react-native-track-player';
 import Slider from '@react-native-assets/slider';
-import caculateTime from '../../../utils/caculateMusicTime';
+import caculateTime, {seconds2MMSS} from '../../../utils/caculateMusicTime';
 import useThemeStore from '../../../store/themeStore';
 
 const TrackSlider = () => {
@@ -56,7 +56,7 @@ const TrackSlider = () => {
         <Text
           className="text-[12px] font-semibold"
           style={{color: `${COLOR.TEXT_PRIMARY}90`}}>
-          {time?.currentMin}:{time?.currentSecond}
+          {seconds2MMSS(progess.position)}
         </Text>
         <Text
           className="text-[12px] font-semibold"

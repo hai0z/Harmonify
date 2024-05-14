@@ -103,14 +103,14 @@ const handlePlay = async (song: any, playlist: IPlaylist = {
     if (song.encodeId === playlist.items[0].encodeId) {
       nodejs.channel.post('getSong', objectToTrack(song));
     }
-    console.log('x');
   }
   const queue = await TrackPlayer.getQueue();
 
-  const index = queue.findIndex(
+  let index = queue.findIndex(
     (item: any) => item?.id === song?.encodeId,
   )
-  console.log(index);
+  index < 0 && (index = 0);
+
   await TrackPlayer.skip(index).finally(() => {
     usePlayerStore.getState().setisLoadingTrack(false);
   })
@@ -128,11 +128,10 @@ const handlePlaySongInLocal = async (song: any, playlist: IPlaylist = {
   const currentPlaylistId = usePlayerStore.getState().playList?.id;
   if (currentPlaylistId !== playlist.id) {
     usePlayerStore.getState().setisLoadingTrack(true);
-    await TrackPlayer.reset();
     usePlayerStore.getState().setPlayList(playlist);
     usePlayerStore.getState().setTempPlayList(playlist);
     usePlayerStore.getState().setShuffleMode(false);
-    await TrackPlayer.add(playlist.items.map((item: any) => ({ ...objectToTrack(item), url: item.url, artwork: item.thumbnail || DEFAULT_IMG, })));
+    await TrackPlayer.setQueue(playlist.items.map((item: any) => ({ ...objectToTrack(item), url: item.url, artwork: item.thumbnail || DEFAULT_IMG, })));
   }
   const queue = await TrackPlayer.getQueue();
 

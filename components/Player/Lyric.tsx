@@ -41,7 +41,7 @@ const Lyric = () => {
   }
   return (
     lyrics?.length > 0 && (
-      <Animated.View>
+      <Animated.View className="mb-4">
         <TouchableOpacity
           onPress={() => nativgation.navigate('Lyric')}
           activeOpacity={1}
@@ -85,11 +85,11 @@ const Lyric = () => {
                 return (
                   <Animated.Text
                     key={index}
-                    className="mb-3"
+                    className="mb-1"
                     style={{
                       color: currentLine >= index ? 'white' : 'black',
                       fontSize: wp(6),
-                      fontFamily: 'GothamBold',
+                      fontFamily: 'SVN-Gotham Black',
                     }}>
                     {item.data}
                   </Animated.Text>

@@ -33,6 +33,7 @@
 		0873D3ACF36E4DECAC2689D4 /* GothamMediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3CE9249B05E94EDCB009F1AC /* GothamMediumItalic.ttf */; };
 		1E87DFEDA77C4783B4C2AD9B /* GothamMedium_1.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BC2549F3CF1F46F59457A8D2 /* GothamMedium_1.ttf */; };
 		21CA69AA69F84E8EB0AA9107 /* Fonts Magazine.txt in Resources */ = {isa = PBXBuildFile; fileRef = EDD644DEBDAE40D786A571EC /* Fonts Magazine.txt */; };
+		62A41EB2CB464B1CBFFE49F4 /* SVN-Gotham Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = FBE9CF421CA24E05996E1CC9 /* SVN-Gotham Black.otf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -82,6 +83,7 @@
 		3CE9249B05E94EDCB009F1AC /* GothamMediumItalic.ttf */ = {isa = PBXFileReference; name = "GothamMediumItalic.ttf"; path = "../assets/fonts/GothamMediumItalic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		BC2549F3CF1F46F59457A8D2 /* GothamMedium_1.ttf */ = {isa = PBXFileReference; name = "GothamMedium_1.ttf"; path = "../assets/fonts/GothamMedium_1.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		EDD644DEBDAE40D786A571EC /* Fonts Magazine.txt */ = {isa = PBXFileReference; name = "Fonts Magazine.txt"; path = "../assets/fonts/Fonts Magazine.txt"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		FBE9CF421CA24E05996E1CC9 /* SVN-Gotham Black.otf */ = {isa = PBXFileReference; name = "SVN-Gotham Black.otf"; path = "../assets/fonts/SVN-Gotham Black.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -209,6 +211,7 @@
 				3CE9249B05E94EDCB009F1AC /* GothamMediumItalic.ttf */,
 				BC2549F3CF1F46F59457A8D2 /* GothamMedium_1.ttf */,
 				EDD644DEBDAE40D786A571EC /* Fonts Magazine.txt */,
+				FBE9CF421CA24E05996E1CC9 /* SVN-Gotham Black.otf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -328,6 +331,7 @@
 				0873D3ACF36E4DECAC2689D4 /* GothamMediumItalic.ttf in Resources */,
 				1E87DFEDA77C4783B4C2AD9B /* GothamMedium_1.ttf in Resources */,
 				21CA69AA69F84E8EB0AA9107 /* Fonts Magazine.txt in Resources */,
+				62A41EB2CB464B1CBFFE49F4 /* SVN-Gotham Black.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

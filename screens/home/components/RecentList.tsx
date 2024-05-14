@@ -2,19 +2,12 @@ import {View, Text, Image} from 'react-native';
 import React, {memo, useCallback, useMemo} from 'react';
 import useThemeStore from '../../../store/themeStore';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
-import tinycolor from 'tinycolor2';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import {handlePlay, objectToTrack} from '../../../service/trackPlayerService';
 import {usePlayerStore} from '../../../store/playerStore';
-import useInternetState from '../../../hooks/useInternetState';
-import {GREEN} from '../../../constants';
-import ActiveTrackAnimation from '../../../components/track-item/ActiveTrackAnimation';
+import RecentTrackItem from '../../../components/track-item/RecentTrackItem';
 
 const RecentList = ({data}: any) => {
   const COLOR = useThemeStore(state => state.COLOR);
-  const theme = useThemeStore(state => state.theme);
-
-  const isConnected = useInternetState();
 
   const setCurrentSong = usePlayerStore(state => state.setCurrentSong);
 
@@ -38,6 +31,7 @@ const RecentList = ({data}: any) => {
     },
     [data],
   );
+  const renderData = useMemo(() => data?.slice(0, 6), [data]);
 
   if (data.length < 6 || !data) return null;
   return (
@@ -52,56 +46,15 @@ const RecentList = ({data}: any) => {
         style={{
           width: wp(100),
         }}>
-        {data?.slice(0, 6)?.map((e: any, index: number) => {
-          const isActive = currentSong?.id === e?.encodeId;
+        {renderData?.map((e: any, index: number) => {
           console.log('vai lz');
           return (
-            <TouchableOpacity
-              disabled={!isConnected}
-              onPress={() => handlePlaySong(e)}
-              activeOpacity={0.8}
+            <RecentTrackItem
               key={index}
-              style={{
-                width: wp(50) - 20,
-                backgroundColor: COLOR.isDark
-                  ? tinycolor(COLOR.BACKGROUND).lighten().toString()
-                  : '#ffffff',
-                elevation: 1,
-                opacity: isConnected ? 1 : 0.5,
-              }}
-              className="flex flex-row items-center my-1 rounded-t-md rounded-b-md">
-              <View>
-                <Image
-                  source={{uri: e?.thumbnailM}}
-                  className="rounded-tl-md rounded-bl-md"
-                  style={{width: wp(15), height: wp(15)}}
-                />
-                {isActive && (
-                  <ActiveTrackAnimation
-                    isAlbum={false}
-                    style={{
-                      borderTopLeftRadius: 6,
-                      borderBottomLeftRadius: 6,
-                    }}
-                  />
-                )}
-              </View>
-              <Text
-                className="px-1"
-                numberOfLines={2}
-                style={{
-                  color: isActive
-                    ? theme !== 'amoled'
-                      ? COLOR.PRIMARY
-                      : GREEN
-                    : COLOR.TEXT_PRIMARY,
-                  fontWeight: '600',
-                  flex: 1,
-                  fontSize: wp(3.5),
-                }}>
-                {e?.title}
-              </Text>
-            </TouchableOpacity>
+              e={e}
+              onClick={handlePlaySong}
+              isActive={currentSong?.id === e?.encodeId}
+            />
           );
         })}
       </View>

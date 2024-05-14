@@ -152,7 +152,7 @@ const PlayerScreens = () => {
               key={currentSong?.id}
               style={{
                 color: COLOR.TEXT_PRIMARY,
-                fontFamily: 'GothamBold',
+                fontFamily: 'SVN-Gotham Black',
                 fontSize: wp(5),
               }}
               duration={10000}

@@ -161,8 +161,8 @@ const ArtistScreens = ({route}: any) => {
               className="p-4 "
               style={{
                 color: COLOR.TEXT_PRIMARY,
-                fontFamily: 'GothamBold',
-                fontSize: wp(12),
+                fontFamily: 'SVN-Gotham Black',
+                fontSize: wp(10),
               }}>
               {dataDetailArtist?.name}
             </Text>

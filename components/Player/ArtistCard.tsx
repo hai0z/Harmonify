@@ -40,7 +40,7 @@ const ArtistCard = () => {
   return (
     <TouchableOpacity
       activeOpacity={1}
-      className="w-full rounded-2xl h-[340px] mt-8"
+      className="w-full rounded-2xl h-[340px] mb-4"
       onPress={() =>
         navigation.navigate('Artists', {
           name: data.alias,
@@ -72,7 +72,7 @@ const ArtistCard = () => {
         <View className="flex justify-between">
           <Text
             className="text-[16px]"
-            style={{color: COLOR.TEXT_PRIMARY, fontFamily: 'GothamBold'}}>
+            style={{color: COLOR.TEXT_PRIMARY, fontFamily: 'SVN-Gotham Black'}}>
             {data?.name}
           </Text>
           <Text className="text-[12px]" style={{color: COLOR.TEXT_PRIMARY}}>

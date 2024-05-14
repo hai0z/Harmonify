@@ -102,11 +102,11 @@ const LyricScreen = () => {
                 TrackPlayer.seekTo(+item.startTime / 1000);
               }}>
               <Text
-                className="mb-4"
+                className="mb-1"
                 style={{
                   color: (currentLine as number) >= index ? 'white' : 'black',
                   fontSize: wp(6),
-                  fontFamily: 'GothamBold',
+                  fontFamily: 'SVN-Gotham Black',
                 }}>
                 {item.data}
               </Text>

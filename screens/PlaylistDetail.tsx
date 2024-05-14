@@ -290,7 +290,7 @@ const PlaylistDetail = ({route}: {route: route<'PlayListDetail'>}) => {
                   style={{
                     opacity: titleOpacity,
                     color: COLOR.TEXT_PRIMARY,
-                    fontFamily: 'GothamBold',
+                    fontFamily: 'SVN-Gotham Black',
                     fontSize: widthPercentageToDP(8),
                   }}
                   className=" text-center">

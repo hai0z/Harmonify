@@ -41,7 +41,7 @@ const EditPlaylist = ({route}: any) => {
       <View>
         <Text
           style={{
-            fontFamily: 'GothamBold',
+            fontFamily: 'SVN-Gotham Black',
             fontSize: wp(6),
             color: COLOR.TEXT_PRIMARY,
           }}>
@@ -54,7 +54,7 @@ const EditPlaylist = ({route}: any) => {
           placeholder="Tên playlist"
           placeholderTextColor={COLOR.TEXT_SECONDARY}
           style={{
-            fontFamily: 'GothamBold',
+            fontFamily: 'SVN-Gotham Black',
             fontSize: wp(4),
             borderColor: COLOR.TEXT_SECONDARY,
           }}
@@ -72,7 +72,7 @@ const EditPlaylist = ({route}: any) => {
             }}>
             <Text
               style={{
-                fontFamily: 'GothamBold',
+                fontFamily: 'SVN-Gotham Black',
                 fontSize: wp(4.5),
                 color: COLOR.TEXT_SECONDARY,
               }}>
@@ -89,7 +89,7 @@ const EditPlaylist = ({route}: any) => {
             }}>
             <Text
               style={{
-                fontFamily: 'GothamBold',
+                fontFamily: 'SVN-Gotham Black',
                 fontSize: wp(4.5),
                 color: COLOR.TEXT_PRIMARY,
               }}>

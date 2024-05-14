@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useRef} from 'react';
 import {usePlayerStore} from '../store/playerStore';
 import {getColors} from 'react-native-image-colors';
-import TrackPlayer from 'react-native-track-player';
+import TrackPlayer, {RepeatMode} from 'react-native-track-player';
 import nodejs from 'nodejs-mobile-react-native';
 import {objectToTrack} from '../service/trackPlayerService';
 import getThumbnail from '../utils/getThumnail';
@@ -13,6 +13,7 @@ import {Appearance} from 'react-native';
 import useThemeStore from '../store/themeStore';
 import {DEFAULT_IMG} from '../constants';
 import SplashScreen from 'react-native-splash-screen';
+import useDebounce from '../hooks/use_debounce';
 
 interface ContextType {
   bottomSheetModalRef: React.RefObject<BottomSheetModalMethods>;
@@ -36,6 +37,7 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
     tempSong,
     savePlayerState,
     offlineMode,
+    repeatMode,
     setColor,
     setisLoadingTrack,
     setSleepTimer,
