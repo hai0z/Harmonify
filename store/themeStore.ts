@@ -16,7 +16,7 @@ const useThemeStore = create<ThemeState>()(
   persist((set) => ({
     COLOR: lightTheme,
     HEADER_GRADIENT: headerGradientLight,
-    theme: "amoled",
+    theme: "light",
     setTheme: (theme: Theme) => {
       set(() => ({
         theme,

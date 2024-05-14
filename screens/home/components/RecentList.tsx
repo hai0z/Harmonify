@@ -54,6 +54,7 @@ const RecentList = ({data}: any) => {
         }}>
         {data?.slice(0, 6)?.map((e: any, index: number) => {
           const isActive = currentSong?.id === e?.encodeId;
+          console.log('vai lz');
           return (
             <TouchableOpacity
               disabled={!isConnected}

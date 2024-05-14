@@ -42,7 +42,6 @@ const AddToPlaylist = ({route}: {route: any}) => {
     (s: any) => s.encodeId == song.encodeId,
   );
 
-  console.log({likedSongIncluded});
   const playListNotIncluded = myPlaylists.filter(
     (pl: any) => !pl.songs.find((s: any) => s.encodeId == song.encodeId),
   );

@@ -52,7 +52,7 @@ const Queue = () => {
 
   const playList = usePlayerStore(state => state.playList);
 
-  const setPlayList = usePlayerStore(state => state.setPlayList);
+  const setLastPosition = usePlayerStore(state => state.setLastPosition);
   const isPlayFromLocal = usePlayerStore(state => state.isPlayFromLocal);
 
   const navigation = useNavigation<any>();

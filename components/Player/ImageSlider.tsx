@@ -10,7 +10,6 @@ import {usePlayerStore} from '../../store/playerStore';
 import getThumbnail from '../../utils/getThumnail';
 import TrackPlayer, {useActiveTrack} from 'react-native-track-player';
 import Animated, {FadeIn} from 'react-native-reanimated';
-import useThrottle from '../../hooks/useThrottle';
 import useDebounce from '../../hooks/use_debounce';
 
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('screen');

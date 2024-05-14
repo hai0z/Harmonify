@@ -72,7 +72,6 @@ nodejs.channel.addListener('getSong', async data => {
     url: data.data['128'],
   }).then(async () => {
     if (usePlayerStore.getState().isFistInit === false) {
-      console.log(usePlayerStore.getState().isFistInit);
       await TrackPlayer.play()
     }
     if (usePlayerStore.getState().savePlayerState && usePlayerStore.getState().isFistInit)
@@ -91,26 +90,27 @@ const handlePlay = async (song: any, playlist: IPlaylist = {
   items: [],
   isAlbum: false
 }) => {
-  await TrackPlayer.pause();
   usePlayerStore.getState().setLastPosition(0);
+  await TrackPlayer.pause();
   const currentPlaylistId = usePlayerStore.getState().playList?.id;
   usePlayerStore.getState().setIsPlayFromLocal(false);
   if (currentPlaylistId !== playlist.id) {
-    await TrackPlayer.reset();
     usePlayerStore.getState().setisLoadingTrack(true);
+    await TrackPlayer.setQueue(playlist.items.map((item: any) => objectToTrack(item)));
     usePlayerStore.getState().setPlayList(playlist);
     usePlayerStore.getState().setTempPlayList(playlist);
     usePlayerStore.getState().setShuffleMode(false);
-    await TrackPlayer.add(playlist.items.map((item: any) => objectToTrack(item)));
     if (song.encodeId === playlist.items[0].encodeId) {
       nodejs.channel.post('getSong', objectToTrack(song));
     }
+    console.log('x');
   }
   const queue = await TrackPlayer.getQueue();
 
   const index = queue.findIndex(
     (item: any) => item?.id === song?.encodeId,
   )
+  console.log(index);
   await TrackPlayer.skip(index).finally(() => {
     usePlayerStore.getState().setisLoadingTrack(false);
   })
