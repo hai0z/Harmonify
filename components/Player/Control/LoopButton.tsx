@@ -14,11 +14,9 @@ const LoopButton = () => {
 
   const handleLoop = async () => {
     if (repeatMode === RepeatMode.Track) {
-      TrackPlayer.setRepeatMode(RepeatMode.Queue);
       setRepeatMode(RepeatMode.Queue);
       ToastAndroid.show('Lặp lại: Tắt', ToastAndroid.SHORT);
     } else {
-      TrackPlayer.setRepeatMode(RepeatMode.Track);
       setRepeatMode(RepeatMode.Track);
       ToastAndroid.show('Lặp lại: Bật', ToastAndroid.SHORT);
     }

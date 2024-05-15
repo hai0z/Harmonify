@@ -210,6 +210,7 @@ const ArtistSong = ({route}: any) => {
               value={searchText}
               onChangeText={text => handleSearch(text)}
               placeholder="Nhập tên bài hát..."
+              placeholderTextColor={COLOR.TEXT_SECONDARY}
               className="w-full rounded-md p-2"
               style={{
                 color: COLOR.TEXT_PRIMARY,

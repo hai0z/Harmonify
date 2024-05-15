@@ -42,11 +42,8 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const TextAnimated = Animated.createAnimatedComponent(TextTicker);
 const PlayerScreens = () => {
-  const {playList, tempSong, playFrom, isPlayFromLocal} = usePlayerStore(
-    state => state,
-  );
+  const {tempSong, playFrom, isPlayFromLocal} = usePlayerStore(state => state);
   const navigation = useNavigation<any>();
-
   const currentSong = useActiveTrack();
   const {COLOR} = useThemeStore(state => state);
 

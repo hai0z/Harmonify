@@ -9,7 +9,6 @@ import {
   Keyboard,
   Alert,
 } from 'react-native';
-
 import React, {useContext, useEffect, useMemo, useState} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useDebounce} from '../hooks/useDebounce';
@@ -29,9 +28,9 @@ import Loading from '../components/Loading';
 import Feather from 'react-native-vector-icons/Feather';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import tinycolor from 'tinycolor2';
-import {FlashList} from '@shopify/flash-list';
 import {useUserStore} from '../store/userStore';
 import {GREEN} from '../constants';
+import {FlatList} from 'react-native-gesture-handler';
 
 const SearchScreens = () => {
   const [text, setText] = useState<string>('');
@@ -75,17 +74,18 @@ const SearchScreens = () => {
       setSuggestion(data);
     });
     nodejs.channel.addListener('search', (data: any) => {
-      nodejs.channel.post('getRecommend', data.songs[0].encodeId);
+      if (data?.songs?.length > 0) {
+        nodejs.channel.post('getRecommend', data.songs[0].encodeId);
+      }
       setData(data);
       setFilterData(data);
+      setLoading(false);
     });
     nodejs.channel.addListener('getRecommend', (data: any) => {
-      console.log('recommend');
-      setRecommenData(data.items);
+      setRecommenData(data.items || []);
       setLoading(false);
     });
   }, []);
-
   const navigation = useNavigation<any>();
 
   const handleFilter = (tab: number) => {
@@ -266,7 +266,7 @@ const SearchScreens = () => {
                     )}
                   </View>
                 )}
-              {(selectedTab == 0 || selectedTab == 1) && (
+              {(selectedTab == 0 || selectedTab == 1) && data?.songs && (
                 <Text
                   className="px-4 font-bold mb-4"
                   style={{
@@ -277,34 +277,34 @@ const SearchScreens = () => {
                 </Text>
               )}
               {
-                <View style={{minHeight: 3}}>
-                  <FlashList
-                    extraData={currentSong?.id}
-                    estimatedItemSize={70}
-                    data={filterData?.songs}
-                    renderItem={({item: e}: any) => {
-                      return (
-                        <TrackItem
-                          isActive={currentSong?.id === e.encodeId}
-                          onClick={() => {
-                            handlePlay(e, {
-                              id,
-                              items: [e, ...recommenData],
-                            });
-                            setPlayFrom({
-                              id: 'search',
-                              name: e.title,
-                            });
-                          }}
-                          item={e}
-                          showBottomSheet={showBottomSheet}
-                        />
-                      );
-                    }}
-                  />
-                </View>
+                <FlatList
+                  scrollEnabled={false}
+                  extraData={currentSong?.id}
+                  data={filterData?.songs?.filter(
+                    (e: any) => e.streamingStatus !== 2,
+                  )}
+                  renderItem={({item: e}: any) => {
+                    return (
+                      <TrackItem
+                        isActive={currentSong?.id === e.encodeId}
+                        onClick={() => {
+                          handlePlay(e, {
+                            id,
+                            items: [e, ...recommenData],
+                          });
+                          setPlayFrom({
+                            id: 'search',
+                            name: e.title,
+                          });
+                        }}
+                        item={e}
+                        showBottomSheet={showBottomSheet}
+                      />
+                    );
+                  }}
+                />
               }
-              {(selectedTab == 0 || selectedTab == 2) && (
+              {(selectedTab == 0 || selectedTab == 2) && data?.playlists && (
                 <Text
                   className="px-4 font-bold mb-4"
                   style={{
@@ -346,7 +346,7 @@ const SearchScreens = () => {
                   </View>
                 </TouchableOpacity>
               ))}
-              {(selectedTab == 0 || selectedTab == 3) && (
+              {(selectedTab == 0 || selectedTab == 3) && data?.artists && (
                 <Text
                   className="px-4 font-bold mb-4"
                   style={{

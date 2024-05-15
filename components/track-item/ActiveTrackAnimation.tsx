@@ -26,7 +26,7 @@ const ActiveTrackAnimation = ({isAlbum, style}: Props) => {
           left: 0,
           bottom: 0,
           right: 0,
-          backgroundColor: !isAlbum ? '#00000075' : COLOR.BACKGROUND,
+          backgroundColor: !isAlbum ? '#00000050' : COLOR.BACKGROUND,
           justifyContent: 'center',
           alignItems: 'center',
           ...style,

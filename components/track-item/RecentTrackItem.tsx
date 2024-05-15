@@ -15,9 +15,7 @@ const RecentTrackItem = (props: Props) => {
   const {e, onClick, isActive} = props;
   const COLOR = useThemeStore(state => state.COLOR);
   const theme = useThemeStore(state => state.theme);
-
   const isConnected = useInternetState();
-  console.log('heheh');
   return (
     <TouchableOpacity
       disabled={!isConnected}

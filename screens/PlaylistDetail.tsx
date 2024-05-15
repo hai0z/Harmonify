@@ -236,6 +236,7 @@ const PlaylistDetail = ({route}: {route: route<'PlayListDetail'>}) => {
               onChangeText={text => handleSearch(text)}
               placeholder="Nhập tên bài hát..."
               className="w-full rounded-md p-2"
+              placeholderTextColor={COLOR.TEXT_SECONDARY}
               style={{
                 color: COLOR.TEXT_PRIMARY,
                 backgroundColor: tinycolor(COLOR.BACKGROUND)

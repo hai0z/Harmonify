@@ -23,11 +23,13 @@ const LibrarySrceens = () => {
     <View style={{...styles.container, backgroundColor: COLOR.BACKGROUND}}>
       <View style={styles.top}>
         <View style={styles.topLeft}>
-          <Image
-            resizeMode="cover"
-            style={styles.avatar}
-            source={require('../../assets/evil.png')}
-          />
+          <View className="rounded-full">
+            <Image
+              resizeMode="cover"
+              style={styles.avatar}
+              source={require('../../assets/sound.png')}
+            />
+          </View>
           <Text style={{...styles.txt, color: COLOR.TEXT_PRIMARY}}>
             Thư viện
           </Text>

@@ -56,20 +56,20 @@ const LyricScreen = () => {
         backgroundColor: bg,
       }}
       className="pt-[35px] h-full w-full pb-10">
-      <View className="flex flex-row items-center justify-between px-6 py-6 ">
+      <View className="flex flex-row items-center justify-between px-6 py-3 ">
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Entypo name="chevron-down" size={28} color={COLOR.TEXT_PRIMARY} />
         </TouchableOpacity>
         <View className="flex-1 flex justify-center items-center">
           <Animated.Text
             entering={FadeInDown.duration(300).springify()}
-            className=" font-bold z-30"
+            className=" font-bold z-30 text-center"
             style={{color: COLOR.TEXT_PRIMARY}}>
             {currentSong?.title}
           </Animated.Text>
           <Animated.Text
             entering={FadeInDown.duration(400).springify().delay(400)}
-            className=" font-bold z-30"
+            className=" font-bold z-30 text-center"
             style={{color: COLOR.TEXT_PRIMARY}}>
             {currentSong?.artist}
           </Animated.Text>
@@ -100,9 +100,10 @@ const LyricScreen = () => {
             <TouchableOpacity
               onPress={() => {
                 TrackPlayer.seekTo(+item.startTime / 1000);
+                TrackPlayer.play();
               }}>
               <Text
-                className="mb-1"
+                className="mb-2"
                 style={{
                   color: (currentLine as number) >= index ? 'white' : 'black',
                   fontSize: wp(6),

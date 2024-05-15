@@ -26,7 +26,7 @@ interface Props {
   timeStamp?: number;
 }
 
-const TrackItem = (props: Props) => {
+const TrackItem: React.FC<Props> = props => {
   const isConnected = useInternetState();
   const {item, index, onClick, isAlbum, showBottomSheet, isActive, timeStamp} =
     props;
@@ -67,7 +67,6 @@ const TrackItem = (props: Props) => {
               uri: getThumbnail(item?.thumbnail),
             }}
             key={item?.encodeId}
-            className="rounded-none"
             style={{width: wp(15), height: wp(15)}}
           />
           {isActive && <ActiveTrackAnimation isAlbum={false} />}

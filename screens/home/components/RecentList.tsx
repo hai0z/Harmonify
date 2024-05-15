@@ -47,7 +47,6 @@ const RecentList = ({data}: any) => {
           width: wp(100),
         }}>
         {renderData?.map((e: any, index: number) => {
-          console.log('vai lz');
           return (
             <RecentTrackItem
               key={index}

@@ -21,10 +21,16 @@ let sleepTimerCounter = 0;
 
 TrackPlayer.addEventListener(Event.PlaybackProgressUpdated, async e => {
   const timer = usePlayerStore.getState().sleepTimer
+  if (usePlayerStore.getState().repeatMode === RepeatMode.Track) {
+    const activeTrackIndex = await TrackPlayer.getActiveTrackIndex();
+    if (Math.floor(e.position) === Math.floor(e.duration)) {
+      TrackPlayer.skip(activeTrackIndex!);
+    }
+  }
   if (timer !== null) {
     sleepTimerCounter++;
     if (sleepTimerCounter === timer) {
-      await TrackPlayer.pause();
+      TrackPlayer.pause();
       usePlayerStore.getState().setSleepTimer(null)
       sleepTimerCounter = 0
       Alert.alert('Hẹn giờ ngủ', 'Chúc bạn ngủ ngon')
@@ -63,9 +69,10 @@ TrackPlayer.addEventListener(Event.PlaybackActiveTrackChanged, async event => {
 });
 
 nodejs.channel.addListener('getSong', async data => {
+  console.log('get url song');
   if (data.data === NULL_URL) {
     useToastStore.getState().show("Không thể phát bài hát này", ToastTime.SHORT);
-    return
+    // return
   }
   await TrackPlayer.load({
     ...data.track,
@@ -85,18 +92,13 @@ nodejs.channel.addListener('getSongInfo', async data => {
   usePlayerStore.getState().setTempSong(data);
 });
 
-const handlePlay = async (song: any, playlist: IPlaylist = {
-  id: "",
-  items: [],
-  isAlbum: false
-}) => {
-  usePlayerStore.getState().setLastPosition(0);
-  await TrackPlayer.pause();
+const handlePlay = async (song: any, playlist: IPlaylist) => {
+  TrackPlayer.pause();
   const currentPlaylistId = usePlayerStore.getState().playList?.id;
   usePlayerStore.getState().setIsPlayFromLocal(false);
   if (currentPlaylistId !== playlist.id) {
     usePlayerStore.getState().setisLoadingTrack(true);
-    await TrackPlayer.setQueue(playlist.items.map((item: any) => objectToTrack(item)));
+    TrackPlayer.setQueue(playlist.items.map((item: any) => objectToTrack(item)));
     usePlayerStore.getState().setPlayList(playlist);
     usePlayerStore.getState().setTempPlayList(playlist);
     usePlayerStore.getState().setShuffleMode(false);
@@ -105,24 +107,20 @@ const handlePlay = async (song: any, playlist: IPlaylist = {
     }
   }
   const queue = await TrackPlayer.getQueue();
-
   let index = queue.findIndex(
     (item: any) => item?.id === song?.encodeId,
   )
-  index < 0 && (index = 0);
-
-  await TrackPlayer.skip(index).finally(() => {
+  if (index === -1) {
+    index = 0
+  }
+  TrackPlayer.skip(index).finally(() => {
     usePlayerStore.getState().setisLoadingTrack(false);
   })
-  await TrackPlayer.play();
+  TrackPlayer.play();
 
 }
-const handlePlaySongInLocal = async (song: any, playlist: IPlaylist = {
-  id: "",
-  items: [],
-  isAlbum: false
-}) => {
-  await TrackPlayer.pause();
+const handlePlaySongInLocal = async (song: any, playlist: IPlaylist) => {
+  TrackPlayer.pause();
   usePlayerStore.getState().setIsPlayFromLocal(true);
   usePlayerStore.getState().setColor(defaultColorObj);
   const currentPlaylistId = usePlayerStore.getState().playList?.id;

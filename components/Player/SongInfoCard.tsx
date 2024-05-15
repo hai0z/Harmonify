@@ -40,7 +40,7 @@ const SongInfoCard = () => {
       <Text
         className="font-bold text-[18px]"
         style={{color: COLOR.TEXT_PRIMARY}}>
-        {data.releaseDate ? (
+        {data?.releaseDate ? (
           <Text>
             Phát hành lúc {dayjs.unix(data?.releaseDate).format('DD/MM/YYYY')}
           </Text>
