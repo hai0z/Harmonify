@@ -60,7 +60,7 @@ const Lyric = () => {
               onPress={() => nativgation.navigate('Lyric', {lyrics})}
               className="w-7 h-7 flex justify-center items-center rounded-full z-[3]"
               style={{
-                backgroundColor: COLOR.isDark ? '#00000020' : '#ffffff80',
+                backgroundColor: COLOR.isDark ? '#00000020' : '#ffffff50',
               }}>
               <AntDesign
                 name="arrowsalt"

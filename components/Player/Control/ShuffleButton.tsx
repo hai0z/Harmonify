@@ -88,7 +88,7 @@ const ShuffleButton = () => {
       className="items-start justify-center flex-1">
       <Feather
         name="shuffle"
-        size={20}
+        size={22}
         color={shuffleMode ? COLOR.PRIMARY : COLOR.TEXT_PRIMARY}
       />
     </TouchableOpacity>

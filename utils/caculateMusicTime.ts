@@ -4,13 +4,13 @@ const caculateTime = (duration: number, position: number) => {
   );
   const currentMin = Math.floor((position / 60) % 60);
 
-  const totalSecond: string | number = `0${Math.floor(duration) % 60}`.slice(
-    -2,
-  );
 
-  const totalMin = `${Math.floor((duration / 60) % 60)}`;
+  const minutes = Math.floor(duration / 60);
+  const remainingSeconds = duration % 60;
 
-  const totalTime = `${totalMin}:${totalSecond}`;
+
+  const totalTime = `${String(minutes).padStart(2, '0')
+    }:${String(remainingSeconds).padStart(2, '0')}`
 
   return {
     currentMin,

@@ -1,9 +1,9 @@
 import {ToastAndroid, TouchableOpacity} from 'react-native';
 import React from 'react';
-import TrackPlayer, {RepeatMode} from 'react-native-track-player';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {RepeatMode} from 'react-native-track-player';
 import useThemeStore from '../../../store/themeStore';
 import {usePlayerStore} from '../../../store/playerStore';
+import Feather from 'react-native-vector-icons/Feather';
 
 const LoopButton = () => {
   const [repeatMode, setRepeatMode] = usePlayerStore(state => [
@@ -27,9 +27,9 @@ const LoopButton = () => {
       activeOpacity={0.8}
       className="items-end justify-center flex-1"
       onPress={handleLoop}>
-      <MaterialIcons
-        name="loop"
-        size={24}
+      <Feather
+        name="repeat"
+        size={22}
         color={
           repeatMode === RepeatMode.Queue ? COLOR.TEXT_PRIMARY : COLOR.SECONDARY
         }

@@ -23,7 +23,6 @@ import useThemeStore from '../store/themeStore';
 import {PlayerContext} from '../context/PlayerProvider';
 import Animated, {
   Easing,
-  FadeIn,
   FadeInUp,
   FadeOut,
   runOnUI,
@@ -38,6 +37,7 @@ import {
 import useImageColor from '../hooks/useImageColor';
 import TrackItemBottomSheet from '../components/bottom-sheet/TrackItemBottomSheet';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Feather from 'react-native-vector-icons/Feather';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const TextAnimated = Animated.createAnimatedComponent(TextTicker);
@@ -63,7 +63,6 @@ const PlayerScreens = () => {
   useLayoutEffect(() => {
     runOnUI(changeBgAnimated)();
   }, [gradientColor, COLOR]);
-
   return (
     <ScrollView
       bounces={false}
@@ -172,15 +171,32 @@ const PlayerScreens = () => {
         <View style={{marginTop: hp(8)}}>
           <Player />
         </View>
-        <View className="my-4">
+        <View className="my-4 flex flex-row items-center justify-between">
+          <TouchableOpacity
+            disabled={isPlayFromLocal}
+            onPress={() =>
+              navigation.navigate('PlaylistStack', {
+                screen: 'AddToPlaylist',
+                params: {song: tempSong},
+              })
+            }
+            activeOpacity={0.8}
+            style={{
+              opacity: isPlayFromLocal ? 0.4 : 1,
+            }}>
+            <MaterialIcons
+              name="add-circle-outline"
+              size={24}
+              color={COLOR.TEXT_PRIMARY}
+            />
+          </TouchableOpacity>
           <TouchableOpacity
             disabled={isPlayFromLocal}
             onPress={() => navigation.navigate('Queue')}
             activeOpacity={0.8}
             style={{
               opacity: isPlayFromLocal ? 0.4 : 1,
-            }}
-            className="items-end justify-center">
+            }}>
             <MaterialIcons
               name="queue-music"
               size={24}

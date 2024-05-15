@@ -23,7 +23,8 @@ TrackPlayer.addEventListener(Event.PlaybackProgressUpdated, async e => {
   const timer = usePlayerStore.getState().sleepTimer
   if (usePlayerStore.getState().repeatMode === RepeatMode.Track) {
     const activeTrackIndex = await TrackPlayer.getActiveTrackIndex();
-    if (Math.floor(e.position) === Math.floor(e.duration)) {
+    console.log({ activeTrackIndex }, e.position, e.duration);
+    if (Math.floor(e.position) === Math.floor(e.duration) - 1) {
       TrackPlayer.skip(activeTrackIndex!);
     }
   }

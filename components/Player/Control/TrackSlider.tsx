@@ -16,26 +16,29 @@ const TrackSlider = () => {
 
   const time = useMemo(() => {
     if (track?.duration) {
-      return caculateTime(track.duration, progess.position);
+      return caculateTime(
+        Math.floor(track.duration),
+        Math.floor(progess.position),
+      );
     }
   }, [progess.position, track?.id]);
 
   const onSlidingComplete = useCallback(async (value: number) => {
-    await TrackPlayer.pause();
-    await TrackPlayer.seekTo(value);
-    await TrackPlayer.play();
+    TrackPlayer.pause();
+    TrackPlayer.seekTo(value);
+    TrackPlayer.play();
   }, []);
 
   return (
     <View>
       <Slider
         minimumValue={0}
-        step={0.5}
+        step={1}
         value={progess.position}
         onSlidingComplete={onSlidingComplete}
         onSlidingStart={() => TrackPlayer.pause()}
         slideOnTap
-        maximumValue={progess.duration}
+        maximumValue={progess.duration - 2}
         thumbStyle={{
           height: 8,
           width: 8,
@@ -56,7 +59,7 @@ const TrackSlider = () => {
         <Text
           className="text-[12px] font-semibold"
           style={{color: `${COLOR.TEXT_PRIMARY}90`}}>
-          {seconds2MMSS(progess.position)}
+          {seconds2MMSS(Math.floor(progess.position))}
         </Text>
         <Text
           className="text-[12px] font-semibold"

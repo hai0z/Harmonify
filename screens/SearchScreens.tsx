@@ -57,8 +57,6 @@ const SearchScreens = () => {
 
   const [selectedTab, setSelectedTab] = useState<number>(0);
 
-  const id = useMemo(() => Math.random().toString(36).substring(7), [data]);
-
   const searchHistory = useUserStore(state => state.searchHistory);
 
   const setSearchHistory = useUserStore(state => state.setSearchHistory);
@@ -289,7 +287,7 @@ const SearchScreens = () => {
                         isActive={currentSong?.id === e.encodeId}
                         onClick={() => {
                           handlePlay(e, {
-                            id,
+                            id: e.encodeId,
                             items: [e, ...recommenData],
                           });
                           setPlayFrom({

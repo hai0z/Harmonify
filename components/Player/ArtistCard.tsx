@@ -8,10 +8,10 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import {DEFAULT_IMG} from '../../constants';
 import useThemeStore from '../../store/themeStore';
 import useImageColor from '../../hooks/useImageColor';
-import LinearGradient from 'react-native-linear-gradient';
 const ArtistCard = () => {
   const currentSong = usePlayerStore(state => state.currentSong);
 
+  const tempSong = usePlayerStore(state => state.tempSong);
   const [data, setData] = useState<any>(null);
 
   const navigation = useNavigation<any>();
@@ -22,17 +22,22 @@ const ArtistCard = () => {
 
   useEffect(() => {
     setData(null);
-    nodejs.channel.addListener('getArtistBySongId', (data: any) => {
+    nodejs.channel.addListener('getArtist', (data: any) => {
+      console.log({data});
       setData(data);
     });
   }, []);
 
   useEffect(() => {
-    setData(null);
-    if (!usePlayerStore.getState().isPlayFromLocal) {
-      nodejs.channel.post('getArtistBySongId', currentSong?.id);
+    if (
+      !usePlayerStore.getState().isPlayFromLocal &&
+      tempSong?.artists[0]?.alias
+    ) {
+      nodejs.channel.post('getArtist', tempSong?.artists[0]?.alias);
+    } else {
+      setData(null);
     }
-  }, [currentSong?.id]);
+  }, [tempSong?.encodeId]);
 
   if (data === null || usePlayerStore.getState().isPlayFromLocal) {
     return null;
