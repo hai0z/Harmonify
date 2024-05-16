@@ -6,6 +6,7 @@ import nodejs from 'nodejs-mobile-react-native';
 import useThemeStore from '../../store/themeStore';
 import Animated from 'react-native-reanimated';
 import useImageColor from '../../hooks/useImageColor';
+import {widthPercentageToDP} from 'react-native-responsive-screen';
 const SongInfoCard = () => {
   const currentSong = usePlayerStore(state => state.currentSong);
 
@@ -38,15 +39,16 @@ const SongInfoCard = () => {
       style={{backgroundColor: bg}}
       className="w-full rounded-2xl px-4 py-2 flex justify-between">
       <Text
-        className="font-bold text-[18px]"
-        style={{color: COLOR.TEXT_PRIMARY}}>
-        {data?.releaseDate ? (
-          <Text>
-            Phát hành lúc {dayjs.unix(data?.releaseDate).format('DD/MM/YYYY')}
-          </Text>
-        ) : (
-          'Phát hành lúc: không rõ'
-        )}
+        style={{
+          color: COLOR.TEXT_PRIMARY,
+          fontFamily: 'SVN-Gotham Black',
+          fontSize: widthPercentageToDP(5),
+        }}>
+        {data?.releaseDate
+          ? `Phát hành lúc ${dayjs
+              .unix(data?.releaseDate)
+              .format('DD/MM/YYYY')}`
+          : 'Phát hành lúc: không rõ'}
       </Text>
       <Text style={{color: COLOR.TEXT_PRIMARY}}>
         Tác giả :{' '}

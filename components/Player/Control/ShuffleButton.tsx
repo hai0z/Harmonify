@@ -59,7 +59,7 @@ const ShuffleButton = () => {
         ...playList,
         items: arr,
       });
-      await setQueueUninterrupted(shuffledQueue);
+      setQueueUninterrupted(shuffledQueue);
     } else {
       ToastAndroid.show('Phát ngẫu nhiên: Tắt', ToastAndroid.SHORT);
       const currentQueue = await getQueue();
@@ -89,7 +89,7 @@ const ShuffleButton = () => {
       <Feather
         name="shuffle"
         size={22}
-        color={shuffleMode ? COLOR.PRIMARY : COLOR.TEXT_PRIMARY}
+        color={shuffleMode ? COLOR.SECONDARY : COLOR.TEXT_PRIMARY}
       />
     </TouchableOpacity>
   );

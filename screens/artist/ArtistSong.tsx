@@ -259,7 +259,7 @@ const ArtistSong = ({route}: any) => {
                       {
                         width: SCREEN_WIDTH,
                         height: SCREEN_WIDTH * 0.8,
-                        backgroundColor: dominantColor,
+                        backgroundColor: `${dominantColor}70`,
                       },
                     ]}
                   />

@@ -85,7 +85,7 @@ const PlaylistDetail = ({route}: {route: route<'PlayListDetail'>}) => {
   const handleSearch = (text: string) => {
     setSearchText(text);
     if (text) {
-      const filteredData = playlistData.song.items.filter((item: Song) => {
+      const filteredData = playlistData?.song.items?.filter((item: Song) => {
         return stringToSlug(item.title)
           .toLowerCase()
           .includes(stringToSlug(text).toLowerCase());
@@ -100,16 +100,19 @@ const PlaylistDetail = ({route}: {route: route<'PlayListDetail'>}) => {
     setLoading(true);
     scrollY.setValue(0);
     nodejs.channel.addListener('getDetailPlaylist', (data: any) => {
+      if (data?.song.totalDuration === 0) {
+        setPlaylistData({});
+      }
       setPlaylistData({
         ...data,
         song: {
-          items: data.song.items.filter(
+          items: data?.song?.items?.filter(
             (item: Song) => item.streamingStatus === 1,
           ),
         },
       });
       setSearchData(
-        data.song.items.filter((item: Song) => item.streamingStatus === 1),
+        data?.song.items?.filter((item: Song) => item.streamingStatus === 1),
       );
       getColors(data.thumbnail).then(res => {
         setColor(res as Color);
@@ -124,7 +127,7 @@ const PlaylistDetail = ({route}: {route: route<'PlayListDetail'>}) => {
       bgAnimated.value = withTiming(
         `${
           COLOR.isDark
-            ? useDarkColor(color.dominant, 35)
+            ? useDarkColor(color.dominant, 30)
             : tinycolor(color.dominant).isDark()
             ? tinycolor(color.dominant).lighten(30)
             : tinycolor(color.dominant).darken()
@@ -174,7 +177,7 @@ const PlaylistDetail = ({route}: {route: route<'PlayListDetail'>}) => {
 
   const caculateTotalTime = () => {
     let total = 0;
-    playlistData?.song.items.forEach((item: any) => {
+    playlistData?.song?.items?.forEach((item: any) => {
       total += item.duration;
     });
     const hours = Math.floor(total / 3600);
@@ -327,7 +330,7 @@ const PlaylistDetail = ({route}: {route: route<'PlayListDetail'>}) => {
                   <View className="flex flex-row justify-between">
                     <View className="flex flex-row items-center">
                       <Text style={{color: COLOR.TEXT_PRIMARY}}>
-                        {playlistData?.song.items.length} bài hát{' • '}
+                        {playlistData?.song?.items?.length ?? 0} bài hát{' • '}
                       </Text>
                       <Text style={{color: COLOR.TEXT_PRIMARY}}>
                         {caculateTotalTime().hours > 0 && (

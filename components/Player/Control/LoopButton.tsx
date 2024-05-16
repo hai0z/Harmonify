@@ -4,6 +4,7 @@ import {RepeatMode} from 'react-native-track-player';
 import useThemeStore from '../../../store/themeStore';
 import {usePlayerStore} from '../../../store/playerStore';
 import Feather from 'react-native-vector-icons/Feather';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const LoopButton = () => {
   const [repeatMode, setRepeatMode] = usePlayerStore(state => [

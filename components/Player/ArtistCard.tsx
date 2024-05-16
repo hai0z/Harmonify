@@ -8,6 +8,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import {DEFAULT_IMG} from '../../constants';
 import useThemeStore from '../../store/themeStore';
 import useImageColor from '../../hooks/useImageColor';
+import {widthPercentageToDP} from 'react-native-responsive-screen';
 const ArtistCard = () => {
   const currentSong = usePlayerStore(state => state.currentSong);
 
@@ -76,8 +77,11 @@ const ArtistCard = () => {
         className="absolute bottom-0 h-20  w-full rounded-b-2xl px-4 py-2 flex justify-between flex-row z-20">
         <View className="flex justify-between">
           <Text
-            className="text-[16px]"
-            style={{color: COLOR.TEXT_PRIMARY, fontFamily: 'SVN-Gotham Black'}}>
+            style={{
+              color: COLOR.TEXT_PRIMARY,
+              fontFamily: 'SVN-Gotham Black',
+              fontSize: widthPercentageToDP(5),
+            }}>
             {data?.name}
           </Text>
           <Text className="text-[12px]" style={{color: COLOR.TEXT_PRIMARY}}>

@@ -29,6 +29,7 @@ const Lyric = () => {
       lyricsRef.current.scrollToIndex({
         index: currentLine === -1 ? 0 : currentLine - OFFSET,
         animated: true,
+        viewPosition: 0,
       });
   }, [currentLine]);
 

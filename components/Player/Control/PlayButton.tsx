@@ -15,6 +15,7 @@ const PlayButton = () => {
   }, []);
   return (
     <TouchableOpacity
+      activeOpacity={0.8}
       onPress={() => togglePlay(playerState.state)}
       style={{
         width: 60,

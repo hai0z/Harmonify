@@ -210,8 +210,8 @@ const Queue = () => {
                   <TrackItem
                     showBottomSheet={showBottomSheet}
                     item={item}
-                    isAlbum={playList.isAlbum}
                     onClick={handlePlay}
+                    isAlbum={playList.isAlbum}
                     index={index + 1}
                   />
                 ) : (
