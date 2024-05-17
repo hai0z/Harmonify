@@ -5,6 +5,7 @@ import {
   NativeSyntheticEvent,
   Dimensions,
   View,
+  Animated as Anim,
 } from 'react-native';
 import {usePlayerStore} from '../../store/playerStore';
 import getThumbnail from '../../utils/getThumnail';
@@ -61,6 +62,7 @@ const ImageSlider = () => {
         currentSongIndex === 0 || currentSongIndex === playList.items.length - 1
           ? false
           : hasScroll,
+      viewPosition: 1,
     });
     hasScrollAnimation();
   }, [currentSong?.id, playList.items]);
@@ -88,8 +90,9 @@ const ImageSlider = () => {
   );
 };
 
-const SliderItem = ({item}: any) => {
-  const {isPlayFromLocal} = usePlayerStore();
+const SliderItem = memo(({item}: {item: any}) => {
+  console.log('hehehe');
+  const isPlayFromLocal = usePlayerStore(state => state.isPlayFromLocal);
   return (
     <View
       key={item.encodeId}
@@ -113,6 +116,6 @@ const SliderItem = ({item}: any) => {
       />
     </View>
   );
-};
+});
 
 export default memo(ImageSlider);

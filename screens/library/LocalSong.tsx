@@ -17,10 +17,8 @@ import {useNavigation} from '@react-navigation/native';
 import useGetLocalSong from '../../hooks/useGetLocalSong';
 import Entypo from 'react-native-vector-icons/Entypo';
 import useThemeStore from '../../store/themeStore';
-import {DEFAULT_IMG} from '../../constants';
 import {usePlayerStore} from '../../store/playerStore';
 import Loading from '../../components/Loading';
-import {widthPercentageToDP} from 'react-native-responsive-screen';
 import LocalTrackItem from '../../components/track-item/LocalTrackItem';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 

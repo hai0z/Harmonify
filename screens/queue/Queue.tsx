@@ -36,14 +36,9 @@ import TrackItem from '../../components/track-item/TrackItem';
 import TrackItemBottomSheet from '../../components/bottom-sheet/TrackItemBottomSheet';
 import ProgressBar from './components/ProgressBar';
 import LocalTrackItem from '../../components/track-item/LocalTrackItem';
-import {
-  add,
-  getActiveTrackIndex,
-  getQueue,
-  remove,
-  setQueue,
-} from 'react-native-track-player/lib/trackPlayer';
+
 import {Song} from '../../utils/types/type';
+import {getQueue} from 'react-native-track-player/lib/trackPlayer';
 
 const Queue = () => {
   const COLOR = useThemeStore(state => state.COLOR);
@@ -52,7 +47,6 @@ const Queue = () => {
 
   const playList = usePlayerStore(state => state.playList);
 
-  const setLastPosition = usePlayerStore(state => state.setLastPosition);
   const isPlayFromLocal = usePlayerStore(state => state.isPlayFromLocal);
 
   const navigation = useNavigation<any>();
@@ -170,7 +164,7 @@ const Queue = () => {
                     />
                   ) : (
                     <LocalTrackItem
-                      item={playList.items[trackIndex]}
+                      item={playList?.items[trackIndex]}
                       onClick={handlePlay}
                     />
                   )}

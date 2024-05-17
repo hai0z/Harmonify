@@ -30,7 +30,6 @@ import tinycolor from 'tinycolor2';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import {usePlayerStore} from '../../store/playerStore';
 import SleepTimerBottomSheet from './SleepTimerBottomSheet';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {removeSongFromPlaylist} from '../../service/firebase';
 import {navigation} from '../../utils/types/RootStackParamList';
 interface Props {
@@ -42,7 +41,6 @@ const TrackItemBottomSheet = (props: Props) => {
   const {data} = useBottomSheetStore(state => state);
   const {bottomSheetModalRef} = useContext(PlayerContext);
   const {COLOR} = useThemeStore(state => state);
-
   // variables
 
   const snapPoints = useMemo(() => ['55%', '75%'], []);

@@ -14,7 +14,7 @@ const CreatePlaylistStack = () => {
       <Stack.Screen
         name="AddToPlaylist"
         component={AddToPlaylist}
-        options={{animation: 'fade'}}
+        options={{animation: 'default'}}
       />
       <Stack.Screen name="EditPlaylist" component={EditPlaylist} />
     </Stack.Navigator>

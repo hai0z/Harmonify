@@ -10,8 +10,6 @@ import useThemeStore from '../../store/themeStore';
 import useImageColor from '../../hooks/useImageColor';
 import {widthPercentageToDP} from 'react-native-responsive-screen';
 const ArtistCard = () => {
-  const currentSong = usePlayerStore(state => state.currentSong);
-
   const tempSong = usePlayerStore(state => state.tempSong);
   const [data, setData] = useState<any>(null);
 
@@ -24,7 +22,6 @@ const ArtistCard = () => {
   useEffect(() => {
     setData(null);
     nodejs.channel.addListener('getArtist', (data: any) => {
-      console.log({data});
       setData(data);
     });
   }, []);

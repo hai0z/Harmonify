@@ -2,6 +2,7 @@ import { ToastAndroid } from 'react-native'
 import RNFetchBlob from 'rn-fetch-blob';
 import useToastStore, { ToastTime } from '../store/toastStore';
 import nodejs from 'nodejs-mobile-react-native';
+import TrackPlayer, { useActiveTrack } from 'react-native-track-player';
 
 nodejs.channel.addListener("downloadSong", async data => {
   if (data.data === 'NULL') {
@@ -10,13 +11,13 @@ nodejs.channel.addListener("downloadSong", async data => {
   }
   const { config, fs } = RNFetchBlob;
   const downloads = fs.dirs.DownloadDir;
+  const currentTrack = await TrackPlayer.getActiveTrack();
   return config({
-    fileCache: true,
     addAndroidDownloads: {
       useDownloadManager: true,
       notification: true,
       title: data.track.title,
-      path: downloads + '/' + data.track.title + Math.random() + '.mp3',
+      path: downloads + '/' + currentTrack?.title + '.mp3',
       description: 'Tải xuống bài hát',
     }
   })

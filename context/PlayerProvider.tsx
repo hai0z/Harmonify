@@ -11,9 +11,10 @@ import useBottomSheetStore from '../store/bottomSheetStore';
 import {saveToHistory} from '../service/firebase';
 import {Appearance} from 'react-native';
 import useThemeStore from '../store/themeStore';
-import {DEFAULT_IMG} from '../constants';
+import {DEFAULT_IMG, NULL_URL} from '../constants';
 import SplashScreen from 'react-native-splash-screen';
 import useDebounce from '../hooks/use_debounce';
+import axios from 'axios';
 
 interface ContextType {
   bottomSheetModalRef: React.RefObject<BottomSheetModalMethods>;
@@ -37,7 +38,6 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
     tempSong,
     savePlayerState,
     offlineMode,
-    repeatMode,
     setColor,
     setisLoadingTrack,
     setSleepTimer,
@@ -137,6 +137,7 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
   useEffect(() => {
     saveHistory && saveToHistory(tempSong);
   }, [tempSong?.encodeId]);
+
   return (
     <PlayerContext.Provider
       value={{

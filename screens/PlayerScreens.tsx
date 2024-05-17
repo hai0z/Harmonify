@@ -37,7 +37,6 @@ import {
 import useImageColor from '../hooks/useImageColor';
 import TrackItemBottomSheet from '../components/bottom-sheet/TrackItemBottomSheet';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import Feather from 'react-native-vector-icons/Feather';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const TextAnimated = Animated.createAnimatedComponent(TextTicker);
@@ -74,7 +73,6 @@ const PlayerScreens = () => {
       <View
         className="pt-[35px]"
         style={{
-          height: hp(75) - 35,
           backgroundColor: COLOR.BACKGROUND,
         }}>
         <LinearGradient
@@ -83,8 +81,8 @@ const PlayerScreens = () => {
             StyleSheet.absoluteFill,
             {
               width: SCREEN_WIDTH,
-              height: hp(100),
               bottom: 0,
+              height: hp(100),
               zIndex: 1,
             },
           ]}
@@ -94,8 +92,8 @@ const PlayerScreens = () => {
             StyleSheet.absoluteFill,
             {
               width: SCREEN_WIDTH,
-              height: hp(100),
               backgroundColor: bgAnimated,
+              height: hp(100),
             },
           ]}
         />
@@ -167,13 +165,12 @@ const PlayerScreens = () => {
           {!isPlayFromLocal && <HeartButton heartIconSize={28} />}
         </View>
       </View>
-      <View className="px-6 w-full ">
-        <View style={{marginTop: hp(8)}}>
-          <Player />
-        </View>
+      <View className="px-6 w-full" style={{marginTop: hp(2)}}>
+        <Player />
         <View className="my-4 flex flex-row items-center justify-between">
           <TouchableOpacity
             disabled={isPlayFromLocal}
+            hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}
             onPress={() =>
               navigation.navigate('PlaylistStack', {
                 screen: 'AddToPlaylist',
@@ -192,6 +189,7 @@ const PlayerScreens = () => {
           </TouchableOpacity>
           <TouchableOpacity
             disabled={isPlayFromLocal}
+            hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}
             onPress={() => navigation.navigate('Queue')}
             activeOpacity={0.8}
             style={{

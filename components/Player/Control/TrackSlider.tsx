@@ -34,6 +34,7 @@ const TrackSlider = () => {
       <Slider
         minimumValue={0}
         step={1}
+        hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}
         value={progess.position}
         onSlidingComplete={onSlidingComplete}
         onSlidingStart={() => TrackPlayer.pause()}
@@ -55,7 +56,7 @@ const TrackSlider = () => {
           height: 20,
         }}
       />
-      <View className="mt-2 flex flex-row justify-between items-center">
+      <View className="flex flex-row justify-between items-center">
         <Text
           className="text-[12px] font-semibold"
           style={{color: `${COLOR.TEXT_PRIMARY}90`}}>

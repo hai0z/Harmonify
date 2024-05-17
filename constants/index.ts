@@ -2,7 +2,7 @@ export const DEFAULT_IMG = "https://photo-resize-zmp3.zmdcdn.me/w720_r1x1_jpeg/a
 
 export const NULL_URL = "NULL"
 
-export const TABBAR_HEIGHT = 65
+export const TABBAR_HEIGHT = 60
 
 export const GREEN = '#19b954'
 

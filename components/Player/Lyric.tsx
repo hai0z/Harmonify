@@ -53,8 +53,10 @@ const Lyric = () => {
           }}>
           <View className="px-4 py-4 justify-between flex flex-row items-center ">
             <Text
-              className=" font-bold z-[3] "
-              style={{color: COLOR.TEXT_PRIMARY}}>
+              style={{
+                color: COLOR.TEXT_PRIMARY,
+                fontFamily: 'SVN-Gotham Black',
+              }}>
               Lời bài hát
             </Text>
             <TouchableOpacity
