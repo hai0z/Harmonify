@@ -38,7 +38,7 @@ const EditPlaylist = ({route}: any) => {
       style={{
         backgroundColor: COLOR.BACKGROUND,
       }}>
-      <View>
+      <View className="w-full px-6">
         <Text
           style={{
             fontFamily: 'SVN-Gotham Black',
@@ -57,6 +57,7 @@ const EditPlaylist = ({route}: any) => {
             fontFamily: 'SVN-Gotham Black',
             fontSize: wp(4),
             borderColor: COLOR.TEXT_SECONDARY,
+            color: COLOR.TEXT_PRIMARY,
           }}
         />
         <View className="flex flex-row justify-center items-center mt-4">

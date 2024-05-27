@@ -37,9 +37,10 @@ import {
 import useImageColor from '../hooks/useImageColor';
 import TrackItemBottomSheet from '../components/bottom-sheet/TrackItemBottomSheet';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-const SCREEN_WIDTH = Dimensions.get('window').width;
 
+const SCREEN_WIDTH = Dimensions.get('window').width;
 const TextAnimated = Animated.createAnimatedComponent(TextTicker);
+
 const PlayerScreens = () => {
   const {tempSong, playFrom, isPlayFromLocal} = usePlayerStore(state => state);
   const navigation = useNavigation<any>();
@@ -82,7 +83,7 @@ const PlayerScreens = () => {
             {
               width: SCREEN_WIDTH,
               bottom: 0,
-              height: hp(100),
+              height: hp(125),
               zIndex: 1,
             },
           ]}
@@ -93,7 +94,7 @@ const PlayerScreens = () => {
             {
               width: SCREEN_WIDTH,
               backgroundColor: bgAnimated,
-              height: hp(100),
+              height: hp(125),
             },
           ]}
         />
@@ -165,7 +166,7 @@ const PlayerScreens = () => {
           {!isPlayFromLocal && <HeartButton heartIconSize={28} />}
         </View>
       </View>
-      <View className="px-6 w-full" style={{marginTop: hp(2)}}>
+      <View className="px-6 w-full" style={{marginTop: 16}}>
         <Player />
         <View className="my-4 flex flex-row items-center justify-between">
           <TouchableOpacity

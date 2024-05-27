@@ -55,7 +55,7 @@ const LyricScreen = () => {
       style={{
         backgroundColor: bg,
       }}
-      className="pt-[35px] h-full w-full pb-10">
+      className="pt-[35px] h-full w-full">
       <View className="flex flex-row items-center justify-between px-6 py-3 ">
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Entypo name="chevron-down" size={28} color={COLOR.TEXT_PRIMARY} />
@@ -116,7 +116,7 @@ const LyricScreen = () => {
           keyExtractor={(_, index) => index.toString()}
         />
       </View>
-      <View className="px-6 py-1 justify-center items-center">
+      <View className="px-6 py-4 justify-center items-center">
         <LinearGradient
           colors={['transparent', bg!, bg!]}
           className="absolute -top-10 left-0 right-0 h-16 z-[2]"

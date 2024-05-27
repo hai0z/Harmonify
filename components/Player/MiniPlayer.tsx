@@ -41,13 +41,13 @@ const MiniPlayer = () => {
 
   const bgAnimated = useSharedValue('#494949');
 
-  const togglePlay = useCallback(async (state: State | undefined) => {
+  const togglePlay = (state: State | undefined) => {
     if (state !== State.Playing) {
-      await TrackPlayer.play();
+      TrackPlayer.play();
     } else {
-      await TrackPlayer.pause();
+      TrackPlayer.pause();
     }
-  }, []);
+  };
 
   useLayoutEffect(() => {
     bgAnimated.value = withTiming(`${gradientColor}`, {
@@ -81,8 +81,7 @@ const MiniPlayer = () => {
           style={{
             flexDirection: 'column',
             justifyContent: 'center',
-            width: '100%',
-            height: '100%',
+            height: MINI_PLAYER_HEIGHT,
           }}>
           <Animated.View
             key={currentSong?.id}
@@ -100,8 +99,8 @@ const MiniPlayer = () => {
               style={{
                 width: 40,
                 height: 40,
-                borderRadius: 5,
-                marginLeft: 7,
+                borderRadius: 4,
+                marginLeft: SCREEN_WIDTH * 0.02,
                 zIndex: 10,
               }}
             />
@@ -109,9 +108,7 @@ const MiniPlayer = () => {
               style={{
                 marginLeft: 10,
                 flex: 1,
-                paddingRight: 20,
-                zIndex: 1,
-                overflow: 'hidden',
+                marginRight: 10,
               }}
               entering={FadeInUp.duration(300).springify()}
               exiting={FadeOutDown.duration(300).springify()}>
@@ -124,7 +121,6 @@ const MiniPlayer = () => {
                 style={{
                   color: COLOR.TEXT_PRIMARY,
                   fontWeight: '600',
-                  fontSize: 14,
                 }}>
                 {currentSong?.title}
               </TextTicker>
