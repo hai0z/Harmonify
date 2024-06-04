@@ -18,12 +18,12 @@ const PlayButton = () => {
       activeOpacity={0.8}
       onPress={() => togglePlay(playerState.state)}
       style={{
-        width: 60,
-        height: 60,
         borderRadius: 9999,
         backgroundColor: COLOR.TEXT_PRIMARY,
         justifyContent: 'center',
         alignItems: 'center',
+        width: 60,
+        height: 60,
       }}>
       <Entypo
         name={

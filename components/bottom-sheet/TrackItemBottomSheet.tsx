@@ -1,4 +1,10 @@
-import React, {useCallback, useContext, useMemo, useRef} from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react';
 import {
   View,
   Text,
@@ -7,6 +13,7 @@ import {
   TouchableOpacity,
   Alert,
   ToastAndroid,
+  BackHandler,
 } from 'react-native';
 import {
   BottomSheetModal,
@@ -19,11 +26,7 @@ import {PlayerContext} from '../../context/PlayerProvider';
 import getThumbnail from '../../utils/getThumnail';
 import useBottomSheetStore from '../../store/bottomSheetStore';
 import useToggleLikeSong from '../../hooks/useToggleLikeSong';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
-import Feather from 'react-native-vector-icons/Feather';
 import useDownloadSong from '../../hooks/useDownloadSong';
 import useThemeStore from '../../store/themeStore';
 import tinycolor from 'tinycolor2';
@@ -32,6 +35,16 @@ import {usePlayerStore} from '../../store/playerStore';
 import SleepTimerBottomSheet from './SleepTimerBottomSheet';
 import {removeSongFromPlaylist} from '../../service/firebase';
 import {navigation} from '../../utils/types/RootStackParamList';
+import {
+  AddCircle,
+  ArrowCircleDown2,
+  HeartAdd,
+  HeartRemove,
+  MinusCirlce,
+  MusicCircle,
+  ProfileCircle,
+  Timer1,
+} from 'iconsax-react-native';
 interface Props {
   context?: 'player' | null;
 }
@@ -42,6 +55,8 @@ const TrackItemBottomSheet = (props: Props) => {
   const {bottomSheetModalRef} = useContext(PlayerContext);
   const {COLOR} = useThemeStore(state => state);
   // variables
+
+  const [isOpen, setIsOpen] = React.useState(false);
 
   const snapPoints = useMemo(() => ['55%', '75%'], []);
 
@@ -90,13 +105,36 @@ const TrackItemBottomSheet = (props: Props) => {
       ]);
     }
   };
+  useEffect(() => {
+    const backAction = () => {
+      if (isOpen) {
+        bottomSheetModalRef.current?.dismiss();
+        return true;
+      } else return false;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => {
+      backHandler.remove();
+    };
+  }, [isOpen, bottomSheetModalRef]);
 
   return (
     <BottomSheetModal
       enablePanDownToClose
       handleIndicatorStyle={{backgroundColor: COLOR.TEXT_SECONDARY}}
       ref={bottomSheetModalRef}
-      index={0}
+      onChange={index => {
+        if (index === -1) {
+          setIsOpen(false);
+        } else {
+          setIsOpen(true);
+        }
+      }}
       backdropComponent={renderBackdrop}
       backgroundStyle={{
         backgroundColor: tinycolor(COLOR.BACKGROUND).lighten(5).toString(),
@@ -137,11 +175,7 @@ const TrackItemBottomSheet = (props: Props) => {
                 handleAddToLikedList(data);
                 dismiss();
               }}>
-              <AntDesign
-                name="hearto"
-                size={24}
-                color={`${COLOR.TEXT_PRIMARY}90`}
-              />
+              <HeartAdd size={24} color={`${COLOR.TEXT_PRIMARY}`} />
               <Text className=" text-base" style={{color: COLOR.TEXT_PRIMARY}}>
                 Thêm vào yêu thích
               </Text>
@@ -153,11 +187,7 @@ const TrackItemBottomSheet = (props: Props) => {
                 handleAddToLikedList(data);
                 dismiss();
               }}>
-              <MaterialCommunityIcons
-                name="heart-off-outline"
-                size={24}
-                color={`${COLOR.TEXT_PRIMARY}90`}
-              />
+              <HeartRemove size={24} color={`${COLOR.TEXT_PRIMARY}`} />
               <Text className=" text-base" style={{color: COLOR.TEXT_PRIMARY}}>
                 Xoá khỏi yêu thích
               </Text>
@@ -172,11 +202,7 @@ const TrackItemBottomSheet = (props: Props) => {
                 params: {song: data},
               });
             }}>
-            <Feather
-              name="plus-circle"
-              size={24}
-              color={`${COLOR.TEXT_PRIMARY}90`}
-            />
+            <AddCircle size={24} color={`${COLOR.TEXT_PRIMARY}`} />
 
             <Text className="text-base" style={{color: COLOR.TEXT_PRIMARY}}>
               Thêm vào danh sách phát
@@ -191,11 +217,7 @@ const TrackItemBottomSheet = (props: Props) => {
                   dismiss();
                 });
               }}>
-              <Feather
-                name="minus-circle"
-                size={24}
-                color={`${COLOR.TEXT_PRIMARY}90`}
-              />
+              <MinusCirlce size={24} color={`${COLOR.TEXT_PRIMARY}`} />
 
               <Text className="text-base" style={{color: COLOR.TEXT_PRIMARY}}>
                 Xoá khỏi danh sách phát hiện tại
@@ -209,11 +231,7 @@ const TrackItemBottomSheet = (props: Props) => {
                 navigation.navigate('Artists', {name: data?.artists[0].alias});
                 dismiss();
               }}>
-              <FontAwesome5
-                name="user-circle"
-                size={24}
-                color={`${COLOR.TEXT_PRIMARY}90`}
-              />
+              <ProfileCircle size={24} color={`${COLOR.TEXT_PRIMARY}`} />
               <Text className="text-base" style={{color: COLOR.TEXT_PRIMARY}}>
                 Xem nghệ sĩ
               </Text>
@@ -228,11 +246,7 @@ const TrackItemBottomSheet = (props: Props) => {
                 });
                 dismiss();
               }}>
-              <MaterialCommunityIcons
-                name="music-circle-outline"
-                size={24}
-                color={`${COLOR.TEXT_PRIMARY}90`}
-              />
+              <MusicCircle size={24} color={`${COLOR.TEXT_PRIMARY}`} />
               <Text className=" text-base" style={{color: COLOR.TEXT_PRIMARY}}>
                 Xem Album
               </Text>
@@ -242,10 +256,9 @@ const TrackItemBottomSheet = (props: Props) => {
             <TouchableOpacity
               onPress={timerPress}
               className="w-full py-3 flex flex-row items-center  mb-3 gap-2">
-              <MaterialCommunityIcons
-                name="clock-time-nine-outline"
+              <Timer1
                 size={24}
-                color={sleepTimer ? COLOR.PRIMARY : `${COLOR.TEXT_PRIMARY}90`}
+                color={sleepTimer ? COLOR.PRIMARY : `${COLOR.TEXT_PRIMARY}`}
               />
               <Text
                 className="text-base"
@@ -263,11 +276,7 @@ const TrackItemBottomSheet = (props: Props) => {
             onPress={async () => {
               downloadFile(data);
             }}>
-            <Feather
-              name="arrow-down-circle"
-              size={24}
-              color={`${COLOR.TEXT_PRIMARY}90`}
-            />
+            <ArrowCircleDown2 size={24} color={`${COLOR.TEXT_PRIMARY}`} />
             <Text className="text-base" style={{color: COLOR.TEXT_PRIMARY}}>
               Tải xuống
             </Text>

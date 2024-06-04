@@ -33,6 +33,7 @@ import tinycolor from 'tinycolor2';
 import stringToSlug from '../../utils/removeSign';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {route} from '../../utils/types/RootStackParamList';
+import {SearchNormal} from 'iconsax-react-native';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -185,7 +186,7 @@ const MyPlaylist = ({route}: {route: route<'MyPlaylist'>}) => {
           </Animated.Text>
         </View>
         <TouchableOpacity onPress={() => setIsSearching(true)}>
-          <AntDesign name="search1" size={24} color={COLOR.TEXT_PRIMARY} />
+          <SearchNormal size={24} color={COLOR.TEXT_PRIMARY} />
         </TouchableOpacity>
       </Animated.View>
       {isSearching && (

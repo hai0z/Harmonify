@@ -5,6 +5,7 @@ import useThemeStore from '../../../store/themeStore';
 import {usePlayerStore} from '../../../store/playerStore';
 import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {Repeat} from 'iconsax-react-native';
 
 const LoopButton = () => {
   const [repeatMode, setRepeatMode] = usePlayerStore(state => [
@@ -28,9 +29,9 @@ const LoopButton = () => {
       activeOpacity={0.8}
       className="items-end justify-center flex-1"
       onPress={handleLoop}>
-      <Feather
-        name="repeat"
-        size={22}
+      <Repeat
+        size={24}
+        variant="Bold"
         color={
           repeatMode === RepeatMode.Queue ? COLOR.TEXT_PRIMARY : COLOR.SECONDARY
         }

@@ -24,7 +24,7 @@ const RecentTrackItem = (props: Props) => {
       style={{
         width: wp(50) - 20,
         backgroundColor: COLOR.isDark
-          ? tinycolor(COLOR.BACKGROUND).lighten().toString()
+          ? tinycolor(COLOR.BACKGROUND).brighten().toString()
           : '#ffffff',
         elevation: 1,
         opacity: isConnected ? 1 : 0.5,

@@ -4,6 +4,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 
 import useThemeStore from '../../../store/themeStore';
 import TrackPlayer from 'react-native-track-player';
+import {Next} from 'iconsax-react-native';
 const NextButton = () => {
   const {COLOR} = useThemeStore(state => state);
   const handleNext = async () => {
@@ -17,7 +18,7 @@ const NextButton = () => {
         justifyContent: 'center',
         alignItems: 'center',
       }}>
-      <AntDesign name="stepforward" size={32} color={COLOR.TEXT_PRIMARY} />
+      <Next size={40} color={COLOR.TEXT_PRIMARY} variant="Bold" />
     </TouchableOpacity>
   );
 };

@@ -14,6 +14,7 @@ import {
 import {objectToTrack} from '../../../service/trackPlayerService';
 import {DEFAULT_IMG} from '../../../constants';
 import shuffleArray from '../../../utils/shuffle';
+import {Shuffle} from 'iconsax-react-native';
 
 export async function setQueueUninterrupted(tracks: Track[]): Promise<void> {
   const currentTrackIndex = await getActiveTrackIndex();
@@ -45,7 +46,6 @@ const ShuffleButton = () => {
     setShuffleMode(!shuffleMode);
     if (!shuffleMode) {
       ToastAndroid.show('Phát ngẫu nhiên: Bật', ToastAndroid.SHORT);
-
       const currentQueue = await getQueue();
       const shuffledQueue = shuffleArray(currentQueue);
       const arr = [];
@@ -86,9 +86,8 @@ const ShuffleButton = () => {
       onPress={shuffleQueueUninterrupted}
       activeOpacity={0.8}
       className="items-start justify-center flex-1">
-      <Feather
-        name="shuffle"
-        size={22}
+      <Shuffle
+        size={24}
         color={shuffleMode ? COLOR.SECONDARY : COLOR.TEXT_PRIMARY}
       />
     </TouchableOpacity>

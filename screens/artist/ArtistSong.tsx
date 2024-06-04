@@ -31,6 +31,7 @@ import stringToSlug from '../../utils/removeSign';
 import tinycolor from 'tinycolor2';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import useImageColor from '../../hooks/useImageColor';
+import {SearchNormal} from 'iconsax-react-native';
 interface artistType {
   id: string;
   name: string;
@@ -188,7 +189,7 @@ const ArtistSong = ({route}: any) => {
           {dataDetailArtist?.name}
         </Animated.Text>
         <TouchableOpacity onPress={() => setIsSearching(true)}>
-          <AntDesign name="search1" size={24} color={COLOR.TEXT_PRIMARY} />
+          <SearchNormal size={24} color={COLOR.TEXT_PRIMARY} />
         </TouchableOpacity>
       </Animated.View>
       {isSearching && (

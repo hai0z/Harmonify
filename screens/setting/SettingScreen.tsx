@@ -77,7 +77,7 @@ const SettingScreen = () => {
       </View>
 
       <View
-        className="mt-8 px-1 py-2 rounded-md"
+        className="mt-8 px-2 py-2 rounded-md"
         style={{backgroundColor: selectedColor}}>
         <Text
           style={{
@@ -134,7 +134,7 @@ const SettingScreen = () => {
         </View>
       </View>
       <View
-        className="mt-4 px-1 py-2 rounded-md"
+        className="mt-4 px-2 py-2 rounded-md"
         style={{backgroundColor: selectedColor}}>
         <Text
           style={{
@@ -200,7 +200,7 @@ const SettingScreen = () => {
         </View>
       </View>
       <View
-        className="mt-4 px-1 py-2 rounded-md"
+        className="mt-4 px-2 py-2 rounded-md"
         style={{backgroundColor: selectedColor}}>
         <Text
           style={{
@@ -244,7 +244,7 @@ const SettingScreen = () => {
         </View>
       </View>
       <View
-        className="mt-4 px-1 py-2 rounded-md"
+        className="mt-4 px-2 py-2 rounded-md"
         style={{backgroundColor: selectedColor}}>
         <Text
           style={{
@@ -274,7 +274,7 @@ const SettingScreen = () => {
       </View>
 
       <View
-        className="mt-4 flex px-1 py-2 rounded-md"
+        className="mt-4 flex px-2 py-2 rounded-md"
         style={{backgroundColor: selectedColor}}>
         <Text
           style={{

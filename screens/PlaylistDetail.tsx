@@ -38,6 +38,7 @@ import Loading from '../components/Loading';
 import stringToSlug from '../utils/removeSign';
 import {navigation, route} from '../utils/types/RootStackParamList';
 import {Song} from '../utils/types/type';
+import {SearchNormal} from 'iconsax-react-native';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const PlaylistDetail = ({route}: {route: route<'PlayListDetail'>}) => {
@@ -216,7 +217,7 @@ const PlaylistDetail = ({route}: {route: route<'PlayListDetail'>}) => {
           </Animated.Text>
         </View>
         <TouchableOpacity onPress={() => setIsSearching(true)}>
-          <AntDesign name="search1" size={24} color={COLOR.TEXT_PRIMARY} />
+          <SearchNormal size={24} color={COLOR.TEXT_PRIMARY} />
         </TouchableOpacity>
       </Animated.View>
       {isSearching && (

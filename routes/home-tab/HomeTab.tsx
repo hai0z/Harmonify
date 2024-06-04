@@ -3,7 +3,6 @@ import HomeScreens from '../../screens/home/HomeScreens';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {StatusBar} from 'expo-status-bar';
 import MiniPlayer from '../../components/Player/MiniPlayer';
-import SearchScreens from '../../screens/SearchScreens';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
@@ -21,8 +20,6 @@ import {GREEN, MINI_PLAYER_HEIGHT, TABBAR_HEIGHT} from '../../constants';
 import TrackItemBottomSheet from '../../components/bottom-sheet/TrackItemBottomSheet';
 import LocalSong from '../../screens/library/LocalSong';
 import useThemeStore from '../../store/themeStore';
-import SettingScreen from '../../screens/setting/SettingScreen';
-import Entypo from 'react-native-vector-icons/Entypo';
 import HistoryScreens from '../../screens/HistoryScreens';
 import Animated, {
   FadeInDown,
@@ -34,6 +31,15 @@ import {widthPercentageToDP} from 'react-native-responsive-screen';
 import {RootStackParamList} from '../../utils/types/RootStackParamList';
 import SearchScreensStack from './SearchStack';
 import SettingStack from '../SettingStack';
+import {
+  Chart,
+  Chart2,
+  Home,
+  Home3,
+  MusicLibrary2,
+  SearchNormal,
+  SearchNormal1,
+} from 'iconsax-react-native';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -184,17 +190,39 @@ const HomeTab = () => {
       screenOptions={({route}) => ({
         tabBarHideOnKeyboard: true,
         headerShown: false,
-        tabBarIcon: ({color}) => {
+        tabBarIcon: ({color, focused}) => {
           switch (route.name) {
             case 'HomeTab':
-              return <Entypo name="home" size={28} color={color} />;
+              return (
+                <Home3
+                  size="24"
+                  color={color}
+                  variant={focused ? 'Bold' : 'Outline'}
+                />
+              );
             case 'Chart':
-              return <AntDesign name="barschart" size={28} color={color} />;
+              return (
+                <Chart2
+                  size={24}
+                  color={color}
+                  variant={focused ? 'Bold' : 'Outline'}
+                />
+              );
             case 'Search':
-              return <AntDesign name="search1" size={28} color={color} />;
+              return (
+                <SearchNormal
+                  size={24}
+                  color={color}
+                  variant={focused ? 'Bold' : 'Outline'}
+                />
+              );
             case 'LibraryTab':
               return (
-                <MaterialIcons name="library-music" size={28} color={color} />
+                <MusicLibrary2
+                  size={24}
+                  color={color}
+                  variant={focused ? 'Bold' : 'Outline'}
+                />
               );
           }
         },

@@ -39,7 +39,7 @@ const LibrarySrceens = () => {
           <AntDesign
             name="plus"
             size={24}
-            style={{color: COLOR.TEXT_PRIMARY, ...styles.plusIcon}}
+            style={{color: COLOR.TEXT_PRIMARY}}
           />
         </TouchableOpacity>
       </View>
@@ -76,11 +76,11 @@ const LibrarySrceens = () => {
             }}
             hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}>
             {viewType === 'list' ? (
-              <Octicons name="apps" size={18} color={COLOR.TEXT_PRIMARY} />
+              <Octicons name="apps" size={20} color={COLOR.TEXT_PRIMARY} />
             ) : (
               <Octicons
                 name="list-unordered"
-                size={18}
+                size={20}
                 color={COLOR.TEXT_PRIMARY}
               />
             )}
@@ -124,5 +124,4 @@ const styles = StyleSheet.create({
 
     marginLeft: 16,
   },
-  plusIcon: {},
 });

@@ -7,6 +7,7 @@ import useThemeStore from '../store/themeStore';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {usePlayerStore} from '../store/playerStore';
 import {navigation} from '../utils/types/RootStackParamList';
+import {Clock, Setting, Setting2} from 'iconsax-react-native';
 
 const Header = () => {
   const COLOR = useThemeStore(state => state.COLOR);
@@ -34,18 +35,16 @@ const Header = () => {
       </View>
       <View className="flex flex-row gap-4">
         {!offlineMode && (
-          <TouchableOpacity onPress={() => navigation.navigate('History')}>
-            <MaterialIcons
-              name="history"
-              size={26}
-              color={COLOR.TEXT_PRIMARY}
-            />
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => navigation.navigate('History')}>
+            <Clock size={24} color={COLOR.TEXT_PRIMARY} />
           </TouchableOpacity>
         )}
         <TouchableOpacity
-          className="z-[5]"
+          activeOpacity={0.8}
           onPress={() => navigation.navigate('SettingStack')}>
-          <AntDesign name="setting" size={24} color={COLOR.TEXT_PRIMARY} />
+          <Setting2 size={24} color={COLOR.TEXT_PRIMARY} />
         </TouchableOpacity>
       </View>
     </View>

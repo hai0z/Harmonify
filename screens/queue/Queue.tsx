@@ -28,7 +28,7 @@ import Animated, {
 import PlayButton from '../../components/Player/Control/PlayButton';
 import PrevButton from '../../components/Player/Control/PrevButton';
 import NextButton from '../../components/Player/Control/NextButton';
-import TrackPlayer, {Track, useActiveTrack} from 'react-native-track-player';
+import TrackPlayer, {useActiveTrack} from 'react-native-track-player';
 import LinearGradient from 'react-native-linear-gradient';
 import useImageColor from '../../hooks/useImageColor';
 import {PlayerContext} from '../../context/PlayerProvider';

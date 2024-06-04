@@ -3,6 +3,7 @@ import React from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import useThemeStore from '../../../store/themeStore';
 import TrackPlayer from 'react-native-track-player';
+import {Previous} from 'iconsax-react-native';
 const PrevButton = () => {
   const {COLOR} = useThemeStore(state => state);
   const PrevTrack = async () => {
@@ -16,7 +17,7 @@ const PrevButton = () => {
         justifyContent: 'center',
         alignItems: 'center',
       }}>
-      <AntDesign name="stepbackward" size={32} color={COLOR.TEXT_PRIMARY} />
+      <Previous size={40} color={COLOR.TEXT_PRIMARY} variant="Bold" />
     </TouchableOpacity>
   );
 };

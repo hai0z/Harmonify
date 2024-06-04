@@ -7,7 +7,7 @@ import {
   StyleSheet,
 } from 'react-native';
 
-import React, {useContext, useEffect, useLayoutEffect} from 'react';
+import React, {useContext, useLayoutEffect} from 'react';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {LinearGradient} from 'react-native-linear-gradient';
 import {playFromMapping, usePlayerStore} from '../store/playerStore';
@@ -37,6 +37,7 @@ import {
 import useImageColor from '../hooks/useImageColor';
 import TrackItemBottomSheet from '../components/bottom-sheet/TrackItemBottomSheet';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {AddCircle} from 'iconsax-react-native';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const TextAnimated = Animated.createAnimatedComponent(TextTicker);
@@ -182,11 +183,7 @@ const PlayerScreens = () => {
             style={{
               opacity: isPlayFromLocal ? 0.4 : 1,
             }}>
-            <MaterialIcons
-              name="add-circle-outline"
-              size={24}
-              color={COLOR.TEXT_PRIMARY}
-            />
+            <AddCircle size={24} color={COLOR.TEXT_PRIMARY} />
           </TouchableOpacity>
           <TouchableOpacity
             disabled={isPlayFromLocal}

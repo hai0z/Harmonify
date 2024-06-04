@@ -154,7 +154,7 @@ const MiniPlayer = () => {
                       ? 'controller-play'
                       : 'controller-paus'
                   }
-                  size={30}
+                  size={28}
                   color={COLOR.TEXT_PRIMARY}
                 />
               </TouchableOpacity>

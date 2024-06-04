@@ -29,6 +29,7 @@ import RAnimated, {
   SlideInUp,
   SlideOutUp,
 } from 'react-native-reanimated';
+import {SearchNormal} from 'iconsax-react-native';
 const caculateTotalTime = (playlistData: any) => {
   let total = 0;
   playlistData?.forEach((item: any) => {
@@ -143,7 +144,7 @@ const LikedSong = () => {
           </Animated.Text>
         </View>
         <TouchableOpacity onPress={() => setIsSearching(true)}>
-          <AntDesign name="search1" size={24} color={COLOR.TEXT_PRIMARY} />
+          <SearchNormal size={24} color={COLOR.TEXT_PRIMARY} />
         </TouchableOpacity>
       </Animated.View>
       {isSearching && (

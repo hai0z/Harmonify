@@ -11,11 +11,7 @@ const Player = () => {
   return (
     <View>
       <TrackSlider />
-      <Animated.View
-        className="flex flex-row justify-between"
-        style={{
-          marginTop: 16,
-        }}>
+      <Animated.View className="flex flex-row justify-between mt-4">
         <ShuffleButton />
         <PrevButton />
         <PlayButton />
