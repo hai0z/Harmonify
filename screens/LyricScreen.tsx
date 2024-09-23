@@ -11,7 +11,7 @@ import {LinearGradient} from 'react-native-linear-gradient';
 import useThemeStore from '../store/themeStore';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 
-import Animated, {FadeInDown} from 'react-native-reanimated';
+import Animated, {FadeIn, FadeInDown} from 'react-native-reanimated';
 import useImageColor from '../hooks/useImageColor';
 import use_local_auto_scroll from '../hooks/use_local_auto_scroll';
 import {usePlayerStore} from '../store/playerStore';
@@ -62,14 +62,14 @@ const LyricScreen = () => {
         </TouchableOpacity>
         <View className="flex-1 flex justify-center items-center">
           <Animated.Text
-            entering={FadeInDown.duration(300).springify()}
+            entering={FadeIn.duration(300).springify()}
             className=" font-bold z-30 text-center"
             style={{color: COLOR.TEXT_PRIMARY}}>
             {currentSong?.title}
           </Animated.Text>
           <Animated.Text
-            entering={FadeInDown.duration(400).springify().delay(400)}
-            className=" font-bold z-30 text-center"
+            entering={FadeIn.duration(300).springify().delay(400)}
+            className=" font-bold z-30 text-center text-xs"
             style={{color: COLOR.TEXT_PRIMARY}}>
             {currentSong?.artist}
           </Animated.Text>

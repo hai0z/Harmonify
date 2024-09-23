@@ -1,24 +1,29 @@
-import { useEffect, useState } from "react";
-import { usePlayerStore } from "../store/playerStore";
-import useInternetState from "./useInternetState";
-import nodejs from "nodejs-mobile-react-native";
-import mmkv from "../utils/mmkv";
-import { getRecentListening } from "../service/firebase";
+import {useEffect, useState} from 'react';
+import {usePlayerStore} from '../store/playerStore';
+import useInternetState from './useInternetState';
+import nodejs from 'nodejs-mobile-react-native';
+import mmkv from '../utils/mmkv';
+import {getRecentListening} from '../service/firebase';
 export default function useGetHomeData() {
-
   const [dataHome, setdataHome] = useState<any>([]);
   const [dataNewRelease, setDataNewRelease] = useState<any>([]);
+  const [hub, setHub] = useState<any>([]);
 
-  const [loading, setLoading] = usePlayerStore(state => [state.homeLoading, state.setHomeLoading]);
+  const [loading, setLoading] = usePlayerStore(state => [
+    state.homeLoading,
+    state.setHomeLoading,
+  ]);
 
   const [dataRecent, setDataRecent] = useState<any>([]);
   const setLikedSongs = usePlayerStore(state => state.setLikedSongs);
   const isConnected = useInternetState();
 
   useEffect(() => {
-    console.log('ok');
     setLoading(true);
     if (isConnected) {
+      nodejs.channel.addListener('getHub', data => {
+        setHub(data.genre);
+      });
       nodejs.channel.addListener('home', data => {
         setdataHome(data.filter((e: any) => e.sectionType === 'playlist'));
         setDataNewRelease(
@@ -41,8 +46,11 @@ export default function useGetHomeData() {
         mmkv.set('recent-listening', JSON.stringify(res));
         setLoading(false);
       };
-      Promise.all([getRecentList(), nodejs.channel.post('home')]);
-
+      Promise.all([
+        getRecentList(),
+        nodejs.channel.post('home'),
+        nodejs.channel.post('getHub'),
+      ]);
     } else {
       setdataHome(JSON.parse(mmkv.getString('home') || '[]'));
       setDataNewRelease(JSON.parse(mmkv.getString('new-release') || '[]'));
@@ -52,5 +60,5 @@ export default function useGetHomeData() {
     }
   }, [isConnected]);
 
-  return { dataHome, dataNewRelease, dataRecent, loading }
+  return {dataHome, dataNewRelease, dataRecent, loading, hub};
 }

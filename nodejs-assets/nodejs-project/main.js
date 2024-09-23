@@ -13,7 +13,7 @@ rn_bridge.channel.on('home', async () => {
 });
 rn_bridge.channel.on('getSong', async track => {
   if (!track) return;
-  const data = await ZingMp3.getSong(track.id);
+  const data = await zing.get_song(track.id);
   rn_bridge.channel.post('getSong', {
     data: data.data !== undefined ? data.data : 'NULL',
     track: track,
@@ -99,5 +99,9 @@ rn_bridge.channel.on('getRecommend', async id => {
 rn_bridge.channel.on('getSuggest', async keyword => {
   const data = await zing.get_suggestion_keyword(keyword);
   rn_bridge.channel.post('getSuggest', data.data);
-  rn_bridge.channel.post('getTop100', data.data);
+});
+
+rn_bridge.channel.on('getHub', async () => {
+  const data = await zing.get_hub_home();
+  rn_bridge.channel.post('getHub', data.data);
 });

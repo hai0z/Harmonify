@@ -267,7 +267,7 @@ const ChartHeader = React.memo(({data, handlePlaySong}: any) => {
                   size={20}
                   color={COLOR.TEXT_PRIMARY}
                 />
-                <Text style={{color: COLOR.TEXT_PRIMARY}}>Play now</Text>
+                <Text style={{color: COLOR.TEXT_PRIMARY}}>Phát</Text>
               </TouchableOpacity>
             </View>
           );

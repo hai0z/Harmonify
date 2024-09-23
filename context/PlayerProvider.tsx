@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useRef} from 'react';
 import {usePlayerStore} from '../store/playerStore';
 import {getColors} from 'react-native-image-colors';
-import TrackPlayer from 'react-native-track-player';
+import TrackPlayer, {usePlaybackState} from 'react-native-track-player';
 import nodejs from 'nodejs-mobile-react-native';
 import {objectToTrack} from '../service/trackPlayerService';
 import getThumbnail from '../utils/getThumnail';
@@ -13,6 +13,8 @@ import {Appearance} from 'react-native';
 import useThemeStore from '../store/themeStore';
 import {DEFAULT_IMG} from '../constants';
 import SplashScreen from 'react-native-splash-screen';
+import {useMaterial3Theme} from '@pchmn/expo-material3-theme';
+import useImageColor from '../hooks/useImageColor';
 
 interface ContextType {
   bottomSheetModalRef: React.RefObject<BottomSheetModalMethods>;
@@ -28,6 +30,7 @@ nodejs.channel.addListener('getLyric', async data => {
 });
 
 const PlayerProvider = ({children}: {children: React.ReactNode}) => {
+  const {updateTheme} = useMaterial3Theme();
   const {
     playList,
     currentSong,
@@ -48,6 +51,7 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
 
   const COLOR = useThemeStore(state => state.COLOR);
 
+  const {dominantColor, vibrantColor} = useImageColor();
   const getSongColors = async () => {
     if (currentSong?.artwork !== null) {
       getColors(getThumbnail(currentSong?.artwork!, 720), {
@@ -73,6 +77,7 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
     if (offlineMode) {
       setHomeLoading(false);
     }
+
     if (savePlayerState) {
       await TrackPlayer.reset();
       setShuffleMode(false);
@@ -92,11 +97,11 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
           index = 0;
         }
         if (!isPlayFromLocal) {
-          await TrackPlayer.add(
+          await TrackPlayer.setQueue(
             playList.items.map((item: any) => objectToTrack(item)),
           );
         } else {
-          await TrackPlayer.add(
+          await TrackPlayer.setQueue(
             playList.items.map((item: any) => ({
               ...objectToTrack(item),
               url: item.url,

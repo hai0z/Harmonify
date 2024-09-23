@@ -15,6 +15,7 @@ const ActiveTrackAnimation = ({isAlbum, style}: Props) => {
   const COLOR = useThemeStore(state => state.COLOR);
   const theme = useThemeStore(state => state.theme);
   const isPlaying = usePlaybackState();
+
   return (
     isPlaying.state === State.Playing && (
       <Animated.View
@@ -26,13 +27,13 @@ const ActiveTrackAnimation = ({isAlbum, style}: Props) => {
           left: 0,
           bottom: 0,
           right: 0,
-          backgroundColor: !isAlbum ? '#00000050' : COLOR.BACKGROUND,
+          backgroundColor: !isAlbum ? '#00000040' : 'transparent',
           justifyContent: 'center',
           alignItems: 'center',
           ...style,
         }}>
         <LottieView
-          style={{width: wp(10), height: wp(10)}}
+          style={{width: wp(8), height: wp(8)}}
           autoPlay
           speed={1}
           source={changeSVGColor(

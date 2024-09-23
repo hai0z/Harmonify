@@ -243,9 +243,9 @@ const PlaylistDetail = ({route}: {route: route<'PlayListDetail'>}) => {
               placeholderTextColor={COLOR.TEXT_SECONDARY}
               style={{
                 color: COLOR.TEXT_PRIMARY,
-                backgroundColor: tinycolor(COLOR.BACKGROUND)
-                  .darken(5)
-                  .toString(),
+                backgroundColor: !COLOR.isDark
+                  ? tinycolor(COLOR.BACKGROUND).darken(5).toString()
+                  : tinycolor(COLOR.BACKGROUND).lighten(10).toString(),
               }}
             />
           </View>
@@ -267,7 +267,7 @@ const PlaylistDetail = ({route}: {route: route<'PlayListDetail'>}) => {
                 style={{height: SCREEN_WIDTH * 0.8}}>
                 <LinearGradient
                   colors={['transparent', COLOR.BACKGROUND]}
-                  className="absolute bottom-0 h-40 left-0 right-0 z-50"
+                  className="absolute bottom-0 h-full left-0 right-0 z-50"
                 />
                 <RAnimated.View
                   className={'absolute'}

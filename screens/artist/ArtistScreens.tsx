@@ -15,7 +15,6 @@ import {handlePlay, objectToTrack} from '../../service/trackPlayerService';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import nodejs from 'nodejs-mobile-react-native';
-import PlayListCover from '../../components/PlayListCover';
 import useThemeStore from '../../store/themeStore';
 import {usePlayerStore} from '../../store/playerStore';
 import LinearGradient from 'react-native-linear-gradient';
@@ -28,6 +27,7 @@ import TrackItem from '../../components/track-item/TrackItem';
 import {PlayerContext} from '../../context/PlayerProvider';
 import {FlashList} from '@shopify/flash-list';
 import {navigation} from '../../utils/types/RootStackParamList';
+import PlayListCover from '../../components/PlayListCover';
 
 interface artistType {
   id: string;
@@ -136,6 +136,19 @@ const ArtistScreens = ({route}: any) => {
           {useNativeDriver: false},
         )}>
         <View className="relative" style={{height: SCREEN_WIDTH}}>
+          <View
+            style={[
+              StyleSheet.absoluteFillObject,
+              {
+                width: SCREEN_WIDTH,
+                height: SCREEN_WIDTH,
+                zIndex: 3,
+              },
+              {
+                backgroundColor: COLOR.BACKGROUND + '35',
+              },
+            ]}
+          />
           <LinearGradient
             colors={['transparent', COLOR.BACKGROUND]}
             className="absolute left-0 right-0 bottom-0 z-10"
@@ -258,6 +271,7 @@ const ArtistScreens = ({route}: any) => {
             </View>
           </View>
         )}
+
         {isKeyExistsInArrayObjects(
           dataDetailArtist?.sections,
           'sectionId',

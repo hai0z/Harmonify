@@ -1,5 +1,5 @@
 import {View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {Fragment, memo, useEffect, useState} from 'react';
 import nodejs from 'nodejs-mobile-react-native';
 import getThumbnail from '../../utils/getThumnail';
 import {usePlayerStore} from '../../store/playerStore';
@@ -20,7 +20,6 @@ const ArtistCard = () => {
   const {vibrantColor: bg} = useImageColor();
 
   useEffect(() => {
-    setData(null);
     nodejs.channel.addListener('getArtist', (data: any) => {
       setData(data);
     });
@@ -29,7 +28,8 @@ const ArtistCard = () => {
   useEffect(() => {
     if (
       !usePlayerStore.getState().isPlayFromLocal &&
-      tempSong?.artists[0]?.alias
+      tempSong?.artists?.[0]?.alias &&
+      tempSong?.artists?.length > 0
     ) {
       nodejs.channel.post('getArtist', tempSong?.artists[0]?.alias);
     } else {
@@ -46,7 +46,7 @@ const ArtistCard = () => {
       className="w-full rounded-2xl h-[340px] mb-4"
       onPress={() =>
         navigation.navigate('Artists', {
-          name: data.alias,
+          name: data?.alias,
         })
       }>
       <View className="absolute w-full h-full bg-black/30 z-10 rounded-2xl " />

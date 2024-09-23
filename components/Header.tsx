@@ -1,14 +1,11 @@
 import {View, Text} from 'react-native';
 import React, {memo} from 'react';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useNavigation} from '@react-navigation/native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import useThemeStore from '../store/themeStore';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {usePlayerStore} from '../store/playerStore';
 import {navigation} from '../utils/types/RootStackParamList';
-import {Clock, Setting, Setting2} from 'iconsax-react-native';
-
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 const Header = () => {
   const COLOR = useThemeStore(state => state.COLOR);
   const offlineMode = usePlayerStore(state => state.offlineMode);
@@ -38,13 +35,21 @@ const Header = () => {
           <TouchableOpacity
             activeOpacity={0.8}
             onPress={() => navigation.navigate('History')}>
-            <Clock size={24} color={COLOR.TEXT_PRIMARY} />
+            <MaterialCommunityIcons
+              name="history"
+              size={24}
+              color={COLOR.TEXT_PRIMARY}
+            />
           </TouchableOpacity>
         )}
         <TouchableOpacity
           activeOpacity={0.8}
           onPress={() => navigation.navigate('SettingStack')}>
-          <Setting2 size={24} color={COLOR.TEXT_PRIMARY} />
+          <MaterialCommunityIcons
+            name="cog-outline"
+            size={24}
+            color={COLOR.TEXT_PRIMARY}
+          />
         </TouchableOpacity>
       </View>
     </View>

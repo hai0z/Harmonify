@@ -17,6 +17,9 @@ const TrackItem = (props: Props) => {
   const {item, onClick, isActive} = props;
   const COLOR = useThemeStore(state => state.COLOR);
   const theme = useThemeStore(state => state.theme);
+  const isTrackThumbnailBorder = useThemeStore(
+    state => state.isTrackThumbnailBorder,
+  );
   const setCurrentSong = usePlayerStore(state => state.setCurrentSong);
   return (
     <TouchableOpacity
@@ -36,10 +39,16 @@ const TrackItem = (props: Props) => {
             uri: item?.thumbnail,
           }}
           key={item?.encodeId}
-          className="rounded-none"
+          className={isTrackThumbnailBorder ? 'rounded-lg' : 'rounded-none'}
           style={{width: wp(15), height: wp(15)}}
         />
-        {isActive && <ActiveTrackAnimation />}
+        {isActive && (
+          <ActiveTrackAnimation
+            style={{
+              borderRadius: isTrackThumbnailBorder ? 6 : 0,
+            }}
+          />
+        )}
       </View>
 
       <View className="flex justify-center ml-2 flex-1 ">

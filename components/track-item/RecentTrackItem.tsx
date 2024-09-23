@@ -1,4 +1,11 @@
-import {View, Text, TouchableOpacity, Image} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  ImageBackground,
+  StyleSheet,
+} from 'react-native';
 import React from 'react';
 import useThemeStore from '../../store/themeStore';
 import useInternetState from '../../hooks/useInternetState';
@@ -26,10 +33,40 @@ const RecentTrackItem = (props: Props) => {
         backgroundColor: COLOR.isDark
           ? tinycolor(COLOR.BACKGROUND).brighten().toString()
           : '#ffffff',
-        elevation: 1,
         opacity: isConnected ? 1 : 0.5,
+        elevation: 0.5,
       }}
       className="flex flex-row items-center my-1 rounded-t-md rounded-b-md">
+      {/* <ImageBackground
+        imageStyle={{
+          borderTopLeftRadius: 6,
+          borderBottomLeftRadius: 6,
+          borderTopRightRadius: 6,
+          borderBottomRightRadius: 6,
+        }}
+        blurRadius={75}
+        source={{uri: e?.thumbnailM}}
+        style={[
+          StyleSheet.absoluteFill,
+          {
+            zIndex: -1,
+          },
+        ]}>
+        <View
+          style={{
+            backgroundColor: COLOR.isDark
+              ? 'rgba(0,0,0,0.3)'
+              : 'rgba(255,255,255,0.45)',
+            position: 'absolute',
+            width: '100%',
+            height: '100%',
+            borderTopLeftRadius: 6,
+            borderBottomLeftRadius: 6,
+            borderTopRightRadius: 6,
+            borderBottomRightRadius: 6,
+          }}
+        />
+      </ImageBackground> */}
       <View>
         <Image
           source={{uri: e?.thumbnailM}}

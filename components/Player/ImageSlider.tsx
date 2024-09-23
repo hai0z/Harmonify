@@ -19,7 +19,7 @@ const ImageSlider = () => {
   const playList = usePlayerStore(state => state.playList);
 
   const shuffleMode = usePlayerStore(state => state.shuffleMode);
-  const currentSong = useActiveTrack();
+  const currentSong = usePlayerStore(state => state.currentSong);
 
   const currentSongIndex = playList.items.findIndex(
     (s: any) => s.encodeId == currentSong?.id,

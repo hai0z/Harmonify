@@ -1,5 +1,13 @@
-import {View, Text, TouchableOpacity, Dimensions} from 'react-native';
-import React, {useCallback, useEffect, useLayoutEffect} from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Dimensions,
+  ImageBackground,
+  StyleSheet,
+  Image,
+} from 'react-native';
+import React, {useEffect} from 'react';
 import useKeyBoardStatus from '../../hooks/useKeyBoardStatus';
 import TrackPlayer, {State, usePlaybackState} from 'react-native-track-player';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -11,6 +19,7 @@ import useThemeStore from '../../store/themeStore';
 import Animated, {
   FadeInDown,
   FadeInUp,
+  FadeOut,
   FadeOutDown,
   useSharedValue,
   withTiming,
@@ -18,6 +27,7 @@ import Animated, {
 import HeartButton from '../HeartButton';
 import useImageColor from '../../hooks/useImageColor';
 import MiniPlayerProgress from './Control/MiniPlayerProgress';
+import {objectToTrack} from '../../service/trackPlayerService';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const MiniPlayer = () => {
@@ -27,6 +37,7 @@ const MiniPlayer = () => {
 
   const currentSong = usePlayerStore(state => state.currentSong);
 
+  const setCurrentSong = usePlayerStore(state => state.setCurrentSong);
   const isPlayFromLocal = usePlayerStore(state => state.isPlayFromLocal);
 
   const loading = usePlayerStore(state => state.homeLoading);
@@ -41,6 +52,10 @@ const MiniPlayer = () => {
 
   const bgAnimated = useSharedValue('#494949');
 
+  const isBlur = usePlayerStore(state => state.isBlur);
+
+  const setNextTrackLoaded = usePlayerStore(state => state.setNextTrackLoaded);
+
   const togglePlay = (state: State | undefined) => {
     if (state !== State.Playing) {
       TrackPlayer.play();
@@ -49,10 +64,25 @@ const MiniPlayer = () => {
     }
   };
 
-  useLayoutEffect(() => {
-    bgAnimated.value = withTiming(`${gradientColor}`, {
-      duration: 550,
-    });
+  const handleButtonNext = async () => {
+    if (!isPlayFromLocal) setNextTrackLoaded(false);
+    const nextTrack = usePlayerStore
+      .getState()
+      .playList.items.findIndex(item => item.encodeId === currentSong?.id);
+    const queue = usePlayerStore.getState().playList.items;
+    if (nextTrack === queue.length - 1) {
+      setCurrentSong(objectToTrack(queue[0]));
+    } else {
+      setCurrentSong(objectToTrack(queue[nextTrack + 1]));
+    }
+    await TrackPlayer.skipToNext();
+  };
+  useEffect(() => {
+    if (!isBlur) {
+      bgAnimated.value = withTiming(`${gradientColor}`, {
+        duration: 550,
+      });
+    }
   });
 
   if (!currentSong || keyboardVisible || loading) {
@@ -69,12 +99,43 @@ const MiniPlayer = () => {
             width: SCREEN_WIDTH * 0.96,
             height: MINI_PLAYER_HEIGHT,
             transform: [{translateX: SCREEN_WIDTH * 0.02}],
-            backgroundColor: bgAnimated,
+            backgroundColor: isBlur ? COLOR.BACKGROUND : bgAnimated,
             borderRadius: 6,
             overflow: 'hidden',
             bottom: offlineMode ? 0 : TABBAR_HEIGHT,
           },
         ]}>
+        {isBlur && (
+          <View
+            style={{
+              width: SCREEN_WIDTH,
+              height: MINI_PLAYER_HEIGHT,
+              position: 'absolute',
+            }}>
+            <Animated.Image
+              exiting={FadeOut.duration(1500)}
+              key={currentSong?.id}
+              blurRadius={125}
+              source={{uri: currentSong?.artwork?.replace('r1x1', 'r16x9')}}
+              style={[
+                StyleSheet.absoluteFill,
+                {
+                  width: SCREEN_WIDTH,
+                  height: MINI_PLAYER_HEIGHT,
+                  zIndex: -1,
+                },
+              ]}></Animated.Image>
+            <View
+              style={{
+                width: SCREEN_WIDTH,
+                height: MINI_PLAYER_HEIGHT,
+                backgroundColor: COLOR.isDark
+                  ? 'rgba(0,0,0,0.25)'
+                  : 'rgba(255,255,255,0.5)',
+              }}
+            />
+          </View>
+        )}
         <TouchableOpacity
           onPress={() => navigation.navigate('PlayerStack')}
           activeOpacity={1}
@@ -141,19 +202,23 @@ const MiniPlayer = () => {
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                gap: 8,
+                gap: 12,
               }}>
               {!isPlayFromLocal && <HeartButton heartIconSize={24} />}
-
-              <TouchableOpacity
-                className=" mr-4"
-                onPress={() => togglePlay(playerState.state)}>
+              <TouchableOpacity onPress={() => togglePlay(playerState.state)}>
                 <Entypo
                   name={
                     playerState.state !== State.Playing
                       ? 'controller-play'
                       : 'controller-paus'
                   }
+                  size={28}
+                  color={COLOR.TEXT_PRIMARY}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity className=" mr-4" onPress={handleButtonNext}>
+                <Entypo
+                  name={'controller-fast-forward'}
                   size={28}
                   color={COLOR.TEXT_PRIMARY}
                 />

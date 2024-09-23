@@ -19,16 +19,10 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import TrackItem from '../../components/track-item/TrackItem';
 import {PlayerContext} from '../../context/PlayerProvider';
 import useThemeStore from '../../store/themeStore';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import tinycolor from 'tinycolor2';
 import stringToSlug from '../../utils/removeSign';
 const SCREEN_WIDTH = Dimensions.get('window').width;
-import RAnimated, {
-  FadeOutUp,
-  SlideInDown,
-  SlideInUp,
-  SlideOutUp,
-} from 'react-native-reanimated';
+
 import {SearchNormal} from 'iconsax-react-native';
 const caculateTotalTime = (playlistData: any) => {
   let total = 0;
@@ -170,9 +164,9 @@ const LikedSong = () => {
               placeholderTextColor={COLOR.TEXT_SECONDARY}
               style={{
                 color: COLOR.TEXT_PRIMARY,
-                backgroundColor: tinycolor(COLOR.BACKGROUND)
-                  .darken(5)
-                  .toString(),
+                backgroundColor: !COLOR.isDark
+                  ? tinycolor(COLOR.BACKGROUND).darken(5).toString()
+                  : tinycolor(COLOR.BACKGROUND).lighten(10).toString(),
               }}
             />
           </View>

@@ -1,6 +1,5 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
-import PlayListCover from '../../components/PlayListCover';
 import Header from '../../components/Header';
 import NewRelease from './components/NewRelease';
 import LinearGradient from 'react-native-linear-gradient';
@@ -10,16 +9,16 @@ import {
   widthPercentageToDP,
 } from 'react-native-responsive-screen';
 import RecentList from './components/RecentList';
-
-import {SafeAreaView} from 'react-native';
 import Loading from '../../components/Loading';
 import useGetHomeData from '../../hooks/useGetHomeData';
 import {typePlaylistCover} from '../../utils/types/type';
 import Animated, {FadeIn} from 'react-native-reanimated';
+import PlayListCover from '../../components/PlayListCover';
+import {FlashList} from '@shopify/flash-list';
 
 function HomeScreens() {
   const {COLOR, HEADER_GRADIENT} = useThemeStore(state => state);
-  const {dataHome, dataNewRelease, loading, dataRecent} = useGetHomeData();
+  const {dataHome, dataNewRelease, loading, dataRecent, hub} = useGetHomeData();
   if (loading) {
     return (
       <Animated.View
@@ -75,23 +74,57 @@ function HomeScreens() {
                     {e.title === '' ? e.sectionId.slice(1) : e.title}
                   </Text>
                 </View>
-                <ScrollView
+                <FlashList
+                  data={e.items}
+                  renderItem={({item}: any) => (
+                    <View className="mr-3">
+                      <PlayListCover {...item} />
+                    </View>
+                  )}
+                  horizontal
+                  estimatedItemSize={hp(20)}
+                  contentContainerStyle={{
+                    paddingHorizontal: 16,
+                  }}></FlashList>
+              </View>
+            );
+          })}
+        </View>
+        <View className="-mt-4">
+          {hub?.map((e: any, index: number) => {
+            return (
+              <View key={index}>
+                <View>
+                  <Text
+                    className="text-xl flex justify-between items-end mt-8 mb-3 uppercase mx-4 "
+                    style={{color: COLOR.TEXT_PRIMARY}}>
+                    {e.title === '' ? e.sectionId.slice(1) : e.title}
+                  </Text>
+                </View>
+                <FlashList
+                  estimatedItemSize={hp(20)}
+                  data={e?.playlists}
+                  renderItem={({item}: any) => (
+                    <View className="mr-3">
+                      <PlayListCover {...item} />
+                    </View>
+                  )}
                   horizontal
                   contentContainerStyle={{
-                    gap: 10,
                     paddingHorizontal: 16,
-                    minWidth: widthPercentageToDP(100),
                   }}>
-                  {e.items.map((element: typePlaylistCover, index: number) => (
-                    <PlayListCover
-                      key={index}
-                      title={element.title}
-                      encodeId={`${element.encodeId}`}
-                      thumbnail={element.thumbnail}
-                      sortDescription={element.sortDescription}
-                    />
-                  ))}
-                </ScrollView>
+                  {/* {e?.playlists?.map(
+                    (element: typePlaylistCover, index: number) => (
+                      <PlayListCover
+                        key={index}
+                        title={element.title}
+                        encodeId={`${element.encodeId}`}
+                        thumbnail={element.thumbnail}
+                        sortDescription={element.sortDescription}
+                      />
+                    ),
+                  )} */}
+                </FlashList>
               </View>
             );
           })}

@@ -1,4 +1,10 @@
-import {View, Text} from 'react-native';
+import {
+  View,
+  Text,
+  ImageBackground,
+  StyleSheet,
+  Dimensions,
+} from 'react-native';
 import React, {
   useCallback,
   useContext,
@@ -19,6 +25,7 @@ import {
 import {FlashList} from '@shopify/flash-list';
 import Animated, {
   Easing,
+  FadeIn,
   FadeInDown,
   FadeOut,
   runOnUI,
@@ -39,7 +46,9 @@ import LocalTrackItem from '../../components/track-item/LocalTrackItem';
 
 import {Song} from '../../utils/types/type';
 import {getQueue} from 'react-native-track-player/lib/trackPlayer';
+import {Image} from 'react-native';
 
+const SCREEN_WIDTH = Dimensions.get('window').width;
 const Queue = () => {
   const COLOR = useThemeStore(state => state.COLOR);
 
@@ -57,6 +66,8 @@ const Queue = () => {
     item => item.encodeId == currentSong?.id,
   );
 
+  const {isBlur} = usePlayerStore(state => state);
+
   const [copyPlaylist, setCopyPlaylist] = useState<any[]>([...playList.items]);
 
   const {dominantColor: gradientColor} = useImageColor();
@@ -65,9 +76,9 @@ const Queue = () => {
 
   const handlePlay = useCallback(
     async (item: Song) => {
-      const queue = await getQueue();
+      const queue = await TrackPlayer.getQueue();
       const index = queue.findIndex(track => track.id == item.encodeId);
-      await TrackPlayer.skip(index);
+      TrackPlayer.skip(index);
     },
     [playList],
   );
@@ -98,15 +109,45 @@ const Queue = () => {
     <View
       className="pt-[35px] flex-1"
       style={{backgroundColor: COLOR.BACKGROUND}}>
+      {/* {!isBlur && (
+        <>
+          <Animated.View
+            className="absolute top-0 left-0 right-0"
+            style={{height: hp(15), backgroundColor: $bg}}
+          />
+          <LinearGradient
+            style={{height: hp(15)}}
+            colors={[`transparent`, `${COLOR.BACKGROUND}`]}
+            className="absolute top-0 left-0 right-0 h-full"
+          />
+        </>
+      )} */}
+
       <Animated.View
-        className="absolute top-0 left-0 right-0"
-        style={{height: hp(15), backgroundColor: $bg}}
-      />
-      <LinearGradient
-        style={{height: hp(15)}}
-        colors={[`transparent`, `${COLOR.BACKGROUND}`]}
-        className="absolute top-0 left-0 right-0 h-full"
-      />
+        style={{height: hp(125), position: 'absolute', width: SCREEN_WIDTH}}>
+        <Animated.Image
+          key={currentSong?.id}
+          exiting={FadeOut.duration(2500)}
+          blurRadius={125}
+          source={{uri: currentSong?.artwork?.replace('r1x1', 'r9x16')}}
+          style={[
+            StyleSheet.absoluteFill,
+            {
+              width: SCREEN_WIDTH,
+              height: hp(125),
+              zIndex: -1,
+            },
+          ]}></Animated.Image>
+        <View
+          style={{
+            width: SCREEN_WIDTH,
+            height: hp(125),
+            backgroundColor: COLOR.isDark
+              ? 'rgba(0,0,0,0.45)'
+              : 'rgba(255,255,255,0.6)',
+          }}
+        />
+      </Animated.View>
 
       <View className="flex flex-row items-center justify-between px-4">
         <Animated.View

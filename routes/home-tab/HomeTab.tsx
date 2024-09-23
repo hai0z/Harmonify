@@ -3,8 +3,6 @@ import HomeScreens from '../../screens/home/HomeScreens';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {StatusBar} from 'expo-status-bar';
 import MiniPlayer from '../../components/Player/MiniPlayer';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import {Text, View} from 'react-native';
 import PlaylistDetail from '../../screens/PlaylistDetail';
@@ -32,13 +30,11 @@ import {RootStackParamList} from '../../utils/types/RootStackParamList';
 import SearchScreensStack from './SearchStack';
 import SettingStack from '../SettingStack';
 import {
-  Chart,
   Chart2,
-  Home,
+  Home2,
   Home3,
   MusicLibrary2,
   SearchNormal,
-  SearchNormal1,
 } from 'iconsax-react-native';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -194,7 +190,7 @@ const HomeTab = () => {
           switch (route.name) {
             case 'HomeTab':
               return (
-                <Home3
+                <Home2
                   size="24"
                   color={color}
                   variant={focused ? 'Bold' : 'Outline'}

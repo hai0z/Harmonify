@@ -7,6 +7,7 @@ import {
   Animated,
   TouchableOpacity,
   TextInput,
+  ImageBackground,
 } from 'react-native';
 import React, {
   useCallback,
@@ -215,9 +216,9 @@ const ArtistSong = ({route}: any) => {
               className="w-full rounded-md p-2"
               style={{
                 color: COLOR.TEXT_PRIMARY,
-                backgroundColor: tinycolor(COLOR.BACKGROUND)
-                  .darken(5)
-                  .toString(),
+                backgroundColor: !COLOR.isDark
+                  ? tinycolor(COLOR.BACKGROUND).darken(5).toString()
+                  : tinycolor(COLOR.BACKGROUND).lighten(10).toString(),
               }}
             />
           </View>
@@ -254,13 +255,14 @@ const ArtistSong = ({route}: any) => {
                     className="absolute bottom-0 h-40 left-0 right-0 z-10"
                   />
 
-                  <View
+                  <ImageBackground
+                    source={{uri: dataDetailArtist?.thumbnailM}}
+                    blurRadius={200}
                     style={[
                       StyleSheet.absoluteFillObject,
                       {
                         width: SCREEN_WIDTH,
                         height: SCREEN_WIDTH * 0.8,
-                        backgroundColor: `${dominantColor}70`,
                       },
                     ]}
                   />

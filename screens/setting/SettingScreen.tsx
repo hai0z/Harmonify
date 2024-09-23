@@ -32,8 +32,10 @@ const SettingScreen = () => {
     setCurrentSong,
     setIsPlayFromLocal,
     setIsFistInit,
+    isBlur,
+    setIsBlur,
   } = usePlayerStore();
-
+  const {isTrackThumbnailBorder, setIsTrackThumbnailBorder} = useThemeStore();
   const selectedColor = COLOR.isDark
     ? tinycolor(themeMap[theme]?.BACKGROUND).lighten(10).toString()
     : tinycolor(themeMap[theme]?.BACKGROUND).darken().toString();
@@ -242,6 +244,25 @@ const SettingScreen = () => {
             ))}
           </View>
         </View>
+        <View className="flex flex-row justify-between items-center">
+          <Text
+            style={{
+              color: COLOR?.TEXT_PRIMARY,
+              fontSize: widthPercentageToDP(3.5),
+            }}>
+            Bo góc hình ảnh
+          </Text>
+          <View className="flex flex-row items-center">
+            <Switch
+              thumbColor={theme === 'amoled' ? GREEN : COLOR?.PRIMARY}
+              trackColor={{false: '#cccccc', true: '#cccccc'}}
+              value={isTrackThumbnailBorder}
+              onChange={() =>
+                setIsTrackThumbnailBorder(!isTrackThumbnailBorder)
+              }
+            />
+          </View>
+        </View>
       </View>
       <View
         className="mt-4 px-2 py-2 rounded-md"
@@ -268,6 +289,23 @@ const SettingScreen = () => {
               trackColor={{false: '#cccccc', true: '#cccccc'}}
               value={savePlayerState}
               onChange={() => setSavePlayerState(!savePlayerState)}
+            />
+          </View>
+        </View>
+        <View className="flex flex-row justify-between items-center">
+          <Text
+            style={{
+              color: COLOR?.TEXT_PRIMARY,
+              fontSize: widthPercentageToDP(3.5),
+            }}>
+            Hiệu ứng blur
+          </Text>
+          <View className="flex flex-row items-center">
+            <Switch
+              thumbColor={theme === 'amoled' ? GREEN : COLOR?.PRIMARY}
+              trackColor={{false: '#cccccc', true: '#cccccc'}}
+              value={isBlur}
+              onChange={() => setIsBlur(!isBlur)}
             />
           </View>
         </View>

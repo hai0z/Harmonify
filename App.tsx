@@ -1,4 +1,4 @@
-import {useEffect} from 'react';
+import {useEffect, useMemo} from 'react';
 import TrackPlayer, {
   AppKilledPlaybackBehavior,
   Capability,
@@ -11,19 +11,41 @@ import AuthProvider from './context/AuthProvider';
 import Toast from './components/toast/Toast';
 import React from 'react';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
+import {useMaterial3Theme} from '@pchmn/expo-material3-theme';
+import {useColorScheme} from 'react-native';
+import {MD3DarkTheme, MD3LightTheme, PaperProvider} from 'react-native-paper';
+import useImageColor from './hooks/useImageColor';
+import useThemeStore from './store/themeStore';
 export default function App() {
+  const {averageColor, dominantColor} = useImageColor();
+
+  const colorScheme = useThemeStore(state =>
+    state.COLOR.isDark ? 'dark' : 'light',
+  );
+
+  const {theme, updateTheme} = useMaterial3Theme();
+
+  const paperTheme = useMemo(
+    () =>
+      colorScheme === 'dark'
+        ? {...MD3DarkTheme, colors: theme.dark}
+        : {...MD3LightTheme, colors: theme.light},
+    [colorScheme, theme, dominantColor],
+  );
+
   useEffect(() => {
     const setupPlayer = async () => {
       try {
         await TrackPlayer.setupPlayer({
           autoHandleInterruptions: true,
-          maxCacheSize: 1024 * 10,
+          maxCacheSize: 1024 * 512,
         });
 
         await TrackPlayer.setRepeatMode(RepeatMode.Queue);
         await TrackPlayer.setVolume(1);
         await TrackPlayer.updateOptions({
           progressUpdateEventInterval: 1,
+
           capabilities: [
             Capability.Play,
             Capability.Pause,
@@ -46,10 +68,10 @@ export default function App() {
           ],
           android: {
             appKilledPlaybackBehavior:
-              AppKilledPlaybackBehavior.StopPlaybackAndRemoveNotification,
+              AppKilledPlaybackBehavior.ContinuePlayback,
             alwaysPauseOnInterruption: true,
-            stopForegroundGracePeriod: 0,
           },
+          color: 0x0098db,
         });
       } catch (e) {
         console.log(e);
@@ -58,16 +80,21 @@ export default function App() {
     setupPlayer();
   }, []);
 
+  useEffect(() => {
+    updateTheme(dominantColor);
+  }, [dominantColor]);
   return (
     <AuthProvider>
-      <PlayerProvider>
-        <GestureHandlerRootView>
-          <BottomSheetModalProvider>
-            <Navigation />
-          </BottomSheetModalProvider>
-          <Toast />
-        </GestureHandlerRootView>
-      </PlayerProvider>
+      <PaperProvider theme={paperTheme}>
+        <PlayerProvider>
+          <GestureHandlerRootView>
+            <BottomSheetModalProvider>
+              <Navigation />
+            </BottomSheetModalProvider>
+            <Toast />
+          </GestureHandlerRootView>
+        </PlayerProvider>
+      </PaperProvider>
     </AuthProvider>
   );
 }

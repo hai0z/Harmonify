@@ -33,7 +33,9 @@ const TrackItem: React.FC<Props> = props => {
   const COLOR = useThemeStore(state => state.COLOR);
   const theme = useThemeStore(state => state.theme);
   const setCurrentSong = usePlayerStore(state => state.setCurrentSong);
-  console.log('track render');
+  const isTrackThumbnailBorder = useThemeStore(
+    state => state.isTrackThumbnailBorder,
+  );
   return (
     <TouchableOpacity
       style={{opacity: isConnected ? 1 : 0.5}}
@@ -45,31 +47,35 @@ const TrackItem: React.FC<Props> = props => {
         onClick(item);
       }}>
       {isAlbum ? (
-        <View>
-          <View
-            className="rounded-md flex justify-center items-center"
-            style={{width: wp(15), height: wp(15)}}>
-            <View>
-              <Text
-                style={{color: COLOR.TEXT_PRIMARY}}
-                className="font-semibold">
-                {index! + 1}
-              </Text>
+        <View
+          className="rounded-md flex justify-center items-center"
+          style={{width: wp(15), height: wp(15)}}>
+          <View>
+            <Text style={{color: COLOR.TEXT_PRIMARY}} className="font-semibold">
+              {!isActive && index! + 1}
+            </Text>
 
-              {isActive && <ActiveTrackAnimation isAlbum={true} />}
-            </View>
+            {isActive && <ActiveTrackAnimation isAlbum={true} />}
           </View>
         </View>
       ) : (
         <View>
           <FastImage
+            className={isTrackThumbnailBorder ? 'rounded-lg' : ''}
             source={{
               uri: getThumbnail(item?.thumbnail),
             }}
             key={item?.encodeId}
             style={{width: wp(15), height: wp(15)}}
           />
-          {isActive && <ActiveTrackAnimation isAlbum={false} />}
+          {isActive && (
+            <ActiveTrackAnimation
+              isAlbum={false}
+              style={{
+                borderRadius: isTrackThumbnailBorder ? 6 : 0,
+              }}
+            />
+          )}
         </View>
       )}
       <View className="flex  ml-2 flex-1 justify-center">

@@ -224,7 +224,7 @@ const TrackItemBottomSheet = (props: Props) => {
               </Text>
             </TouchableOpacity>
           )}
-          {data?.artists[0]?.alias && (
+          {data?.artists?.[0]?.alias && (
             <TouchableOpacity
               className="w-full py-3 flex flex-row items-center  mb-3 gap-2"
               onPress={() => {

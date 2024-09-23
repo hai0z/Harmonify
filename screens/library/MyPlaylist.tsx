@@ -212,9 +212,9 @@ const MyPlaylist = ({route}: {route: route<'MyPlaylist'>}) => {
               className="w-full rounded-md p-2"
               style={{
                 color: COLOR.TEXT_PRIMARY,
-                backgroundColor: tinycolor(COLOR.BACKGROUND)
-                  .darken(5)
-                  .toString(),
+                backgroundColor: !COLOR.isDark
+                  ? tinycolor(COLOR.BACKGROUND).darken(5).toString()
+                  : tinycolor(COLOR.BACKGROUND).lighten(10).toString(),
               }}
             />
           </View>

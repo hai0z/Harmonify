@@ -5,6 +5,8 @@ import {
   Dimensions,
   TouchableOpacity,
   StyleSheet,
+  ImageBackground,
+  Image,
 } from 'react-native';
 
 import React, {useContext, useLayoutEffect} from 'react';
@@ -43,15 +45,16 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 const TextAnimated = Animated.createAnimatedComponent(TextTicker);
 
 const PlayerScreens = () => {
-  const {tempSong, playFrom, isPlayFromLocal} = usePlayerStore(state => state);
+  const {tempSong, playFrom, isPlayFromLocal, isBlur} = usePlayerStore(
+    state => state,
+  );
   const navigation = useNavigation<any>();
-  const currentSong = useActiveTrack();
-  const {COLOR} = useThemeStore(state => state);
+  const currentSong = usePlayerStore(state => state.currentSong);
 
   const {showBottomSheet} = useContext(PlayerContext);
 
+  const {COLOR} = useThemeStore(state => state);
   const {dominantColor: gradientColor} = useImageColor();
-
   const bgAnimated = useSharedValue(`transparent`);
 
   const changeBgAnimated = () => {
@@ -64,6 +67,7 @@ const PlayerScreens = () => {
   useLayoutEffect(() => {
     runOnUI(changeBgAnimated)();
   }, [gradientColor, COLOR]);
+
   return (
     <ScrollView
       bounces={false}
@@ -78,17 +82,53 @@ const PlayerScreens = () => {
           backgroundColor: COLOR.BACKGROUND,
         }}>
         <LinearGradient
+          locations={isBlur ? [0.5, 1] : [0, 1]}
           colors={['transparent', COLOR.BACKGROUND]}
           style={[
             StyleSheet.absoluteFill,
             {
               width: SCREEN_WIDTH,
-              bottom: 0,
+              bottom: 10,
               height: hp(125),
-              zIndex: 1,
+              zIndex: 4,
             },
           ]}
         />
+        {isBlur && (
+          <View
+            className="absolute"
+            style={[
+              {
+                width: SCREEN_WIDTH,
+                height: hp(125),
+                zIndex: 3,
+              },
+            ]}>
+            <Animated.Image
+              blurRadius={125}
+              key={currentSong?.id}
+              exiting={FadeOut.duration(1500)}
+              source={{uri: currentSong?.artwork?.replace('r1x1', 'r9x16')}}
+              style={[
+                StyleSheet.absoluteFill,
+                {
+                  width: SCREEN_WIDTH,
+                  height: hp(125),
+                  zIndex: -1,
+                },
+              ]}></Animated.Image>
+            <View
+              style={{
+                width: SCREEN_WIDTH,
+                height: hp(125),
+                backgroundColor: COLOR.isDark
+                  ? 'rgba(0,0,0,0.25)'
+                  : 'rgba(255,255,255,0.6)',
+                zIndex: 2,
+              }}
+            />
+          </View>
+        )}
         <Animated.View
           style={[
             StyleSheet.absoluteFill,
@@ -99,7 +139,7 @@ const PlayerScreens = () => {
             },
           ]}
         />
-        <View className="flex flex-row items-center justify-between px-6">
+        <View className="flex flex-row items-center justify-between px-6 z-10">
           <TouchableOpacity
             hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}
             className="z-50"

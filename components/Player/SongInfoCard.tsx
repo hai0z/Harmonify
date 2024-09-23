@@ -1,5 +1,5 @@
-import {Text} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import {Text, View} from 'react-native';
+import React, {memo, useEffect, useState} from 'react';
 import {usePlayerStore} from '../../store/playerStore';
 import dayjs from 'dayjs';
 import nodejs from 'nodejs-mobile-react-native';
@@ -7,6 +7,19 @@ import useThemeStore from '../../store/themeStore';
 import Animated from 'react-native-reanimated';
 import useImageColor from '../../hooks/useImageColor';
 import {widthPercentageToDP} from 'react-native-responsive-screen';
+import {Headphone, Heart} from 'iconsax-react-native';
+
+function formatNumber(num: number) {
+  if (num >= 1000000000) {
+    return (num / 1000000000).toFixed(1) + 'B'; // Tỷ
+  } else if (num >= 1000000) {
+    return (num / 1000000).toFixed(1) + 'M';
+  } else if (num >= 1000) {
+    return (num / 1000).toFixed(1) + 'k';
+  } else {
+    return num.toString();
+  }
+}
 const SongInfoCard = () => {
   const currentSong = usePlayerStore(state => state.currentSong);
 
@@ -30,7 +43,8 @@ const SongInfoCard = () => {
   if (
     loading ||
     currentSong === undefined ||
-    usePlayerStore.getState().isPlayFromLocal
+    usePlayerStore.getState().isPlayFromLocal ||
+    data === null
   ) {
     return null;
   }
@@ -45,10 +59,10 @@ const SongInfoCard = () => {
           fontSize: widthPercentageToDP(5),
         }}>
         {data?.releaseDate
-          ? `Phát hành lúc ${dayjs
+          ? `Ngày phát hành: ${dayjs
               .unix(data?.releaseDate)
               .format('DD/MM/YYYY')}`
-          : 'Phát hành lúc: không rõ'}
+          : 'Ngày phát hành: không rõ'}
       </Text>
       <Text style={{color: COLOR.TEXT_PRIMARY}}>
         Tác giả :{' '}
@@ -60,7 +74,20 @@ const SongInfoCard = () => {
       <Text style={{color: COLOR.TEXT_PRIMARY}}>
         Nghệ sĩ: {data?.artists?.map((e: any) => e?.name).join(', ')}
       </Text>
-      <Text style={{color: COLOR.TEXT_PRIMARY}}>Lượt thích: {data?.like} </Text>
+      <View className="flex flex-row mt-1">
+        <View className="flex flex-row  items-center mr-2 gap-x-1">
+          <Heart size="18" color={COLOR.TEXT_PRIMARY} variant="Bold" />
+          <Text style={{color: COLOR.TEXT_PRIMARY}}>
+            {formatNumber(data?.like)}
+          </Text>
+        </View>
+        <View className="flex flex-row  items-center gap-x-1">
+          <Headphone size="18" color={COLOR.TEXT_PRIMARY} variant="Bold" />
+          <Text style={{color: COLOR.TEXT_PRIMARY}}>
+            {formatNumber(data?.listen)}
+          </Text>
+        </View>
+      </View>
     </Animated.View>
   );
 };
