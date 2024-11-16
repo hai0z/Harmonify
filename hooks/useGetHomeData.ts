@@ -4,29 +4,56 @@ import useInternetState from './useInternetState';
 import nodejs from 'nodejs-mobile-react-native';
 import mmkv from '../utils/mmkv';
 import {getRecentListening} from '../service/firebase';
+import {createJSONStorage, persist} from 'zustand/middleware';
+import {create} from 'zustand';
+import zustandStorage from '../store/zustandStorage';
+
+interface HomeData {
+  home: any[];
+  newRelease: any;
+  hub: any[];
+  dataRecent: any[];
+  homeLoading: boolean;
+  setHomeLoading: (homeLoading: boolean) => void;
+  setNewRelease: (data: any) => void;
+  setHub: (data: any) => void;
+  setRecent: (data: any) => void;
+  setHome: (data: any) => void;
+}
+export const useHomeDataStore = create<HomeData>(set => ({
+  home: [],
+  newRelease: [],
+  hub: [],
+  dataRecent: [],
+  homeLoading: true,
+  setHomeLoading: (homeLoading: boolean) => set({homeLoading}),
+  setHome: (data: any) => set({home: data}),
+  setNewRelease: (data: any) => set({newRelease: data}),
+  setHub: (data: any) => set({hub: data}),
+  setRecent: (data: any) => set({dataRecent: data}),
+}));
 export default function useGetHomeData() {
-  const [dataHome, setdataHome] = useState<any>([]);
-  const [dataNewRelease, setDataNewRelease] = useState<any>([]);
-  const [hub, setHub] = useState<any>([]);
+  const {
+    setHomeLoading,
+    setHub,
+    setNewRelease,
+    setRecent,
+    setHome,
+    homeLoading,
+  } = useHomeDataStore();
 
-  const [loading, setLoading] = usePlayerStore(state => [
-    state.homeLoading,
-    state.setHomeLoading,
-  ]);
-
-  const [dataRecent, setDataRecent] = useState<any>([]);
   const setLikedSongs = usePlayerStore(state => state.setLikedSongs);
   const isConnected = useInternetState();
 
   useEffect(() => {
-    setLoading(true);
+    setHomeLoading(true);
     if (isConnected) {
       nodejs.channel.addListener('getHub', data => {
-        setHub(data.genre);
+        setHub(data?.genre);
       });
       nodejs.channel.addListener('home', data => {
-        setdataHome(data.filter((e: any) => e.sectionType === 'playlist'));
-        setDataNewRelease(
+        setHome(data.filter((e: any) => e.sectionType === 'playlist'));
+        setNewRelease(
           data.filter((e: any) => e.sectionType === 'new-release')[0],
         );
         mmkv.set(
@@ -42,9 +69,9 @@ export default function useGetHomeData() {
       });
       const getRecentList = async () => {
         const res = await getRecentListening();
-        setDataRecent(res);
+        setRecent(res);
         mmkv.set('recent-listening', JSON.stringify(res));
-        setLoading(false);
+        setHomeLoading(false);
       };
       Promise.all([
         getRecentList(),
@@ -52,13 +79,12 @@ export default function useGetHomeData() {
         nodejs.channel.post('getHub'),
       ]);
     } else {
-      setdataHome(JSON.parse(mmkv.getString('home') || '[]'));
-      setDataNewRelease(JSON.parse(mmkv.getString('new-release') || '[]'));
-      setDataRecent(JSON.parse(mmkv.getString('recent-listening') || '[]'));
+      setHome(JSON.parse(mmkv.getString('home') || '[]'));
+      setNewRelease(JSON.parse(mmkv.getString('new-release') || '[]'));
+      setRecent(JSON.parse(mmkv.getString('recent-listening') || '[]'));
       setLikedSongs(JSON.parse(mmkv.getString('liked-songs') || '[]'));
-      setLoading(false);
+      setHome(false);
     }
   }, [isConnected]);
-
-  return {dataHome, dataNewRelease, dataRecent, loading, hub};
+  return {homeLoading};
 }

@@ -27,11 +27,9 @@ const useImageColor = () => {
       : tinycolor(color.average).darken(5).toString()
     : tinycolor(color.vibrant).lighten(15).toString();
 
-  const averageColor = tinycolor(color.average).toString();
   return {
     dominantColor,
     vibrantColor,
-    averageColor,
   };
 };
 

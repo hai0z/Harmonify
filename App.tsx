@@ -11,27 +11,20 @@ import AuthProvider from './context/AuthProvider';
 import Toast from './components/toast/Toast';
 import React from 'react';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
-import {useMaterial3Theme} from '@pchmn/expo-material3-theme';
-import {useColorScheme} from 'react-native';
-import {MD3DarkTheme, MD3LightTheme, PaperProvider} from 'react-native-paper';
-import useImageColor from './hooks/useImageColor';
-import useThemeStore from './store/themeStore';
 export default function App() {
-  const {averageColor, dominantColor} = useImageColor();
+  // const colorScheme = useThemeStore(state =>
+  //   state.COLOR.isDark ? 'dark' : 'light',
+  // );
 
-  const colorScheme = useThemeStore(state =>
-    state.COLOR.isDark ? 'dark' : 'light',
-  );
+  // const {theme, updateTheme} = useMaterial3Theme();
 
-  const {theme, updateTheme} = useMaterial3Theme();
-
-  const paperTheme = useMemo(
-    () =>
-      colorScheme === 'dark'
-        ? {...MD3DarkTheme, colors: theme.dark}
-        : {...MD3LightTheme, colors: theme.light},
-    [colorScheme, theme, dominantColor],
-  );
+  // const paperTheme = useMemo(
+  //   () =>
+  //     colorScheme === 'dark'
+  //       ? {...MD3DarkTheme, colors: theme.dark}
+  //       : {...MD3LightTheme, colors: theme.light},
+  //   [colorScheme, theme, color.dominant!],
+  // );
 
   useEffect(() => {
     const setupPlayer = async () => {
@@ -39,6 +32,7 @@ export default function App() {
         await TrackPlayer.setupPlayer({
           autoHandleInterruptions: true,
           maxCacheSize: 1024 * 512,
+          autoUpdateMetadata: false,
         });
 
         await TrackPlayer.setRepeatMode(RepeatMode.Queue);
@@ -80,21 +74,21 @@ export default function App() {
     setupPlayer();
   }, []);
 
-  useEffect(() => {
-    updateTheme(dominantColor);
-  }, [dominantColor]);
+  // useEffect(() => {
+  //   updateTheme(color.dominant!);
+  // }, [color.dominant!]);
   return (
     <AuthProvider>
-      <PaperProvider theme={paperTheme}>
-        <PlayerProvider>
-          <GestureHandlerRootView>
-            <BottomSheetModalProvider>
-              <Navigation />
-            </BottomSheetModalProvider>
-            <Toast />
-          </GestureHandlerRootView>
-        </PlayerProvider>
-      </PaperProvider>
+      {/* <PaperProvider theme={paperTheme}> */}
+      <PlayerProvider>
+        <GestureHandlerRootView>
+          <BottomSheetModalProvider>
+            <Navigation />
+          </BottomSheetModalProvider>
+          <Toast />
+        </GestureHandlerRootView>
+      </PlayerProvider>
+      {/* </PaperProvider> */}
     </AuthProvider>
   );
 }

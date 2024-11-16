@@ -1,20 +1,18 @@
-import React, {useCallback, useEffect, useRef} from 'react';
-import {usePlayerStore} from '../store/playerStore';
-import {getColors} from 'react-native-image-colors';
-import TrackPlayer, {usePlaybackState} from 'react-native-track-player';
-import nodejs from 'nodejs-mobile-react-native';
-import {objectToTrack} from '../service/trackPlayerService';
-import getThumbnail from '../utils/getThumnail';
-import {BottomSheetModal} from '@gorhom/bottom-sheet';
-import {BottomSheetModalMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
-import useBottomSheetStore from '../store/bottomSheetStore';
-import {saveToHistory} from '../service/firebase';
-import {Appearance} from 'react-native';
-import useThemeStore from '../store/themeStore';
-import {DEFAULT_IMG} from '../constants';
-import SplashScreen from 'react-native-splash-screen';
-import {useMaterial3Theme} from '@pchmn/expo-material3-theme';
-import useImageColor from '../hooks/useImageColor';
+import React, {useCallback, useEffect, useRef} from "react";
+import {usePlayerStore} from "../store/playerStore";
+import {getColors} from "react-native-image-colors";
+import TrackPlayer from "react-native-track-player";
+import nodejs from "nodejs-mobile-react-native";
+import {objectToTrack} from "../service/trackPlayerService";
+import getThumbnail from "../utils/getThumnail";
+import {BottomSheetModal} from "@gorhom/bottom-sheet";
+import {BottomSheetModalMethods} from "@gorhom/bottom-sheet/lib/typescript/types";
+import useBottomSheetStore from "../store/bottomSheetStore";
+import {saveToHistory} from "../service/firebase";
+import {Appearance} from "react-native";
+import useThemeStore from "../store/themeStore";
+import {DEFAULT_IMG} from "../constants";
+import SplashScreen from "react-native-splash-screen";
 
 interface ContextType {
   bottomSheetModalRef: React.RefObject<BottomSheetModalMethods>;
@@ -23,14 +21,13 @@ interface ContextType {
 
 export const PlayerContext = React.createContext({} as ContextType);
 
-nodejs.start('main.js');
+nodejs.start("main.js");
 
-nodejs.channel.addListener('getLyric', async data => {
+nodejs.channel.addListener("getLyric", async data => {
   usePlayerStore.getState().setLyrics(data);
 });
 
 const PlayerProvider = ({children}: {children: React.ReactNode}) => {
-  const {updateTheme} = useMaterial3Theme();
   const {
     playList,
     currentSong,
@@ -51,11 +48,10 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
 
   const COLOR = useThemeStore(state => state.COLOR);
 
-  const {dominantColor, vibrantColor} = useImageColor();
   const getSongColors = async () => {
     if (currentSong?.artwork !== null) {
       getColors(getThumbnail(currentSong?.artwork!, 720), {
-        fallback: '#0098DB',
+        fallback: "#0098DB",
         cache: true,
         key: currentSong?.id,
       }).then(setColor);
@@ -71,13 +67,12 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
     setData(item);
   }, []);
 
-  Appearance.setColorScheme(COLOR.isDark ? 'dark' : 'light');
+  Appearance.setColorScheme(COLOR.isDark ? "dark" : "light");
 
   const initPlayer = async () => {
     if (offlineMode) {
       setHomeLoading(false);
     }
-
     if (savePlayerState) {
       await TrackPlayer.reset();
       setShuffleMode(false);
@@ -87,18 +82,18 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
       setSleepTimer(null);
       if (
         playList.items.length > 0 &&
-        playList.id !== '' &&
+        playList.id !== "" &&
         currentSong !== null
       ) {
         let index = playList.items.findIndex(
-          (item: any) => item?.encodeId === currentSong?.id,
+          (item: any) => item?.encodeId === currentSong?.id
         );
         if (index < 0) {
           index = 0;
         }
         if (!isPlayFromLocal) {
           await TrackPlayer.setQueue(
-            playList.items.map((item: any) => objectToTrack(item)),
+            playList.items.map((item: any) => objectToTrack(item))
           );
         } else {
           await TrackPlayer.setQueue(
@@ -106,7 +101,7 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
               ...objectToTrack(item),
               url: item.url,
               artwork: item.thumbnail || DEFAULT_IMG,
-            })),
+            }))
           );
         }
         await TrackPlayer.skip(index).finally(() => {
@@ -131,7 +126,7 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
   useEffect(() => {
     if (!isPlayFromLocal) {
       Promise.all([
-        nodejs.channel.post('getLyric', currentSong?.id),
+        nodejs.channel.post("getLyric", currentSong?.id),
         getSongColors(),
       ]);
     }

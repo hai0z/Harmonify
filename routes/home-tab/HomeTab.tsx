@@ -29,13 +29,7 @@ import {widthPercentageToDP} from 'react-native-responsive-screen';
 import {RootStackParamList} from '../../utils/types/RootStackParamList';
 import SearchScreensStack from './SearchStack';
 import SettingStack from '../SettingStack';
-import {
-  Chart2,
-  Home2,
-  Home3,
-  MusicLibrary2,
-  SearchNormal,
-} from 'iconsax-react-native';
+import {Chart2, Home2, MusicLibrary2, SearchNormal} from 'iconsax-react-native';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 

@@ -1,21 +1,21 @@
-import {View, Text, TouchableOpacity} from 'react-native';
-import React from 'react';
-import getThumbnail from '../../utils/getThumnail';
-import Feather from 'react-native-vector-icons/Feather';
-import useThemeStore from '../../store/themeStore';
-import FastImage from 'react-native-fast-image';
-import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
-import {usePlayerStore} from '../../store/playerStore';
-import {objectToTrack} from '../../service/trackPlayerService';
-import useInternetState from '../../hooks/useInternetState';
-import {GREEN} from '../../constants';
-import ActiveTrackAnimation from './ActiveTrackAnimation';
-import {Song} from '../../utils/types/type';
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
-import 'dayjs/locale/vi';
+import {View, Text, TouchableOpacity} from "react-native";
+import React from "react";
+import getThumbnail from "../../utils/getThumnail";
+import Feather from "react-native-vector-icons/Feather";
+import useThemeStore from "../../store/themeStore";
+import FastImage from "react-native-fast-image";
+import {widthPercentageToDP as wp} from "react-native-responsive-screen";
+import {usePlayerStore} from "../../store/playerStore";
+import {objectToTrack} from "../../service/trackPlayerService";
+import useInternetState from "../../hooks/useInternetState";
+import {GREEN} from "../../constants";
+import ActiveTrackAnimation from "./ActiveTrackAnimation";
+import {Song} from "../../utils/types/type";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import "dayjs/locale/vi";
 dayjs.extend(relativeTime);
-dayjs.locale('vi');
+dayjs.locale("vi");
 interface Props {
   item: Song;
   index?: number;
@@ -34,7 +34,7 @@ const TrackItem: React.FC<Props> = props => {
   const theme = useThemeStore(state => state.theme);
   const setCurrentSong = usePlayerStore(state => state.setCurrentSong);
   const isTrackThumbnailBorder = useThemeStore(
-    state => state.isTrackThumbnailBorder,
+    state => state.isTrackThumbnailBorder
   );
   return (
     <TouchableOpacity
@@ -61,7 +61,7 @@ const TrackItem: React.FC<Props> = props => {
       ) : (
         <View>
           <FastImage
-            className={isTrackThumbnailBorder ? 'rounded-lg' : ''}
+            className={isTrackThumbnailBorder ? "rounded-lg" : ""}
             source={{
               uri: getThumbnail(item?.thumbnail),
             }}
@@ -84,7 +84,7 @@ const TrackItem: React.FC<Props> = props => {
           numberOfLines={1}
           style={{
             color: isActive
-              ? theme !== 'amoled'
+              ? theme !== "amoled"
                 ? COLOR.PRIMARY
                 : GREEN
               : COLOR.TEXT_PRIMARY,

@@ -6,7 +6,7 @@ import FastImage from 'react-native-fast-image';
 import useThemeStore from '../store/themeStore';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import {navigation} from '../utils/types/RootStackParamList';
-import {Text, useTheme} from 'react-native-paper';
+import {Text} from 'react-native-paper';
 interface coverProps {
   title: string;
   sortDescription?: string;
@@ -44,11 +44,14 @@ const PlayListCover = ({
       <Text
         numberOfLines={1}
         className="text-left mt-1"
-        style={{fontSize: wp(4)}}>
+        style={{fontSize: wp(4), color: COLOR.TEXT_PRIMARY}}>
         {title}
       </Text>
       {!isAlbum && (
-        <Text numberOfLines={2} className="text-left" style={{fontSize: wp(3)}}>
+        <Text
+          numberOfLines={2}
+          className="text-left"
+          style={{fontSize: wp(3), color: COLOR.TEXT_SECONDARY}}>
           {sortDescription ? sortDescription : ''}
         </Text>
       )}

@@ -87,7 +87,7 @@ const HistoryScreens = () => {
         name: 'Bài hát gần đây',
       });
     },
-    [ historyData ],
+    [historyData],
   );
 
   const fetchMoreData = async () => {
@@ -140,7 +140,7 @@ const HistoryScreens = () => {
 
   useLayoutEffect(() => {
     runOnUI(changeBgAnimated)();
-  }, [changeBgAnimated, gradientColor, historyData]);
+  }, [gradientColor, historyData]);
 
   return (
     <View

@@ -1,16 +1,16 @@
-import {defaultColorObj, IPlaylist, usePlayerStore} from '../store/playerStore';
-import TrackPlayer, {Event, RepeatMode} from 'react-native-track-player';
-import getThumbnail from '../utils/getThumnail';
-import nodejs from 'nodejs-mobile-react-native';
-import {DEFAULT_IMG, NULL_URL} from '../constants';
-import useToastStore, {ToastTime} from '../store/toastStore';
-import {Alert, ToastAndroid} from 'react-native';
+import {defaultColorObj, IPlaylist, usePlayerStore} from "../store/playerStore";
+import TrackPlayer, {Event, RepeatMode} from "react-native-track-player";
+import getThumbnail from "../utils/getThumnail";
+import nodejs from "nodejs-mobile-react-native";
+import {DEFAULT_IMG, NULL_URL} from "../constants";
+import useToastStore, {ToastTime} from "../store/toastStore";
+import {Alert, ToastAndroid} from "react-native";
 
 export const objectToTrack = (data: any) => {
   return {
     id: data.encodeId,
     url:
-      data.url && data.url !== '' && data.url !== null && data.url !== undefined
+      data.url && data.url !== "" && data.url !== null && data.url !== undefined
         ? data.url
         : NULL_URL,
     title: data.title,
@@ -27,16 +27,16 @@ TrackPlayer.addEventListener(Event.PlaybackProgressUpdated, async e => {
   if (usePlayerStore.getState().repeatMode === RepeatMode.Track) {
     const activeTrackIndex = await TrackPlayer.getActiveTrackIndex();
     if (Math.floor(e.position) === Math.floor(e.duration) - 1) {
-      TrackPlayer.skip(activeTrackIndex!);
+      await TrackPlayer.skip(activeTrackIndex!);
     }
   }
   if (timer !== null) {
     sleepTimerCounter++;
     if (sleepTimerCounter === timer) {
-      TrackPlayer.pause();
+      await TrackPlayer.pause();
       usePlayerStore.getState().setSleepTimer(null);
       sleepTimerCounter = 0;
-      Alert.alert('Hẹn giờ ngủ', 'Chúc bạn ngủ ngon');
+      Alert.alert("Hẹn giờ ngủ", "Chúc bạn ngủ ngon");
     }
   } else {
     sleepTimerCounter = 0;
@@ -45,7 +45,7 @@ TrackPlayer.addEventListener(Event.PlaybackProgressUpdated, async e => {
 });
 
 TrackPlayer.addEventListener(Event.PlayerError, () => {
-  ToastAndroid.show('Không thể phát', ToastAndroid.SHORT);
+  ToastAndroid.show("Không thể phát", ToastAndroid.SHORT);
 });
 TrackPlayer.addEventListener(Event.PlaybackActiveTrackChanged, async event => {
   if (!usePlayerStore.getState().isPlayFromLocal) {
@@ -56,7 +56,7 @@ TrackPlayer.addEventListener(Event.PlaybackActiveTrackChanged, async event => {
     ) {
       usePlayerStore.getState().setNextTrackLoaded(true);
       usePlayerStore.getState().setCurrentSong(event.track);
-      nodejs.channel.post('getSongInfo', event.track?.id);
+      nodejs.channel.post("getSongInfo", event.track?.id);
     }
     if (
       event.index !== undefined &&
@@ -64,7 +64,7 @@ TrackPlayer.addEventListener(Event.PlaybackActiveTrackChanged, async event => {
       event.track.url === NULL_URL
     ) {
       usePlayerStore.getState().isLoadingTrack === false &&
-        nodejs.channel.post('getSong', event.track!);
+        nodejs.channel.post("getSong", event.track!);
     }
   } else {
     !usePlayerStore.getState().isLoadingTrack &&
@@ -76,20 +76,20 @@ TrackPlayer.addEventListener(Event.PlaybackActiveTrackChanged, async event => {
       await TrackPlayer.seekTo(usePlayerStore.getState().lastPosition).then(
         () => {
           usePlayerStore.getState().setIsFistInit(false);
-        },
+        }
       );
   }
 });
 
-nodejs.channel.addListener('getSong', async data => {
+nodejs.channel.addListener("getSong", async data => {
   if (data.data === NULL_URL) {
     useToastStore
       .getState()
-      .show('Không thể phát bài hát này', ToastTime.SHORT);
+      .show("Không thể phát bài hát này", ToastTime.SHORT);
   }
   TrackPlayer.load({
     ...data.track,
-    url: data.data['128'],
+    url: data.data["128"],
   })
     .then(async () => {
       if (usePlayerStore.getState().isFistInit === false) {
@@ -99,14 +99,16 @@ nodejs.channel.addListener('getSong', async data => {
         usePlayerStore.getState().savePlayerState &&
         usePlayerStore.getState().isFistInit
       )
-        TrackPlayer.seekTo(usePlayerStore.getState().lastPosition).then(() => {
-          usePlayerStore.getState().setIsFistInit(false);
-        });
+        await TrackPlayer.seekTo(usePlayerStore.getState().lastPosition).then(
+          () => {
+            usePlayerStore.getState().setIsFistInit(false);
+          }
+        );
     })
     .finally(() => usePlayerStore.getState().setNextTrackLoaded(true));
 });
 
-nodejs.channel.addListener('getSongInfo', async data => {
+nodejs.channel.addListener("getSongInfo", async data => {
   usePlayerStore.getState().setTempSong(data);
 });
 
@@ -118,13 +120,13 @@ const handlePlay = async (song: any, playlist: IPlaylist) => {
   if (currentPlaylistId !== playlist.id) {
     usePlayerStore.getState().setisLoadingTrack(true);
     await TrackPlayer.setQueue(
-      playlist.items.map((item: any) => objectToTrack(item)),
+      playlist.items.map((item: any) => objectToTrack(item))
     );
     usePlayerStore.getState().setPlayList(playlist);
     usePlayerStore.getState().setTempPlayList(playlist);
     usePlayerStore.getState().setShuffleMode(false);
     if (song.encodeId === playlist.items[0].encodeId) {
-      nodejs.channel.post('getSong', objectToTrack(song));
+      nodejs.channel.post("getSong", objectToTrack(song));
     }
   }
   const queue = usePlayerStore.getState().playList?.items || [];
@@ -153,7 +155,7 @@ const handlePlaySongInLocal = async (song: any, playlist: IPlaylist) => {
         ...objectToTrack(item),
         url: item.url,
         artwork: item.thumbnail || DEFAULT_IMG,
-      })),
+      }))
     );
   }
   const queue = await TrackPlayer.getQueue();

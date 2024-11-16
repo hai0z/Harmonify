@@ -1,13 +1,21 @@
-import { collection, deleteDoc, doc, getDocs, limit, orderBy, query, setDoc, updateDoc, writeBatch } from "firebase/firestore";
-import { auth, db } from "../../firebase/config";
-import { usePlayerStore } from "../../store/playerStore";
-import { useUserStore } from "../../store/userStore";
-import shuffleArray from "../../utils/shuffle";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  limit,
+  orderBy,
+  query,
+  setDoc,
+  updateDoc,
+  writeBatch,
+} from 'firebase/firestore';
+import {auth, db} from '../../firebase/config';
+import {usePlayerStore} from '../../store/playerStore';
+import {useUserStore} from '../../store/userStore';
+import shuffleArray from '../../utils/shuffle';
 
-
-export const addToLikedList = async (
-  song: any,
-): Promise<void> => {
+export const addToLikedList = async (song: any): Promise<void> => {
   try {
     const user = auth.currentUser?.uid;
     const likedSongs = usePlayerStore.getState().likedSongs;
@@ -21,9 +29,7 @@ export const addToLikedList = async (
     console.log(err.message);
   }
 };
-export const addToLikedPlaylist = async (
-  playlist: any,
-) => {
+export const addToLikedPlaylist = async (playlist: any) => {
   try {
     const user = auth.currentUser?.uid;
     const likedPlaylist = useUserStore.getState().likedPlaylists;
@@ -68,22 +74,22 @@ export const saveToHistory = async (song: any) => {
   } catch (err: any) {
     console.log(err.message);
   }
-}
+};
 
 export const getRecentListening = async () => {
   try {
     const user = auth.currentUser?.uid;
-    const q = query(collection(db, `users/${user}/history`), orderBy("timestamp", "desc"), limit(100));
+    const q = query(collection(db, `users/${user}/history`), limit(100));
     const querySnapshot = await getDocs(q);
-    const recentListening: any = []
-    querySnapshot.forEach((doc) => {
+    const recentListening: any = [];
+    querySnapshot.forEach(doc => {
       recentListening.push(doc.data());
     });
     return shuffleArray(recentListening);
   } catch (err: any) {
     console.log(err.message);
   }
-}
+};
 
 export const createPlaylist = async (playlist: {
   encodeId: string;
@@ -98,29 +104,37 @@ export const createPlaylist = async (playlist: {
   } catch (err: any) {
     console.log(err.message);
   }
-}
+};
 export const addSongToPlaylist = async (playlistId: string, song: any) => {
   try {
     const user = auth.currentUser?.uid;
     const docRef = doc(db, `users/${user}/myPlaylists`, playlistId);
     await updateDoc(docRef, {
-      songs: [...useUserStore.getState().myPlaylists.find((pl: any) => pl.encodeId == playlistId).songs, song],
+      songs: [
+        ...useUserStore
+          .getState()
+          .myPlaylists.find((pl: any) => pl.encodeId == playlistId).songs,
+        song,
+      ],
     });
   } catch (err: any) {
     console.log(err.message);
   }
-}
+};
 export const removeSongFromPlaylist = async (playlistId: string, song: any) => {
   try {
     const user = auth.currentUser?.uid;
     const docRef = doc(db, `users/${user}/myPlaylists`, playlistId);
     await updateDoc(docRef, {
-      songs: useUserStore.getState().myPlaylists.find((pl: any) => pl.encodeId == playlistId).songs.filter((s: any) => s.encodeId != song.encodeId),
+      songs: useUserStore
+        .getState()
+        .myPlaylists.find((pl: any) => pl.encodeId == playlistId)
+        .songs.filter((s: any) => s.encodeId != song.encodeId),
     });
   } catch (err: any) {
     console.log(err.message);
   }
-}
+};
 
 export const deletePlaylist = async (playlistId: string) => {
   try {
@@ -130,7 +144,7 @@ export const deletePlaylist = async (playlistId: string) => {
   } catch (err: any) {
     console.log(err.message);
   }
-}
+};
 export const updatePlaylist = async (playlist: any) => {
   try {
     const user = auth.currentUser?.uid;
@@ -141,19 +155,19 @@ export const updatePlaylist = async (playlist: any) => {
   } catch (err: any) {
     console.log(err.message);
   }
-}
+};
 export const deleteHistory = async () => {
   try {
     const user = auth.currentUser?.uid;
     const docRef = collection(db, `users/${user}/history`);
-    getDocs(docRef).then((querySnapshot) => {
+    getDocs(docRef).then(querySnapshot => {
       const batch = writeBatch(db);
-      querySnapshot.forEach((doc) => {
+      querySnapshot.forEach(doc => {
         batch.delete(doc.ref);
       });
       batch.commit();
-    })
+    });
   } catch (err: any) {
     console.log(err.message);
   }
-}
+};

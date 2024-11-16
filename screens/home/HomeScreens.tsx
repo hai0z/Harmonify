@@ -1,25 +1,25 @@
-import React, {useEffect, useState} from 'react';
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
-import Header from '../../components/Header';
-import NewRelease from './components/NewRelease';
-import LinearGradient from 'react-native-linear-gradient';
-import useThemeStore from '../../store/themeStore';
+import React, {useEffect, useState} from "react";
+import {ScrollView, StyleSheet, Text, View} from "react-native";
+import Header from "../../components/Header";
+import NewRelease from "./components/NewRelease";
+import LinearGradient from "react-native-linear-gradient";
+import useThemeStore from "../../store/themeStore";
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP,
-} from 'react-native-responsive-screen';
-import RecentList from './components/RecentList';
-import Loading from '../../components/Loading';
-import useGetHomeData from '../../hooks/useGetHomeData';
-import {typePlaylistCover} from '../../utils/types/type';
-import Animated, {FadeIn} from 'react-native-reanimated';
-import PlayListCover from '../../components/PlayListCover';
-import {FlashList} from '@shopify/flash-list';
+} from "react-native-responsive-screen";
+import RecentList from "./components/RecentList";
+import Loading from "../../components/Loading";
+import useGetHomeData, {useHomeDataStore} from "../../hooks/useGetHomeData";
+import {typePlaylistCover} from "../../utils/types/type";
+import Animated, {FadeIn} from "react-native-reanimated";
+import PlayListCover from "../../components/PlayListCover";
+import {FlashList} from "@shopify/flash-list";
 
 function HomeScreens() {
   const {COLOR, HEADER_GRADIENT} = useThemeStore(state => state);
-  const {dataHome, dataNewRelease, loading, dataRecent, hub} = useGetHomeData();
-  if (loading) {
+  const {home, hub, dataRecent, newRelease, homeLoading} = useHomeDataStore();
+  if (homeLoading) {
     return (
       <Animated.View
         entering={FadeIn.duration(500)}
@@ -60,18 +60,18 @@ function HomeScreens() {
           <RecentList data={dataRecent} />
         </View>
         <View className="mt-4">
-          {dataNewRelease && <NewRelease data={dataNewRelease} />}
+          {newRelease && <NewRelease data={newRelease} />}
         </View>
 
         <View className="-mt-4">
-          {dataHome?.map((e: typePlaylistCover, index: number) => {
+          {home?.map((e: typePlaylistCover, index: number) => {
             return (
               <View key={index}>
                 <View>
                   <Text
                     className="text-xl flex justify-between items-end mt-8 mb-3 uppercase mx-4 "
                     style={{color: COLOR.TEXT_PRIMARY}}>
-                    {e.title === '' ? e.sectionId.slice(1) : e.title}
+                    {e.title === "" ? e.sectionId.slice(1) : e.title}
                   </Text>
                 </View>
                 <FlashList
@@ -90,7 +90,7 @@ function HomeScreens() {
             );
           })}
         </View>
-        <View className="-mt-4">
+        <View className="-mt-4 flex-1">
           {hub?.map((e: any, index: number) => {
             return (
               <View key={index}>
@@ -98,7 +98,7 @@ function HomeScreens() {
                   <Text
                     className="text-xl flex justify-between items-end mt-8 mb-3 uppercase mx-4 "
                     style={{color: COLOR.TEXT_PRIMARY}}>
-                    {e.title === '' ? e.sectionId.slice(1) : e.title}
+                    {e.title === "" ? e.sectionId.slice(1) : e.title}
                   </Text>
                 </View>
                 <FlashList

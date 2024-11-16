@@ -28,6 +28,7 @@ import HeartButton from '../HeartButton';
 import useImageColor from '../../hooks/useImageColor';
 import MiniPlayerProgress from './Control/MiniPlayerProgress';
 import {objectToTrack} from '../../service/trackPlayerService';
+import {useHomeDataStore} from '../../hooks/useGetHomeData';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const MiniPlayer = () => {
@@ -40,7 +41,7 @@ const MiniPlayer = () => {
   const setCurrentSong = usePlayerStore(state => state.setCurrentSong);
   const isPlayFromLocal = usePlayerStore(state => state.isPlayFromLocal);
 
-  const loading = usePlayerStore(state => state.homeLoading);
+  const loading = useHomeDataStore(state => state.homeLoading);
 
   const COLOR = useThemeStore(state => state.COLOR);
 
@@ -89,146 +90,148 @@ const MiniPlayer = () => {
     return null;
   }
   return (
-    <Animated.View
-      exiting={FadeOutDown.springify()}
-      entering={FadeInDown.duration(500)}>
+    <View>
       <Animated.View
-        className="flex flex-col justify-center absolute"
-        style={[
-          {
-            width: SCREEN_WIDTH * 0.96,
-            height: MINI_PLAYER_HEIGHT,
-            transform: [{translateX: SCREEN_WIDTH * 0.02}],
-            backgroundColor: isBlur ? COLOR.BACKGROUND : bgAnimated,
-            borderRadius: 6,
-            overflow: 'hidden',
-            bottom: offlineMode ? 0 : TABBAR_HEIGHT,
-          },
-        ]}>
-        {isBlur && (
-          <View
-            style={{
-              width: SCREEN_WIDTH,
+        exiting={FadeOutDown.springify()}
+        entering={FadeInDown.duration(500)}>
+        <Animated.View
+          className="flex flex-col justify-center absolute"
+          style={[
+            {
+              width: SCREEN_WIDTH * 0.96,
               height: MINI_PLAYER_HEIGHT,
-              position: 'absolute',
-            }}>
-            <Animated.Image
-              exiting={FadeOut.duration(1500)}
-              key={currentSong?.id}
-              blurRadius={125}
-              source={{uri: currentSong?.artwork?.replace('r1x1', 'r16x9')}}
-              style={[
-                StyleSheet.absoluteFill,
-                {
-                  width: SCREEN_WIDTH,
-                  height: MINI_PLAYER_HEIGHT,
-                  zIndex: -1,
-                },
-              ]}></Animated.Image>
+              transform: [{translateX: SCREEN_WIDTH * 0.02}],
+              backgroundColor: isBlur ? COLOR.BACKGROUND : bgAnimated,
+              borderRadius: 6,
+              overflow: 'hidden',
+              bottom: offlineMode ? 0 : TABBAR_HEIGHT,
+            },
+          ]}>
+          {isBlur && (
             <View
               style={{
                 width: SCREEN_WIDTH,
                 height: MINI_PLAYER_HEIGHT,
-                backgroundColor: COLOR.isDark
-                  ? 'rgba(0,0,0,0.25)'
-                  : 'rgba(255,255,255,0.5)',
-              }}
-            />
-          </View>
-        )}
-        <TouchableOpacity
-          onPress={() => navigation.navigate('PlayerStack')}
-          activeOpacity={1}
-          style={{
-            flexDirection: 'column',
-            justifyContent: 'center',
-            height: MINI_PLAYER_HEIGHT,
-          }}>
-          <Animated.View
-            key={currentSong?.id}
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}>
-            <Animated.Image
-              exiting={FadeOutDown.duration(300).springify()}
-              entering={FadeInUp.duration(300).springify()}
-              source={{
-                uri: currentSong?.artwork,
-              }}
-              style={{
-                width: 40,
-                height: 40,
-                borderRadius: 4,
-                marginLeft: SCREEN_WIDTH * 0.02,
-                zIndex: 10,
-              }}
-            />
-            <Animated.View
-              style={{
-                marginLeft: 10,
-                flex: 1,
-                marginRight: 10,
-              }}
-              entering={FadeInUp.duration(300).springify()}
-              exiting={FadeOutDown.duration(300).springify()}>
-              <TextTicker
-                duration={6000}
-                loop
-                bounce
-                repeatSpacer={50}
-                marqueeDelay={1000}
-                style={{
-                  color: COLOR.TEXT_PRIMARY,
-                  fontWeight: '600',
-                }}>
-                {currentSong?.title}
-              </TextTicker>
-
-              <Text
-                style={{
-                  color: COLOR.TEXT_PRIMARY,
-                  fontSize: 12,
-                }}
-                numberOfLines={1}>
-                {currentSong?.artist}
-              </Text>
-            </Animated.View>
-
-            <View
-              style={{
-                marginLeft: 'auto',
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                gap: 12,
+                position: 'absolute',
               }}>
-              {!isPlayFromLocal && <HeartButton heartIconSize={24} />}
-              <TouchableOpacity onPress={() => togglePlay(playerState.state)}>
-                <Entypo
-                  name={
-                    playerState.state !== State.Playing
-                      ? 'controller-play'
-                      : 'controller-paus'
-                  }
-                  size={28}
-                  color={COLOR.TEXT_PRIMARY}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity className=" mr-4" onPress={handleButtonNext}>
-                <Entypo
-                  name={'controller-fast-forward'}
-                  size={28}
-                  color={COLOR.TEXT_PRIMARY}
-                />
-              </TouchableOpacity>
+              <Animated.Image
+                exiting={FadeOut.duration(1500)}
+                key={currentSong?.id}
+                blurRadius={125}
+                source={{uri: currentSong?.artwork?.replace('r1x1', 'r16x9')}}
+                style={[
+                  StyleSheet.absoluteFill,
+                  {
+                    width: SCREEN_WIDTH,
+                    height: MINI_PLAYER_HEIGHT,
+                    zIndex: -1,
+                  },
+                ]}></Animated.Image>
+              <View
+                style={{
+                  width: SCREEN_WIDTH,
+                  height: MINI_PLAYER_HEIGHT,
+                  backgroundColor: COLOR.isDark
+                    ? 'rgba(0,0,0,0.25)'
+                    : 'rgba(255,255,255,0.5)',
+                }}
+              />
             </View>
-          </Animated.View>
-        </TouchableOpacity>
-        <MiniPlayerProgress />
+          )}
+          <TouchableOpacity
+            onPress={() => navigation.navigate('PlayerStack')}
+            activeOpacity={1}
+            style={{
+              flexDirection: 'column',
+              justifyContent: 'center',
+              height: MINI_PLAYER_HEIGHT,
+            }}>
+            <Animated.View
+              key={currentSong?.id}
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}>
+              <Animated.Image
+                exiting={FadeOutDown.duration(300).springify()}
+                entering={FadeInUp.duration(300).springify()}
+                source={{
+                  uri: currentSong?.artwork,
+                }}
+                style={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: 4,
+                  marginLeft: SCREEN_WIDTH * 0.02,
+                  zIndex: 10,
+                }}
+              />
+              <Animated.View
+                style={{
+                  marginLeft: 10,
+                  flex: 1,
+                  marginRight: 10,
+                }}
+                entering={FadeInUp.duration(300).springify()}
+                exiting={FadeOutDown.duration(300).springify()}>
+                <TextTicker
+                  duration={6000}
+                  loop
+                  bounce
+                  repeatSpacer={50}
+                  marqueeDelay={1000}
+                  style={{
+                    color: COLOR.TEXT_PRIMARY,
+                    fontWeight: '600',
+                  }}>
+                  {currentSong?.title}
+                </TextTicker>
+
+                <Text
+                  style={{
+                    color: COLOR.TEXT_PRIMARY,
+                    fontSize: 12,
+                  }}
+                  numberOfLines={1}>
+                  {currentSong?.artist}
+                </Text>
+              </Animated.View>
+
+              <View
+                style={{
+                  marginLeft: 'auto',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: 12,
+                }}>
+                {!isPlayFromLocal && <HeartButton heartIconSize={24} />}
+                <TouchableOpacity onPress={() => togglePlay(playerState.state)}>
+                  <Entypo
+                    name={
+                      playerState.state !== State.Playing
+                        ? 'controller-play'
+                        : 'controller-paus'
+                    }
+                    size={28}
+                    color={COLOR.TEXT_PRIMARY}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity className=" mr-4" onPress={handleButtonNext}>
+                  <Entypo
+                    name={'controller-fast-forward'}
+                    size={28}
+                    color={COLOR.TEXT_PRIMARY}
+                  />
+                </TouchableOpacity>
+              </View>
+            </Animated.View>
+          </TouchableOpacity>
+          <MiniPlayerProgress />
+        </Animated.View>
       </Animated.View>
-    </Animated.View>
+    </View>
   );
 };
 
