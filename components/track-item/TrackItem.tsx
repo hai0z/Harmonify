@@ -14,8 +14,10 @@ import {Song} from "../../utils/types/type";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/vi";
+
 dayjs.extend(relativeTime);
 dayjs.locale("vi");
+
 interface Props {
   item: Song;
   index?: number;
@@ -36,32 +38,39 @@ const TrackItem: React.FC<Props> = props => {
   const isTrackThumbnailBorder = useThemeStore(
     state => state.isTrackThumbnailBorder
   );
+
   return (
     <TouchableOpacity
-      style={{opacity: isConnected ? 1 : 0.5}}
-      activeOpacity={0.8}
+      style={{
+        opacity: isConnected ? 1 : 0.5,
+        backgroundColor: isActive ? `${COLOR.PRIMARY}15` : "transparent",
+      }}
+      activeOpacity={0.7}
       disabled={isConnected === false}
-      className="flex flex-row  items-center mx-4 mb-3"
+      className="flex flex-row items-center mx-3 mb-2 p-2 rounded-xl"
       onPress={() => {
         setCurrentSong(objectToTrack(item));
         onClick(item);
       }}>
       {isAlbum ? (
         <View
-          className="rounded-md flex justify-center items-center"
+          className="rounded-xl flex justify-center items-center bg-gray-100/10"
           style={{width: wp(15), height: wp(15)}}>
           <View>
-            <Text style={{color: COLOR.TEXT_PRIMARY}} className="font-semibold">
+            <Text
+              style={{color: COLOR.TEXT_PRIMARY}}
+              className="font-bold text-sm">
               {!isActive && index! + 1}
             </Text>
-
             {isActive && <ActiveTrackAnimation isAlbum={true} />}
           </View>
         </View>
       ) : (
-        <View>
+        <View className="relative">
           <FastImage
-            className={isTrackThumbnailBorder ? "rounded-lg" : ""}
+            className={`${
+              isTrackThumbnailBorder ? "rounded-xl" : ""
+            } shadow-sm`}
             source={{
               uri: getThumbnail(item?.thumbnail),
             }}
@@ -72,15 +81,16 @@ const TrackItem: React.FC<Props> = props => {
             <ActiveTrackAnimation
               isAlbum={false}
               style={{
-                borderRadius: isTrackThumbnailBorder ? 6 : 0,
+                borderRadius: isTrackThumbnailBorder ? 12 : 0,
               }}
             />
           )}
         </View>
       )}
-      <View className="flex  ml-2 flex-1 justify-center">
+
+      <View className="flex ml-3 flex-1 justify-center">
         <Text
-          className="font-semibold"
+          className="font-bold"
           numberOfLines={1}
           style={{
             color: isActive
@@ -88,37 +98,42 @@ const TrackItem: React.FC<Props> = props => {
                 ? COLOR.PRIMARY
                 : GREEN
               : COLOR.TEXT_PRIMARY,
-            fontSize: wp(4),
+            fontSize: wp(3.8),
           }}>
           {item?.title}
         </Text>
 
-        <View className="flex-row items-end justify-between">
+        <View className="flex-row items-center justify-between mt-0.5">
           <Text
             numberOfLines={1}
-            style={{color: COLOR.TEXT_SECONDARY, fontSize: wp(3.5)}}>
+            style={{
+              color: COLOR.TEXT_SECONDARY,
+              fontSize: wp(3.2),
+            }}
+            className="flex-1 mr-2">
             {item?.artistsNames}
           </Text>
           {timeStamp && (
-            <Text style={{fontSize: wp(2.5), color: COLOR.TEXT_SECONDARY}}>
+            <Text
+              style={{fontSize: wp(2.8), color: COLOR.TEXT_SECONDARY}}
+              className="font-medium">
               {dayjs(timeStamp).fromNow()}
             </Text>
           )}
         </View>
       </View>
 
-      <View>
-        <TouchableOpacity
-          disabled={item?.streamingStatus === 2}
-          onPress={() => showBottomSheet(item)}
-          hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}>
-          <Feather
-            name="more-vertical"
-            size={20}
-            color={`${COLOR.TEXT_PRIMARY}90`}
-          />
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity
+        disabled={item?.streamingStatus === 2}
+        onPress={() => showBottomSheet(item)}
+        className="p-2 -mr-1"
+        hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}>
+        <Feather
+          name="more-vertical"
+          size={18}
+          color={`${COLOR.TEXT_PRIMARY}80`}
+        />
+      </TouchableOpacity>
     </TouchableOpacity>
   );
 };

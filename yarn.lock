@@ -8797,10 +8797,10 @@ nodejs-mobile-gyp@^0.4.0:
     tar "^6.1.2"
     which "^4.0.0"
 
-nodejs-mobile-react-native@^18.17.7:
-  version "18.17.7"
-  resolved "https://registry.npmjs.org/nodejs-mobile-react-native/-/nodejs-mobile-react-native-18.17.7.tgz"
-  integrity sha512-642EBWyQi15vfYC7j3WRRAg+7pUUzXZ5Y0yFdcYawFSmrAh+kZl/0dwQPkpIspVcJebyigRbpoGH6i3ZCUEejA==
+nodejs-mobile-react-native@^18.20.4:
+  version "18.20.4"
+  resolved "https://registry.yarnpkg.com/nodejs-mobile-react-native/-/nodejs-mobile-react-native-18.20.4.tgz#b95947496e90ba1778353108b27d631bd4a614fb"
+  integrity sha512-Lba5nYNwEbw+K9WQnxcyY/9Beagw+NIVbyrCU6burCJZ1p1iKxSXTp5rctgvRxzQb4ARY0r9Uy1k7Dseb1FhVw==
   dependencies:
     mkdirp "^0.5.1"
     ncp "^2.0.0"
@@ -9922,11 +9922,6 @@ react-native-linear-gradient@^2.8.3:
   version "2.8.3"
   resolved "https://registry.npmjs.org/react-native-linear-gradient/-/react-native-linear-gradient-2.8.3.tgz"
   integrity sha512-KflAXZcEg54PXkLyflaSZQ3PJp4uC4whM7nT/Uot9m0e/qxFV3p6uor1983D1YOBJbJN7rrWdqIjq0T42jOJyA==
-
-react-native-loader-kit@^2.0.8:
-  version "2.0.8"
-  resolved "https://registry.yarnpkg.com/react-native-loader-kit/-/react-native-loader-kit-2.0.8.tgz#2d3b98805ec7edb857d38ee27402c05c60338980"
-  integrity sha512-mteFh4HF5uMjazLPxEE4lWw3aCWLH5jiUbqVZU4TtOWC+WV/Kck+ipDwsGzEqVxaIXh6bNoti1fkziNGLiuDJg==
 
 react-native-mmkv@^2.12.2:
   version "2.12.2"

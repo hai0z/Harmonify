@@ -23,7 +23,7 @@ export const PlayerContext = React.createContext({} as ContextType);
 
 nodejs.start("main.js");
 
-nodejs.channel.addListener("getLyric", async data => {
+nodejs.channel.addListener("getLyric", data => {
   usePlayerStore.getState().setLyrics(data);
 });
 
@@ -47,101 +47,94 @@ const PlayerProvider = ({children}: {children: React.ReactNode}) => {
   } = usePlayerStore();
 
   const COLOR = useThemeStore(state => state.COLOR);
-
-  const getSongColors = async () => {
-    if (currentSong?.artwork !== null) {
-      getColors(getThumbnail(currentSong?.artwork!, 720), {
-        fallback: "#0098DB",
-        cache: true,
-        key: currentSong?.id,
-      }).then(setColor);
-    }
-  };
-
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
-  const setData = useBottomSheetStore(state => state.setData);
+  const getSongColors = useCallback(async () => {
+    if (!currentSong?.artwork) return;
+
+    const colors = await getColors(getThumbnail(currentSong.artwork, 720), {
+      fallback: "#0098DB",
+      cache: true,
+      key: currentSong.id,
+    });
+    setColor(colors);
+  }, [currentSong?.artwork, currentSong?.id]);
 
   const showBottomSheet = useCallback((item: any) => {
     bottomSheetModalRef.current?.present();
-    setData(item);
+    useBottomSheetStore.getState().setData(item);
   }, []);
 
-  Appearance.setColorScheme(COLOR.isDark ? "dark" : "light");
+  const initPlayer = useCallback(async () => {
+    await TrackPlayer.reset();
+    setShuffleMode(false);
+    setSleepTimer(null);
 
-  const initPlayer = async () => {
     if (offlineMode) {
       setHomeLoading(false);
-    }
-    if (savePlayerState) {
-      await TrackPlayer.reset();
-      setShuffleMode(false);
-      !offlineMode && setHomeLoading(true);
-      setIsFistInit(true);
-      setisLoadingTrack(true);
-      setSleepTimer(null);
-      if (
-        playList.items.length > 0 &&
-        playList.id !== "" &&
-        currentSong !== null
-      ) {
-        let index = playList.items.findIndex(
-          (item: any) => item?.encodeId === currentSong?.id
-        );
-        if (index < 0) {
-          index = 0;
-        }
-        if (!isPlayFromLocal) {
-          await TrackPlayer.setQueue(
-            playList.items.map((item: any) => objectToTrack(item))
-          );
-        } else {
-          await TrackPlayer.setQueue(
-            playList.items.map((item: any) => ({
-              ...objectToTrack(item),
-              url: item.url,
-              artwork: item.thumbnail || DEFAULT_IMG,
-            }))
-          );
-        }
-        await TrackPlayer.skip(index).finally(() => {
-          setisLoadingTrack(false);
-        });
-      }
     } else {
-      await TrackPlayer.reset();
+      setHomeLoading(true);
+    }
+
+    if (!savePlayerState) {
       setIsFistInit(false);
       setCurrentSong(null);
       setLastPosition(0);
       setisLoadingTrack(false);
+      return;
     }
-  };
+
+    if (!playList.items.length || !playList.id || !currentSong) {
+      setisLoadingTrack(false);
+      return;
+    }
+
+    setIsFistInit(true);
+    setisLoadingTrack(true);
+
+    const index = Math.max(
+      0,
+      playList.items.findIndex(
+        (item: any) => item?.encodeId === currentSong?.id
+      )
+    );
+
+    const queue = playList.items.map((item: any) => ({
+      ...objectToTrack(item),
+      ...(isPlayFromLocal && {
+        url: item.url,
+        artwork: item.thumbnail || DEFAULT_IMG,
+      }),
+    }));
+
+    await TrackPlayer.setQueue(queue);
+    await TrackPlayer.skip(index);
+    setisLoadingTrack(false);
+  }, [playList, currentSong, isPlayFromLocal, savePlayerState, offlineMode]);
 
   useEffect(() => {
-    initPlayer().then(() => {
-      SplashScreen.hide();
-    });
+    initPlayer().then(() => SplashScreen.hide());
   }, []);
 
   useEffect(() => {
-    if (!isPlayFromLocal) {
-      Promise.all([
-        nodejs.channel.post("getLyric", currentSong?.id),
-        getSongColors(),
-      ]);
+    if (!isPlayFromLocal && currentSong?.id) {
+      nodejs.channel.post("getLyric", currentSong.id);
+      getSongColors();
     }
-  }, [currentSong?.id]);
+  }, [currentSong?.id, isPlayFromLocal, getSongColors]);
 
   useEffect(() => {
-    saveHistory && saveToHistory(tempSong);
-  }, [tempSong?.encodeId]);
+    if (saveHistory && tempSong?.encodeId) {
+      saveToHistory(tempSong);
+    }
+  }, [tempSong?.encodeId, saveHistory]);
+
+  useEffect(() => {
+    Appearance.setColorScheme(COLOR.isDark ? "dark" : "light");
+  }, [COLOR.isDark]);
 
   return (
-    <PlayerContext.Provider
-      value={{
-        bottomSheetModalRef,
-        showBottomSheet,
-      }}>
+    <PlayerContext.Provider value={{bottomSheetModalRef, showBottomSheet}}>
       {children}
     </PlayerContext.Provider>
   );

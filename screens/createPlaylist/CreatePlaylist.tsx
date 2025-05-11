@@ -1,21 +1,22 @@
-import {View, Text, TouchableOpacity, Alert} from 'react-native';
-import React from 'react';
-import useThemeStore from '../../store/themeStore';
-import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
-import {TextInput} from 'react-native-gesture-handler';
-import {useNavigation} from '@react-navigation/native';
-import {DEFAULT_IMG} from '../../constants';
-import {createPlaylist} from '../../service/firebase';
+import {View, Text, TouchableOpacity, Alert} from "react-native";
+import React from "react";
+import useThemeStore from "../../store/themeStore";
+import {widthPercentageToDP as wp} from "react-native-responsive-screen";
+import {TextInput} from "react-native-gesture-handler";
+import {useNavigation} from "@react-navigation/native";
+import {DEFAULT_IMG} from "../../constants";
+import {createPlaylist} from "../../service/firebase";
+import {ArrowLeft} from "iconsax-react-native";
+import tinycolor from "tinycolor2";
+
 const CreatePlaylist = () => {
   const {COLOR} = useThemeStore();
-
   const navigation = useNavigation<any>();
-
-  const [playlistName, setPlaylistName] = React.useState('');
+  const [playlistName, setPlaylistName] = React.useState("");
 
   const handleCreatePlaylist = async () => {
     if (playlistName.trim().length === 0) {
-      Alert.alert('Thất bại', 'Vui lòng đặt tên cho playlist');
+      Alert.alert("Thất bại", "Vui lòng đặt tên cho playlist");
     } else {
       const playlist = {
         encodeId: Math.random().toString(36).substring(3),
@@ -28,75 +29,105 @@ const CreatePlaylist = () => {
           navigation.goBack();
         });
       } catch (error) {
-        Alert.alert('Thất bại', 'Có lỗi xảy ra vui lòng thử lại sau');
+        Alert.alert("Thất bại", "Có lỗi xảy ra vui lòng thử lại sau");
       }
     }
   };
+
   return (
     <View
-      className="flex-1 w-full justify-center items-center"
+      className="flex-1"
       style={{
         backgroundColor: COLOR.BACKGROUND,
       }}>
-      <View className="w-full px-6">
-        <Text
+      <View className="flex-row items-center px-4 pt-12 pb-4">
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          className="p-2 rounded-full"
           style={{
-            fontFamily: 'SVN-Gotham Black',
-            fontSize: wp(6),
+            backgroundColor: tinycolor(COLOR.BACKGROUND)
+              .setAlpha(0.5)
+              .toString(),
+          }}>
+          <ArrowLeft size={24} color={COLOR.TEXT_PRIMARY} />
+        </TouchableOpacity>
+        <Text
+          className="ml-4"
+          style={{
+            fontFamily: "SVN-Gotham Black",
+            fontSize: wp(5),
             color: COLOR.TEXT_PRIMARY,
           }}>
-          Đặt tên cho playlist của bạn
+          Tạo playlist mới
         </Text>
-        <TextInput
-          value={playlistName}
-          onChangeText={setPlaylistName}
-          className="border-b py-4"
-          placeholder="Tên playlist"
-          placeholderTextColor={COLOR.TEXT_SECONDARY}
+      </View>
+
+      <View className="flex-1 px-6 justify-center">
+        <View
+          className="bg-opacity-10 rounded-xl p-6"
           style={{
-            fontFamily: 'SVN-Gotham Black',
-            fontSize: wp(4),
-            borderColor: COLOR.TEXT_SECONDARY,
-            color: COLOR.TEXT_PRIMARY,
-          }}
-        />
-        <View className="flex flex-row justify-center items-center mt-4">
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            className="mr-8"
+            backgroundColor: tinycolor(COLOR.PRIMARY).setAlpha(0.1).toString(),
+          }}>
+          <Text
             style={{
-              borderColor: COLOR.SECONDARY,
-              paddingHorizontal: 12,
-              paddingVertical: 8,
-              borderRadius: 4,
-              borderWidth: 1,
+              fontFamily: "SVN-Gotham Black",
+              fontSize: wp(6),
+              color: COLOR.TEXT_PRIMARY,
+              marginBottom: 20,
             }}>
-            <Text
-              style={{
-                fontFamily: 'SVN-Gotham Black',
-                fontSize: wp(4.5),
-                color: COLOR.TEXT_SECONDARY,
-              }}>
-              Huỷ
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={handleCreatePlaylist}
+            Đặt tên cho playlist của bạn
+          </Text>
+
+          <TextInput
+            value={playlistName}
+            onChangeText={setPlaylistName}
+            className="border-b py-4 mb-8"
+            placeholder="Tên playlist"
+            placeholderTextColor={COLOR.TEXT_SECONDARY}
             style={{
-              backgroundColor: COLOR.PRIMARY,
-              paddingHorizontal: 12,
-              paddingVertical: 8,
-              borderRadius: 4,
-            }}>
-            <Text
+              fontFamily: "SVN-Gotham Black",
+              fontSize: wp(4),
+              borderColor: tinycolor(COLOR.TEXT_SECONDARY)
+                .setAlpha(0.3)
+                .toString(),
+              color: COLOR.TEXT_PRIMARY,
+            }}
+          />
+
+          <View className="flex-row justify-end items-center">
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              className="mr-4 px-6 py-3 rounded-full"
               style={{
-                fontFamily: 'SVN-Gotham Black',
-                fontSize: wp(4.5),
-                color: COLOR.TEXT_PRIMARY,
+                borderColor: COLOR.TEXT_SECONDARY,
+                borderWidth: 1,
               }}>
-              Tạo
-            </Text>
-          </TouchableOpacity>
+              <Text
+                style={{
+                  fontFamily: "SVN-Gotham Black",
+                  fontSize: wp(4),
+                  color: COLOR.TEXT_SECONDARY,
+                }}>
+                Huỷ
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={handleCreatePlaylist}
+              className="px-6 py-3 rounded-full"
+              style={{
+                backgroundColor: COLOR.PRIMARY,
+              }}>
+              <Text
+                style={{
+                  fontFamily: "SVN-Gotham Black",
+                  fontSize: wp(4),
+                  color: COLOR.TEXT_PRIMARY,
+                }}>
+                Tạo playlist
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </View>

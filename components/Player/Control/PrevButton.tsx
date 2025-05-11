@@ -1,10 +1,10 @@
-import {TouchableOpacity} from 'react-native';
-import React from 'react';
-import useThemeStore from '../../../store/themeStore';
-import TrackPlayer from 'react-native-track-player';
-import {usePlayerStore} from '../../../store/playerStore';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {objectToTrack} from '../../../service/trackPlayerService';
+import {TouchableOpacity} from "react-native";
+import React from "react";
+import useThemeStore from "../../../store/themeStore";
+import TrackPlayer from "react-native-track-player";
+import {usePlayerStore} from "../../../store/playerStore";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import {objectToTrack} from "../../../service/trackPlayerService";
 const PrevButton = () => {
   const {COLOR} = useThemeStore(state => state);
   const {
@@ -35,15 +35,13 @@ const PrevButton = () => {
     <TouchableOpacity
       disabled={!nextTrackLoaded}
       onPress={PrevTrack}
+      className="items-center justify-center"
       style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
         opacity: nextTrackLoaded ? 1 : 0.5,
       }}>
       <MaterialCommunityIcons
         name="skip-previous"
-        size={48}
+        size={44}
         color={COLOR.TEXT_PRIMARY}
       />
     </TouchableOpacity>

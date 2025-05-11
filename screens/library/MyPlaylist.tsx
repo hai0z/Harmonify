@@ -7,35 +7,35 @@ import {
   Image,
   Text,
   TextInput,
-} from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+} from "react-native";
+import Ionicons from "react-native-vector-icons/Ionicons";
 import React, {
   useCallback,
   useContext,
   useEffect,
   useLayoutEffect,
-} from 'react';
-import {LinearGradient} from 'react-native-linear-gradient';
-import {FlashList} from '@shopify/flash-list';
-import {handlePlay} from '../../service/trackPlayerService';
-import {useNavigation} from '@react-navigation/native';
-import {usePlayerStore} from '../../store/playerStore';
-import TrackItem from '../../components/track-item/TrackItem';
-import {PlayerContext} from '../../context/PlayerProvider';
-import useThemeStore from '../../store/themeStore';
-import {useUserStore} from '../../store/userStore';
-import getThumbnail from '../../utils/getThumnail';
-import RenderPlaylistThumbnail from './components/RenderPlaylistThumnail';
-import RAnimated, {useSharedValue, withTiming} from 'react-native-reanimated';
-import {getColors} from 'react-native-image-colors';
-import useDarkColor from '../../hooks/useDarkColor';
-import tinycolor from 'tinycolor2';
-import stringToSlug from '../../utils/removeSign';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import {route} from '../../utils/types/RootStackParamList';
-import {SearchNormal} from 'iconsax-react-native';
+} from "react";
+import {LinearGradient} from "react-native-linear-gradient";
+import {FlashList} from "@shopify/flash-list";
+import {handlePlay} from "../../service/trackPlayerService";
+import {useNavigation} from "@react-navigation/native";
+import {usePlayerStore} from "../../store/playerStore";
+import TrackItem from "../../components/track-item/TrackItem";
+import {PlayerContext} from "../../context/PlayerProvider";
+import useThemeStore from "../../store/themeStore";
+import {useUserStore} from "../../store/userStore";
+import getThumbnail from "../../utils/getThumnail";
+import RenderPlaylistThumbnail from "./components/RenderPlaylistThumnail";
+import RAnimated, {useSharedValue, withTiming} from "react-native-reanimated";
+import {getColors} from "react-native-image-colors";
+import useDarkColor from "../../hooks/useDarkColor";
+import tinycolor from "tinycolor2";
+import stringToSlug from "../../utils/removeSign";
+import {widthPercentageToDP as wp} from "react-native-responsive-screen";
+import {route} from "../../utils/types/RootStackParamList";
+import {SearchNormal, Play} from "iconsax-react-native";
 
-const SCREEN_WIDTH = Dimensions.get('window').width;
+const SCREEN_WIDTH = Dimensions.get("window").width;
 
 const caculateTotalTime = (playlistData: any) => {
   let total = 0;
@@ -48,7 +48,8 @@ const caculateTotalTime = (playlistData: any) => {
 
   return {hours, minutes};
 };
-const MyPlaylist = ({route}: {route: route<'MyPlaylist'>}) => {
+
+const MyPlaylist = ({route}: {route: route<"MyPlaylist">}) => {
   const scrollY = React.useRef(new Animated.Value(0)).current;
 
   const {playlistId} = route.params;
@@ -67,9 +68,9 @@ const MyPlaylist = ({route}: {route: route<'MyPlaylist'>}) => {
 
   const [color, setColor] = React.useState<any>(null);
 
-  const bgAnimated = useSharedValue('transparent');
+  const bgAnimated = useSharedValue("transparent");
 
-  const [searchText, setSearchText] = React.useState<string>('');
+  const [searchText, setSearchText] = React.useState<string>("");
 
   const [searchData, setSearchData] = React.useState<any>(data.songs);
 
@@ -115,7 +116,7 @@ const MyPlaylist = ({route}: {route: route<'MyPlaylist'>}) => {
     (async () => {
       getColors(
         data.songs.at(Math.floor(Math.random() * data.songs.length - 1))
-          .thumbnail,
+          .thumbnail
       ).then((res: any) => {
         setColor(res);
       });
@@ -134,26 +135,33 @@ const MyPlaylist = ({route}: {route: route<'MyPlaylist'>}) => {
         }95`,
         {
           duration: 750,
-        },
+        }
       );
     }
   }, [color, isSearching, showBottomSheet]);
 
   const headerColor = scrollY.interpolate({
     inputRange: [SCREEN_WIDTH * 0.8, SCREEN_WIDTH * 0.8],
-    outputRange: ['transparent', COLOR.BACKGROUND],
-    extrapolate: 'clamp',
+    outputRange: ["transparent", COLOR.BACKGROUND],
+    extrapolate: "clamp",
   });
+
   const headerTitleOpacity = scrollY.interpolate({
     inputRange: [0, SCREEN_WIDTH * 0.6, SCREEN_WIDTH * 0.8],
     outputRange: [0, 0, 1],
-    extrapolate: 'clamp',
+    extrapolate: "clamp",
   });
 
   const titleOpacity = scrollY.interpolate({
     inputRange: [0, SCREEN_WIDTH * 0.4, SCREEN_WIDTH * 0.6],
     outputRange: [1, 0.5, 0],
-    extrapolate: 'clamp',
+    extrapolate: "clamp",
+  });
+
+  const imgScale = scrollY.interpolate({
+    inputRange: [0, SCREEN_WIDTH * 0.4, SCREEN_WIDTH * 0.6],
+    outputRange: [1, 0.6, 0.4],
+    extrapolate: "clamp",
   });
 
   const handlePlaySong = useCallback((song: any) => {
@@ -163,53 +171,62 @@ const MyPlaylist = ({route}: {route: route<'MyPlaylist'>}) => {
       isAlbum: false,
     });
     setPlayFrom({
-      id: 'playlist',
+      id: "playlist",
       name: data?.title,
     });
   }, []);
 
   return (
-    <View
-      className="flex-1  w-full"
-      style={{backgroundColor: COLOR.BACKGROUND}}>
+    <View className="flex-1 w-full" style={{backgroundColor: COLOR.BACKGROUND}}>
       <Animated.View
-        className="absolute top-0  left-0 right-0 z-30 h-20 pt-[35px] justify-between items-center flex-row px-6"
+        className="absolute top-0 left-0 right-0 z-30 h-20 pt-[35px] justify-between items-center flex-row px-6"
         style={{backgroundColor: headerColor}}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color={COLOR.TEXT_PRIMARY} />
+        <TouchableOpacity
+          className="w-10 h-10 rounded-full bg-black/20 items-center justify-center"
+          onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back" size={20} color={COLOR.TEXT_PRIMARY} />
         </TouchableOpacity>
-        <View className="justify-center items-center">
+        <View className="justify-center items-center flex-1">
           <Animated.Text
-            style={{opacity: headerTitleOpacity, color: COLOR.TEXT_PRIMARY}}
-            className="font-bold">
+            style={{
+              opacity: headerTitleOpacity,
+              color: COLOR.TEXT_PRIMARY,
+              fontFamily: "SVN-Gotham Black",
+              fontSize: wp(4.5),
+            }}
+            className="text-center">
             {data?.title}
           </Animated.Text>
         </View>
-        <TouchableOpacity onPress={() => setIsSearching(true)}>
-          <SearchNormal size={24} color={COLOR.TEXT_PRIMARY} />
+        <TouchableOpacity
+          className="w-10 h-10 rounded-full bg-black/20 items-center justify-center"
+          onPress={() => setIsSearching(true)}>
+          <SearchNormal size={20} color={COLOR.TEXT_PRIMARY} />
         </TouchableOpacity>
       </Animated.View>
+
       {isSearching && (
         <View
           style={{backgroundColor: COLOR.BACKGROUND}}
-          className="absolute top-0 left-0 right-0 z-30 h-20 pt-[35px]  items-center justify-between flex-row px-6">
+          className="absolute top-0 left-0 right-0 z-30 h-20 pt-[35px] items-center justify-between flex-row px-6">
           <TouchableOpacity
+            className="w-10 h-10 rounded-full bg-black/20 items-center justify-center"
             onPress={() => {
               setIsSearching(false);
-              setSearchText('');
+              setSearchText("");
               setSearchData(data.songs);
               scrollY.setValue(0);
             }}>
-            <Ionicons name="arrow-back" size={24} color={COLOR.TEXT_PRIMARY} />
+            <Ionicons name="arrow-back" size={20} color={COLOR.TEXT_PRIMARY} />
           </TouchableOpacity>
           <View className="justify-center items-center p-1 flex-1 ml-2">
             <TextInput
               ref={textInputRef}
               value={searchText}
               onChangeText={text => handleSearch(text)}
+              placeholder="Tìm kiếm bài hát..."
+              className="w-full rounded-full p-2 px-4"
               placeholderTextColor={COLOR.TEXT_SECONDARY}
-              placeholder="Nhập tên bài hát..."
-              className="w-full rounded-md p-2"
               style={{
                 color: COLOR.TEXT_PRIMARY,
                 backgroundColor: !COLOR.isDark
@@ -218,16 +235,17 @@ const MyPlaylist = ({route}: {route: route<'MyPlaylist'>}) => {
               }}
             />
           </View>
-          <View className="w-4" />
+          <View className="w-10" />
         </View>
       )}
+
       <FlashList
         ref={flashListRef}
         showsVerticalScrollIndicator={false}
         scrollEventThrottle={32}
         onScroll={Animated.event(
           [{nativeEvent: {contentOffset: {y: scrollY}}}],
-          {useNativeDriver: false},
+          {useNativeDriver: false}
         )}
         ListHeaderComponent={
           !isSearching ? (
@@ -236,54 +254,77 @@ const MyPlaylist = ({route}: {route: route<'MyPlaylist'>}) => {
                 className="flex justify-end items-center pb-4"
                 style={{height: SCREEN_WIDTH * 0.8}}>
                 <LinearGradient
-                  colors={['transparent', COLOR.BACKGROUND]}
-                  className="absolute bottom-0 h-40 left-0 right-0 z-50"
+                  colors={["transparent", COLOR.BACKGROUND]}
+                  className="absolute bottom-0 h-full left-0 right-0 z-50"
                 />
                 <RAnimated.View
-                  style={[
-                    StyleSheet.absoluteFill,
-                    {
-                      width: SCREEN_WIDTH,
-                      height: SCREEN_WIDTH * 0.8,
-                      backgroundColor: bgAnimated,
-                    },
-                  ]}
+                  className="absolute"
+                  style={{
+                    width: SCREEN_WIDTH,
+                    height: SCREEN_WIDTH * 0.8,
+                    backgroundColor: bgAnimated,
+                  }}
                 />
                 {data?.songs.length > 0 ? (
-                  <RenderPlaylistThumbnail
-                    playlistLength={data?.songs?.length}
-                    songs={data?.songs}
-                    width={SCREEN_WIDTH * 0.6}
-                    height={SCREEN_WIDTH * 0.6}
-                  />
+                  <Animated.View
+                    style={{
+                      opacity: titleOpacity,
+                      transform: [{scale: imgScale}],
+                      zIndex: 9999,
+                    }}>
+                    <RenderPlaylistThumbnail
+                      playlistLength={data?.songs?.length}
+                      songs={data?.songs}
+                      width={SCREEN_WIDTH * 0.6}
+                      height={SCREEN_WIDTH * 0.6}
+                    />
+                  </Animated.View>
                 ) : (
-                  <Image
+                  <Animated.Image
                     source={{uri: getThumbnail(data?.thumbnailM)}}
+                    className="rounded-2xl"
                     style={{
                       width: SCREEN_WIDTH * 0.6,
                       height: SCREEN_WIDTH * 0.6,
-                      zIndex: 50,
+                      zIndex: 9999,
+                      opacity: titleOpacity,
+                      transform: [{scale: imgScale}],
                     }}
                   />
                 )}
               </View>
-              <View className="z-50 mt-4 px-6 mb-8">
+              <View className="z-50 mt-4 px-6 mb-4">
                 <Animated.Text
-                  style={{opacity: titleOpacity, color: COLOR.TEXT_PRIMARY}}
-                  className=" text-center text-3xl font-bold">
+                  style={{
+                    opacity: titleOpacity,
+                    color: COLOR.TEXT_PRIMARY,
+                    fontFamily: "SVN-Gotham Black",
+                    fontSize: wp(8),
+                  }}
+                  className="text-center">
                   {data?.title}
                 </Animated.Text>
-              </View>
-              <View className="flex flex-row items-center py-4 px-4">
-                <Text style={{color: COLOR.TEXT_PRIMARY}}>
-                  {data?.songs.length} bài hát{' • '}
-                </Text>
-                <Text style={{color: COLOR.TEXT_PRIMARY}}>
-                  {caculateTotalTime(data).hours > 0 && (
-                    <Text>{caculateTotalTime(data).hours} giờ </Text>
-                  )}
-                  {caculateTotalTime(data).minutes} phút
-                </Text>
+                <View className="flex-row justify-between items-center mt-8">
+                  <View className="flex-1">
+                    <Text
+                      style={{color: COLOR.TEXT_SECONDARY}}
+                      className="text-center text-sm">
+                      {data?.songs.length} bài hát{" • "}
+                      {caculateTotalTime(data).hours > 0 && (
+                        <Text>{caculateTotalTime(data).hours} giờ </Text>
+                      )}
+                      {caculateTotalTime(data).minutes} phút
+                    </Text>
+                  </View>
+                </View>
+
+                <View className="flex-row justify-center gap-4 mt-8">
+                  <TouchableOpacity
+                    className="w-12 h-12 rounded-full bg-[#1DB954] items-center justify-center"
+                    onPress={() => handlePlaySong(data?.songs[0])}>
+                    <Play size={24} color="#fff" variant="Bold" />
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
           ) : (

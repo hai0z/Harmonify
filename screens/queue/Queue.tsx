@@ -1,28 +1,22 @@
-import {
-  View,
-  Text,
-  ImageBackground,
-  StyleSheet,
-  Dimensions,
-} from 'react-native';
+import {View, Text, StyleSheet, Dimensions} from "react-native";
 import React, {
   useCallback,
   useContext,
   useEffect,
   useLayoutEffect,
   useState,
-} from 'react';
-import useThemeStore from '../../store/themeStore';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import {playFromMapping, usePlayerStore} from '../../store/playerStore';
-import {useNavigation} from '@react-navigation/native';
+} from "react";
+import useThemeStore from "../../store/themeStore";
+import AntDesign from "react-native-vector-icons/AntDesign";
+import {playFromMapping, usePlayerStore} from "../../store/playerStore";
+import {useNavigation} from "@react-navigation/native";
 
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import {TouchableOpacity} from "react-native-gesture-handler";
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP,
-} from 'react-native-responsive-screen';
-import {FlashList} from '@shopify/flash-list';
+} from "react-native-responsive-screen";
+import {FlashList} from "@shopify/flash-list";
 import Animated, {
   Easing,
   FadeIn,
@@ -31,24 +25,24 @@ import Animated, {
   runOnUI,
   useSharedValue,
   withTiming,
-} from 'react-native-reanimated';
-import PlayButton from '../../components/Player/Control/PlayButton';
-import PrevButton from '../../components/Player/Control/PrevButton';
-import NextButton from '../../components/Player/Control/NextButton';
-import TrackPlayer, {useActiveTrack} from 'react-native-track-player';
-import LinearGradient from 'react-native-linear-gradient';
-import useImageColor from '../../hooks/useImageColor';
-import {PlayerContext} from '../../context/PlayerProvider';
-import TrackItem from '../../components/track-item/TrackItem';
-import TrackItemBottomSheet from '../../components/bottom-sheet/TrackItemBottomSheet';
-import ProgressBar from './components/ProgressBar';
-import LocalTrackItem from '../../components/track-item/LocalTrackItem';
+} from "react-native-reanimated";
+import PlayButton from "../../components/Player/Control/PlayButton";
+import PrevButton from "../../components/Player/Control/PrevButton";
+import NextButton from "../../components/Player/Control/NextButton";
+import TrackPlayer, {useActiveTrack} from "react-native-track-player";
+import LinearGradient from "react-native-linear-gradient";
+import useImageColor from "../../hooks/useImageColor";
+import {PlayerContext} from "../../context/PlayerProvider";
+import TrackItem from "../../components/track-item/TrackItem";
+import TrackItemBottomSheet from "../../components/bottom-sheet/TrackItemBottomSheet";
+import ProgressBar from "./components/ProgressBar";
+import LocalTrackItem from "../../components/track-item/LocalTrackItem";
 
-import {Song} from '../../utils/types/type';
-import {getQueue} from 'react-native-track-player/lib/trackPlayer';
-import {Image} from 'react-native';
+import {Song} from "../../utils/types/type";
+import {getQueue} from "react-native-track-player/lib/trackPlayer";
+import {Image} from "react-native";
 
-const SCREEN_WIDTH = Dimensions.get('window').width;
+const SCREEN_WIDTH = Dimensions.get("window").width;
 const Queue = () => {
   const COLOR = useThemeStore(state => state.COLOR);
 
@@ -63,10 +57,8 @@ const Queue = () => {
   const currentSong = useActiveTrack();
 
   const trackIndex = playList.items.findIndex(
-    item => item.encodeId == currentSong?.id,
+    item => item.encodeId == currentSong?.id
   );
-
-  const {isBlur} = usePlayerStore(state => state);
 
   const [copyPlaylist, setCopyPlaylist] = useState<any[]>([...playList.items]);
 
@@ -80,7 +72,7 @@ const Queue = () => {
       const index = queue.findIndex(track => track.id == item.encodeId);
       TrackPlayer.skip(index);
     },
-    [playList],
+    [playList]
   );
 
   const $bg = useSharedValue(`transparent`);
@@ -95,7 +87,7 @@ const Queue = () => {
   }, [currentSong?.id, playList.items]);
 
   const changeBgAnimated = () => {
-    'worklet';
+    "worklet";
     $bg.value = withTiming(`${gradientColor}70`, {
       duration: 750,
       easing: Easing.inOut(Easing.quad),
@@ -109,45 +101,15 @@ const Queue = () => {
     <View
       className="pt-[35px] flex-1"
       style={{backgroundColor: COLOR.BACKGROUND}}>
-      {/* {!isBlur && (
-        <>
-          <Animated.View
-            className="absolute top-0 left-0 right-0"
-            style={{height: hp(15), backgroundColor: $bg}}
-          />
-          <LinearGradient
-            style={{height: hp(15)}}
-            colors={[`transparent`, `${COLOR.BACKGROUND}`]}
-            className="absolute top-0 left-0 right-0 h-full"
-          />
-        </>
-      )} */}
-
       <Animated.View
-        style={{height: hp(125), position: 'absolute', width: SCREEN_WIDTH}}>
-        <Animated.Image
-          key={currentSong?.id}
-          exiting={FadeOut.duration(2500)}
-          blurRadius={125}
-          source={{uri: currentSong?.artwork?.replace('r1x1', 'r9x16')}}
-          style={[
-            StyleSheet.absoluteFill,
-            {
-              width: SCREEN_WIDTH,
-              height: hp(125),
-              zIndex: -1,
-            },
-          ]}></Animated.Image>
-        <View
-          style={{
-            width: SCREEN_WIDTH,
-            height: hp(125),
-            backgroundColor: COLOR.isDark
-              ? 'rgba(0,0,0,0.45)'
-              : 'rgba(255,255,255,0.6)',
-          }}
-        />
-      </Animated.View>
+        className="absolute top-0 left-0 right-0"
+        style={{height: hp(15), backgroundColor: $bg}}
+      />
+      <LinearGradient
+        style={{height: hp(15)}}
+        colors={[`transparent`, `${COLOR.BACKGROUND}`]}
+        className="absolute top-0 left-0 right-0 h-full"
+      />
 
       <View className="flex flex-row items-center justify-between px-4">
         <Animated.View

@@ -1,35 +1,47 @@
-import {usePlayerStore} from '../store/playerStore';
-import useThemeStore from '../store/themeStore';
-import useDarkColor from './useDarkColor';
-import tinycolor from 'tinycolor2';
+import {usePlayerStore} from "../store/playerStore";
+import useThemeStore from "../store/themeStore";
+import useDarkColor from "./useDarkColor";
+import tinycolor from "tinycolor2";
 
 const useImageColor = () => {
   const color = usePlayerStore(state => state.color);
-  const COLOR = useThemeStore(state => state.COLOR);
+  const {COLOR} = useThemeStore();
+
+  const adjustColor = (baseColor: string, isDark: boolean, amount: number) => {
+    return isDark
+      ? tinycolor(baseColor).lighten(amount).toString()
+      : tinycolor(baseColor).darken(amount).toString();
+  };
 
   const dominantColor = COLOR.isDark
     ? useDarkColor(color.dominant!, 35)
-    : tinycolor(color.dominant!).isDark()
-    ? tinycolor(color.dominant!).lighten(40).toString()
-    : tinycolor(color.dominant!).darken(5).toString();
+    : adjustColor(color.dominant!, tinycolor(color.dominant!).isDark(), 40);
 
-  const vibrantColor = COLOR.isDark
-    ? color.vibrant === '#0098DB'
-      ? tinycolor(color.average).isDark()
-        ? tinycolor(color.average).lighten(20).toString()
-        : tinycolor(color.average).darken(5).toString()
-      : tinycolor(color.vibrant).isDark()
-      ? tinycolor(color.vibrant).toString()
-      : tinycolor(color.vibrant).darken(10).toString()
-    : color.vibrant === '#0098DB'
-    ? tinycolor(color.average).isDark()
-      ? tinycolor(color.average).lighten(35).toString()
-      : tinycolor(color.average).darken(5).toString()
-    : tinycolor(color.vibrant).lighten(15).toString();
+  const getVibrantColor = () => {
+    const isDefaultVibrant = color.vibrant === "#0098DB";
+    const baseColor = isDefaultVibrant ? color.average : color.vibrant;
+    const tColor = tinycolor(baseColor);
+
+    if (COLOR.isDark) {
+      if (isDefaultVibrant) {
+        return adjustColor(
+          baseColor!,
+          tColor.isDark(),
+          tColor.isDark() ? 20 : 5
+        );
+      }
+      return tColor.isDark() ? tColor.toString() : tColor.darken(10).toString();
+    }
+
+    if (isDefaultVibrant) {
+      return adjustColor(baseColor!, tColor.isDark(), tColor.isDark() ? 35 : 5);
+    }
+    return tColor.lighten(15).toString();
+  };
 
   return {
     dominantColor,
-    vibrantColor,
+    vibrantColor: getVibrantColor(),
   };
 };
 

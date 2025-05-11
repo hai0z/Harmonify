@@ -1,12 +1,12 @@
-import {View, Text} from 'react-native';
-import React, {useCallback, useMemo} from 'react';
+import {View, Text} from "react-native";
+import React, {useCallback, useMemo} from "react";
 import TrackPlayer, {
   useActiveTrack,
   useProgress,
-} from 'react-native-track-player';
-import Slider from '@react-native-assets/slider';
-import caculateTime, {seconds2MMSS} from '../../../utils/caculateMusicTime';
-import useThemeStore from '../../../store/themeStore';
+} from "react-native-track-player";
+import Slider from "@react-native-assets/slider";
+import caculateTime, {seconds2MMSS} from "../../../utils/caculateMusicTime";
+import useThemeStore from "../../../store/themeStore";
 
 const TrackSlider = () => {
   const COLOR = useThemeStore(state => state.COLOR);
@@ -18,7 +18,7 @@ const TrackSlider = () => {
     if (track?.duration) {
       return caculateTime(
         Math.floor(track.duration),
-        Math.floor(progess.position),
+        Math.floor(progess.position)
       );
     }
   }, [progess.position, track?.id]);
@@ -41,22 +41,27 @@ const TrackSlider = () => {
         slideOnTap
         maximumValue={progess.duration - 2}
         thumbStyle={{
-          height: 8,
-          width: 8,
+          height: 12,
+          width: 12,
           backgroundColor: COLOR.TEXT_PRIMARY,
+          borderRadius: 6,
+          elevation: 2,
         }}
         trackStyle={{
-          height: 3.25,
-          backgroundColor: COLOR.isDark ? '#ffffff20' : '#00000020',
+          height: 4,
+          backgroundColor: COLOR.isDark ? "#ffffff15" : "#00000015",
+          borderRadius: 2,
         }}
         minTrackStyle={{
-          backgroundColor: COLOR.isDark ? '#ffffff' : '#000000',
+          backgroundColor: COLOR.isDark ? "#ffffff" : "#000000",
+          borderRadius: 2,
         }}
         style={{
-          height: 20,
+          height: 24,
+          marginBottom: 4,
         }}
       />
-      <View className="flex flex-row justify-between items-center">
+      <View className="flex flex-row justify-between items-center px-1">
         <Text
           className="text-[12px] font-semibold"
           style={{color: `${COLOR.TEXT_PRIMARY}90`}}>

@@ -10,7 +10,6 @@
   "author": "janeasystems",
   "license": "",
   "dependencies": {
-    "colorthief": "^2.4.0",
     "express": "^4.19.2",
     "zingmp3-api-full": "^1.0.14",
     "zingmp3-api-next": "^1.0.4"

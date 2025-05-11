@@ -1,12 +1,12 @@
-import {ViewStyle} from 'react-native';
-import React from 'react';
-import Animated, {FadeIn, FadeOut} from 'react-native-reanimated';
-import LottieView from 'lottie-react-native';
-import changeSVGColor from '@killerwink/lottie-react-native-color';
-import useThemeStore from '../../store/themeStore';
-import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
-import {State, usePlaybackState} from 'react-native-track-player';
-import {GREEN} from '../../constants';
+import {ViewStyle} from "react-native";
+import React from "react";
+import Animated, {FadeIn, FadeOut} from "react-native-reanimated";
+import LottieView from "lottie-react-native";
+import changeSVGColor from "@killerwink/lottie-react-native-color";
+import useThemeStore from "../../store/themeStore";
+import {widthPercentageToDP as wp} from "react-native-responsive-screen";
+import {State, usePlaybackState} from "react-native-track-player";
+import {GREEN} from "../../constants";
 interface Props {
   isAlbum?: boolean;
   style?: ViewStyle;
@@ -22,14 +22,14 @@ const ActiveTrackAnimation = ({isAlbum, style}: Props) => {
         exiting={FadeOut.duration(300)}
         entering={FadeIn.duration(300)}
         style={{
-          position: 'absolute',
+          position: "absolute",
           top: 0,
           left: 0,
           bottom: 0,
           right: 0,
-          backgroundColor: !isAlbum ? '#00000040' : 'transparent',
-          justifyContent: 'center',
-          alignItems: 'center',
+          backgroundColor: !isAlbum ? "#00000040" : "transparent",
+          justifyContent: "center",
+          alignItems: "center",
           ...style,
         }}>
         <LottieView
@@ -37,8 +37,8 @@ const ActiveTrackAnimation = ({isAlbum, style}: Props) => {
           autoPlay
           speed={1}
           source={changeSVGColor(
-            require('../../assets/animation/musicwave.json'),
-            theme !== 'amoled' ? COLOR.PRIMARY : GREEN,
+            require("../../assets/animation/musicwave.json"),
+            theme !== "amoled" ? COLOR.PRIMARY : GREEN
           )}
         />
       </Animated.View>

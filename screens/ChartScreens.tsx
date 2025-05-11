@@ -1,85 +1,51 @@
-import {
-  View,
-  Text,
-  Dimensions,
-  TouchableOpacity,
-  Image,
-  StyleSheet,
-  ScrollView,
-  Animated,
-} from 'react-native';
-import Entypo from 'react-native-vector-icons/Entypo';
-
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {FlashList} from '@shopify/flash-list';
-import {handlePlay, objectToTrack} from '../service/trackPlayerService';
-import {LinearGradient} from 'react-native-linear-gradient';
-import getThumbnail from '../utils/getThumnail';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import {useNavigation} from '@react-navigation/native';
-import nodejs from 'nodejs-mobile-react-native';
-import useThemeStore from '../store/themeStore';
-import {usePlayerStore} from '../store/playerStore';
-import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
-import Loading from '../components/Loading';
-import {GREEN} from '../constants';
-const SCREEN_WIDTH = Dimensions.get('window').width;
+import {View, Text, TouchableOpacity, Dimensions} from "react-native";
+import React, {useCallback, useEffect, useState} from "react";
+import {FlashList} from "@shopify/flash-list";
+import {handlePlay, objectToTrack} from "../service/trackPlayerService";
+import getThumbnail from "../utils/getThumnail";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import {useNavigation} from "@react-navigation/native";
+import nodejs from "nodejs-mobile-react-native";
+import useThemeStore from "../store/themeStore";
+import {usePlayerStore} from "../store/playerStore";
+import {widthPercentageToDP as wp} from "react-native-responsive-screen";
+import Loading from "../components/Loading";
+import FastImage from "react-native-fast-image";
+import tinycolor from "tinycolor2";
+import useToggleLikeSong from "../hooks/useToggleLikeSong";
+import {Heart, Play} from "iconsax-react-native";
 
 const ChartScreens = () => {
   const [data, setData] = useState<any>([]);
-
   const [loading, setLoading] = useState(true);
-
   const COLOR = useThemeStore(state => state.COLOR);
-
-  const scrollY = React.useRef(new Animated.Value(0)).current;
-
   const setPlayFrom = usePlayerStore(state => state.setPlayFrom);
   const setCurrentSong = usePlayerStore(state => state.setCurrentSong);
+  const navigation = useNavigation<any>();
 
-  const headerColor = useMemo(
-    () =>
-      scrollY.interpolate({
-        inputRange: [SCREEN_WIDTH * 0.8, SCREEN_WIDTH * 0.8],
-        outputRange: ['transparent', COLOR.BACKGROUND],
-        extrapolate: 'clamp',
-      }),
-    [scrollY, COLOR.BACKGROUND],
-  );
-
-  const headerTitleOpacity = useMemo(
-    () =>
-      scrollY.interpolate({
-        inputRange: [0, SCREEN_WIDTH * 0.8, SCREEN_WIDTH * 0.8],
-        outputRange: [0, 0, 1],
-        extrapolate: 'clamp',
-      }),
-    [scrollY],
-  );
   useEffect(() => {
-    nodejs.channel.addListener('charthome', (data: any) => {
+    nodejs.channel.addListener("charthome", (data: any) => {
       setData(data.RTChart.items);
       setLoading(false);
     });
-    nodejs.channel.post('charthome');
+    nodejs.channel.post("charthome");
   }, []);
 
   const handlePlaySong = useCallback(
     (song: any) => {
       setCurrentSong(objectToTrack(song));
       handlePlay(song, {
-        id: 'chart',
+        id: "chart",
         items: data,
       });
       setPlayFrom({
-        id: 'chart',
-        name: 'Bảng xếp hạng V-POP',
+        id: "chart",
+        name: "Bảng xếp hạng V-POP",
       });
     },
-    [data],
+    [data]
   );
 
-  const navigation = useNavigation<any>();
   if (loading) {
     return (
       <View
@@ -89,36 +55,40 @@ const ChartScreens = () => {
       </View>
     );
   }
+
   return (
-    <View className="flex-1 " style={{backgroundColor: COLOR.BACKGROUND}}>
-      <Animated.View
-        className="absolute top-0 pt-[35px] left-0 right-0 z-30 h-20  justify-between items-center flex-row px-6"
-        style={{backgroundColor: headerColor}}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color={COLOR.TEXT_PRIMARY} />
+    <View className="flex-1" style={{backgroundColor: COLOR.BACKGROUND}}>
+      <View className="flex-row items-center justify-between px-4 pt-14 pb-4">
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          className="p-2 rounded-full"
+          style={{backgroundColor: `${COLOR.TEXT_SECONDARY}20`}}>
+          <Ionicons name="arrow-back" size={22} color={COLOR.TEXT_PRIMARY} />
         </TouchableOpacity>
-        <View className="justify-center items-center">
-          <Animated.Text
-            style={{opacity: headerTitleOpacity, color: COLOR.TEXT_PRIMARY}}
-            className="font-bold">
-            Bảng xếp hạng
-          </Animated.Text>
-        </View>
-        <View className="w-10"></View>
-      </Animated.View>
+        <Text
+          style={{
+            color: COLOR.TEXT_PRIMARY,
+            fontFamily: "SVN-Gotham Black",
+            fontSize: wp(4.5),
+          }}>
+          Bảng xếp hạng
+        </Text>
+        <View className="w-10" />
+      </View>
+
       <FlashList
         showsVerticalScrollIndicator={false}
-        onScroll={Animated.event(
-          [{nativeEvent: {contentOffset: {y: scrollY}}}],
-          {useNativeDriver: false},
-        )}
         ListHeaderComponent={
-          <ChartHeader
-            data={[...data].splice(0, 3)}
-            handlePlaySong={handlePlaySong}
-          />
+          <View className="px-4 py-6">
+            <TopChart data={data[0]} onPlay={handlePlaySong} />
+            <View className="flex-row mt-1">
+              <TopChartItem data={data[1]} rank={2} onPlay={handlePlaySong} />
+              <View className="w-1" />
+              <TopChartItem data={data[2]} rank={3} onPlay={handlePlaySong} />
+            </View>
+          </View>
         }
-        ListFooterComponent={() => <View style={{height: 200}} />}
+        ListFooterComponent={() => <View style={{height: 100}} />}
         estimatedItemSize={70}
         data={[...data].splice(3, data.length)}
         renderItem={({item, index}) => (
@@ -129,188 +99,218 @@ const ChartScreens = () => {
   );
 };
 
-const Dot = ({scrollX}: any) => {
+const TopChart = ({data, onPlay}: any) => {
   const COLOR = useThemeStore(state => state.COLOR);
-
-  return (
-    <View className="flex flex-row gap-2">
-      {Array(3)
-        .fill(0)
-        .map((_, i) => {
-          const inputRange = [
-            (i - 1) * SCREEN_WIDTH,
-            i * SCREEN_WIDTH,
-            (i + 1) * SCREEN_WIDTH,
-          ];
-          return (
-            <Animated.View
-              key={i}
-              className={'w-2 h-2 rounded-full mx-1'}
-              style={{
-                opacity: scrollX.interpolate({
-                  inputRange,
-                  outputRange: [0.3, 1, 0.3],
-                  extrapolate: 'clamp',
-                }),
-                backgroundColor: COLOR.SECONDARY,
-              }}></Animated.View>
-          );
-        })}
-    </View>
-  );
-};
-const ChartHeader = React.memo(({data, handlePlaySong}: any) => {
-  const COLOR = useThemeStore(state => state.COLOR);
-
-  const scrollX = React.useRef(new Animated.Value(0)).current;
-  const scrollViewRef = useRef<ScrollView>(null);
+  const {isLiked, handleAddToLikedList} = useToggleLikeSong(data?.encodeId);
 
   return (
     <View
-      style={{width: SCREEN_WIDTH, height: SCREEN_WIDTH * 1.2}}
-      className="justify-center items-center mb-8">
-      {data.map((item: any, index: number) => {
-        const opacity = scrollX.interpolate({
-          inputRange: [
-            (index - 1) * SCREEN_WIDTH,
-            SCREEN_WIDTH,
-            (index + 1) * SCREEN_WIDTH,
-          ],
-          outputRange: [0.2, 1, 0.2],
-          extrapolate: 'clamp',
-        });
-        return (
-          <Animated.Image
-            key={index}
-            blurRadius={1000}
-            src={item?.thumbnailM}
-            className="w-full h-full"
-            style={[StyleSheet.absoluteFillObject, {opacity}]}
+      className="rounded-3xl p-4"
+      style={{
+        backgroundColor: tinycolor(COLOR.BACKGROUND).lighten(3).toString(),
+      }}>
+      <View className="flex-row items-center justify-between mb-4">
+        <View className="flex-row items-center gap-3">
+          <Text
+            className="text-4xl font-black"
+            style={{
+              color: COLOR.PRIMARY,
+              fontFamily: "SVN-Gotham Black",
+            }}>
+            01
+          </Text>
+          <View>
+            <Text
+              className="font-bold mb-1"
+              style={{
+                fontSize: wp(4),
+                color: COLOR.TEXT_PRIMARY,
+                fontFamily: "SVN-Gotham Bold",
+              }}>
+              {data?.title}
+            </Text>
+            <Text
+              style={{
+                fontSize: wp(3.2),
+                color: COLOR.TEXT_SECONDARY,
+              }}>
+              {data?.artistsNames}
+            </Text>
+          </View>
+        </View>
+        <TouchableOpacity
+          onPress={() => handleAddToLikedList(data)}
+          className="p-2 rounded-full"
+          style={{
+            backgroundColor: tinycolor(COLOR.BACKGROUND).lighten(6).toString(),
+          }}>
+          <Heart
+            size={20}
+            variant={isLiked ? "Bold" : "Linear"}
+            color={isLiked ? "#ff4757" : COLOR.TEXT_SECONDARY}
           />
-        );
-      })}
-      <LinearGradient
-        colors={['transparent', COLOR.BACKGROUND]}
-        className="bottom-0 w-full h-full absolute"
-      />
-      <View className="absolute bottom-0 z-50">
-        <Dot scrollX={scrollX} />
+        </TouchableOpacity>
       </View>
-      <ScrollView
-        ref={scrollViewRef}
-        className="flex flex-col"
-        horizontal
-        pagingEnabled
-        onScroll={Animated.event(
-          [{nativeEvent: {contentOffset: {x: scrollX}}}],
-          {useNativeDriver: false},
-        )}>
-        {data.map((item: any, index: number) => {
-          const titleOpacity = scrollX.interpolate({
-            inputRange: [
-              SCREEN_WIDTH * (index - 1),
-              SCREEN_WIDTH * index,
-              SCREEN_WIDTH * (index + 1),
-            ],
-            outputRange: [0, 1, 0],
-            extrapolate: 'clamp',
-          });
-          const imgScale = scrollX.interpolate({
-            inputRange: [
-              SCREEN_WIDTH * (index - 1),
-              SCREEN_WIDTH * index,
-              SCREEN_WIDTH * (index + 1),
-            ],
-            outputRange: [0, 1, 0],
-            extrapolate: 'clamp',
-          });
-          return (
-            <View
-              key={item.encodeId}
-              className="flex flex-col items-center justify-center"
-              style={{width: SCREEN_WIDTH, height: SCREEN_WIDTH * 1.2}}>
-              <Animated.Image
-                className="rounded-xl"
-                src={getThumbnail(item.thumbnailM) || ''}
-                style={{
-                  width: SCREEN_WIDTH * 0.6,
-                  height: SCREEN_WIDTH * 0.6,
-                  transform: [{scale: imgScale}],
-                }}
-              />
-              <View className="mt-4">
-                <Animated.Text
-                  className="font-xl font-bold uppercase text-center"
-                  style={{
-                    maxWidth: SCREEN_WIDTH * 0.6,
-                    opacity: titleOpacity,
-                    color: COLOR.TEXT_PRIMARY,
-                  }}>
-                  {item.title}
-                </Animated.Text>
-                <Animated.Text
-                  className=" font-bold text-center"
-                  style={{
-                    maxWidth: SCREEN_WIDTH * 0.6,
-                    opacity: titleOpacity,
-                    color: COLOR.TEXT_SECONDARY,
-                  }}>
-                  {item.artistsNames}
-                </Animated.Text>
-              </View>
-              <TouchableOpacity
-                onPress={() => handlePlaySong(item)}
-                className="px-4 py-2 rounded-full mt-4 flex flex-row"
-                style={{backgroundColor: COLOR.PRIMARY}}>
-                <Entypo
-                  name="controller-play"
-                  size={20}
-                  color={COLOR.TEXT_PRIMARY}
-                />
-                <Text style={{color: COLOR.TEXT_PRIMARY}}>Phát</Text>
-              </TouchableOpacity>
-            </View>
-          );
-        })}
-      </ScrollView>
+
+      <TouchableOpacity
+        activeOpacity={0.9}
+        onPress={() => onPlay(data)}
+        className="relative">
+        <FastImage
+          source={{uri: getThumbnail(data?.thumbnailM)}}
+          className="w-full aspect-square rounded-2xl"
+        />
+        <View className="absolute inset-0 bg-black/30 rounded-2xl items-center justify-center">
+          <View
+            className="p-4 rounded-full"
+            style={{backgroundColor: COLOR.PRIMARY}}>
+            <Play variant="Bold" color="#fff" size={24} />
+          </View>
+        </View>
+      </TouchableOpacity>
     </View>
   );
-});
+};
+
+const TopChartItem = ({data, rank, onPlay}: any) => {
+  const COLOR = useThemeStore(state => state.COLOR);
+  const {isLiked, handleAddToLikedList} = useToggleLikeSong(data?.encodeId);
+
+  return (
+    <View
+      className="flex-1 rounded-2xl p-3"
+      style={{
+        backgroundColor: tinycolor(COLOR.BACKGROUND).lighten(3).toString(),
+      }}>
+      <TouchableOpacity
+        activeOpacity={0.9}
+        onPress={() => onPlay(data)}
+        className="relative mb-3">
+        <FastImage
+          source={{uri: getThumbnail(data?.thumbnailM)}}
+          className="w-full aspect-square rounded-xl"
+        />
+        <View className="absolute inset-0 bg-black/30 rounded-xl items-center justify-center">
+          <View
+            className="p-2 rounded-full"
+            style={{backgroundColor: COLOR.PRIMARY}}>
+            <Play variant="Bold" color="#fff" size={16} />
+          </View>
+        </View>
+      </TouchableOpacity>
+
+      <View className="flex-row items-center justify-between mb-2">
+        <Text
+          className="text-2xl font-black"
+          style={{
+            color: COLOR.PRIMARY,
+            fontFamily: "SVN-Gotham Black",
+          }}>
+          {rank < 10 ? `0${rank}` : rank}
+        </Text>
+        <TouchableOpacity
+          onPress={() => handleAddToLikedList(data)}
+          className="p-1.5 rounded-full"
+          style={{
+            backgroundColor: tinycolor(COLOR.BACKGROUND).lighten(6).toString(),
+          }}>
+          <Heart
+            size={16}
+            variant={isLiked ? "Bold" : "Linear"}
+            color={isLiked ? "#ff4757" : COLOR.TEXT_SECONDARY}
+          />
+        </TouchableOpacity>
+      </View>
+
+      <Text
+        numberOfLines={1}
+        className="font-bold mb-1"
+        style={{
+          fontSize: wp(3.5),
+          color: COLOR.TEXT_PRIMARY,
+          fontFamily: "SVN-Gotham Bold",
+        }}>
+        {data?.title}
+      </Text>
+      <Text
+        numberOfLines={1}
+        style={{
+          fontSize: wp(3),
+          color: COLOR.TEXT_SECONDARY,
+        }}>
+        {data?.artistsNames}
+      </Text>
+    </View>
+  );
+};
+
 const ChartItem = React.memo(({item, index, onPlay}: any) => {
   const COLOR = useThemeStore(state => state.COLOR);
-  const theme = useThemeStore(state => state.theme);
+  const {isLiked, handleAddToLikedList} = useToggleLikeSong(item?.encodeId);
 
   return (
     <TouchableOpacity
-      activeOpacity={0.8}
-      className="flex flex-row  items-center mx-4 mb-3"
+      activeOpacity={0.7}
+      className="flex-row items-center mx-4 mb-4 p-3 rounded-2xl"
+      style={{
+        backgroundColor: tinycolor(COLOR.BACKGROUND).lighten(3).toString(),
+      }}
       onPress={() => onPlay(item)}>
       <Text
-        className=" font-bold mr-4 text-2xl"
-        style={{color: theme === 'amoled' ? GREEN : COLOR.SECONDARY}}>
-        {index + 3 < 10 ? `0${index + 3}` : index + 3}
+        className="font-bold mr-4 text-2xl w-10"
+        style={{
+          color: COLOR.PRIMARY,
+          textAlign: "center",
+          fontFamily: "SVN-Gotham Black",
+        }}>
+        {index + 4 < 10 ? `0${index + 4}` : index + 4}
       </Text>
-      <Image
+      <FastImage
         source={{uri: getThumbnail(item.thumbnail)}}
         key={item.encodeId}
-        style={{width: wp(15), height: wp(15)}}
+        className="rounded-xl"
+        style={{
+          width: wp(15),
+          height: wp(15),
+        }}
       />
 
-      <View className="flex justify-center ml-2 flex-1">
+      <View className="flex justify-center ml-3 flex-1">
         <Text
           numberOfLines={1}
           style={{
-            fontWeight: 'bold',
+            fontSize: wp(3.8),
+            fontFamily: "SVN-Gotham Bold",
             color: COLOR.TEXT_PRIMARY,
+            marginBottom: 4,
           }}>
           {item?.title}
         </Text>
 
-        <Text numberOfLines={1} style={{color: COLOR.TEXT_SECONDARY}}>
+        <Text
+          numberOfLines={1}
+          style={{
+            color: COLOR.TEXT_SECONDARY,
+            fontSize: wp(3.2),
+          }}>
           {item?.artistsNames}
         </Text>
       </View>
+
+      <TouchableOpacity
+        onPress={() => handleAddToLikedList(item)}
+        className="p-2 rounded-full"
+        style={{
+          backgroundColor: tinycolor(COLOR.BACKGROUND).lighten(6).toString(),
+        }}>
+        <Heart
+          size={20}
+          variant={isLiked ? "Bold" : "Linear"}
+          color={isLiked ? "#ff4757" : COLOR.TEXT_SECONDARY}
+        />
+      </TouchableOpacity>
     </TouchableOpacity>
   );
 });
+
 export default ChartScreens;

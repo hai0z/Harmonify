@@ -1,20 +1,20 @@
-import {ToastAndroid, TouchableOpacity} from 'react-native';
-import React from 'react';
-import {Track} from 'react-native-track-player';
-import useThemeStore from '../../../store/themeStore';
-import {usePlayerStore} from '../../../store/playerStore';
-import Feather from 'react-native-vector-icons/Feather';
+import {ToastAndroid, TouchableOpacity} from "react-native";
+import React from "react";
+import {Track} from "react-native-track-player";
+import useThemeStore from "../../../store/themeStore";
+import {usePlayerStore} from "../../../store/playerStore";
+import Feather from "react-native-vector-icons/Feather";
 import {
   add,
   getActiveTrackIndex,
   getQueue,
   remove,
   setQueue,
-} from 'react-native-track-player/lib/trackPlayer';
-import {objectToTrack} from '../../../service/trackPlayerService';
-import {DEFAULT_IMG} from '../../../constants';
-import shuffleArray from '../../../utils/shuffle';
-import {Shuffle} from 'iconsax-react-native';
+} from "react-native-track-player/lib/trackPlayer";
+import {objectToTrack} from "../../../service/trackPlayerService";
+import {DEFAULT_IMG} from "../../../constants";
+import shuffleArray from "../../../utils/shuffle";
+import {Shuffle} from "iconsax-react-native";
 
 export async function setQueueUninterrupted(tracks: Track[]): Promise<void> {
   const currentTrackIndex = await getActiveTrackIndex();
@@ -22,7 +22,7 @@ export async function setQueueUninterrupted(tracks: Track[]): Promise<void> {
   const currentQueue = await getQueue();
   const currentTrack = currentQueue[currentTrackIndex];
   const currentTrackNewIndex = tracks.findIndex(
-    track => track.id === currentTrack.id,
+    track => track.id === currentTrack.id
   );
 
   if (currentTrackNewIndex < 0) return await setQueue(tracks);
@@ -45,13 +45,13 @@ const ShuffleButton = () => {
   async function shuffleQueueUninterrupted() {
     setShuffleMode(!shuffleMode);
     if (!shuffleMode) {
-      ToastAndroid.show('Phát ngẫu nhiên: Bật', ToastAndroid.SHORT);
+      ToastAndroid.show("Phát ngẫu nhiên: Bật", ToastAndroid.SHORT);
       const currentQueue = await getQueue();
       const shuffledQueue = shuffleArray(currentQueue);
       const arr = [];
       for (let i = 0; i < shuffledQueue.length; i++) {
         const index = playList.items.findIndex(
-          items => items.encodeId == shuffledQueue[i].id,
+          items => items.encodeId == shuffledQueue[i].id
         );
         arr.push(playList.items[index]);
       }
@@ -61,7 +61,7 @@ const ShuffleButton = () => {
       });
       setQueueUninterrupted(shuffledQueue);
     } else {
-      ToastAndroid.show('Phát ngẫu nhiên: Tắt', ToastAndroid.SHORT);
+      ToastAndroid.show("Phát ngẫu nhiên: Tắt", ToastAndroid.SHORT);
       const currentQueue = await getQueue();
       for (let i = 0; i < currentQueue.length; i++) {
         if (isPlayFromLocal) {
@@ -85,9 +85,9 @@ const ShuffleButton = () => {
     <TouchableOpacity
       onPress={shuffleQueueUninterrupted}
       activeOpacity={0.8}
-      className="items-start justify-center flex-1">
+      className="items-center justify-center">
       <Shuffle
-        size={24}
+        size={26}
         color={shuffleMode ? COLOR.SECONDARY : COLOR.TEXT_PRIMARY}
       />
     </TouchableOpacity>

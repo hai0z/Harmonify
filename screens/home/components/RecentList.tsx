@@ -1,10 +1,12 @@
-import {View, Text, Image} from 'react-native';
-import React, {memo, useCallback, useMemo} from 'react';
-import useThemeStore from '../../../store/themeStore';
-import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
-import {handlePlay, objectToTrack} from '../../../service/trackPlayerService';
-import {usePlayerStore} from '../../../store/playerStore';
-import RecentTrackItem from '../../../components/track-item/RecentTrackItem';
+import {View, Text} from "react-native";
+import React, {memo, useCallback, useMemo} from "react";
+import useThemeStore from "../../../store/themeStore";
+import {handlePlay, objectToTrack} from "../../../service/trackPlayerService";
+import {usePlayerStore} from "../../../store/playerStore";
+import RecentTrackItem from "../../../components/track-item/RecentTrackItem";
+import tinycolor from "tinycolor2";
+import LinearGradient from "react-native-linear-gradient";
+import Animated, {FadeIn} from "react-native-reanimated";
 
 const RecentList = ({data}: any) => {
   const COLOR = useThemeStore(state => state.COLOR);
@@ -25,39 +27,62 @@ const RecentList = ({data}: any) => {
         items: data,
       });
       setPlayFrom({
-        id: 'history',
-        name: 'Bài hát gần đây',
+        id: "history",
+        name: "Bài hát gần đây",
       });
     },
-    [data],
+    [data]
   );
   const renderData = useMemo(() => data?.slice(0, 6), [data]);
 
   if (data.length < 6 || !data) return null;
   return (
-    <View>
-      <Text
-        className="text-xl flex justify-between items-end mt-4 mb-3 uppercase mx-4 "
-        style={{color: COLOR.TEXT_PRIMARY}}>
-        Nghe Lại
-      </Text>
-      <View
-        className="flex flex-wrap flex-row justify-between items-center px-4"
+    <Animated.View
+      entering={FadeIn.duration(500).springify()}
+      style={{
+        marginHorizontal: 12,
+        marginVertical: 8,
+      }}>
+      <LinearGradient
+        colors={[`${COLOR.PRIMARY}15`, `${COLOR.SECONDARY}10`]}
         style={{
-          width: wp(100),
+          borderRadius: 16,
+          padding: 16,
         }}>
-        {renderData?.map((e: any, index: number) => {
-          return (
-            <RecentTrackItem
-              key={index}
-              e={e}
-              onClick={handlePlaySong}
-              isActive={currentSong?.id === e?.encodeId}
-            />
-          );
-        })}
-      </View>
-    </View>
+        <View className="flex flex-row items-center justify-between mb-6">
+          <Text
+            className="text-2xl font-bold"
+            style={{color: COLOR.TEXT_PRIMARY}}>
+            Nghe Lại
+          </Text>
+          <Text
+            className="text-sm font-medium"
+            style={{
+              color: tinycolor(COLOR.TEXT_PRIMARY).setAlpha(0.7).toString(),
+            }}>
+            {data.length} bài hát
+          </Text>
+        </View>
+
+        <View
+          className="flex flex-wrap flex-row justify-between"
+          style={{
+            width: "100%",
+            gap: 8,
+          }}>
+          {renderData?.map((e: any, index: number) => {
+            return (
+              <RecentTrackItem
+                key={index}
+                e={e}
+                onClick={handlePlaySong}
+                isActive={currentSong?.id === e?.encodeId}
+              />
+            );
+          })}
+        </View>
+      </LinearGradient>
+    </Animated.View>
   );
 };
 

@@ -4,16 +4,15 @@ import {
   doc,
   getDocs,
   limit,
-  orderBy,
   query,
   setDoc,
   updateDoc,
   writeBatch,
-} from 'firebase/firestore';
-import {auth, db} from '../../firebase/config';
-import {usePlayerStore} from '../../store/playerStore';
-import {useUserStore} from '../../store/userStore';
-import shuffleArray from '../../utils/shuffle';
+} from "firebase/firestore";
+import {auth, db} from "../../firebase/config";
+import {usePlayerStore} from "../../store/playerStore";
+import {useUserStore} from "../../store/userStore";
+import shuffleArray from "../../utils/shuffle";
 
 export const addToLikedList = async (song: any): Promise<void> => {
   try {

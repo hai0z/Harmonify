@@ -1,103 +1,93 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-  ImageBackground,
-  StyleSheet,
-} from 'react-native';
-import React from 'react';
-import useThemeStore from '../../store/themeStore';
-import useInternetState from '../../hooks/useInternetState';
-import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
-import ActiveTrackAnimation from './ActiveTrackAnimation';
-import tinycolor from 'tinycolor2';
-import {GREEN} from '../../constants';
+import {View, Text, TouchableOpacity, Image} from "react-native";
+import React from "react";
+import useThemeStore from "../../store/themeStore";
+import useInternetState from "../../hooks/useInternetState";
+import {widthPercentageToDP as wp} from "react-native-responsive-screen";
+import tinycolor from "tinycolor2";
+import {GREEN} from "../../constants";
+import Entypo from "react-native-vector-icons/Entypo";
+import getThumbnail from "../../utils/getThumnail";
+
 interface Props {
   e: any;
   onClick: (item: any) => void;
   isActive: boolean;
 }
+
 const RecentTrackItem = (props: Props) => {
   const {e, onClick, isActive} = props;
   const COLOR = useThemeStore(state => state.COLOR);
   const theme = useThemeStore(state => state.theme);
   const isConnected = useInternetState();
+
   return (
     <TouchableOpacity
       disabled={!isConnected}
       onPress={() => onClick(e)}
       activeOpacity={0.8}
       style={{
-        width: wp(50) - 20,
+        width: wp(50) - 35,
         backgroundColor: COLOR.isDark
-          ? tinycolor(COLOR.BACKGROUND).brighten().toString()
-          : '#ffffff',
+          ? tinycolor(COLOR.BACKGROUND).brighten(2).toString()
+          : tinycolor(COLOR.BACKGROUND).darken(2).toString(),
         opacity: isConnected ? 1 : 0.5,
-        elevation: 0.5,
+        elevation: 2,
+        flexDirection: "row",
       }}
-      className="flex flex-row items-center my-1 rounded-t-md rounded-b-md">
-      {/* <ImageBackground
-        imageStyle={{
-          borderTopLeftRadius: 6,
-          borderBottomLeftRadius: 6,
-          borderTopRightRadius: 6,
-          borderBottomRightRadius: 6,
-        }}
-        blurRadius={75}
-        source={{uri: e?.thumbnailM}}
-        style={[
-          StyleSheet.absoluteFill,
-          {
-            zIndex: -1,
-          },
-        ]}>
-        <View
-          style={{
-            backgroundColor: COLOR.isDark
-              ? 'rgba(0,0,0,0.3)'
-              : 'rgba(255,255,255,0.45)',
-            position: 'absolute',
-            width: '100%',
-            height: '100%',
-            borderTopLeftRadius: 6,
-            borderBottomLeftRadius: 6,
-            borderTopRightRadius: 6,
-            borderBottomRightRadius: 6,
-          }}
-        />
-      </ImageBackground> */}
-      <View>
+      className="my-1 rounded-lg overflow-hidden">
+      <View
+        className="relative"
+        style={{
+          width: wp(15),
+          height: wp(15),
+        }}>
         <Image
-          source={{uri: e?.thumbnailM}}
-          className="rounded-tl-md rounded-bl-md"
+          source={{uri: getThumbnail(e?.thumbnailM)}}
+          className="rounded-l-lg"
           style={{width: wp(15), height: wp(15)}}
         />
         {isActive && (
-          <ActiveTrackAnimation
-            isAlbum={false}
+          <View
+            className="absolute bottom-1 right-1 p-1.5 rounded-full"
             style={{
-              borderTopLeftRadius: 6,
-              borderBottomLeftRadius: 6,
-            }}
-          />
+              backgroundColor: tinycolor(COLOR.BACKGROUND)
+                .setAlpha(0.8)
+                .toString(),
+            }}>
+            <Entypo
+              name="controller-play"
+              size={12}
+              color={theme !== "amoled" ? COLOR.PRIMARY : GREEN}
+            />
+          </View>
         )}
       </View>
-      <Text
-        className="px-1"
-        numberOfLines={2}
-        style={{
-          color: isActive
-            ? theme !== 'amoled'
-              ? COLOR.PRIMARY
-              : GREEN
-            : COLOR.TEXT_PRIMARY,
-          fontWeight: '600',
-          flex: 1,
-          fontSize: wp(3.5),
-        }}>
-        {e?.title}
-      </Text>
+
+      <View className="flex-1 p-1.5">
+        <Text
+          numberOfLines={2}
+          style={{
+            color: isActive
+              ? theme !== "amoled"
+                ? COLOR.PRIMARY
+                : GREEN
+              : COLOR.TEXT_PRIMARY,
+            fontWeight: "600",
+            fontSize: wp(3),
+            lineHeight: wp(4),
+          }}>
+          {e?.title}
+        </Text>
+        <Text
+          numberOfLines={1}
+          style={{
+            color: tinycolor(COLOR.TEXT_PRIMARY).setAlpha(0.6).toString(),
+            fontSize: wp(2.5),
+            marginTop: 2,
+          }}>
+          {e?.artistsNames}
+        </Text>
+      </View>
     </TouchableOpacity>
   );
 };

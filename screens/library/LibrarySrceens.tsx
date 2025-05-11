@@ -1,33 +1,33 @@
-import {View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
-import React from 'react';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import LocalSong from './components/LocalSong';
-import Playlist from './components/Playlist';
-import useThemeStore from '../../store/themeStore';
-import FollowedArtist from './components/FollowedArtists';
-import {ScrollView} from 'react-native-gesture-handler';
-import tinycolor from 'tinycolor2';
-import {Octicons} from '@expo/vector-icons';
-import {widthPercentageToDP} from 'react-native-responsive-screen';
-import useLibraryStore from '../../store/useLibraryStore';
-import {useNavigation} from '@react-navigation/native';
-import {navigation} from '../../utils/types/RootStackParamList';
+import {View, Text, TouchableOpacity, Image, StyleSheet} from "react-native";
+import React from "react";
+import AntDesign from "react-native-vector-icons/AntDesign";
+import LocalSong from "./components/LocalSong";
+import Playlist from "./components/Playlist";
+import useThemeStore from "../../store/themeStore";
+import FollowedArtist from "./components/FollowedArtists";
+import {ScrollView} from "react-native-gesture-handler";
+import tinycolor from "tinycolor2";
+import {Octicons} from "@expo/vector-icons";
+import {widthPercentageToDP} from "react-native-responsive-screen";
+import useLibraryStore from "../../store/useLibraryStore";
+import {useNavigation} from "@react-navigation/native";
+import {navigation} from "../../utils/types/RootStackParamList";
 
 const LibrarySrceens = () => {
   const [selectedTab, setSelectedTab] = React.useState(0);
   const {COLOR} = useThemeStore();
   const {viewType, setViewType} = useLibraryStore();
-  const navigation = useNavigation<navigation<'Library' | 'PlaylistStack'>>();
+  const navigation = useNavigation<navigation<"Library" | "PlaylistStack">>();
 
   return (
     <View style={{...styles.container, backgroundColor: COLOR.BACKGROUND}}>
       <View style={styles.top}>
         <View style={styles.topLeft}>
-          <View className="rounded-full">
+          <View className="rounded-full overflow-hidden shadow-lg">
             <Image
               resizeMode="cover"
               style={styles.avatar}
-              source={require('../../assets/sound.png')}
+              source={require("../../assets/sound.png")}
             />
           </View>
           <Text style={{...styles.txt, color: COLOR.TEXT_PRIMARY}}>
@@ -35,7 +35,13 @@ const LibrarySrceens = () => {
           </Text>
         </View>
         <TouchableOpacity
-          onPress={() => navigation.navigate('PlaylistStack', {})}>
+          className="w-10 h-10 items-center justify-center rounded-full"
+          style={{
+            backgroundColor: !COLOR.isDark
+              ? tinycolor(COLOR.BACKGROUND).darken(5).toString()
+              : tinycolor(COLOR.BACKGROUND).lighten(10).toString(),
+          }}
+          onPress={() => navigation.navigate("PlaylistStack", {})}>
           <AntDesign
             name="plus"
             size={24}
@@ -43,16 +49,17 @@ const LibrarySrceens = () => {
           />
         </TouchableOpacity>
       </View>
-      <View>
+
+      <View className="mt-2">
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{
             paddingHorizontal: 16,
-            gap: 10,
+            gap: 12,
             minWidth: widthPercentageToDP(100),
           }}>
-          {['Danh sách phát', 'Nghệ sĩ', 'Đã tải xuống'].map((item, index) => (
+          {["Danh sách phát", "Nghệ sĩ", "Đã tải xuống"].map((item, index) => (
             <TouchableOpacity
               onPress={() => setSelectedTab(index)}
               key={index}
@@ -61,33 +68,49 @@ const LibrarySrceens = () => {
                   selectedTab === index
                     ? COLOR.PRIMARY
                     : !COLOR.isDark
-                    ? tinycolor(COLOR.BACKGROUND).darken(10).toString()
+                    ? tinycolor(COLOR.BACKGROUND).darken(5).toString()
                     : tinycolor(COLOR.BACKGROUND).lighten(10).toString(),
               }}
-              className="items-center justify-center rounded-full px-2 py-1">
-              <Text style={{color: COLOR.TEXT_PRIMARY}}>{item}</Text>
+              className="items-center justify-center rounded-full px-4 py-2">
+              <Text
+                className="font-medium"
+                style={{
+                  color: selectedTab === index ? "#fff" : COLOR.TEXT_PRIMARY,
+                }}>
+                {item}
+              </Text>
             </TouchableOpacity>
           ))}
         </ScrollView>
-        <View className="flex flex-row justify-end px-4 items-center py-2">
+
+        <View className="flex flex-row justify-end px-4 items-center py-3">
           <TouchableOpacity
-            onPress={() => {
-              setViewType(viewType === 'grid' ? 'list' : 'grid');
+            className="w-8 h-8 items-center justify-center rounded-full"
+            style={{
+              backgroundColor: !COLOR.isDark
+                ? tinycolor(COLOR.BACKGROUND).darken(5).toString()
+                : tinycolor(COLOR.BACKGROUND).lighten(10).toString(),
             }}
-            hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}>
-            {viewType === 'list' ? (
-              <Octicons name="apps" size={20} color={COLOR.TEXT_PRIMARY} />
+            onPress={() => {
+              setViewType(viewType === "grid" ? "list" : "grid");
+            }}>
+            {viewType === "list" ? (
+              <Octicons name="apps" size={18} color={COLOR.TEXT_PRIMARY} />
             ) : (
               <Octicons
                 name="list-unordered"
-                size={20}
+                size={18}
                 color={COLOR.TEXT_PRIMARY}
               />
             )}
           </TouchableOpacity>
         </View>
       </View>
-      <ScrollView className=" flex-1" showsVerticalScrollIndicator={false}>
+
+      <ScrollView
+        className="flex-1"
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{paddingBottom: 20}}>
         {selectedTab === 0 && <Playlist />}
         {selectedTab === 1 && <FollowedArtist />}
         {selectedTab === 2 && <LocalSong />}
@@ -97,31 +120,31 @@ const LibrarySrceens = () => {
 };
 
 export default LibrarySrceens;
+
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 35,
+    paddingTop: 45,
     flex: 1,
   },
   avatar: {
-    width: 35,
-    height: 35,
-    borderRadius: 35 / 2,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
   },
   top: {
-    height: 65,
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    alignItems: 'center',
+    height: 60,
+    justifyContent: "space-between",
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 16,
   },
   topLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   txt: {
-    fontWeight: 'bold',
-    fontSize: 24,
-
+    fontWeight: "bold",
+    fontSize: 28,
     marginLeft: 16,
   },
 });

@@ -1,28 +1,29 @@
-import React, {forwardRef, useCallback, useMemo} from 'react';
+import React, {forwardRef, useCallback, useMemo} from "react";
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   ToastAndroid,
-} from 'react-native';
+} from "react-native";
 import {
   BottomSheetModal,
   BottomSheetView,
   BottomSheetBackdrop,
   useBottomSheetModal,
-} from '@gorhom/bottom-sheet';
+} from "@gorhom/bottom-sheet";
 
-import useThemeStore from '../../store/themeStore';
-import tinycolor from 'tinycolor2';
-import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
-import {usePlayerStore} from '../../store/playerStore';
+import useThemeStore from "../../store/themeStore";
+import tinycolor from "tinycolor2";
+import {widthPercentageToDP as wp} from "react-native-responsive-screen";
+import {usePlayerStore} from "../../store/playerStore";
+import {GREEN} from "../../constants";
 
 const SleepTimerBottomSheet = forwardRef(
   (_, ref: React.ForwardedRef<BottomSheetModal>) => {
-    const {COLOR} = useThemeStore(state => state);
+    const {COLOR, theme} = useThemeStore(state => state);
 
-    const snapPoints = useMemo(() => ['50%'], []);
+    const snapPoints = useMemo(() => ["45%"], []);
 
     const {dismiss} = useBottomSheetModal();
     const renderBackdrop = useCallback(
@@ -33,7 +34,7 @@ const SleepTimerBottomSheet = forwardRef(
           appearsOnIndex={0}
         />
       ),
-      [],
+      []
     );
 
     const {setSleepTimer} = usePlayerStore();
@@ -43,44 +44,78 @@ const SleepTimerBottomSheet = forwardRef(
     return (
       <BottomSheetModal
         enablePanDownToClose
-        handleIndicatorStyle={{backgroundColor: COLOR.TEXT_SECONDARY}}
+        handleIndicatorStyle={{
+          backgroundColor: tinycolor(COLOR.TEXT_PRIMARY)
+            .setAlpha(0.5)
+            .toString(),
+          width: 40,
+        }}
         ref={ref}
         index={0}
         backdropComponent={renderBackdrop}
         backgroundStyle={{
-          backgroundColor: tinycolor(COLOR.BACKGROUND).lighten(5).toString(),
+          backgroundColor: tinycolor(COLOR.BACKGROUND).lighten(3).toString(),
+          borderRadius: 24,
         }}
         snapPoints={snapPoints}>
         <BottomSheetView
           style={{
             ...styles.contentContainer,
-            backgroundColor: tinycolor(COLOR.BACKGROUND).lighten(5).toString(),
+            backgroundColor: tinycolor(COLOR.BACKGROUND).lighten(3).toString(),
           }}>
           <View className="flex justify-center items-center">
             <Text
               style={{color: COLOR.TEXT_PRIMARY, fontSize: wp(4.5)}}
-              className="font-bold mb-1">
+              className="font-bold">
               Hẹn giờ đi ngủ
+            </Text>
+            <Text
+              style={{
+                color: tinycolor(COLOR.TEXT_PRIMARY).setAlpha(0.6).toString(),
+                fontSize: wp(3.5),
+              }}
+              className="mt-1">
+              Chọn thời gian để dừng phát nhạc
             </Text>
           </View>
           <View
-            className="w-full h-[1px] mt-2"
-            style={{backgroundColor: COLOR.TEXT_SECONDARY}}></View>
-          <View className="mt-4 flex flex-col justify-between flex-1">
+            className="w-full h-[0.5px] mt-4"
+            style={{
+              backgroundColor: tinycolor(COLOR.TEXT_PRIMARY)
+                .setAlpha(0.1)
+                .toString(),
+            }}></View>
+          <View className="mt-6 flex-row flex-wrap justify-between">
             {times.map(time => (
               <TouchableOpacity
                 key={time}
                 onPress={() => {
                   setSleepTimer(time * 60);
                   ToastAndroid.show(
-                    'Hẹn giờ ngủ sau: ' + time + ' phút',
-                    ToastAndroid.SHORT,
+                    "Hẹn giờ ngủ sau: " + time + " phút",
+                    ToastAndroid.SHORT
                   );
                   dismiss();
                 }}
-                className="w-full flex-row items-center justify-between flex-1 my-1">
-                <Text style={{color: COLOR.TEXT_PRIMARY}} className="font-bold">
-                  {time % 60 > 0 ? `${time % 60} phút` : `${time / 60} giờ`}
+                style={{
+                  backgroundColor: tinycolor(COLOR.BACKGROUND)
+                    .lighten(8)
+                    .toString(),
+                  width: "48%",
+                  marginBottom: 12,
+                  borderWidth: 1,
+                  borderColor: tinycolor(COLOR.TEXT_PRIMARY)
+                    .setAlpha(0.1)
+                    .toString(),
+                }}
+                className="py-4 rounded-xl items-center">
+                <Text
+                  style={{
+                    color: theme === "amoled" ? GREEN : COLOR.PRIMARY,
+                    fontSize: wp(4),
+                  }}
+                  className="font-bold">
+                  {time % 60 > 0 ? `${time} phút` : `${time / 60} giờ`}
                 </Text>
               </TouchableOpacity>
             ))}
@@ -88,7 +123,7 @@ const SleepTimerBottomSheet = forwardRef(
         </BottomSheetView>
       </BottomSheetModal>
     );
-  },
+  }
 );
 
 const styles = StyleSheet.create({

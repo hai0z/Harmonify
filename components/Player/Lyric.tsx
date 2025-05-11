@@ -1,15 +1,15 @@
-import {View, Text, TouchableOpacity} from 'react-native';
-import React, {useEffect} from 'react';
-import {usePlayerStore} from '../../store/playerStore';
-import {FlashList} from '@shopify/flash-list';
-import {LinearGradient} from 'react-native-linear-gradient';
-import {useNavigation} from '@react-navigation/native';
-import useSyncLyric from '../../hooks/useSyncLyric';
-import useThemeStore from '../../store/themeStore';
-import Animated from 'react-native-reanimated';
-import useImageColor from '../../hooks/useImageColor';
-import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
-import AntDesign from 'react-native-vector-icons/AntDesign';
+import {View, Text, TouchableOpacity} from "react-native";
+import React, {useEffect} from "react";
+import {usePlayerStore} from "../../store/playerStore";
+import {FlashList} from "@shopify/flash-list";
+import {LinearGradient} from "react-native-linear-gradient";
+import {useNavigation} from "@react-navigation/native";
+import useSyncLyric from "../../hooks/useSyncLyric";
+import useThemeStore from "../../store/themeStore";
+import Animated, {useAnimatedStyle, withSpring} from "react-native-reanimated";
+import useImageColor from "../../hooks/useImageColor";
+import {widthPercentageToDP as wp} from "react-native-responsive-screen";
+import AntDesign from "react-native-vector-icons/AntDesign";
 
 const OFFSET = 1;
 
@@ -27,9 +27,8 @@ const Lyric = () => {
   useEffect(() => {
     lyricsRef.current &&
       lyricsRef.current.scrollToIndex({
-        index: currentLine === -1 ? 0 : currentLine - OFFSET,
+        index: Math.max(0, currentLine - OFFSET),
         animated: true,
-        viewPosition: 0,
       });
   }, [currentLine]);
 
@@ -37,33 +36,43 @@ const Lyric = () => {
 
   const {vibrantColor: bg} = useImageColor();
 
+  const [isPressed, setIsPressed] = React.useState(false);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{scale: withSpring(isPressed ? 0.98 : 1)}],
+    };
+  });
+
   if (isPlayFromLocal) {
     return null;
   }
   return (
     lyrics?.length > 0 && (
-      <Animated.View className="mb-4">
+      <Animated.View className="mb-4" style={animatedStyle}>
         <TouchableOpacity
-          onPress={() => nativgation.navigate('Lyric')}
+          onPressIn={() => setIsPressed(true)}
+          onPressOut={() => setIsPressed(false)}
+          onPress={() => nativgation.navigate("Lyric")}
           activeOpacity={1}
           className="rounded-2xl"
           style={{
             backgroundColor: bg,
-            height: 340,
+            height: 320,
           }}>
           <View className="px-4 py-4 justify-between flex flex-row items-center ">
             <Text
               style={{
                 color: COLOR.TEXT_PRIMARY,
-                fontFamily: 'SVN-Gotham Black',
+                fontFamily: "SVN-Gotham Black",
               }}>
               Lời bài hát
             </Text>
             <TouchableOpacity
-              onPress={() => nativgation.navigate('Lyric', {lyrics})}
+              onPress={() => nativgation.navigate("Lyric", {lyrics})}
               className="w-7 h-7 flex justify-center items-center rounded-full z-[3]"
               style={{
-                backgroundColor: COLOR.isDark ? '#00000020' : '#ffffff50',
+                backgroundColor: COLOR.isDark ? "#00000020" : "#ffffff50",
               }}>
               <AntDesign
                 name="arrowsalt"
@@ -80,7 +89,7 @@ const Lyric = () => {
                 paddingBottom: 48,
               }}
               data={lyrics}
-              initialScrollIndex={currentLine === -1 ? 0 : currentLine - OFFSET}
+              initialScrollIndex={Math.max(0, currentLine - OFFSET)}
               estimatedItemSize={32}
               showsVerticalScrollIndicator={false}
               extraData={currentLine}
@@ -90,9 +99,9 @@ const Lyric = () => {
                     key={index}
                     className="mb-1"
                     style={{
-                      color: currentLine >= index ? 'white' : 'black',
-                      fontSize: wp(6),
-                      fontFamily: 'SVN-Gotham Black',
+                      color: currentLine >= index ? "white" : "black",
+                      fontSize: wp(5),
+                      fontFamily: "SVN-Gotham Black",
                     }}>
                     {item.data}
                   </Animated.Text>
@@ -102,7 +111,7 @@ const Lyric = () => {
             />
           </View>
           <LinearGradient
-            colors={['transparent', bg!, bg!]}
+            colors={["transparent", bg!, bg!]}
             className="absolute  left-0 right-0 bottom-0 h-16 z-[2] rounded-b-xl"
           />
         </TouchableOpacity>

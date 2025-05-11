@@ -2,32 +2,31 @@ import {
   View,
   Text,
   Image,
-  ActivityIndicator,
   Dimensions,
   StyleSheet,
   Animated,
   TouchableOpacity,
   ScrollView,
-} from 'react-native';
-import React, {useContext, useEffect, useMemo, useState} from 'react';
-
-import {handlePlay, objectToTrack} from '../../service/trackPlayerService';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import {useNavigation} from '@react-navigation/native';
-import nodejs from 'nodejs-mobile-react-native';
-import useThemeStore from '../../store/themeStore';
-import {usePlayerStore} from '../../store/playerStore';
-import LinearGradient from 'react-native-linear-gradient';
-import getThumbnail from '../../utils/getThumnail';
-import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
-import {followArtist} from '../../service/firebase';
-import {useUserStore} from '../../store/userStore';
-import Loading from '../../components/Loading';
-import TrackItem from '../../components/track-item/TrackItem';
-import {PlayerContext} from '../../context/PlayerProvider';
-import {FlashList} from '@shopify/flash-list';
-import {navigation} from '../../utils/types/RootStackParamList';
-import PlayListCover from '../../components/PlayListCover';
+} from "react-native";
+import React, {useContext, useEffect, useMemo, useState} from "react";
+import {handlePlay} from "../../service/trackPlayerService";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import {useNavigation} from "@react-navigation/native";
+import nodejs from "nodejs-mobile-react-native";
+import useThemeStore from "../../store/themeStore";
+import {usePlayerStore} from "../../store/playerStore";
+import LinearGradient from "react-native-linear-gradient";
+import {widthPercentageToDP as wp} from "react-native-responsive-screen";
+import {followArtist} from "../../service/firebase";
+import {useUserStore} from "../../store/userStore";
+import Loading from "../../components/Loading";
+import TrackItem from "../../components/track-item/TrackItem";
+import {PlayerContext} from "../../context/PlayerProvider";
+import {FlashList} from "@shopify/flash-list";
+import {navigation} from "../../utils/types/RootStackParamList";
+import PlayListCover from "../../components/PlayListCover";
+import tinycolor from "tinycolor2";
+import {Play, Heart} from "iconsax-react-native";
 
 interface artistType {
   id: string;
@@ -42,7 +41,7 @@ interface artistType {
   biography: string;
 }
 
-const SCREEN_WIDTH = Dimensions.get('window').width;
+const SCREEN_WIDTH = Dimensions.get("window").width;
 
 function isKeyExistsInArrayObjects(arr: any, key: any, value: any) {
   for (let obj of arr) {
@@ -55,54 +54,47 @@ function isKeyExistsInArrayObjects(arr: any, key: any, value: any) {
 
 const ArtistScreens = ({route}: any) => {
   const {name} = route.params;
-
   const [loading, setLoading] = React.useState(true);
-
   const [dataDetailArtist, setDataDetailArtist] = useState<artistType>();
-
   const COLOR = useThemeStore(state => state.COLOR);
-
   const {listFollowArtists} = useUserStore();
-
   const {showBottomSheet} = useContext(PlayerContext);
-
   const setPlayFrom = usePlayerStore(state => state.setPlayFrom);
-
   const scrollY = React.useRef(new Animated.Value(0)).current;
-
   const currentSong = usePlayerStore(state => state.currentSong);
 
   useEffect(() => {
     setLoading(true);
-    nodejs.channel.addListener('getArtist', (data: any) => {
+    nodejs.channel.addListener("getArtist", (data: any) => {
       setDataDetailArtist(data);
       setLoading(false);
     });
     scrollY.setValue(0);
-    nodejs.channel.post('getArtist', name);
+    nodejs.channel.post("getArtist", name);
   }, [name]);
 
   const topSong = useMemo(
     () =>
       dataDetailArtist?.sections
-        ?.filter((type: any) => type.sectionId === 'aSongs')[0]
+        ?.filter((type: any) => type.sectionId === "aSongs")[0]
         ?.items.filter((i: any) => i.streamingStatus === 1)
         .slice(0, 5),
-    [dataDetailArtist],
+    [dataDetailArtist]
   );
 
   const headerColor = scrollY.interpolate({
     inputRange: [SCREEN_WIDTH * 0.6, SCREEN_WIDTH * 0.6],
-    outputRange: ['transparent', COLOR.BACKGROUND],
-    extrapolate: 'clamp',
+    outputRange: ["transparent", COLOR.BACKGROUND],
+    extrapolate: "clamp",
   });
+
   const headerOpacity = scrollY.interpolate({
     inputRange: [SCREEN_WIDTH * 0.6, SCREEN_WIDTH],
     outputRange: [0, 1],
-    extrapolate: 'clamp',
+    extrapolate: "clamp",
   });
 
-  const navigation = useNavigation<navigation<'Artists' | 'ArtistsSong'>>();
+  const navigation = useNavigation<navigation<"Artists" | "ArtistsSong">>();
 
   if (loading) {
     return (
@@ -113,28 +105,56 @@ const ArtistScreens = ({route}: any) => {
       </View>
     );
   }
+
+  const handlePlayArtist = () => {
+    const songs = dataDetailArtist?.sections
+      .filter((type: any) => type.sectionId === "aSongs")[0]
+      .items.filter((i: any) => i.streamingStatus === 1);
+
+    if (songs && songs.length > 0) {
+      handlePlay(songs[0], {
+        id: name,
+        items: songs,
+      });
+      setPlayFrom({
+        id: "artist",
+        name: dataDetailArtist?.name!,
+      });
+    }
+  };
+
   return (
-    <View className=" flex-1" style={{backgroundColor: COLOR.BACKGROUND}}>
+    <View className="flex-1" style={{backgroundColor: COLOR.BACKGROUND}}>
+      {/* Header */}
       <Animated.View
-        className="absolute top-0 pt-[35px] left-0 right-0 z-[999] h-20  items-center flex-row px-6"
+        className="absolute top-0 pt-[35px] left-0 right-0 z-[999] h-20 items-center flex-row px-6"
         style={{backgroundColor: headerColor}}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          className="w-10 h-10 items-center justify-center rounded-full"
+          style={{
+            backgroundColor: tinycolor(COLOR.TEXT_PRIMARY)
+              .setAlpha(0.1)
+              .toString(),
+          }}>
           <Ionicons name="arrow-back" size={24} color={COLOR.TEXT_PRIMARY} />
         </TouchableOpacity>
         <Animated.Text
-          className=" font-bold ml-4"
+          className="font-bold ml-4 text-lg"
           style={{color: COLOR.TEXT_PRIMARY, opacity: headerOpacity}}>
           {dataDetailArtist?.name}
         </Animated.Text>
       </Animated.View>
+
       <Animated.ScrollView
         bounces={false}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{paddingBottom: 200}}
         onScroll={Animated.event(
           [{nativeEvent: {contentOffset: {y: scrollY}}}],
-          {useNativeDriver: false},
+          {useNativeDriver: false}
         )}>
+        {/* Hero Section */}
         <View className="relative" style={{height: SCREEN_WIDTH}}>
           <View
             style={[
@@ -143,19 +163,14 @@ const ArtistScreens = ({route}: any) => {
                 width: SCREEN_WIDTH,
                 height: SCREEN_WIDTH,
                 zIndex: 3,
-              },
-              {
-                backgroundColor: COLOR.BACKGROUND + '35',
+                backgroundColor: COLOR.BACKGROUND + "35",
               },
             ]}
           />
           <LinearGradient
-            colors={['transparent', COLOR.BACKGROUND]}
+            colors={["transparent", COLOR.BACKGROUND]}
             className="absolute left-0 right-0 bottom-0 z-10"
-            style={{
-              height: 200,
-              width: SCREEN_WIDTH,
-            }}
+            style={{height: 200, width: SCREEN_WIDTH}}
           />
           <Animated.Image
             source={{uri: dataDetailArtist?.thumbnailM}}
@@ -169,102 +184,139 @@ const ArtistScreens = ({route}: any) => {
             ]}
           />
 
-          <View className="absolute bottom-0 z-20">
+          <View className="absolute bottom-8 z-20 px-6 w-full">
             <Text
-              className="p-4 "
+              className="mb-4"
               style={{
                 color: COLOR.TEXT_PRIMARY,
-                fontFamily: 'SVN-Gotham Black',
+                fontFamily: "SVN-Gotham Black",
                 fontSize: wp(10),
+                textShadowColor: "rgba(0,0,0,0.3)",
+                textShadowOffset: {width: 1, height: 1},
+                textShadowRadius: 10,
               }}>
               {dataDetailArtist?.name}
             </Text>
-            <TouchableOpacity
-              style={{
-                borderColor: COLOR.PRIMARY,
-                backgroundColor: listFollowArtists.some(
-                  (item: any) => item.id === dataDetailArtist?.id,
-                )
-                  ? COLOR.PRIMARY
-                  : 'transparent',
-              }}
-              className="w-32 p-2 rounded-full items-center  border mx-4"
-              onPress={() =>
-                followArtist({
-                  thumbnailM: dataDetailArtist?.thumbnailM,
-                  name: dataDetailArtist?.name,
-                  id: dataDetailArtist?.id,
-                  alias: dataDetailArtist?.alias,
-                  totalFollow: dataDetailArtist?.totalFollow,
-                })
-              }>
-              <Text style={{color: COLOR.TEXT_PRIMARY}} className=" text-sm">
-                {listFollowArtists.some(
-                  (item: any) => item.id === dataDetailArtist?.id,
-                )
-                  ? 'Đã theo dõi'
-                  : 'Theo dõi'}
-              </Text>
-            </TouchableOpacity>
+
+            <Text
+              style={{color: COLOR.TEXT_SECONDARY}}
+              className="text-base mb-6">
+              {formatNumber(dataDetailArtist?.totalFollow || 0)} người quan tâm
+            </Text>
+
+            <View className="flex-row gap-4">
+              <TouchableOpacity
+                style={{
+                  backgroundColor: listFollowArtists.some(
+                    (item: any) => item.id === dataDetailArtist?.id
+                  )
+                    ? COLOR.PRIMARY
+                    : tinycolor(COLOR.PRIMARY).setAlpha(0.2).toString(),
+                }}
+                className="flex-1 h-12 rounded-full items-center justify-center flex-row gap-2"
+                onPress={() =>
+                  followArtist({
+                    thumbnailM: dataDetailArtist?.thumbnailM,
+                    name: dataDetailArtist?.name,
+                    id: dataDetailArtist?.id,
+                    alias: dataDetailArtist?.alias,
+                    totalFollow: dataDetailArtist?.totalFollow,
+                  })
+                }>
+                <Heart
+                  size={20}
+                  color={COLOR.TEXT_PRIMARY}
+                  variant={
+                    listFollowArtists.some(
+                      (item: any) => item.id === dataDetailArtist?.id
+                    )
+                      ? "Bold"
+                      : "Linear"
+                  }
+                />
+                <Text
+                  style={{color: COLOR.TEXT_PRIMARY}}
+                  className="text-base font-medium">
+                  {listFollowArtists.some(
+                    (item: any) => item.id === dataDetailArtist?.id
+                  )
+                    ? "Đã theo dõi"
+                    : "Theo dõi"}
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={handlePlayArtist}
+                style={{
+                  backgroundColor: COLOR.PRIMARY,
+                }}
+                className="w-12 h-12 rounded-full items-center justify-center">
+                <Play size={24} color={COLOR.TEXT_PRIMARY} variant="Bold" />
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
 
-        {/* top */}
+        {/* Top Songs */}
         {isKeyExistsInArrayObjects(
           dataDetailArtist?.sections,
-          'sectionId',
-          'aSongs',
+          "sectionId",
+          "aSongs"
         ) && (
-          <View>
-            <View className=" text-lg font-semibold px-4 mt-8 justify-between items-center flex-row">
+          <View className="mt-6">
+            <View className="px-6 mb-4 flex-row justify-between items-center">
               <Text
-                className=" font-bold text-lg mb-4"
+                className="text-xl font-bold"
                 style={{color: COLOR.TEXT_PRIMARY}}>
                 Bài hát nổi bật
               </Text>
             </View>
+
             <View style={{minHeight: 3}}>
               <FlashList
                 estimatedItemSize={70}
                 extraData={currentSong?.id}
                 data={topSong}
-                renderItem={({item}: any) => {
-                  return (
-                    <TrackItem
-                      isActive={currentSong?.id === item.encodeId}
-                      showBottomSheet={showBottomSheet}
-                      item={item}
-                      key={item.encodeId}
-                      onClick={() => {
-                        handlePlay(item, {
-                          id: name,
-                          items: dataDetailArtist?.sections
-                            .filter(
-                              (type: any) => type.sectionId === 'aSongs',
-                            )[0]
-                            .items.filter((i: any) => i.streamingStatus === 1),
-                        });
-                        setPlayFrom({
-                          id: 'artist',
-                          name: dataDetailArtist?.name!,
-                        });
-                      }}
-                    />
-                  );
-                }}
+                renderItem={({item}: any) => (
+                  <TrackItem
+                    isActive={currentSong?.id === item.encodeId}
+                    showBottomSheet={showBottomSheet}
+                    item={item}
+                    key={item.encodeId}
+                    onClick={() => {
+                      handlePlay(item, {
+                        id: name,
+                        items: dataDetailArtist?.sections
+                          .filter((type: any) => type.sectionId === "aSongs")[0]
+                          .items.filter((i: any) => i.streamingStatus === 1),
+                      });
+                      setPlayFrom({
+                        id: "artist",
+                        name: dataDetailArtist?.name!,
+                      });
+                    }}
+                  />
+                )}
               />
             </View>
-            <View className="w-full justify-center items-center my-2">
+
+            <View className="w-full items-center my-4">
               <TouchableOpacity
-                style={{borderColor: COLOR.PRIMARY}}
-                className="w-32 p-2 rounded-full items-center  border"
+                style={{
+                  backgroundColor: tinycolor(COLOR.PRIMARY)
+                    .setAlpha(0.2)
+                    .toString(),
+                }}
+                className="w-36 h-12 rounded-full items-center justify-center"
                 onPress={() => {
-                  navigation.push('ArtistsSong', {
+                  navigation.push("ArtistsSong", {
                     id: dataDetailArtist?.id,
                     name: dataDetailArtist?.alias,
                   });
                 }}>
-                <Text style={{color: COLOR.TEXT_PRIMARY}} className=" text-sm">
+                <Text
+                  style={{color: COLOR.TEXT_PRIMARY}}
+                  className="text-base font-medium">
                   Xem thêm
                 </Text>
               </TouchableOpacity>
@@ -272,26 +324,28 @@ const ArtistScreens = ({route}: any) => {
           </View>
         )}
 
+        {/* Albums */}
         {isKeyExistsInArrayObjects(
           dataDetailArtist?.sections,
-          'sectionId',
-          'aAlbum',
+          "sectionId",
+          "aAlbum"
         ) && (
-          <View>
+          <View className="mt-6">
             <Text
               style={{color: COLOR.TEXT_PRIMARY}}
-              className="text-lg font-semibold px-4 mb-4">
+              className="text-xl font-bold px-6 mb-4">
               Albums
             </Text>
             <ScrollView
               horizontal
+              showsHorizontalScrollIndicator={false}
               contentContainerStyle={{
-                paddingHorizontal: 16,
-                gap: 10,
+                paddingHorizontal: 24,
+                gap: 16,
                 minWidth: SCREEN_WIDTH,
               }}>
               {dataDetailArtist?.sections
-                ?.filter((type: any) => type.sectionId === 'aAlbum')[0]
+                ?.filter((type: any) => type.sectionId === "aAlbum")[0]
                 ?.items.map((item: any, index: number) => (
                   <PlayListCover
                     isAlbum={true}
@@ -306,27 +360,28 @@ const ArtistScreens = ({route}: any) => {
           </View>
         )}
 
-        {/* playlist */}
+        {/* Playlists */}
         {isKeyExistsInArrayObjects(
           dataDetailArtist?.sections,
-          'sectionId',
-          'aPlaylist',
+          "sectionId",
+          "aPlaylist"
         ) && (
-          <View>
+          <View className="mt-6">
             {dataDetailArtist?.sections
-              ?.filter((type: any) => type.sectionId === 'aPlaylist')
+              ?.filter((type: any) => type.sectionId === "aPlaylist")
               ?.map((item: any, index: number) => (
-                <View key={index}>
+                <View key={index} className="mb-6">
                   <Text
                     style={{color: COLOR.TEXT_PRIMARY}}
-                    className="text-lg font-semibold px-4 py-4">
+                    className="text-xl font-bold px-6 mb-4">
                     {item.title}
                   </Text>
                   <ScrollView
                     horizontal
+                    showsHorizontalScrollIndicator={false}
                     contentContainerStyle={{
-                      paddingHorizontal: 16,
-                      gap: 10,
+                      paddingHorizontal: 24,
+                      gap: 16,
                       minWidth: SCREEN_WIDTH,
                     }}>
                     {item.items.map((item: any, index: number) => (
@@ -344,27 +399,28 @@ const ArtistScreens = ({route}: any) => {
           </View>
         )}
 
-        {/* Single */}
+        {/* Singles */}
         {isKeyExistsInArrayObjects(
           dataDetailArtist?.sections,
-          'sectionId',
-          'aSingle',
+          "sectionId",
+          "aSingle"
         ) && (
-          <View>
+          <View className="mt-6">
             <Text
               style={{color: COLOR.TEXT_PRIMARY}}
-              className="text-lg font-semibold px-4 py-4">
+              className="text-xl font-bold px-6 mb-4">
               Đĩa đơn
             </Text>
             <ScrollView
               horizontal
+              showsHorizontalScrollIndicator={false}
               contentContainerStyle={{
-                paddingHorizontal: 16,
-                gap: 10,
+                paddingHorizontal: 24,
+                gap: 16,
                 minWidth: SCREEN_WIDTH,
               }}>
               {dataDetailArtist?.sections
-                ?.filter((type: any) => type.sectionId === 'aSingle')[0]
+                ?.filter((type: any) => type.sectionId === "aSingle")[0]
                 ?.items.map((item: any, index: number) => (
                   <PlayListCover
                     isAlbum
@@ -379,83 +435,108 @@ const ArtistScreens = ({route}: any) => {
           </View>
         )}
 
-        {/* Relate artis */}
-
+        {/* Related Artists */}
         {isKeyExistsInArrayObjects(
           dataDetailArtist?.sections,
-          'sectionId',
-          'aReArtist',
+          "sectionId",
+          "aReArtist"
         ) && (
-          <View>
+          <View className="mt-6">
             {dataDetailArtist?.sections?.filter(
-              (type: any) => type.sectionId === 'aReArtist',
+              (type: any) => type.sectionId === "aReArtist"
             )[0].items.length > 0 && (
               <Text
-                className="text-lg font-semibold px-4 py-4"
+                className="text-xl font-bold px-6 mb-4"
                 style={{color: COLOR.TEXT_PRIMARY}}>
                 Có thể bạn thích
               </Text>
             )}
             <ScrollView
               horizontal
-              contentContainerStyle={{paddingHorizontal: 16, gap: 10}}>
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{paddingHorizontal: 24, gap: 16}}>
               {dataDetailArtist?.sections
-                .filter((type: any) => type.sectionId === 'aReArtist')[0]
+                .filter((type: any) => type.sectionId === "aReArtist")[0]
                 ?.items.map((item: any, index: number) => (
                   <TouchableOpacity
                     key={index}
-                    activeOpacity={1}
+                    activeOpacity={0.8}
                     onPress={() => {
-                      navigation.navigate('Artists', {
+                      navigation.navigate("Artists", {
                         name: item.alias,
                       });
-                    }}>
+                    }}
+                    className="items-center">
                     <Image
                       source={{uri: item.thumbnailM}}
-                      className="w-40 h-40 rounded-full"
+                      className="w-32 h-32 rounded-full mb-3"
                     />
-                    <View>
-                      <Text
-                        className=" text-center mt-2"
-                        style={{color: COLOR.TEXT_PRIMARY}}>
-                        {item.name}
-                      </Text>
-                      <Text
-                        className=" text-center"
-                        style={{color: COLOR.TEXT_SECONDARY}}>
-                        {item.totalFollow} quan tâm
-                      </Text>
-                    </View>
+                    <Text
+                      className="text-base font-medium text-center"
+                      style={{color: COLOR.TEXT_PRIMARY}}>
+                      {item.name}
+                    </Text>
+                    <Text
+                      className="text-sm mt-1"
+                      style={{color: COLOR.TEXT_SECONDARY}}>
+                      {formatNumber(item.totalFollow)} quan tâm
+                    </Text>
                   </TouchableOpacity>
                 ))}
             </ScrollView>
           </View>
         )}
 
-        {/* info */}
-        <View className="px-4 flex flex-col gap-2 py-4">
+        {/* Artist Info */}
+        <View className="px-6 mt-8 mb-4">
           <Text
-            className=" text-lg font-semibold py-2"
+            className="text-xl font-bold mb-4"
             style={{color: COLOR.TEXT_PRIMARY}}>
             Thông tin
           </Text>
-          <Text style={{color: COLOR.TEXT_SECONDARY}}>
-            Tên thật: {dataDetailArtist?.realname}
-          </Text>
-          <Text style={{color: COLOR.TEXT_SECONDARY}}>
-            Ngày sinh: {dataDetailArtist?.birthday || 'Không rõ'}
-          </Text>
 
-          <Text style={{color: COLOR.TEXT_SECONDARY}}>
-            {dataDetailArtist?.sortBiography.replaceAll('<br>', '')}
-          </Text>
-          <Text style={{color: COLOR.TEXT_SECONDARY}}>
-            {dataDetailArtist?.biography.replaceAll('<br>', '')}
-          </Text>
+          <View
+            style={{
+              backgroundColor: tinycolor(COLOR.TEXT_PRIMARY)
+                .setAlpha(0.1)
+                .toString(),
+            }}
+            className="rounded-2xl p-4 space-y-3">
+            <Text style={{color: COLOR.TEXT_PRIMARY}} className="text-base">
+              <Text className="font-medium">Tên thật: </Text>
+              {dataDetailArtist?.realname}
+            </Text>
+
+            <Text style={{color: COLOR.TEXT_PRIMARY}} className="text-base">
+              <Text className="font-medium">Ngày sinh: </Text>
+              {dataDetailArtist?.birthday || "Không rõ"}
+            </Text>
+
+            <Text
+              style={{color: COLOR.TEXT_SECONDARY}}
+              className="text-base leading-6 mt-2">
+              {dataDetailArtist?.sortBiography.replaceAll("<br>", "")}
+            </Text>
+
+            <Text
+              style={{color: COLOR.TEXT_SECONDARY}}
+              className="text-base leading-6">
+              {dataDetailArtist?.biography.replaceAll("<br>", "")}
+            </Text>
+          </View>
         </View>
       </Animated.ScrollView>
     </View>
   );
 };
+
+function formatNumber(num: number) {
+  if (num >= 1000000) {
+    return (num / 1000000).toFixed(1) + "M";
+  } else if (num >= 1000) {
+    return (num / 1000).toFixed(1) + "K";
+  }
+  return num.toString();
+}
 
 export default ArtistScreens;

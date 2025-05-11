@@ -1,11 +1,11 @@
-import {TouchableOpacity} from 'react-native';
-import React, {memo} from 'react';
+import {TouchableOpacity} from "react-native";
+import React, {memo} from "react";
 
-import useThemeStore from '../../../store/themeStore';
-import TrackPlayer from 'react-native-track-player';
-import {usePlayerStore} from '../../../store/playerStore';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {objectToTrack} from '../../../service/trackPlayerService';
+import useThemeStore from "../../../store/themeStore";
+import TrackPlayer from "react-native-track-player";
+import {usePlayerStore} from "../../../store/playerStore";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import {objectToTrack} from "../../../service/trackPlayerService";
 const NextButton = () => {
   const {COLOR} = useThemeStore(state => state);
   const {
@@ -31,20 +31,17 @@ const NextButton = () => {
     }
     TrackPlayer.skipToNext();
   };
-  console.log('next btn');
   return (
     <TouchableOpacity
       onPress={handleNext}
       disabled={!nextTrackLoaded}
+      className="items-center justify-center"
       style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
         opacity: nextTrackLoaded ? 1 : 0.5,
       }}>
       <MaterialCommunityIcons
         name="skip-next"
-        size={48}
+        size={44}
         color={COLOR.TEXT_PRIMARY}
       />
     </TouchableOpacity>

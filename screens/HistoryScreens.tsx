@@ -1,4 +1,4 @@
-import {View, Text} from 'react-native';
+import {View, Text} from "react-native";
 import React, {
   useCallback,
   useContext,
@@ -6,14 +6,14 @@ import React, {
   useLayoutEffect,
   useMemo,
   useState,
-} from 'react';
-import useThemeStore from '../store/themeStore';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import {usePlayerStore} from '../store/playerStore';
-import {useNavigation} from '@react-navigation/native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
-import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
-import {FlashList} from '@shopify/flash-list';
+} from "react";
+import useThemeStore from "../store/themeStore";
+import AntDesign from "react-native-vector-icons/AntDesign";
+import {usePlayerStore} from "../store/playerStore";
+import {useNavigation} from "@react-navigation/native";
+import {TouchableOpacity} from "react-native-gesture-handler";
+import {heightPercentageToDP as hp} from "react-native-responsive-screen";
+import {FlashList} from "@shopify/flash-list";
 import Animated, {
   Easing,
   FadeIn,
@@ -22,8 +22,8 @@ import Animated, {
   runOnUI,
   useSharedValue,
   withTiming,
-} from 'react-native-reanimated';
-import LinearGradient from 'react-native-linear-gradient';
+} from "react-native-reanimated";
+import LinearGradient from "react-native-linear-gradient";
 import {
   collection,
   getDocs,
@@ -31,50 +31,37 @@ import {
   orderBy,
   query,
   startAfter,
-} from 'firebase/firestore';
-import {auth, db} from '../firebase/config';
-import 'dayjs/locale/vi';
-import {handlePlay} from '../service/trackPlayerService';
-import {PlayerContext} from '../context/PlayerProvider';
-import useImageColor from '../hooks/useImageColor';
-import TrackItem from '../components/track-item/TrackItem';
-import Loading from '../components/Loading';
-import {navigation} from '../utils/types/RootStackParamList';
-import {GREEN} from '../constants';
+} from "firebase/firestore";
+import {auth, db} from "../firebase/config";
+import "dayjs/locale/vi";
+import {handlePlay} from "../service/trackPlayerService";
+import {PlayerContext} from "../context/PlayerProvider";
+import useImageColor from "../hooks/useImageColor";
+import TrackItem from "../components/track-item/TrackItem";
+import Loading from "../components/Loading";
+import {navigation} from "../utils/types/RootStackParamList";
+import {GREEN} from "../constants";
 
 const ITEM_PER_PAGE = 20;
 
 const HistoryScreens = () => {
   const COLOR = useThemeStore(state => state.COLOR);
-
   const theme = useThemeStore(state => state.theme);
-
   const setPlayFrom = usePlayerStore(state => state.setPlayFrom);
-
   const playerContext = useContext(PlayerContext);
-
   const currentSong = usePlayerStore(state => state.currentSong);
-
   const saveHistory = usePlayerStore(state => state.saveHistory);
-
-  const navigation = useNavigation<navigation<'History'>>();
-
+  const navigation = useNavigation<navigation<"History">>();
   const [historyData, setHistoryData] = useState<any>([]);
-
   const id = useMemo(
     () => Math.random().toString(36).substring(7),
-    [historyData.length],
+    [historyData.length]
   );
-
   const [loading, setLoading] = useState(false);
-
   const {dominantColor: gradientColor} = useImageColor();
-
   const [lastVisible, setLastVisible] = useState<any>(null);
-
   const [fetchMoreLoading, setFetchMoreLoading] = useState(false);
-
-  const $bg = useSharedValue('transparent');
+  const $bg = useSharedValue("transparent");
 
   const handlePlaySong = useCallback(
     (item: any) => {
@@ -83,23 +70,22 @@ const HistoryScreens = () => {
         items: historyData,
       });
       setPlayFrom({
-        id: 'history',
-        name: 'Bài hát gần đây',
+        id: "history",
+        name: "Bài hát gần đây",
       });
     },
-    [ historyData ],
+    [historyData]
   );
 
   const fetchMoreData = async () => {
-    if (!lastVisible) {
-      return;
-    }
+    if (!lastVisible) return;
+
     setFetchMoreLoading(true);
     const q = query(
       collection(db, `users/${auth.currentUser?.uid}/history`),
-      orderBy('timestamp', 'desc'),
+      orderBy("timestamp", "desc"),
       startAfter(lastVisible),
-      limit(ITEM_PER_PAGE),
+      limit(ITEM_PER_PAGE)
     );
     const docs = await getDocs(q);
     const songs = [] as any;
@@ -112,19 +98,20 @@ const HistoryScreens = () => {
   };
 
   const changeBgAnimated = () => {
-    'worklet';
+    "worklet";
     $bg.value = withTiming(`${gradientColor}70`, {
       duration: 1550,
       easing: Easing.inOut(Easing.quad),
     });
   };
+
   useEffect(() => {
     const getHistory = async () => {
       setLoading(true);
       const q = query(
         collection(db, `users/${auth.currentUser?.uid}/history`),
-        orderBy('timestamp', 'desc'),
-        limit(ITEM_PER_PAGE),
+        orderBy("timestamp", "desc"),
+        limit(ITEM_PER_PAGE)
       );
       const docs = await getDocs(q);
       const songs = [] as any;
@@ -143,81 +130,82 @@ const HistoryScreens = () => {
   }, [changeBgAnimated, gradientColor, historyData]);
 
   return (
-    <View
-      className="flex-1 w-full pt-[35px]"
-      style={{backgroundColor: COLOR.BACKGROUND}}>
+    <View className="flex-1 w-full" style={{backgroundColor: COLOR.BACKGROUND}}>
+      {/* Gradient Background */}
       <Animated.View
         className="absolute top-0 left-0 right-0"
-        style={{height: hp(15), backgroundColor: $bg}}>
+        style={{height: hp(25), backgroundColor: $bg}}>
         <LinearGradient
-          style={{height: hp(15)}}
-          colors={['transparent', `${COLOR.BACKGROUND}`]}
+          style={{height: hp(25)}}
+          colors={["transparent", `${COLOR.BACKGROUND}`]}
           className="absolute bottom-0 left-0 right-0 h-full"
         />
       </Animated.View>
 
-      <View className="flex flex-row items-center justify-between px-4">
+      {/* Header */}
+      <View className="flex flex-row items-center justify-between px-6 pt-12 pb-4">
         <Animated.View
           entering={FadeIn.duration(300).delay(300)}
           exiting={FadeOut}>
           <TouchableOpacity
-            className="z-50"
+            className="p-2 rounded-full bg-black/10"
             onPress={() => navigation.goBack()}>
-            <AntDesign name="close" size={24} color={COLOR.TEXT_PRIMARY} />
+            <AntDesign name="close" size={22} color={COLOR.TEXT_PRIMARY} />
           </TouchableOpacity>
         </Animated.View>
-        <View className="flex-1">
+
+        <View className="flex-1 px-4">
           <Animated.Text
             entering={FadeInDown.duration(300).springify()}
-            className=" uppercase text-center text-[12px]"
+            className="uppercase text-center text-[11px] opacity-80 mb-1"
             style={{color: COLOR.TEXT_PRIMARY}}>
             Lịch sử nghe
           </Animated.Text>
           <Animated.Text
             entering={FadeInDown.duration(300).delay(300).springify()}
-            className=" font-semibold text-center"
+            className="font-bold text-lg text-center"
             style={{color: COLOR.TEXT_PRIMARY}}>
             Đã phát gần đây
           </Animated.Text>
         </View>
-        <View className="w-5 h-5" />
+
+        <View className="w-10" />
       </View>
+
+      {/* Content */}
       {loading ? (
-        <View className="flex-1">
-          <View className="flex-1 flex justify-center items-center">
-            <Loading />
-          </View>
+        <View className="flex-1 justify-center items-center">
+          <Loading />
         </View>
       ) : (
-        <View className="flex-1 pt-2">
+        <View className="flex-1">
           <FlashList
             onMomentumScrollEnd={fetchMoreData}
-            ListHeaderComponent={<View className="h-8" />}
+            ListHeaderComponent={<View className="h-4" />}
             ListFooterComponent={
-              <View className="h-64 items-center">
+              <View className="h-64 items-center justify-center">
                 {fetchMoreLoading && <Loading />}
               </View>
             }
             ListEmptyComponent={
               <View
-                className="flex justify-center items-center flex-1"
-                style={{
-                  height: hp(75) - 35,
-                }}>
+                className="flex justify-center items-center"
+                style={{height: hp(70)}}>
                 {!saveHistory ? (
-                  <View className="flex flex-col gap-1">
+                  <View className="flex items-center gap-3">
                     <Text
                       style={{color: COLOR.TEXT_PRIMARY}}
-                      className="text-center">
+                      className="text-base opacity-80">
                       Lịch sử nghe đang tắt
                     </Text>
                     <TouchableOpacity
-                      onPress={() => navigation.navigate('SettingStack')}>
+                      className="px-6 py-2 rounded-full bg-black/10"
+                      onPress={() => navigation.navigate("SettingStack")}>
                       <Text
                         style={{
-                          color: theme === 'amoled' ? GREEN : COLOR.PRIMARY,
+                          color: theme === "amoled" ? GREEN : COLOR.PRIMARY,
                         }}
-                        className="text-center">
+                        className="font-medium">
                         Bật lịch sử nghe
                       </Text>
                     </TouchableOpacity>
@@ -225,7 +213,7 @@ const HistoryScreens = () => {
                 ) : (
                   <Text
                     style={{color: COLOR.TEXT_PRIMARY}}
-                    className="text-center">
+                    className="text-base opacity-80">
                     Bạn chưa nghe bài hát nào gần đây
                   </Text>
                 )}
@@ -237,18 +225,16 @@ const HistoryScreens = () => {
             estimatedItemSize={70}
             nestedScrollEnabled
             keyExtractor={(item: any) => item.encodeId}
-            renderItem={({item, index}: any) => {
-              return (
-                <TrackItem
-                  isActive={currentSong?.id === item.encodeId}
-                  showBottomSheet={playerContext.showBottomSheet}
-                  item={item}
-                  index={index}
-                  onClick={handlePlaySong}
-                  timeStamp={item.timestamp}
-                />
-              );
-            }}
+            renderItem={({item, index}: any) => (
+              <TrackItem
+                isActive={currentSong?.id === item.encodeId}
+                showBottomSheet={playerContext.showBottomSheet}
+                item={item}
+                index={index}
+                onClick={handlePlaySong}
+                timeStamp={item.timestamp}
+              />
+            )}
           />
         </View>
       )}

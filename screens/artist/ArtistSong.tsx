@@ -8,31 +8,31 @@ import {
   TouchableOpacity,
   TextInput,
   ImageBackground,
-} from 'react-native';
+} from "react-native";
 import React, {
   useCallback,
   useContext,
   useEffect,
   useMemo,
   useState,
-} from 'react';
-import {FlashList} from '@shopify/flash-list';
-import {LinearGradient} from 'react-native-linear-gradient';
-import {handlePlay} from '../../service/trackPlayerService';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import {useNavigation} from '@react-navigation/native';
-import nodejs from 'nodejs-mobile-react-native';
-import TrackItem from '../../components/track-item/TrackItem';
-import {PlayerContext} from '../../context/PlayerProvider';
-import useThemeStore from '../../store/themeStore';
-import {usePlayerStore} from '../../store/playerStore';
-import {widthPercentageToDP} from 'react-native-responsive-screen';
-import Loading from '../../components/Loading';
-import stringToSlug from '../../utils/removeSign';
-import tinycolor from 'tinycolor2';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import useImageColor from '../../hooks/useImageColor';
-import {SearchNormal} from 'iconsax-react-native';
+} from "react";
+import {FlashList} from "@shopify/flash-list";
+import {LinearGradient} from "react-native-linear-gradient";
+import {handlePlay} from "../../service/trackPlayerService";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import {useNavigation} from "@react-navigation/native";
+import nodejs from "nodejs-mobile-react-native";
+import TrackItem from "../../components/track-item/TrackItem";
+import {PlayerContext} from "../../context/PlayerProvider";
+import useThemeStore from "../../store/themeStore";
+import {usePlayerStore} from "../../store/playerStore";
+import {widthPercentageToDP} from "react-native-responsive-screen";
+import Loading from "../../components/Loading";
+import stringToSlug from "../../utils/removeSign";
+import tinycolor from "tinycolor2";
+import useImageColor from "../../hooks/useImageColor";
+import {SearchNormal} from "iconsax-react-native";
+
 interface artistType {
   id: string;
   name: string;
@@ -43,7 +43,7 @@ interface artistType {
   totalFollow: number;
 }
 
-const SCREEN_WIDTH = Dimensions.get('window').width;
+const SCREEN_WIDTH = Dimensions.get("window").width;
 
 const ArtistSong = ({route}: any) => {
   const {id, name} = route.params;
@@ -59,15 +59,12 @@ const ArtistSong = ({route}: any) => {
   const {dominantColor} = useImageColor();
   const playlistId = useMemo(
     () => Math.random().toString(36).substring(7),
-    [data?.length],
+    [data?.length]
   );
 
-  const [searchText, setSearchText] = React.useState<string>('');
-
+  const [searchText, setSearchText] = React.useState<string>("");
   const [searchData, setSearchData] = React.useState<any>([]);
-
   const [isSearching, setIsSearching] = React.useState<boolean>(false);
-
   const [isFetchMoreLoading, setIsFetchMoreLoading] =
     React.useState<boolean>(false);
 
@@ -98,7 +95,7 @@ const ArtistSong = ({route}: any) => {
     setLoading(true);
     setData([]);
     setDataDetailArtist({} as artistType);
-    nodejs.channel.addListener('getListArtistSong', (data: any) => {
+    nodejs.channel.addListener("getListArtistSong", (data: any) => {
       setIsFetchMoreLoading(false);
 
       if (data.hasMore === false && page > 1) {
@@ -110,17 +107,17 @@ const ArtistSong = ({route}: any) => {
       setSearchData((prev: any) => [...prev, ...data.items]);
       setLoading(false);
     });
-    nodejs.channel.addListener('getArtist', (data: any) => {
+    nodejs.channel.addListener("getArtist", (data: any) => {
       setDataDetailArtist(data);
       setLoading(false);
     });
 
     nodejs.channel.post(
-      'getListArtistSong',
-      JSON.stringify({id, page, count: 20}),
+      "getListArtistSong",
+      JSON.stringify({id, page, count: 20})
     );
 
-    nodejs.channel.post('getArtist', name);
+    nodejs.channel.post("getArtist", name);
   }, [id, name]);
 
   const fetchMoreData = async () => {
@@ -129,8 +126,8 @@ const ArtistSong = ({route}: any) => {
       setIsFetchMoreLoading(true);
       setPage(page + 1);
       nodejs.channel.post(
-        'getListArtistSong',
-        JSON.stringify({id, page, count: 20}),
+        "getListArtistSong",
+        JSON.stringify({id, page, count: 20})
       );
     } catch (error) {
       setHasLoadMore(false);
@@ -142,13 +139,14 @@ const ArtistSong = ({route}: any) => {
 
   const headerColor = scrollY.interpolate({
     inputRange: [SCREEN_WIDTH * 0.6, SCREEN_WIDTH * 0.6],
-    outputRange: ['transparent', COLOR.BACKGROUND],
-    extrapolate: 'clamp',
+    outputRange: ["transparent", COLOR.BACKGROUND],
+    extrapolate: "clamp",
   });
+
   const titleOpacity = scrollY.interpolate({
     inputRange: [SCREEN_WIDTH * 0.6, SCREEN_WIDTH * 0.6],
     outputRange: [0, 1],
-    extrapolate: 'clamp',
+    extrapolate: "clamp",
   });
 
   const navigation = useNavigation<any>();
@@ -161,46 +159,74 @@ const ArtistSong = ({route}: any) => {
         items: data.filter((i: any) => i.streamingStatus === 1),
       });
       setPlayFrom({
-        id: 'artist',
+        id: "artist",
         name: dataDetailArtist?.name as string,
       });
     },
-    [data],
+    [data]
   );
+
   if (loading) {
     return (
       <View
-        className="flex-1 items-center justify-center "
+        className="flex-1 items-center justify-center"
         style={{backgroundColor: COLOR.BACKGROUND}}>
         <Loading />
       </View>
     );
   }
+
   return (
-    <View className=" flex-1" style={{backgroundColor: COLOR.BACKGROUND}}>
+    <View className="flex-1" style={{backgroundColor: COLOR.BACKGROUND}}>
       <Animated.View
-        className="absolute top-0 pt-[35px] left-0 right-0 z-30 h-20 justify-between  items-center flex-row px-6"
-        style={{backgroundColor: headerColor}}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        className="absolute top-0 pt-[35px] left-0 right-0 z-30 h-20 justify-between items-center flex-row px-6"
+        style={{
+          backgroundColor: headerColor,
+          shadowColor: COLOR.TEXT_PRIMARY,
+          shadowOffset: {width: 0, height: 2},
+          shadowOpacity: 0.2,
+        }}>
+        <TouchableOpacity
+          className="p-2 rounded-full"
+          style={{
+            backgroundColor: tinycolor(COLOR.BACKGROUND)
+              .setAlpha(0.5)
+              .toString(),
+          }}
+          onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back" size={24} color={COLOR.TEXT_PRIMARY} />
         </TouchableOpacity>
         <Animated.Text
-          className=" font-bold ml-4"
+          className="font-bold ml-4 text-lg"
           style={{color: COLOR.TEXT_PRIMARY, opacity: titleOpacity}}>
           {dataDetailArtist?.name}
         </Animated.Text>
-        <TouchableOpacity onPress={() => setIsSearching(true)}>
+        <TouchableOpacity
+          className="p-2 rounded-full"
+          style={{
+            backgroundColor: tinycolor(COLOR.BACKGROUND)
+              .setAlpha(0.5)
+              .toString(),
+          }}
+          onPress={() => setIsSearching(true)}>
           <SearchNormal size={24} color={COLOR.TEXT_PRIMARY} />
         </TouchableOpacity>
       </Animated.View>
+
       {isSearching && (
         <View
-          style={{backgroundColor: COLOR.BACKGROUND}}
-          className="absolute top-0 left-0 right-0 z-30 h-20 pt-[35px]  items-center justify-between flex-row px-6">
+          style={StyleSheet.absoluteFill}
+          className="absolute top-0 left-0 right-0 z-30 h-20 pt-[35px] items-center justify-between flex-row px-6">
           <TouchableOpacity
+            className="p-2 rounded-full bg-opacity-50"
+            style={{
+              backgroundColor: tinycolor(COLOR.BACKGROUND)
+                .setAlpha(0.3)
+                .toString(),
+            }}
             onPress={() => {
               setIsSearching(false);
-              setSearchText('');
+              setSearchText("");
               setSearchData(data);
               scrollY.setValue(0);
             }}>
@@ -213,7 +239,7 @@ const ArtistSong = ({route}: any) => {
               onChangeText={text => handleSearch(text)}
               placeholder="Nhập tên bài hát..."
               placeholderTextColor={COLOR.TEXT_SECONDARY}
-              className="w-full rounded-md p-2"
+              className="w-full rounded-full p-3"
               style={{
                 color: COLOR.TEXT_PRIMARY,
                 backgroundColor: !COLOR.isDark
@@ -225,21 +251,20 @@ const ArtistSong = ({route}: any) => {
           <View className="w-4" />
         </View>
       )}
+
       <View className="flex-1">
         <FlashList
           bounces={false}
           showsVerticalScrollIndicator={false}
-          ListFooterComponent={() => {
-            return (
-              <View className="h-80 items-center">
-                {isFetchMoreLoading && <Loading />}
-              </View>
-            );
-          }}
+          ListFooterComponent={() => (
+            <View className="h-80 items-center">
+              {isFetchMoreLoading && <Loading />}
+            </View>
+          )}
           onEndReached={fetchMoreData}
           onScroll={Animated.event(
             [{nativeEvent: {contentOffset: {y: scrollY}}}],
-            {useNativeDriver: false},
+            {useNativeDriver: false}
           )}
           ListHeaderComponent={
             !isSearching ? (
@@ -251,13 +276,13 @@ const ArtistSong = ({route}: any) => {
                     height: SCREEN_WIDTH * 0.8,
                   }}>
                   <LinearGradient
-                    colors={['transparent', COLOR.BACKGROUND]}
+                    colors={["transparent", COLOR.BACKGROUND]}
                     className="absolute bottom-0 h-40 left-0 right-0 z-10"
                   />
 
                   <ImageBackground
                     source={{uri: dataDetailArtist?.thumbnailM}}
-                    blurRadius={200}
+                    blurRadius={100}
                     style={[
                       StyleSheet.absoluteFillObject,
                       {
@@ -268,7 +293,7 @@ const ArtistSong = ({route}: any) => {
                   />
                   <Image
                     src={dataDetailArtist?.thumbnailM}
-                    className="rounded-lg z-50"
+                    className="rounded-2xl z-50 shadow-lg"
                     style={[
                       {
                         width: SCREEN_WIDTH * 0.6,
@@ -278,11 +303,14 @@ const ArtistSong = ({route}: any) => {
                   />
                 </View>
                 <Text
-                  className=" mt-4 px-4"
+                  className="mt-6 px-6 text-center"
                   style={{
                     color: COLOR.TEXT_PRIMARY,
-                    fontFamily: 'SVN-Gotham Black',
+                    fontFamily: "SVN-Gotham Black",
                     fontSize: widthPercentageToDP(10),
+                    textShadowColor: "rgba(0, 0, 0, 0.3)",
+                    textShadowOffset: {width: 0, height: 2},
+                    textShadowRadius: 4,
                   }}>
                   {dataDetailArtist?.name}
                 </Text>
